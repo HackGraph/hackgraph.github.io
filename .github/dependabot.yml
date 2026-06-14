@@ -1,0 +1,21 @@
+version: 2
+updates:
+  # npm dependencies — weekly PRs; low-risk updates batched to cut noise,
+  # majors (e.g. the Vite upgrade) come as their own reviewable PRs.
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 10
+    labels: ["dependencies"]
+    groups:
+      minor-and-patch:
+        patterns: ["*"]
+        update-types: ["minor", "patch"]
+
+  # The GitHub Actions used in our workflows — keep them current/patched too.
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    labels: ["dependencies", "github-actions"]

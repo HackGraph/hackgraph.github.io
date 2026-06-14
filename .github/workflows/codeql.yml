@@ -1,0 +1,30 @@
+name: CodeQL
+
+# Static security analysis of the TS/React source (XSS, injection, unsafe DOM,
+# taint flows). Runs on every push/PR to main and weekly so newly-added query
+# rules catch old code too. Results land in the repo's Security → Code scanning tab.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+
+permissions:
+  contents: read
+  security-events: write # upload scan results
+
+jobs:
+  analyze:
+    name: Analyze (javascript-typescript)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+          queries: security-extended
+      - uses: github/codeql-action/analyze@v3
+        with:
+          category: "/language:javascript-typescript"

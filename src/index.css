@@ -1,0 +1,156 @@
+@import 'tailwindcss';
+
+/* ════════════════════════════════════════════════════════════════════════
+   HackGraph — restrained, high-end RED-TEAM system. Deep warm graphite ground,
+   one confident red accent, muted phase dots, soft NEUTRAL shadows (depth, no
+   glow). The "feel" lives in motion + spacing, not decoration.
+   ════════════════════════════════════════════════════════════════════════ */
+@theme {
+  /* surfaces — a deep, faintly warm graphite (red-tinted, not dead gray) */
+  --color-bg: #0c0a0b;
+  --color-bg-soft: #120e10;
+  --color-panel: #1a1517;
+  --color-panel-2: #241c1f;
+
+  /* hairlines — faintly warm */
+  --color-border: rgba(214, 168, 172, 0.11);
+  --color-border-strong: rgba(228, 178, 182, 0.24);
+  --color-edge: #342b2d;
+
+  /* ink — a touch warm */
+  --color-ink: #f0eaec;
+  --color-ink-dim: #a59699;
+  --color-ink-faint: #685d60;
+
+  /* one accent: a confident red (red team) */
+  --color-accent: #f04450;
+  --color-accent-soft: rgba(240, 68, 80, 0.16);
+
+  /* elevation — soft, diffuse, NEUTRAL (no colored bloom anywhere) */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 6px 16px -8px rgba(0, 0, 0, 0.5);
+  --shadow-lift: 0 2px 4px rgba(0, 0, 0, 0.35), 0 14px 32px -12px rgba(0, 0, 0, 0.62);
+  --shadow-pop: 0 12px 44px -12px rgba(0, 0, 0, 0.66);
+
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI',
+    system-ui, Roboto, sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.011em;
+}
+
+/* ---- React Flow theming ------------------------------------------------- */
+.react-flow {
+  background: transparent;
+}
+
+.hg-controls {
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  background: color-mix(in oklab, var(--color-panel) 80%, transparent);
+  backdrop-filter: blur(12px);
+}
+.hg-controls button {
+  background: transparent;
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-ink-dim);
+  fill: var(--color-ink-dim);
+}
+.hg-controls button:hover {
+  background: var(--color-border);
+  color: var(--color-ink);
+  fill: var(--color-ink);
+}
+
+.hg-minimap {
+  background: color-mix(in oklab, var(--color-bg-soft) 84%, transparent);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+}
+
+/*
+ * THE load-bearing animation rule: React Flow re-applies translate() to each
+ * node wrapper on position change; transitioning transform makes those updates
+ * glide for free (GPU-composited). `.rf-appearing` nodes snap to target while
+ * framer-motion handles their entrance.
+ */
+.react-flow__node {
+  transition: transform 340ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.react-flow__node.rf-appearing {
+  transition: none;
+}
+/* While the isolate enter/leave JS tween drives node positions frame-by-frame
+   (so edges stay glued to their boxes), suppress the CSS transform transition —
+   otherwise the two animation systems fight and the glide smears. */
+.hg-tweening .react-flow__node {
+  transition: none;
+}
+
+.react-flow__handle {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* PERF: while the camera pans/zooms, the graph slides behind the fixed overlays,
+   so their backdrop-blur would re-rasterize every frame (the dominant cost of
+   camera movement). Drop the blur for the duration of the move — a static blur is
+   imperceptible mid-glide, and the overlay backgrounds are already 75–85% opaque so
+   they stay legible without it. Toggled by GraphCanvas onMoveStart/onMoveEnd. */
+body.hg-camera-moving .hg-controls,
+body.hg-camera-moving .hg-minimap,
+body.hg-camera-moving [class*='backdrop-blur'] {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+/* Edge stroke + width are set per-edge via inline style in DrawInEdge (so they
+   can reflect state); no global rule here, which would override that inline style. */
+
+/* ---- Utilities ---------------------------------------------------------- */
+.hg-scroll::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.hg-scroll::-webkit-scrollbar-thumb {
+  background: var(--color-border-strong);
+  border-radius: 8px;
+}
+.hg-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* ---- Reduced motion ----------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .react-flow__node {
+    transition: none !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
