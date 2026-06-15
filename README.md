@@ -1,92 +1,72 @@
+<div align="center">
+
 # HackGraph
 
-An interactive, fully client-side **attack-path explorer**. Start at a root node and
-click the **"+N" badge** on a node to smoothly expand into sub-techniques, navigating
-left→right through the attack phases until you reach the goal — think the Orange
-Cyberdefense AD mindmap, but navigable like BloodHound, in the spirit of CyberChef /
-revshells.com.
+### Walk the attack path, one click at a time.
 
-Each node is a mini-cheatsheet: description, tools, copy-able commands, MITRE ATT&CK id,
-prerequisites, and OPSEC notes. The header selector switches between maps:
+HackGraph is a fully client-side explorer for offensive-security attack chains.
+Start at a foothold and expand it technique by technique — left→right across the
+phases — until you reach the goal. Like the Orange Cyberdefense mindmaps, but
+navigable like BloodHound, in the spirit of [CyberChef](https://gchq.github.io/CyberChef/)
+and [revshells.com](https://www.revshells.com/).
 
-- **Active Directory** — zero access → Domain Admin & persistence (foothold, roasting,
-  ADCS, DACL/delegation abuse, Kerberos ticket abuse, lateral movement, key CVEs).
-- **Windows Priv Esc** — a low-priv shell → `NT AUTHORITY\SYSTEM` (kernel, service &
-  registry misconfigs, token privileges / Potato, privileged groups, credential dumping,
-  UAC bypass).
+[![Live](https://img.shields.io/badge/live-hackgraph.github.io-f04450)](https://hackgraph.github.io/)
+[![Deploy](https://github.com/HackGraph/hackgraph.github.io/actions/workflows/deploy.yml/badge.svg)](https://github.com/HackGraph/hackgraph.github.io/actions/workflows/deploy.yml)
+[![License](https://img.shields.io/badge/license-Apache_2.0-blue)](LICENSE)
 
-> Live: https://hackgraph.github.io/
+**[▶ Try it live → hackgraph.github.io](https://hackgraph.github.io/)**
 
-## Stack
+</div>
 
-- **React + TypeScript + Vite**
-- **React Flow** (`@xyflow/react`) — the canvas, with custom nodes/edges
-- **dagre** (`@dagrejs/dagre`) — left→right hierarchical auto-layout
-- **framer-motion** — node enter/exit + edge draw-in animations
-- **Tailwind CSS v4** — dark theme, phase-coded colors
+## Features
 
-No backend; the whole graph lives in static JSON/TS and renders client-side.
+- **Click to expand.** Every node carries a **+N** badge — click it to reveal the next
+  techniques and glide deeper into the graph. The camera follows the frontier and the
+  path you've walked stays lit.
+- **Every node is a cheat-sheet.** Description, tools, copy-paste commands, MITRE ATT&CK
+  id, prerequisites, and OPSEC / detection notes — one click away.
+- **Real attack paths, not flat lists.** Techniques converge on shared "you now hold X"
+  hubs, so the graph reads like an actual attack instead of a folder of tricks.
+- **Switch domains.** Choose a map from the header — Active Directory or Windows
+  privilege escalation today, with more on the way.
+- **Share any path.** The URL deep-links to exactly what you've expanded and selected —
+  drop it in a report or a teammate's chat and they land on the same view.
+- **Search anything.** Jump straight to any technique by name.
+- **Yours alone.** No backend, no accounts, no telemetry. It all runs in your browser —
+  your clicks never leave the page.
 
-## Develop
+## Maps
+
+- **Active Directory** — zero access → Domain Admin & persistence: recon, roasting,
+  AD CS (ESC1–16), DACL & delegation abuse, Kerberos ticket attacks, lateral movement,
+  and the key CVEs.
+- **Windows Privilege Escalation** — a low-priv shell → `NT AUTHORITY\SYSTEM`: kernel &
+  driver exploits, service / registry misconfigs, token privileges (the Potato family),
+  privileged groups, credential theft, UAC bypasses, and local lateral movement.
+
+## Run locally
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
-npm run test     # vitest — graph logic (visibility DAG, layout)
-npm run build    # tsc + vite build -> dist/
-npm run preview  # serve the production build locally
 ```
 
-## How it works
+`npm test` runs the content + graph-logic tests · `npm run build` type-checks and bundles
+to `dist/` · `npm run preview` serves the production build.
 
-`expandedIds: Set<string>` + a static `GraphModel` are the single source of truth.
-Everything rendered is derived from them:
+## Contributing
 
-- `src/graph/visibility.ts` — a forward BFS from the root through expanded nodes yields
-  the visible subgraph. Handles multi-parent nodes, convergence, collapse, and cycles.
-- `src/graph/layout.ts` — dagre computes left→right positions for the visible subgraph.
-- `src/graph/useGraphView.ts` — the only writer of React Flow nodes/edges: diffs the
-  layout, reuses node identity so survivors **glide** (CSS `transition: transform`), and
-  mints new nodes that **fade/scale in** (framer-motion). The camera gently follows the
-  newly-revealed frontier.
+The content is just data: adding a technique — or a whole new domain like web, cloud, or
+network — means editing files under `src/data/`, never the engine. New maps appear in the
+header automatically. See **[CONTRIBUTING.md](CONTRIBUTING.md)** to get started.
 
-## Add / edit content
-
-Content is data-driven. Each map (`src/data/maps/*.ts`) declares its own `phases`
-(id/label/color) and is assembled from chain files in `src/data/chains/*.ts` (each
-exports `nodes` + `edges`). The node schema lives in `src/data/schema.ts`.
-
-To add techniques, edit the relevant chain file. To add an entirely new domain (web,
-cloud, network), create a sibling `MapDefinition` with its own phases and register it in
-`src/data/index.ts` — it appears in the header selector automatically; the engine is
-map-agnostic.
-
-**One framework, many knowledge sets.** Everything about *pathfinding* — visibility,
-layout, loop-unrolling, the lit-path highlight, search, deep-linking — lives in the
-shared engine (`src/graph/*`) and never special-cases a map. Maps differ only in their
-*knowledge nodes* (the techniques) and presentation (phase colors). So every map reuses
-the same domain-independent conventions, and new maps should too:
-
-- **Convergence hubs** (`hub: true`) — model "you now hold X" capability/state nodes that
-  many techniques funnel through, rather than each leaf dead-ending at the goal. This is
-  what makes a map read as a navigable attack path instead of a folder tree.
-- **The relationship vocabulary** (`src/data/relationships.ts`) — give semantic edges a
-  `rel` from the cross-domain CORE (`host-exec`, `cred-reuse`, `enables`) so every
-  path-step shows a consistent explanation. Add a new per-domain section there instead of
-  inventing per-edge wording inline; an explicit edge `label` still overrides the caption.
-- **Node kinds** (`start` / `category` / `technique` / `goal`) and the schema fields are
-  shared — reuse them; don't fork the schema per map.
-
-## Deploy
-
-`hackgraph.github.io` is an org Pages site served at the root (`base: '/'`). The
-workflow in `.github/workflows/deploy.yml` builds and publishes `dist/` on every push to
-`main` via GitHub Actions. Set the repo's **Pages → Source** to **GitHub Actions** once.
+Built with [React Flow](https://reactflow.dev/), [dagre](https://github.com/dagrejs/dagre),
+framer-motion, and Tailwind CSS.
 
 ## License
 
-Licensed under the [Apache License 2.0](LICENSE). Copyright 2026 HackGraph.
+[Apache License 2.0](LICENSE) · Copyright 2026 HackGraph.
 
----
-
-For authorized security testing, CTFs, and education.
+> For authorized security testing, CTFs, and education.
+</content>
+</invoke>
