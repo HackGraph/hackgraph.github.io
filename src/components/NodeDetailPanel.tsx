@@ -247,6 +247,15 @@ export function NodeDetailPanel({
             {def.summary && <p className="text-[13px] font-medium leading-snug text-ink">{def.summary}</p>}
             {def.description && <p className="text-[12.5px] leading-relaxed text-ink-dim">{def.description}</p>}
 
+            {def.affects && (
+              <div className="flex items-start gap-2 rounded-md border border-border bg-bg-soft px-2.5 py-1.5">
+                <span className="mt-px shrink-0 text-[10px] font-semibold uppercase tracking-[0.08em] text-ink-dim">
+                  Affects
+                </span>
+                <span className="text-[11.5px] leading-snug text-ink-dim">{def.affects}</span>
+              </div>
+            )}
+
             {def.requires && def.requires.length > 0 && (
               <Section title="Requires">
                 <div className="flex flex-wrap gap-1.5">

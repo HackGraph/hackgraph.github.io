@@ -73,6 +73,13 @@ export interface TechniqueNodeDef {
   requires?: string[];
   /** Detection / stealth considerations. */
   opsec?: string;
+  /**
+   * Windows-version applicability — which builds the technique works on, and when it
+   * was patched. Keeps the map honest about outdated vectors (e.g. an eventvwr UAC
+   * bypass patched after Win10 1607). Use "All supported Windows versions" for
+   * version-independent vectors (the privilege/service model rather than a bug).
+   */
+  affects?: string;
   difficulty?: Difficulty;
   /**
    * Convergence hub: a "you now hold X" state node that many later steps lead back
