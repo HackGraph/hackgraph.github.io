@@ -44,7 +44,7 @@ const anchorNodes: TechniqueNodeDef[] = [
     kind: 'goal',
     summary: '👑 Full local SYSTEM privileges.',
     description:
-      'You hold SYSTEM (or local administrator) on the host — full control of the machine, its services, and any credentials in memory or on disk. From here, dump credentials and pivot: on a domain-joined host this feeds straight back into the Active Directory map.',
+      'You hold SYSTEM (or local administrator) on the host — full control of the machine, its services, and any credentials in memory or on disk. From here, dump credentials and pivot. On a domain-joined host this feeds straight back into the Active Directory map; but it is not always AD — a dumped local-admin hash reused across a workgroup, or a recovered service-account credential, moves you host-to-host with no domain involved (see the Local Lateral Movement branch).',
     requires: ['Any one successful local escalation vector'],
     difficulty: 'medium',
   },
@@ -76,6 +76,7 @@ export const windowsPeMap: MapDefinition = {
     { id: 'token-privilege', label: 'Token Privileges', color: '#ef8630' },
     { id: 'group-abuse', label: 'Privileged Groups', color: '#ec5a97' },
     { id: 'uac-bypass', label: 'UAC Bypass', color: '#b04fda' },
+    { id: 'lateral-movement', label: 'Local Lateral Movement', color: '#cf4fc4' },
     { id: 'system', label: 'SYSTEM', color: '#5f6ce6' },
   ],
   nodes: [...anchorNodes, ...peTechniqueNodes],

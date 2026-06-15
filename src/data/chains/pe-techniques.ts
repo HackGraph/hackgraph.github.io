@@ -18,6 +18,10 @@ const mitre = (id: string): { id: string; url: string } => ({
  * key, Server Operators, and DnsAdmins all reach "Service Executes Your Code"), so
  * the map reads as a navigable attack DAG with shared convergence rather than a flat
  * folder tree. This mirrors the AD map's hubs (`lateral-movement-cme`, etc.).
+ *
+ * The "Reuse Recovered Credentials" hub also feeds a LOCAL lateral-movement branch
+ * (`pe-lateral-*`): privesc is not always an AD pivot — a shared local-admin hash or
+ * a recovered service-account credential moves you host-to-host with no domain.
  */
 export const peTechniqueNodes: TechniqueNodeDef[] = [
   // Category (grouping) nodes — pe-enum expands into these instead of ~20 techniques.
@@ -154,6 +158,45 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
     references: [{ label: 'HackTricks — Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' }],
     requires: ['sysadmin role on the MSSQL instance', 'xp_cmdshell enable-able'],
     opsec: 'sp_configure + xp_cmdshell are heavily monitored; many EDRs flag sqlservr.exe spawning cmd.exe.',
+    difficulty: 'medium',
+  },
+  {
+    id: 'pe-path-dll-hijack',
+    label: 'Writable %PATH% Directory',
+    phase: 'service-abuse',
+    summary: 'Plant a DLL a privileged service resolves by name from %PATH%.',
+    description: r`If a directory listed in the system PATH is writable by your user, any privileged process or service that loads a DLL by bare name (no full path) can resolve it from your writable directory if it precedes the legitimate one in the search order. Drop a matching DLL whose DllMain runs your payload; it loads into the privileged process. Distinct from a per-app DLL hijack — here the weakness is a globally writable PATH entry.`,
+    tools: [
+      { name: 'accesschk (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk' },
+      { name: 'PowerUp', url: 'https://github.com/PowerShellMafia/PowerSploit' },
+    ],
+    commands: [
+      { label: 'Show the system PATH', code: r`reg query "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment" /v Path`, lang: 'cmd' },
+      { label: 'Check each PATH dir for write access', code: r`accesschk.exe -dqwu "C:\SomePathDir" /accepteula`, lang: 'cmd' },
+    ],
+    mitre: mitre('T1574.007'),
+    references: [{ label: 'MITRE T1574.007 — Path Interception by PATH Env Var', url: 'https://attack.mitre.org/techniques/T1574/007/' }],
+    requires: ['A user-writable directory on the system PATH', 'A privileged service/process that DLL-loads by bare name'],
+    opsec: 'An unsigned DLL loaded by a signed, privileged binary from a user-writable PATH directory (Sysmon Event ID 7) is a strong signal.',
+    difficulty: 'medium',
+  },
+  {
+    id: 'pe-printnightmare',
+    label: 'PrintNightmare (CVE-2021-34527)',
+    phase: 'service-abuse',
+    summary: 'Spooler loads an attacker DLL as SYSTEM.',
+    description: r`The Print Spooler's RpcAddPrinterDriverEx lets an authenticated user register a printer "driver" DLL that spoolsv.exe (running as SYSTEM) then loads. Run locally against the host's own spooler, the LPE variant points it at a DLL on disk and executes it as SYSTEM. Requires the Print Spooler service to be running; fully mitigated by disabling it or patching.`,
+    tools: [
+      { name: 'SharpPrintNightmare', url: 'https://github.com/cube0x0/CVE-2021-1675' },
+      { name: 'mimikatz (misc::printnightmare)', url: 'https://github.com/gentilkiwi/mimikatz' },
+    ],
+    commands: [
+      { label: 'Local LPE via a driver DLL', code: r`SharpPrintNightmare.exe C:\Temp\addCync.dll`, lang: 'cmd' },
+    ],
+    mitre: mitre('T1068'),
+    references: [{ label: 'MSRC — CVE-2021-34527', url: 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527' }],
+    requires: ['Print Spooler service running', 'Unpatched host'],
+    opsec: 'Spooler loading a user-supplied driver DLL is heavily detected post-2021. Disabling the spooler kills it entirely.',
     difficulty: 'medium',
   },
   {
@@ -517,6 +560,42 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
     difficulty: 'easy',
   },
   {
+    id: 'pe-winlogon-autologon',
+    label: 'Winlogon Autologon Password',
+    phase: 'credential-access',
+    summary: 'Read a cleartext autologon password from the registry.',
+    description: r`When automatic logon is configured, Windows stores the account name and its password in cleartext under the Winlogon registry key (DefaultUserName / DefaultPassword, with AutoAdminLogon = 1). Any user can read these values — if the autologon account is a local or domain admin, you have its password directly, no cracking required.`,
+    tools: [{ name: 'reg (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/reg' }],
+    commands: [
+      { label: 'Read the autologon values', code: r`reg query "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon" /v DefaultPassword`, lang: 'cmd' },
+    ],
+    mitre: mitre('T1552.002'),
+    references: [{ label: 'MITRE T1552.002 — Credentials in Registry', url: 'https://attack.mitre.org/techniques/T1552/002/' }],
+    requires: ['Autologon configured with a stored DefaultPassword'],
+    opsec: 'Read-only registry query — very quiet. The password is only present when autologon is actually configured.',
+    difficulty: 'easy',
+  },
+  {
+    id: 'pe-hivenightmare',
+    label: 'HiveNightmare / SeriousSAM',
+    phase: 'credential-access',
+    summary: 'CVE-2021-36934 — any user reads SAM via a shadow copy.',
+    description: r`On affected Windows 10/11 builds the ACLs on C:\Windows\System32\config\SAM, SYSTEM and SECURITY mistakenly granted BUILTIN\Users read access. A non-admin can read these hives out of a Volume Shadow Copy and extract the local-admin hash offline — no SeBackup, no admin token required. Mitigated by patching, fixing the ACLs, and deleting existing shadow copies.`,
+    tools: [
+      { name: 'impacket-secretsdump', url: 'https://github.com/fortra/impacket' },
+      { name: 'HiveNightmare PoC', url: 'https://github.com/GossiTheDog/HiveNightmare' },
+    ],
+    commands: [
+      { label: 'Confirm the over-permissive ACL', code: r`icacls C:\Windows\System32\config\SAM`, lang: 'cmd' },
+      { label: 'Read hives from a shadow copy + dump', code: r`impacket-secretsdump -sam SAM -system SYSTEM -security SECURITY LOCAL`, lang: 'bash' },
+    ],
+    mitre: mitre('T1003.002'),
+    references: [{ label: 'MSRC — CVE-2021-36934', url: 'https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36934' }],
+    requires: ['Unpatched vulnerable build', 'At least one VSS shadow copy present'],
+    opsec: 'Reading the hives is low-noise; it depends on a shadow copy existing. Fully patched/mitigated systems are not affected.',
+    difficulty: 'easy',
+  },
+  {
     id: 'pe-uac-fodhelper',
     label: 'UAC Bypass (fodhelper)',
     phase: 'uac-bypass',
@@ -619,6 +698,59 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
     opsec: 'New/modified autorun, scheduled-task, or accessibility binaries are classic IOCs (Autoruns, Sysmon, Event ID 4698/4702). Overwriting an existing target is quieter than creating one; restore it afterward.',
     difficulty: 'medium',
   },
+
+  // ── Local lateral movement (no domain required) ─────────────────────────────
+  // Privesc isn't always an AD pivot: a local-admin hash reused across a workgroup,
+  // or a recovered service-account credential, moves you host-to-host on its own.
+  {
+    id: 'pe-lateral-local-pth',
+    label: 'Local Admin Pass-the-Hash',
+    phase: 'lateral-movement',
+    summary: 'Reuse a shared local-admin hash across workgroup hosts.',
+    description: r`In a workgroup — or anywhere a local administrator password is shared across machines (the classic pre-LAPS imaging sin) — the local-admin NT hash you dumped from SAM authenticates to OTHER hosts with no domain and no cleartext. Caveat: UAC remote restrictions mean only the built-in Administrator (RID 500), or a local account where LocalAccountTokenFilterPolicy = 1, receives a full elevated token over the network; other local admins are filtered.`,
+    tools: [
+      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
+      { name: 'impacket', url: 'https://github.com/fortra/impacket' },
+      { name: 'mimikatz (sekurlsa::pth)', url: 'https://github.com/gentilkiwi/mimikatz' },
+    ],
+    commands: [
+      { label: 'Spray a subnet with the local hash', code: r`nxc smb 10.0.0.0/24 -u Administrator -H <nthash> --local-auth`, lang: 'bash' },
+      { label: 'Pass-the-hash exec to one host', code: r`impacket-psexec -hashes :<nthash> Administrator@10.0.0.5`, lang: 'bash' },
+    ],
+    mitre: mitre('T1550.002'),
+    references: [
+      { label: 'HackTricks — Pass the Hash', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
+      { label: 'MITRE T1550.002 — Pass the Hash', url: 'https://attack.mitre.org/techniques/T1550/002/' },
+    ],
+    requires: ['A recovered local-admin NT hash', 'A target reusing that local account (RID 500, or LocalAccountTokenFilterPolicy = 1)'],
+    opsec: 'Local-account network logons (4624 type 3, NTLM) from unusual sources stand out, and --local-auth spraying is noisy. Impacket-style service creation is widely signatured.',
+    difficulty: 'medium',
+  },
+  {
+    id: 'pe-lateral-remote-exec',
+    label: 'Remote Execution (Local Admin)',
+    phase: 'lateral-movement',
+    hub: true,
+    summary: 'Run code on an adjacent host → SYSTEM, no AD needed.',
+    description: r`With valid local-admin credentials or an NT hash on a reachable host, execute code there. An SMB service channel (PsExec/SMBExec) lands you as SYSTEM directly; WMI, WinRM, or RDP land you as the user. This is how a single dumped local account spreads sideways across standalone hosts — and, the moment you land on a domain-joined machine, becomes the bridge into the Active Directory map.`,
+    tools: [
+      { name: 'impacket (psexec/smbexec/wmiexec)', url: 'https://github.com/fortra/impacket' },
+      { name: 'Evil-WinRM', url: 'https://github.com/Hackplayers/evil-winrm' },
+      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
+    ],
+    commands: [
+      { label: 'SMB service exec (lands as SYSTEM)', code: r`impacket-psexec Administrator@10.0.0.5`, lang: 'bash' },
+      { label: 'WinRM shell with a hash', code: r`evil-winrm -i 10.0.0.5 -u Administrator -H <nthash>`, lang: 'bash' },
+    ],
+    mitre: mitre('T1021.002'),
+    references: [
+      { label: 'HackTricks — PsExec / Lateral Movement', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
+      { label: 'MITRE T1021.002 — SMB/Windows Admin Shares', url: 'https://attack.mitre.org/techniques/T1021/002/' },
+    ],
+    requires: ['Local-admin credentials or NT hash valid on the target', 'A reachable management port (445 / 5985 / 3389)'],
+    opsec: 'PsExec-style service creation (Event ID 7045) and WinRM/RDP logons (type 3 / 10) are detectable. Blend into legitimate admin tooling and change windows; do not spray every host at once.',
+    difficulty: 'medium',
+  },
 ];
 
 export const peTechniqueEdges: AttackEdge[] = [
@@ -638,6 +770,8 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-services', target: 'pe-insecure-service-binary' },
   { source: 'pe-cat-services', target: 'pe-service-dll-hijack' },
   { source: 'pe-cat-services', target: 'pe-mssql-xpcmdshell' },
+  { source: 'pe-cat-services', target: 'pe-path-dll-hijack' },
+  { source: 'pe-cat-services', target: 'pe-printnightmare' },
   { source: 'pe-cat-registry', target: 'pe-always-install-elevated' },
   { source: 'pe-cat-registry', target: 'pe-weak-registry-service' },
   { source: 'pe-cat-registry', target: 'pe-autorun-writable' },
@@ -657,6 +791,8 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-creds', target: 'pe-dpapi-creds' },
   { source: 'pe-cat-creds', target: 'pe-stored-creds' },
   { source: 'pe-cat-creds', target: 'pe-config-password-hunt' },
+  { source: 'pe-cat-creds', target: 'pe-winlogon-autologon' },
+  { source: 'pe-cat-creds', target: 'pe-hivenightmare' },
   { source: 'pe-cat-uac', target: 'pe-uac-fodhelper' },
   { source: 'pe-cat-uac', target: 'pe-uac-eventvwr' },
 
@@ -677,6 +813,8 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', label: 'rewrite ImagePath' },
   { source: 'pe-server-operators', target: 'pe-prim-service-exec', label: 'reconfig DC service' },
   { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', label: 'plugin DLL → DNS svc' },
+  { source: 'pe-path-dll-hijack', target: 'pe-prim-service-exec', label: 'service loads planted DLL' },
+  { source: 'pe-printnightmare', target: 'pe-prim-service-exec', label: 'spooler loads your DLL' },
   { source: 'pe-prim-service-exec', target: 'nt-system' },
 
   // ── Token impersonation -> Potato (its own convergence node) ────────────────
@@ -697,11 +835,19 @@ export const peTechniqueEdges: AttackEdge[] = [
 
   // ── Credential access -> "Reuse Recovered Credentials" hub -> SYSTEM ─────────
   { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', label: 'local-admin hash' },
+  { source: 'pe-hivenightmare', target: 'pe-prim-cred-reuse', label: 'local-admin hash' },
   { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', label: 'LSASS creds' },
   { source: 'pe-dpapi-creds', target: 'pe-prim-cred-reuse' },
   { source: 'pe-stored-creds', target: 'pe-prim-cred-reuse' },
   { source: 'pe-config-password-hunt', target: 'pe-prim-cred-reuse' },
+  { source: 'pe-winlogon-autologon', target: 'pe-prim-cred-reuse', label: 'cleartext admin pw' },
   { source: 'pe-prim-cred-reuse', target: 'nt-system', label: 'runas / pass-the-hash' },
+
+  // ── Recovered creds also move you sideways — no domain required ──────────────
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-local-pth', label: 'shared local admin' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-remote-exec', label: 'reuse on a neighbour' },
+  { source: 'pe-lateral-local-pth', target: 'pe-lateral-remote-exec' },
+  { source: 'pe-lateral-remote-exec', target: 'nt-system', label: 'SYSTEM on the next host' },
 
   // ── Self-contained one-shots straight to SYSTEM ─────────────────────────────
   { source: 'pe-always-install-elevated', target: 'nt-system' },
