@@ -80,6 +80,12 @@ export interface TechniqueNodeDef {
    * version-independent vectors (the privilege/service model rather than a bug).
    */
   affects?: string;
+  /**
+   * Structured counterpart to `affects`, powering the version filter. Version ids
+   * (see data/windows-versions.ts) the technique applies to. OMITTED = applies to all
+   * versions — only version-specific vectors enumerate a restricted set.
+   */
+  versions?: string[];
   difficulty?: Difficulty;
   /**
    * Convergence hub: a "you now hold X" state node that many later steps lead back

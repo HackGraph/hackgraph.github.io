@@ -1,4 +1,5 @@
 import type { AttackEdge, TechniqueNodeDef } from '../schema';
+import { range } from '../windows-versions';
 
 const r = String.raw;
 const mitre = (id: string): { id: string; url: string } => ({
@@ -52,6 +53,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
     phase: 'hold',
     summary: 'Recover a service account stripped of its privileges.',
     affects: 'Win10 / Server 2016–2019; the tool was archived in 2024 and is unreliable on Win11 / Server 2022+. On newer builds prefer GodPotato, which needs only SeImpersonate.',
+    versions: [...range('win8', 'win10-22h2'), 'srv2016', 'srv2019'],
     description: r`Services running as LOCAL SERVICE or NETWORK SERVICE often start with a heavily filtered token missing SeImpersonatePrivilege. itm4n's FullPowers recreates the account's default privilege set by spawning a process through the Task Scheduler (whose tasks get the full set when RequiredPrivileges is absent), handing back SeImpersonate / SeAssignPrimaryToken so a Potato attack becomes possible again.`,
     tools: [{ name: 'FullPowers', url: 'https://github.com/itm4n/FullPowers' }],
     commands: [
@@ -311,6 +313,7 @@ icacls C:\Windows\System32\utilman.exe /grant %USERNAME%:F`, lang: 'cmd' },
     phase: 'hold',
     summary: 'Abuse vmms symlink/TOCTOU (CVE-2018-0952 / CVE-2019-0841).',
     affects: 'Unpatched hosts only — CVE-2018-0952 / CVE-2019-0841 (patched 2018–2019).',
+    versions: [...range('win10-1607', 'win10-1809'), 'srv2016', 'srv2019'],
     description: r`Hyper-V Administrators can manipulate VM/.vhdx operations performed by vmms.exe as SYSTEM without impersonation. By deleting a .vhdx and planting a hardlink to a protected file, an unpatched host (vulnerable to CVE-2018-0952 / CVE-2019-0841) can be leveraged to gain SYSTEM. Patch-dependent.`,
     mitre: mitre('T1068'),
     references: [{ label: 'decoder.cloud — From Hyper-V Admin to SYSTEM', url: 'https://decoder.cloud/2020/01/20/from-hyper-v-admin-to-system/' }],
@@ -387,6 +390,7 @@ whoami /priv | findstr /i SeLoadDriver`, lang: 'cmd' },
     phase: 'admin',
     summary: 'Auto-elevate fodhelper via an HKCU ms-settings handler.',
     affects: 'Windows 10 (1607+) and Windows 11 through 22H2 — still effective, the most reliable of the registry-handler bypasses.',
+    versions: [...range('win10-1607', 'win11-24h2'), 'srv2016', 'srv2019', 'srv2022', 'srv2025'],
     description: r`fodhelper.exe auto-elevates and reads HKCU\Software\Classes\ms-settings\shell\open\command (with DelegateExecute). Plant your command there and run fodhelper to execute at High integrity — no UAC prompt. Elevates an existing admin to High integrity; it does not turn a standard user into admin.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
     commands: [
@@ -406,6 +410,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
     phase: 'admin',
     summary: 'Hijack the mscfile handler eventvwr.exe auto-elevates.',
     affects: 'Legacy: Windows 7 – Windows 10 1607. Patched in the Creators Update (1703); does NOT work on modern builds.',
+    versions: [...range('win7', 'win10-1607'), 'srv2008', 'srv2012', 'srv2016'],
     description: r`eventvwr.exe is an auto-elevating Microsoft-signed binary that opens its .msc snap-in via the HKCU\Software\Classes\mscfile\shell\open\command handler — checked before the HKLM one and never validated. A medium-integrity admin can point that key at an arbitrary command; launching eventvwr.exe then runs it at High integrity with no UAC prompt.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
     commands: [
@@ -424,6 +429,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
     phase: 'admin',
     summary: 'Auto-elevating sdclt via the Folder/App Path handler.',
     affects: 'Legacy: Windows 10 1507–1607. Patched around 1803; does NOT work on modern builds.',
+    versions: range('win10-1507', 'win10-1709'),
     description: r`sdclt.exe (Backup and Restore) auto-elevates and, on Windows 10, resolves a command through HKCU\Software\Classes\Folder\shell\open\command (or the App Paths key). Plant your command there and launch sdclt to run at High integrity with no prompt.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
     commands: [
@@ -443,6 +449,7 @@ reg add "HKCU\Software\Classes\Folder\shell\open\command" /v DelegateExecute /t 
     phase: 'admin',
     summary: 'Auto-elevating computerdefaults via ms-settings handler.',
     affects: 'Windows 10 and Windows 11 (same ms-settings handler as fodhelper).',
+    versions: [...range('win10-1507', 'win11-24h2'), 'srv2016', 'srv2019', 'srv2022', 'srv2025'],
     description: r`computerdefaults.exe auto-elevates and, like fodhelper, launches its target through the HKCU\Software\Classes\ms-settings\shell\open\command handler. Point that key at your command and run computerdefaults to execute at High integrity without a consent prompt.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
     commands: [
@@ -476,6 +483,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /v DelegateExecut
     phase: 'admin',
     summary: 'Abuse the auto-elevating SilentCleanup scheduled task.',
     affects: 'Windows 8 – Windows 11 (the SilentCleanup task ships on all).',
+    versions: [...range('win8', 'win11-24h2'), 'srv2012', 'srv2016', 'srv2019', 'srv2022', 'srv2025'],
     description: r`The built-in SilentCleanup scheduled task runs "with highest privileges" yet is launchable by normal users. It executes cleanmgr.exe, which expands environment variables — by hijacking an environment variable (e.g. windir) in HKCU, the elevated task launches your binary at High integrity.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
     commands: [
@@ -626,6 +634,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
     phase: 'finding',
     summary: 'CVE-2021-36934 — any user reads SAM via a shadow copy.',
     affects: 'Windows 10 1809 – 21H1 and Windows 11 21H2, pre-patch (patched Aug 2021).',
+    versions: range('win10-1809', 'win11-21h2'),
     description: r`On affected Windows 10/11 builds the ACLs on C:\Windows\System32\config\SAM, SYSTEM and SECURITY mistakenly granted BUILTIN\Users read access. A non-admin can read these hives out of a Volume Shadow Copy and extract the local-admin hash offline — no SeBackup, no admin token required. Mitigated by patching, fixing the ACLs, and deleting existing shadow copies.`,
     tools: [
       { name: 'impacket-secretsdump', url: 'https://github.com/fortra/impacket' },
@@ -1015,6 +1024,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
     phase: 'finding',
     summary: 'AFD for WinSock LPE on Win11 22H2 / Server 2022.',
     affects: 'Windows 11 22H2 and Server 2022, unpatched (pre-Jan 2023).',
+    versions: ['win11-22h2', 'srv2022'],
     description: r`An elevation-of-privilege flaw in the Ancillary Function Driver for WinSock (afd.sys). The widely-used public PoC abuses an arbitrary write to swap a token, taking an unprivileged process to SYSTEM on Windows 11 22H2 and Server 2022. Fast and reliable on vulnerable builds.`,
     tools: [{ name: 'chompie1337 PoC', url: 'https://github.com/chompie1337/Windows_LPE_AFD_CVE-2023-21768' }],
     mitre: mitre('T1068'),
@@ -1029,6 +1039,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
     phase: 'finding',
     summary: 'Win32k type confusion → SYSTEM (in-the-wild).',
     affects: 'Windows 10 1809–20H2 / Server 2019–20H2, unpatched (pre-Feb 2021).',
+    versions: [...range('win10-1809', 'win10-20h2'), 'srv2019'],
     description: r`A Win32k elevation-of-privilege via a user-mode callback type confusion (NtUserConsoleControl / xxxClientAllocWindowClassExtraBytes) that yields kernel read/write and a token swap to SYSTEM. Originally exploited in the wild by the Bitter APT; reliable public PoCs exist for the affected Windows 10 builds.`,
     tools: [{ name: 'KaLendsi PoC', url: 'https://github.com/KaLendsi/CVE-2021-1732-Exploit' }],
     mitre: mitre('T1068'),
@@ -1043,6 +1054,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
     phase: 'finding',
     summary: 'BITS arbitrary file move → SYSTEM, no SeImpersonate.',
     affects: 'Windows 7 – Windows 10 / Server 2008–2019, unpatched (pre-Mar 2020).',
+    versions: [...range('win7', 'win10-2004'), 'srv2008', 'srv2012', 'srv2016', 'srv2019'],
     description: r`A symlink / arbitrary-file-move flaw in the Background Intelligent Transfer Service (BITS) that itm4n's exploit turns into an arbitrary file write as SYSTEM, then code execution. Notable for working from a plain user without SeImpersonatePrivilege, across a wide range of Windows 7–10 builds.`,
     tools: [{ name: 'itm4n CVE-2020-0787 PoC', url: 'https://github.com/itm4n/CVE-2020-0787-BitsArbitraryFileMove' }],
     mitre: mitre('T1068'),
@@ -1057,6 +1069,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
     phase: 'finding',
     summary: 'UAC certificate dialog → SYSTEM browser → shell.',
     affects: 'Windows 7–10 / Server 2008–2019, unpatched (pre-Nov 2019).',
+    versions: [...range('win7', 'win10-1909'), 'srv2008', 'srv2012', 'srv2016', 'srv2019'],
     description: r`The Windows Certificate Dialog in the hhupd.exe UAC prompt failed to drop privileges when following the certificate's "Issued by" hyperlink. Clicking it opens Internet Explorer as SYSTEM; from there a Save-As / file dialog launches cmd.exe as SYSTEM. A famous one-click GUI escalation on unpatched Windows 7–10 / 2008–2019.`,
     tools: [{ name: 'CVE-2019-1388 writeup', url: 'https://github.com/jas502n/CVE-2019-1388' }],
     mitre: mitre('T1548.002'),

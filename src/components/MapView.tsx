@@ -25,6 +25,7 @@ import { NodeDetailPanel } from './NodeDetailPanel';
 import { EdgeDetailPanel, type EdgeDetail } from './EdgeDetailPanel';
 import { SearchBox } from './SearchBox';
 import { Legend } from './Legend';
+import { WINDOWS_VERSIONS } from '../data/windows-versions';
 import { CloseIcon, SearchIcon } from '../ui/icons';
 
 /**
@@ -130,18 +131,25 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
     return set;
   }, [hoveredId, rendered, model.rootId]);
 
-  // Filter: dim technique nodes that don't match the active phase chips.
+  // Filter: dim technique nodes that don't match the active phase chips / target version.
   const [phaseFilter, setPhaseFilter] = useState<ReadonlySet<string>>(new Set());
+  const [versionFilter, setVersionFilter] = useState<string | null>(null);
   const [toolsOpen, setToolsOpen] = useState(false);
+  // Only maps that tag nodes with `versions` (currently the PE map) get the selector.
+  const versionAware = useMemo(() => map.nodes.some((n) => n.versions && n.versions.length > 0), [map]);
 
   const isDimmed = useCallback(
     (id: string) => {
-      if (phaseFilter.size === 0) return false;
+      if (phaseFilter.size === 0 && !versionFilter) return false;
       const def = model.nodes.get(id);
       if (!def || def.kind === 'category' || def.kind === 'start' || def.kind === 'goal') return false;
-      return !phaseFilter.has(def.phase);
+      if (phaseFilter.size > 0 && !phaseFilter.has(def.phase)) return true;
+      // A node with a restricted `versions` set that excludes the selected target is
+      // dimmed; an untagged node (applies to all versions) always passes.
+      if (versionFilter && def.versions && !def.versions.includes(versionFilter)) return true;
+      return false;
     },
-    [model, phaseFilter],
+    [model, phaseFilter, versionFilter],
   );
 
   // Picking a node (by click or expand) makes it THE selected node and the lit
@@ -393,7 +401,7 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
     else next.add(key);
     return next;
   };
-  const filterActive = phaseFilter.size > 0;
+  const filterActive = phaseFilter.size > 0 || versionFilter != null;
 
   return (
     <GraphInteractionProvider value={interaction}>
@@ -443,6 +451,36 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
               </button>
             </div>
             <div className="pointer-events-auto flex max-w-[min(94vw,660px)] flex-wrap items-center justify-center gap-1 rounded-xl border border-border bg-panel/75 px-2 py-1.5 shadow-[var(--shadow-card)] backdrop-blur-xl">
+              {versionAware && (
+                <>
+                  <label className="flex items-center gap-1.5 text-[11px] text-ink-dim">
+                    <span className="text-ink-faint">Target</span>
+                    <select
+                      value={versionFilter ?? ''}
+                      onChange={(e) => setVersionFilter(e.target.value || null)}
+                      title="Dim techniques that don't apply to this Windows version"
+                      className="rounded-md border border-border bg-bg-soft px-1.5 py-0.5 text-[11px] text-ink outline-none focus:border-border-strong"
+                    >
+                      <option value="">All versions</option>
+                      <optgroup label="Client">
+                        {WINDOWS_VERSIONS.filter((v) => v.family === 'client').map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.label}
+                          </option>
+                        ))}
+                      </optgroup>
+                      <optgroup label="Server">
+                        {WINDOWS_VERSIONS.filter((v) => v.family === 'server').map((v) => (
+                          <option key={v.id} value={v.id}>
+                            {v.label}
+                          </option>
+                        ))}
+                      </optgroup>
+                    </select>
+                  </label>
+                  <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
+                </>
+              )}
               {map.phases.map((p) => (
                 <button
                   key={p.id}
@@ -460,7 +498,10 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
               {filterActive && (
                 <button
                   type="button"
-                  onClick={() => setPhaseFilter(new Set())}
+                  onClick={() => {
+                    setPhaseFilter(new Set());
+                    setVersionFilter(null);
+                  }}
                   className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-ink-dim transition-colors hover:text-ink"
                 >
                   Clear
