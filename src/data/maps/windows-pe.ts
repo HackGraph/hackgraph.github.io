@@ -17,11 +17,11 @@ const anchorNodes: TechniqueNodeDef[] = [
   },
   {
     id: 'pe-enum',
-    label: 'Triage — Who Am I?',
+    label: 'Account Triage',
     phase: 'triage',
-    summary: 'whoami /priv & /groups first — it decides everything.',
+    summary: 'Identify the account, its privileges, and its groups.',
     description:
-      'Before any tooling, answer one question: what is this account? whoami /priv and whoami /groups resolve most boxes in seconds. A service account holding SeImpersonate goes straight to a Potato; an Administrators member filtered to medium integrity just needs a UAC bypass; a privileged group or token is a power you already hold. Only a genuinely unprivileged user has to enumerate the host and hunt for a weakness — and even then you work the findings in priority order, cheapest and quietest first.',
+      'Establish the security context of the current account before anything else. whoami /priv and whoami /groups determine which path applies: a privileged token or group, an administrator restricted by UAC, or an unprivileged user who must enumerate the host for a misconfiguration.',
     tools: [
       { name: 'winPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
       { name: 'Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },

@@ -34,12 +34,12 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   //   B. pe-cat-uac    — a filtered admin (just bypass UAC)
   //   C. pe-cat-enum   — unprivileged; enumerate, then a priority ladder of rungs
   //                      (① pe-cat-creds  ② pe-cat-services  ③ pe-cat-kernel)
-  { id: 'pe-cat-tokens', label: 'A Power You Already Hold', phase: 'hold', kind: 'category', summary: 'whoami /priv & /groups — a right you can abuse now.', description: 'Triage shows you already hold something dangerous: a token privilege (SeImpersonate → Potato, SeBackup, SeDebug, SeTakeOwnership, SeLoadDriver, SeManageVolume) or membership in a powerful local group (Backup / Server / Print Operators, DnsAdmins, Hyper-V Admins). No hunting required — abuse the right you have.' },
-  { id: 'pe-cat-uac', label: 'Filtered Admin (UAC)', phase: 'admin', kind: 'category', summary: "Already admin — just filtered to medium integrity.", description: 'whoami /groups shows you in local Administrators, but your token is filtered to Medium integrity by UAC. You do not need a privesc vector at all — abuse an auto-elevating, Microsoft-signed binary to run at High integrity with no prompt. This unfilters an existing admin; it does nothing for a standard user.' },
-  { id: 'pe-cat-enum', label: 'Unprivileged — Enumerate', phase: 'finding', kind: 'category', summary: 'No shortcut: hunt a weakness, cheap → loud.', description: 'You hold no useful privilege, group, or admin membership, so you have to find a misconfiguration. Run automated enumeration (winPEAS / PrivescCheck) and work the findings in priority order — quietest and cheapest first, loudest and riskiest last: ① stored credentials, ② a hijackable privileged execution, ③ a kernel / known-CVE exploit.' },
-  { id: 'pe-cat-creds', label: '① Stored Credentials', phase: 'finding', kind: 'category', summary: 'Often the real path — secrets on disk, registry, memory.', description: 'First thing to check, and frequently the actual win: credentials you can replay as a more privileged user — SAM / LSASS, DPAPI, autologon and unattended-install passwords, saved runas creds, and the HiveNightmare shadow-copy read. Quiet, and several need no admin first.' },
-  { id: 'pe-cat-services', label: '② Hijack a Privileged Execution', phase: 'finding', kind: 'category', summary: 'Make a SYSTEM service / task / installer run your code.', description: 'A privileged context will run a binary you control: a weak service ACL or unquoted path, a writable service binary/DLL or registry key, a writable scheduled task or autorun, or the AlwaysInstallElevated MSI policy. Reliable, but you often wait for a restart, logon, or trigger.' },
-  { id: 'pe-cat-kernel', label: '③ Kernel / CVE (last resort)', phase: 'finding', kind: 'category', summary: 'systeminfo + WES-NG → a public LPE exploit.', description: 'When config and creds are clean, fall back to memory corruption: map the build and hotfixes to a known kernel/privilege CVE and run the public exploit. Powerful but loud and BSOD-prone — the last rung of the ladder, for older unpatched hosts.' },
+  { id: 'pe-cat-tokens', label: 'Privileged Users', phase: 'hold', kind: 'category', summary: 'Accounts holding a privileged token or group.', description: 'The account already holds a dangerous token privilege (SeImpersonate, SeBackup, SeDebug, SeTakeOwnership, SeLoadDriver, SeManageVolume) or membership in a powerful local group (Backup, Server, or Print Operators, DnsAdmins, Hyper-V Administrators).' },
+  { id: 'pe-cat-uac', label: 'Restricted Admin (UAC)', phase: 'admin', kind: 'category', summary: 'Local administrators filtered to medium integrity.', description: 'A member of local Administrators running at medium integrity under User Account Control. A UAC bypass restores the high-integrity token. Applies only to an existing administrator, not a standard user.' },
+  { id: 'pe-cat-enum', label: 'Unprivileged Users', phase: 'finding', kind: 'category', summary: 'Standard accounts with no inherent privilege.', description: 'The account holds no useful privilege, group, or administrator membership. Enumerate the host for misconfigurations: stored credentials, weak services and tasks, and kernel exploits as a last resort.' },
+  { id: 'pe-cat-creds', label: 'Stored Credentials', phase: 'finding', kind: 'category', summary: 'Reusable secrets left on the host.', description: 'Credentials recoverable from disk, the registry, or memory — SAM and LSASS, DPAPI, autologon and unattended-install passwords, saved credentials, and the HiveNightmare shadow-copy read.' },
+  { id: 'pe-cat-services', label: 'Service & Task Misconfigurations', phase: 'finding', kind: 'category', summary: 'Weak services, scheduled tasks, and installer policy.', description: 'A privileged context runs a binary the account controls — weak service permissions, unquoted paths, writable binaries, DLLs or registry keys, writable scheduled tasks and autoruns, or the AlwaysInstallElevated policy.' },
+  { id: 'pe-cat-kernel', label: 'Kernel Exploits', phase: 'finding', kind: 'category', summary: 'Unpatched kernel and driver vulnerabilities.', description: 'Memory-corruption exploits against an unpatched kernel or a vulnerable signed driver. Powerful but unstable, used as a last resort on older hosts where configuration and credential vectors are absent.' },
   {
     id: 'pe-kernel-enum',
     label: 'Enumerate Missing Patches',
@@ -814,66 +814,62 @@ export const peTechniqueEdges: AttackEdge[] = [
   // ── Lane C, rung ③: kernel / known-CVE ──────────────────────────────────────
   { source: 'pe-cat-kernel', target: 'pe-kernel-enum' },
 
-  // Semantic transitions carry a shared `rel` (data/relationships.ts) so each step
-  // gets a consistent edge-panel explanation; `label` keeps the on-graph caption.
+  // Transitions carry a shared `rel` (data/relationships.ts) that drives the
+  // edge-panel explanation; no on-graph captions.
 
-  // ── Lane A cashes out: each privilege/group has its own capability ──────────
-  { source: 'pe-seimpersonate-potato', target: 'nt-system', label: 'impersonate a SYSTEM token', rel: 'host-exec' },
-  { source: 'pe-sebackup-restore', target: 'pe-prim-cred-reuse', label: 'read SAM → hashes', rel: 'cred-reuse' },
-  { source: 'pe-backup-operators', target: 'pe-prim-cred-reuse', label: 'SeBackup → read SAM', rel: 'cred-reuse' },
-  { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', label: 'dump LSASS creds', rel: 'cred-reuse' },
-  { source: 'pe-setakeownership', target: 'pe-prim-trigger', label: 'replace utilman/sethc', rel: 'enables' },
-  { source: 'pe-semanagevolume', target: 'pe-prim-trigger', label: 'plant a System32 DLL', rel: 'enables' },
-  { source: 'pe-seloaddriver', target: 'pe-prim-kernel-exec', label: 'BYOVD', rel: 'enables' },
-  { source: 'pe-print-operators', target: 'pe-seloaddriver', label: 'grants SeLoadDriver', rel: 'enables' },
-  { source: 'pe-server-operators', target: 'pe-prim-service-exec', label: 'reconfig DC service', rel: 'enables' },
-  { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', label: 'plugin DLL → DNS svc', rel: 'enables' },
-  { source: 'pe-hyperv-admins', target: 'nt-system', label: 'vmms TOCTOU CVE', rel: 'host-exec' },
+  // Privileged Users -> outcome.
+  { source: 'pe-seimpersonate-potato', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-sebackup-restore', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-backup-operators', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-setakeownership', target: 'pe-prim-trigger', rel: 'enables' },
+  { source: 'pe-semanagevolume', target: 'pe-prim-trigger', rel: 'enables' },
+  { source: 'pe-seloaddriver', target: 'pe-prim-kernel-exec', rel: 'enables' },
+  { source: 'pe-print-operators', target: 'pe-seloaddriver', rel: 'enables' },
+  { source: 'pe-server-operators', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-hyperv-admins', target: 'nt-system', rel: 'host-exec' },
 
-  // ── Lane B cashes out: UAC bypass → high-integrity admin ────────────────────
+  // Restricted Admin -> outcome.
   { source: 'pe-uac-fodhelper', target: 'pe-prim-uac', rel: 'enables' },
   { source: 'pe-uac-eventvwr', target: 'pe-prim-uac', rel: 'enables' },
-  { source: 'pe-prim-uac', target: 'nt-system', label: 'high-integrity admin', rel: 'host-exec' },
+  { source: 'pe-prim-uac', target: 'nt-system', rel: 'host-exec' },
 
-  // ── Rung ① cashes out: every credential converges on the reuse/loop hub ─────
-  { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', label: 'local-admin hash', rel: 'cred-reuse' },
-  { source: 'pe-hivenightmare', target: 'pe-prim-cred-reuse', label: 'local-admin hash', rel: 'cred-reuse' },
+  // Stored Credentials -> reuse hub.
+  { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-hivenightmare', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
   { source: 'pe-dpapi-creds', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
   { source: 'pe-stored-creds', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
   { source: 'pe-config-password-hunt', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
-  { source: 'pe-winlogon-autologon', target: 'pe-prim-cred-reuse', label: 'cleartext admin pw', rel: 'cred-reuse' },
+  { source: 'pe-winlogon-autologon', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
 
-  // ── Rung ② cashes out: service / auto-run mechanisms ────────────────────────
-  // Service ACLs, a writable service registry key, a PATH DLL, PrintNightmare, and
-  // the Server Operators/DnsAdmins groups all converge on one outcome.
+  // Service & Task Misconfigurations -> mechanisms.
   { source: 'pe-unquoted-service-path', target: 'pe-prim-service-exec', rel: 'enables' },
   { source: 'pe-weak-service-perms', target: 'pe-prim-service-exec', rel: 'enables' },
   { source: 'pe-insecure-service-binary', target: 'pe-prim-service-exec', rel: 'enables' },
   { source: 'pe-service-dll-hijack', target: 'pe-prim-service-exec', rel: 'enables' },
-  { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', label: 'rewrite ImagePath', rel: 'enables' },
-  { source: 'pe-path-dll-hijack', target: 'pe-prim-service-exec', label: 'service loads planted DLL', rel: 'enables' },
-  { source: 'pe-printnightmare', target: 'pe-prim-service-exec', label: 'spooler loads your DLL', rel: 'enables' },
-  { source: 'pe-mssql-xpcmdshell', target: 'pe-seimpersonate-potato', label: 'svc acct has SeImpersonate', rel: 'enables' },
+  { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-path-dll-hijack', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-printnightmare', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-mssql-xpcmdshell', target: 'pe-seimpersonate-potato', rel: 'enables' },
   { source: 'pe-autorun-writable', target: 'pe-prim-trigger', rel: 'enables' },
   { source: 'pe-scheduled-task-abuse', target: 'pe-prim-trigger', rel: 'enables' },
-  { source: 'pe-always-install-elevated', target: 'nt-system', label: 'MSI runs as SYSTEM', rel: 'host-exec' },
+  { source: 'pe-always-install-elevated', target: 'nt-system', rel: 'host-exec' },
 
-  // ── Rung ③ cashes out: kernel-mode execution ────────────────────────────────
+  // Kernel Exploits -> mechanism.
   { source: 'pe-kernel-enum', target: 'pe-kernel-exploit', rel: 'enables' },
   { source: 'pe-kernel-exploit', target: 'pe-prim-kernel-exec', rel: 'enables' },
 
-  // ── Mechanisms → SYSTEM ─────────────────────────────────────────────────────
+  // Mechanisms -> SYSTEM.
   { source: 'pe-prim-service-exec', target: 'nt-system', rel: 'host-exec' },
   { source: 'pe-prim-trigger', target: 'nt-system', rel: 'host-exec' },
   { source: 'pe-prim-kernel-exec', target: 'nt-system', rel: 'host-exec' },
 
-  // ── Loot & Loop: the recovered credential is the iterative heart of privesc ──
-  // Admin cred → SYSTEM. Non-admin cred → a new principal you re-triage (back to the
-  // gate), or replay host-to-host with no domain.
-  { source: 'pe-prim-cred-reuse', target: 'nt-system', label: 'admin cred → runas / PtH', rel: 'host-exec' },
-  { source: 'pe-prim-cred-reuse', target: 'pe-enum', label: 're-triage as the new user', rel: 'cred-reuse' },
-  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-local-pth', label: 'shared local admin', rel: 'cred-reuse' },
-  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-remote-exec', label: 'reuse on a neighbour', rel: 'cred-reuse' },
+  // Recovered credentials: SYSTEM, re-triage as a new account, or move laterally.
+  { source: 'pe-prim-cred-reuse', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-enum', rel: 'cred-reuse' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-local-pth', rel: 'cred-reuse' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-remote-exec', rel: 'cred-reuse' },
   { source: 'pe-lateral-local-pth', target: 'pe-lateral-remote-exec', rel: 'cred-reuse' },
-  { source: 'pe-lateral-remote-exec', target: 'nt-system', label: 'SYSTEM on the next host', rel: 'host-exec' },
+  { source: 'pe-lateral-remote-exec', target: 'nt-system', rel: 'host-exec' },
 ];
