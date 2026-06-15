@@ -796,63 +796,68 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-uac', target: 'pe-uac-fodhelper' },
   { source: 'pe-cat-uac', target: 'pe-uac-eventvwr' },
 
+  // Semantic transitions carry a shared `rel` from the cross-domain relationship
+  // vocabulary (data/relationships.ts) — same framework the AD map uses — so every
+  // path-step gets a consistent edge-panel explanation. An explicit `label` keeps the
+  // specific on-graph caption while inheriting the canonical description.
+
   // ── Kernel branch -> "Kernel-Mode Execution" hub ────────────────────────────
-  { source: 'pe-kernel-enum', target: 'pe-kernel-exploit' },
-  { source: 'pe-kernel-exploit', target: 'pe-prim-kernel-exec' },
-  { source: 'pe-print-operators', target: 'pe-seloaddriver', label: 'grants SeLoadDriver' },
-  { source: 'pe-seloaddriver', target: 'pe-prim-kernel-exec', label: 'BYOVD' },
-  { source: 'pe-prim-kernel-exec', target: 'nt-system' },
+  { source: 'pe-kernel-enum', target: 'pe-kernel-exploit', rel: 'enables' },
+  { source: 'pe-kernel-exploit', target: 'pe-prim-kernel-exec', rel: 'enables' },
+  { source: 'pe-print-operators', target: 'pe-seloaddriver', label: 'grants SeLoadDriver', rel: 'enables' },
+  { source: 'pe-seloaddriver', target: 'pe-prim-kernel-exec', label: 'BYOVD', rel: 'enables' },
+  { source: 'pe-prim-kernel-exec', target: 'nt-system', rel: 'host-exec' },
 
   // ── Service-config control -> "Service Executes Your Code" hub ──────────────
   // Converges service ACLs, a writable service registry key, Server Operators, and
   // DnsAdmins — four primitives from THREE different source folders, one outcome.
-  { source: 'pe-unquoted-service-path', target: 'pe-prim-service-exec' },
-  { source: 'pe-weak-service-perms', target: 'pe-prim-service-exec' },
-  { source: 'pe-insecure-service-binary', target: 'pe-prim-service-exec' },
-  { source: 'pe-service-dll-hijack', target: 'pe-prim-service-exec' },
-  { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', label: 'rewrite ImagePath' },
-  { source: 'pe-server-operators', target: 'pe-prim-service-exec', label: 'reconfig DC service' },
-  { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', label: 'plugin DLL → DNS svc' },
-  { source: 'pe-path-dll-hijack', target: 'pe-prim-service-exec', label: 'service loads planted DLL' },
-  { source: 'pe-printnightmare', target: 'pe-prim-service-exec', label: 'spooler loads your DLL' },
-  { source: 'pe-prim-service-exec', target: 'nt-system' },
+  { source: 'pe-unquoted-service-path', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-weak-service-perms', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-insecure-service-binary', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-service-dll-hijack', target: 'pe-prim-service-exec', rel: 'enables' },
+  { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', label: 'rewrite ImagePath', rel: 'enables' },
+  { source: 'pe-server-operators', target: 'pe-prim-service-exec', label: 'reconfig DC service', rel: 'enables' },
+  { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', label: 'plugin DLL → DNS svc', rel: 'enables' },
+  { source: 'pe-path-dll-hijack', target: 'pe-prim-service-exec', label: 'service loads planted DLL', rel: 'enables' },
+  { source: 'pe-printnightmare', target: 'pe-prim-service-exec', label: 'spooler loads your DLL', rel: 'enables' },
+  { source: 'pe-prim-service-exec', target: 'nt-system', rel: 'host-exec' },
 
   // ── Token impersonation -> Potato (its own convergence node) ────────────────
-  { source: 'pe-mssql-xpcmdshell', target: 'pe-seimpersonate-potato', label: 'svc acct has SeImpersonate' },
-  { source: 'pe-seimpersonate-potato', target: 'nt-system' },
+  { source: 'pe-mssql-xpcmdshell', target: 'pe-seimpersonate-potato', label: 'svc acct has SeImpersonate', rel: 'enables' },
+  { source: 'pe-seimpersonate-potato', target: 'nt-system', rel: 'host-exec' },
 
   // ── Auto-run / accessibility -> "Hijack a Privileged Auto-Run" hub ──────────
-  { source: 'pe-autorun-writable', target: 'pe-prim-trigger' },
-  { source: 'pe-scheduled-task-abuse', target: 'pe-prim-trigger' },
-  { source: 'pe-setakeownership', target: 'pe-prim-trigger', label: 'replace utilman/sethc' },
-  { source: 'pe-prim-trigger', target: 'nt-system' },
+  { source: 'pe-autorun-writable', target: 'pe-prim-trigger', rel: 'enables' },
+  { source: 'pe-scheduled-task-abuse', target: 'pe-prim-trigger', rel: 'enables' },
+  { source: 'pe-setakeownership', target: 'pe-prim-trigger', label: 'replace utilman/sethc', rel: 'enables' },
+  { source: 'pe-prim-trigger', target: 'nt-system', rel: 'host-exec' },
 
   // ── Read-anything -> "Read Locked Files" hub -> dump -> reuse ────────────────
   // Backup Operators (group) and SeBackup (token) both reach the same read primitive.
-  { source: 'pe-sebackup-restore', target: 'pe-prim-file-read' },
-  { source: 'pe-backup-operators', target: 'pe-prim-file-read', label: 'group grants SeBackup' },
-  { source: 'pe-prim-file-read', target: 'pe-sam-system-dump', label: 'read SAM/SYSTEM/NTDS' },
+  { source: 'pe-sebackup-restore', target: 'pe-prim-file-read', rel: 'enables' },
+  { source: 'pe-backup-operators', target: 'pe-prim-file-read', label: 'group grants SeBackup', rel: 'enables' },
+  { source: 'pe-prim-file-read', target: 'pe-sam-system-dump', label: 'read SAM/SYSTEM/NTDS', rel: 'enables' },
 
   // ── Credential access -> "Reuse Recovered Credentials" hub -> SYSTEM ─────────
-  { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', label: 'local-admin hash' },
-  { source: 'pe-hivenightmare', target: 'pe-prim-cred-reuse', label: 'local-admin hash' },
-  { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', label: 'LSASS creds' },
-  { source: 'pe-dpapi-creds', target: 'pe-prim-cred-reuse' },
-  { source: 'pe-stored-creds', target: 'pe-prim-cred-reuse' },
-  { source: 'pe-config-password-hunt', target: 'pe-prim-cred-reuse' },
-  { source: 'pe-winlogon-autologon', target: 'pe-prim-cred-reuse', label: 'cleartext admin pw' },
-  { source: 'pe-prim-cred-reuse', target: 'nt-system', label: 'runas / pass-the-hash' },
+  { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', label: 'local-admin hash', rel: 'cred-reuse' },
+  { source: 'pe-hivenightmare', target: 'pe-prim-cred-reuse', label: 'local-admin hash', rel: 'cred-reuse' },
+  { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', label: 'LSASS creds', rel: 'cred-reuse' },
+  { source: 'pe-dpapi-creds', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-stored-creds', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-config-password-hunt', target: 'pe-prim-cred-reuse', rel: 'cred-reuse' },
+  { source: 'pe-winlogon-autologon', target: 'pe-prim-cred-reuse', label: 'cleartext admin pw', rel: 'cred-reuse' },
+  { source: 'pe-prim-cred-reuse', target: 'nt-system', label: 'runas / pass-the-hash', rel: 'host-exec' },
 
   // ── Recovered creds also move you sideways — no domain required ──────────────
-  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-local-pth', label: 'shared local admin' },
-  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-remote-exec', label: 'reuse on a neighbour' },
-  { source: 'pe-lateral-local-pth', target: 'pe-lateral-remote-exec' },
-  { source: 'pe-lateral-remote-exec', target: 'nt-system', label: 'SYSTEM on the next host' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-local-pth', label: 'shared local admin', rel: 'cred-reuse' },
+  { source: 'pe-prim-cred-reuse', target: 'pe-lateral-remote-exec', label: 'reuse on a neighbour', rel: 'cred-reuse' },
+  { source: 'pe-lateral-local-pth', target: 'pe-lateral-remote-exec', rel: 'cred-reuse' },
+  { source: 'pe-lateral-remote-exec', target: 'nt-system', label: 'SYSTEM on the next host', rel: 'host-exec' },
 
   // ── Self-contained one-shots straight to SYSTEM ─────────────────────────────
-  { source: 'pe-always-install-elevated', target: 'nt-system' },
-  { source: 'pe-semanagevolume', target: 'nt-system', label: 'DLL into System32' },
-  { source: 'pe-hyperv-admins', target: 'nt-system' },
-  { source: 'pe-uac-fodhelper', target: 'nt-system' },
-  { source: 'pe-uac-eventvwr', target: 'nt-system' },
+  { source: 'pe-always-install-elevated', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-semanagevolume', target: 'nt-system', label: 'DLL into System32', rel: 'host-exec' },
+  { source: 'pe-hyperv-admins', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-uac-fodhelper', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-uac-eventvwr', target: 'nt-system', rel: 'host-exec' },
 ];

@@ -61,6 +61,22 @@ cloud, network), create a sibling `MapDefinition` with its own phases and regist
 `src/data/index.ts` — it appears in the header selector automatically; the engine is
 map-agnostic.
 
+**One framework, many knowledge sets.** Everything about *pathfinding* — visibility,
+layout, loop-unrolling, the lit-path highlight, search, deep-linking — lives in the
+shared engine (`src/graph/*`) and never special-cases a map. Maps differ only in their
+*knowledge nodes* (the techniques) and presentation (phase colors). So every map reuses
+the same domain-independent conventions, and new maps should too:
+
+- **Convergence hubs** (`hub: true`) — model "you now hold X" capability/state nodes that
+  many techniques funnel through, rather than each leaf dead-ending at the goal. This is
+  what makes a map read as a navigable attack path instead of a folder tree.
+- **The relationship vocabulary** (`src/data/relationships.ts`) — give semantic edges a
+  `rel` from the cross-domain CORE (`host-exec`, `cred-reuse`, `enables`) so every
+  path-step shows a consistent explanation. Add a new per-domain section there instead of
+  inventing per-edge wording inline; an explicit edge `label` still overrides the caption.
+- **Node kinds** (`start` / `category` / `technique` / `goal`) and the schema fields are
+  shared — reuse them; don't fork the schema per map.
+
 ## Deploy
 
 `hackgraph.github.io` is an org Pages site served at the root (`base: '/'`). The
