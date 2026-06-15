@@ -7,8 +7,17 @@ const mitre = (id: string): { id: string; url: string } => ({
 });
 
 /**
- * Windows local privilege-escalation techniques (web-verified). All branch from
- * the `pe-enum` hub and (when successful) converge on the `nt-system` goal.
+ * Windows local privilege-escalation techniques (web-verified).
+ *
+ * Shape: `pe-enum` fans out to source-categories (the folders you browse), but the
+ * individual techniques do NOT each dead-end at SYSTEM. Instead they flow THROUGH a
+ * small set of capability/state CONVERGENCE HUBS (`pe-prim-*`, `hub: true`) — the
+ * "you now have X" primitives that actually grant SYSTEM. Crucially each hub draws
+ * from MULTIPLE source-categories (a Backup Operators *group* and the SeBackup
+ * *token* both reach "Read Locked Files"; service ACLs, a writable service registry
+ * key, Server Operators, and DnsAdmins all reach "Service Executes Your Code"), so
+ * the map reads as a navigable attack DAG with shared convergence rather than a flat
+ * folder tree. This mirrors the AD map's hubs (`lateral-movement-cme`, etc.).
  */
 export const peTechniqueNodes: TechniqueNodeDef[] = [
   // Category (grouping) nodes — pe-enum expands into these instead of ~20 techniques.
@@ -525,10 +534,95 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
     opsec: 'The HKCU ms-settings shell-open-command key + fodhelper spawning cmd is a widely-signatured detection. Clean up the key afterward.',
     difficulty: 'easy',
   },
+  {
+    id: 'pe-uac-eventvwr',
+    label: 'UAC Bypass (eventvwr)',
+    phase: 'uac-bypass',
+    summary: 'Hijack the mscfile handler eventvwr.exe auto-elevates.',
+    description: r`eventvwr.exe is an auto-elevating Microsoft-signed binary that opens its .msc snap-in via the HKCU\Software\Classes\mscfile\shell\open\command handler — checked before the HKLM one and never validated. A medium-integrity admin can point that key at an arbitrary command; launching eventvwr.exe then runs it at High integrity with no UAC prompt. Like fodhelper, this elevates an EXISTING admin, not a standard user.`,
+    tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
+    commands: [
+      { label: 'Set the hijack key', code: r`reg add "HKCU\Software\Classes\mscfile\shell\open\command" /d "cmd.exe" /f`, lang: 'cmd' },
+      { label: 'Trigger elevation', code: r`eventvwr.exe`, lang: 'cmd' },
+    ],
+    mitre: mitre('T1548.002'),
+    references: [{ label: 'enigma0x3 — Fileless UAC Bypass via eventvwr', url: 'https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/' }],
+    requires: ['Member of local Administrators running at Medium integrity (default UAC)'],
+    opsec: 'The HKCU mscfile shell-open-command key + eventvwr.exe spawning cmd is a classic, widely-signatured detection. Remove the key afterward.',
+    difficulty: 'easy',
+  },
+
+  // ── Capability / state convergence hubs ─────────────────────────────────────
+  // The "you now have X" primitives. Many techniques from DIFFERENT source folders
+  // funnel through each one before reaching SYSTEM — this is what turns the map from
+  // a folder tree into an attack DAG. Marked hub:true so they stay a single shared
+  // node (never fan into a redundant copy per incoming source).
+  {
+    id: 'pe-prim-service-exec',
+    label: 'Service Executes Your Code',
+    phase: 'service-abuse',
+    hub: true,
+    summary: 'A SYSTEM service launches your payload on (re)start.',
+    description: r`The convergence point of the service-abuse branch: whether you rewrote a binPath, replaced the on-disk EXE, hijacked a DLL it loads, edited the service's registry key, reconfigured it as a Server Operator, or pointed a service plugin at your DLL (DnsAdmins) — the outcome is identical. When the Service Control Manager next starts the service, it runs your code as its account, almost always LocalSystem.`,
+    commands: [
+      { label: 'Trigger the (re)start', code: r`sc stop <service> & sc start <service>`, lang: 'cmd' },
+    ],
+    requires: ['Control over what a privileged service executes', 'Ability to (re)start the service or wait for a reboot'],
+    opsec: 'Service install/change events (7045/7040) plus the service failing to respond, and an unusual child process under services.exe, are high-fidelity signals. Restore the original config afterward.',
+    difficulty: 'easy',
+  },
+  {
+    id: 'pe-prim-kernel-exec',
+    label: 'Kernel-Mode Code Execution',
+    phase: 'kernel-exploit',
+    hub: true,
+    summary: 'Ring-0 execution collapses straight to SYSTEM.',
+    description: r`Where the kernel branch converges: a public kernel-CVE exploit, or a bring-your-own-vulnerable-driver load (via SeLoadDriverPrivilege / Print Operators), gives you code execution in ring 0. From the kernel you can patch your token, steal the SYSTEM token, or spawn a SYSTEM process directly. The most powerful but least stable route — a wrong-build exploit or a blocked driver bugchecks the host.`,
+    mitre: mitre('T1068'),
+    requires: ['A working kernel exploit, or a loadable vulnerable driver, for the exact OS build'],
+    opsec: 'Driver loads and ring-0 token manipulation are top-tier EDR / HVCI detections, and instability risks a visible crash. Prefer a misconfig vector when one exists.',
+    difficulty: 'hard',
+  },
+  {
+    id: 'pe-prim-file-read',
+    label: 'Read Locked Files (ACL Bypass)',
+    phase: 'credential-access',
+    hub: true,
+    summary: 'Read SAM/SYSTEM/NTDS regardless of their ACLs.',
+    description: r`SeBackupPrivilege — held directly, or granted by the Backup Operators group — lets you read any file on the host irrespective of its DACL. That read primitive turns into credentials: copy the SAM + SYSTEM hives on a workstation/server, or ntds.dit on a Domain Controller (via a VSS snapshot), then extract every hash offline.`,
+    mitre: mitre('T1003.002'),
+    requires: ['A read-anything capability — SeBackupPrivilege or equivalent'],
+    opsec: 'The privilege often needs explicit enabling in the token first. reg save / diskshadow / VSS snapshot creation are detectable; offline parsing on the attacker host is not.',
+    difficulty: 'medium',
+  },
+  {
+    id: 'pe-prim-cred-reuse',
+    label: 'Reuse Recovered Credentials',
+    phase: 'credential-access',
+    hub: true,
+    summary: 'Authenticate as a privileged account you recovered.',
+    description: r`The payoff of every credential-access path: a cleartext password, an NT hash, a Kerberos ticket, or a saved credential for a local-admin / privileged account. Replay it — runas /savecred, pass-the-hash, or simply logging in — to execute as that principal. On a domain-joined host these same secrets feed straight back into the Active Directory map for lateral movement.`,
+    mitre: mitre('T1078'),
+    requires: ['A usable credential, hash, ticket, or saved cred for a privileged account'],
+    opsec: 'A new logon as the recovered account (4624/4672) under an unusual process tree is the main signal; pass-the-hash shows NTLM network logons from odd sources.',
+    difficulty: 'medium',
+  },
+  {
+    id: 'pe-prim-trigger',
+    label: 'Hijack a Privileged Auto-Run',
+    phase: 'registry-abuse',
+    hub: true,
+    summary: 'Plant code an elevated context runs automatically.',
+    description: r`Several misconfigs share one shape: a binary or script that a higher-privileged context executes — on a schedule, at logon, or via an accessibility hook (utilman/sethc) — is writable by you, directly or after taking ownership. Overwrite it and wait for, or invoke, the trigger; your payload then runs as that principal. Quieter than a loud exploit, but you may have to wait for the trigger (e.g. an admin logon).`,
+    mitre: mitre('T1547.001'),
+    requires: ['A writable binary/script invoked automatically by a privileged context', 'The trigger fires — logon, schedule, lock screen, or you invoke it'],
+    opsec: 'New/modified autorun, scheduled-task, or accessibility binaries are classic IOCs (Autoruns, Sysmon, Event ID 4698/4702). Overwriting an existing target is quieter than creating one; restore it afterward.',
+    difficulty: 'medium',
+  },
 ];
 
 export const peTechniqueEdges: AttackEdge[] = [
-  // pe-enum -> category nodes
+  // ── pe-enum -> source-category folders (the entry fan-out you browse) ────────
   { source: 'pe-enum', target: 'pe-cat-kernel' },
   { source: 'pe-enum', target: 'pe-cat-services' },
   { source: 'pe-enum', target: 'pe-cat-registry' },
@@ -537,7 +631,7 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-enum', target: 'pe-cat-creds' },
   { source: 'pe-enum', target: 'pe-cat-uac' },
 
-  // category -> technique
+  // ── category -> technique ───────────────────────────────────────────────────
   { source: 'pe-cat-kernel', target: 'pe-kernel-enum' },
   { source: 'pe-cat-services', target: 'pe-unquoted-service-path' },
   { source: 'pe-cat-services', target: 'pe-weak-service-perms' },
@@ -564,33 +658,55 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-creds', target: 'pe-stored-creds' },
   { source: 'pe-cat-creds', target: 'pe-config-password-hunt' },
   { source: 'pe-cat-uac', target: 'pe-uac-fodhelper' },
+  { source: 'pe-cat-uac', target: 'pe-uac-eventvwr' },
 
-  // technique chains / convergence onto SYSTEM
+  // ── Kernel branch -> "Kernel-Mode Execution" hub ────────────────────────────
   { source: 'pe-kernel-enum', target: 'pe-kernel-exploit' },
-  { source: 'pe-kernel-exploit', target: 'nt-system' },
-  { source: 'pe-unquoted-service-path', target: 'nt-system' },
-  { source: 'pe-weak-service-perms', target: 'nt-system' },
-  { source: 'pe-insecure-service-binary', target: 'nt-system' },
-  { source: 'pe-service-dll-hijack', target: 'nt-system' },
+  { source: 'pe-kernel-exploit', target: 'pe-prim-kernel-exec' },
+  { source: 'pe-print-operators', target: 'pe-seloaddriver', label: 'grants SeLoadDriver' },
+  { source: 'pe-seloaddriver', target: 'pe-prim-kernel-exec', label: 'BYOVD' },
+  { source: 'pe-prim-kernel-exec', target: 'nt-system' },
+
+  // ── Service-config control -> "Service Executes Your Code" hub ──────────────
+  // Converges service ACLs, a writable service registry key, Server Operators, and
+  // DnsAdmins — four primitives from THREE different source folders, one outcome.
+  { source: 'pe-unquoted-service-path', target: 'pe-prim-service-exec' },
+  { source: 'pe-weak-service-perms', target: 'pe-prim-service-exec' },
+  { source: 'pe-insecure-service-binary', target: 'pe-prim-service-exec' },
+  { source: 'pe-service-dll-hijack', target: 'pe-prim-service-exec' },
+  { source: 'pe-weak-registry-service', target: 'pe-prim-service-exec', label: 'rewrite ImagePath' },
+  { source: 'pe-server-operators', target: 'pe-prim-service-exec', label: 'reconfig DC service' },
+  { source: 'pe-dnsadmins', target: 'pe-prim-service-exec', label: 'plugin DLL → DNS svc' },
+  { source: 'pe-prim-service-exec', target: 'nt-system' },
+
+  // ── Token impersonation -> Potato (its own convergence node) ────────────────
   { source: 'pe-mssql-xpcmdshell', target: 'pe-seimpersonate-potato', label: 'svc acct has SeImpersonate' },
-  { source: 'pe-always-install-elevated', target: 'nt-system' },
-  { source: 'pe-weak-registry-service', target: 'nt-system' },
-  { source: 'pe-autorun-writable', target: 'nt-system' },
-  { source: 'pe-scheduled-task-abuse', target: 'nt-system' },
   { source: 'pe-seimpersonate-potato', target: 'nt-system' },
-  { source: 'pe-setakeownership', target: 'nt-system' },
-  { source: 'pe-seloaddriver', target: 'nt-system' },
-  { source: 'pe-semanagevolume', target: 'nt-system' },
-  { source: 'pe-sebackup-restore', target: 'pe-sam-system-dump', label: 'read hives' },
-  { source: 'pe-sedebug-lsass', target: 'pe-dpapi-creds', label: 'harvested creds' },
-  { source: 'pe-backup-operators', target: 'pe-sam-system-dump', label: 'SeBackup' },
-  { source: 'pe-server-operators', target: 'nt-system' },
-  { source: 'pe-dnsadmins', target: 'nt-system' },
+
+  // ── Auto-run / accessibility -> "Hijack a Privileged Auto-Run" hub ──────────
+  { source: 'pe-autorun-writable', target: 'pe-prim-trigger' },
+  { source: 'pe-scheduled-task-abuse', target: 'pe-prim-trigger' },
+  { source: 'pe-setakeownership', target: 'pe-prim-trigger', label: 'replace utilman/sethc' },
+  { source: 'pe-prim-trigger', target: 'nt-system' },
+
+  // ── Read-anything -> "Read Locked Files" hub -> dump -> reuse ────────────────
+  // Backup Operators (group) and SeBackup (token) both reach the same read primitive.
+  { source: 'pe-sebackup-restore', target: 'pe-prim-file-read' },
+  { source: 'pe-backup-operators', target: 'pe-prim-file-read', label: 'group grants SeBackup' },
+  { source: 'pe-prim-file-read', target: 'pe-sam-system-dump', label: 'read SAM/SYSTEM/NTDS' },
+
+  // ── Credential access -> "Reuse Recovered Credentials" hub -> SYSTEM ─────────
+  { source: 'pe-sam-system-dump', target: 'pe-prim-cred-reuse', label: 'local-admin hash' },
+  { source: 'pe-sedebug-lsass', target: 'pe-prim-cred-reuse', label: 'LSASS creds' },
+  { source: 'pe-dpapi-creds', target: 'pe-prim-cred-reuse' },
+  { source: 'pe-stored-creds', target: 'pe-prim-cred-reuse' },
+  { source: 'pe-config-password-hunt', target: 'pe-prim-cred-reuse' },
+  { source: 'pe-prim-cred-reuse', target: 'nt-system', label: 'runas / pass-the-hash' },
+
+  // ── Self-contained one-shots straight to SYSTEM ─────────────────────────────
+  { source: 'pe-always-install-elevated', target: 'nt-system' },
+  { source: 'pe-semanagevolume', target: 'nt-system', label: 'DLL into System32' },
   { source: 'pe-hyperv-admins', target: 'nt-system' },
-  { source: 'pe-print-operators', target: 'pe-seloaddriver', label: 'SeLoadDriver' },
-  { source: 'pe-sam-system-dump', target: 'nt-system', label: 'PtH local admin' },
-  { source: 'pe-dpapi-creds', target: 'nt-system' },
-  { source: 'pe-stored-creds', target: 'nt-system' },
-  { source: 'pe-config-password-hunt', target: 'nt-system' },
   { source: 'pe-uac-fodhelper', target: 'nt-system' },
+  { source: 'pe-uac-eventvwr', target: 'nt-system' },
 ];

@@ -53,9 +53,11 @@ const anchorNodes: TechniqueNodeDef[] = [
 const anchorEdges: AttackEdge[] = [{ source: 'pe-start', target: 'pe-enum' }];
 
 /**
- * Windows local privilege-escalation map: low-priv shell -> SYSTEM, branching
- * across kernel, services, registry/autorun, token privileges, privileged
- * groups, credentials, and UAC bypass.
+ * Windows local privilege-escalation map: low-priv shell -> SYSTEM. The entry
+ * fan-out is by source-category (kernel, services, registry/autorun, token
+ * privileges, privileged groups, credentials, UAC), but the techniques then flow
+ * THROUGH shared capability/state convergence hubs (`pe-prim-*`, see pe-techniques)
+ * — so it reads as an attack DAG with cross-cutting convergence, not a folder tree.
  */
 export const windowsPeMap: MapDefinition = {
   id: 'win-pe',
