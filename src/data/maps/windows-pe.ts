@@ -53,31 +53,34 @@ const anchorNodes: TechniqueNodeDef[] = [
 const anchorEdges: AttackEdge[] = [{ source: 'pe-start', target: 'pe-enum' }];
 
 /**
- * Windows local privilege-escalation map: low-priv shell -> SYSTEM. The entry
- * fan-out is by source-category (kernel, services, registry/autorun, token
- * privileges, privileged groups, credentials, UAC), but the techniques then flow
- * THROUGH shared capability/state convergence hubs (`pe-prim-*`, see pe-techniques)
- * — so it reads as an attack DAG with cross-cutting convergence, not a folder tree.
+ * Windows local privilege-escalation map: low-priv shell -> SYSTEM.
+ *
+ * Local privesc is triage-and-pick, not a campaign, so the map is staged as one
+ * left→right funnel rather than a phased AD-style path:
+ *
+ *   Enumerate -> What You Found -> Primitive -> SYSTEM -> Loot & Move
+ *
+ * "What You Found" branches the way enumeration actually reports (dangerous
+ * privileges, group membership, service misconfigs, stored creds, missing patches,
+ * medium-integrity admin); those findings converge on a few shared PRIMITIVES
+ * (`pe-prim-*`, see pe-techniques) which are the only nodes that reach SYSTEM.
+ * Colouring by stage (not by vector type) is what gives it a single readable spine.
  */
 export const windowsPeMap: MapDefinition = {
   id: 'win-pe',
   name: 'Windows Priv Esc',
   tagline: 'From a low-priv shell to NT AUTHORITY\\SYSTEM',
   rootId: 'pe-start',
-  // Warm ANALOGOUS palette matching the red accent (no blue/green/teal).
+  // Phases are escalation STAGES, not vector types — so the map reads as one
+  // left→right spine (enumerate → what you found → the primitive it grants →
+  // SYSTEM → loot & move) instead of a rainbow of parallel silos. Red is reserved
+  // for the lit-path accent.
   phases: [
-    // High-contrast spectrum (matches the AD map): 9 vivid, evenly-spaced hues so
-    // the stages read clearly apart; red stays reserved for the lit-path accent.
-    { id: 'enumeration', label: 'Enumeration', color: '#3f9ae8' },
-    { id: 'kernel-exploit', label: 'Kernel Exploits', color: '#19b0b0' },
-    { id: 'service-abuse', label: 'Service Abuse', color: '#46bd55' },
-    { id: 'registry-abuse', label: 'Registry & Autorun', color: '#9bc23a' },
-    { id: 'credential-access', label: 'Credential Access', color: '#e0b12f' },
-    { id: 'token-privilege', label: 'Token Privileges', color: '#ef8630' },
-    { id: 'group-abuse', label: 'Privileged Groups', color: '#ec5a97' },
-    { id: 'uac-bypass', label: 'UAC Bypass', color: '#b04fda' },
-    { id: 'lateral-movement', label: 'Local Lateral Movement', color: '#cf4fc4' },
+    { id: 'enumeration', label: 'Enumerate', color: '#3f9ae8' },
+    { id: 'finding', label: 'What You Found', color: '#e0b12f' },
+    { id: 'primitive', label: 'Primitive', color: '#ef8630' },
     { id: 'system', label: 'SYSTEM', color: '#5f6ce6' },
+    { id: 'loot', label: 'Loot & Move', color: '#cf4fc4' },
   ],
   nodes: [...anchorNodes, ...peTechniqueNodes],
   edges: [...anchorEdges, ...peTechniqueEdges],

@@ -9,33 +9,37 @@ const mitre = (id: string): { id: string; url: string } => ({
 /**
  * Windows local privilege-escalation techniques (web-verified).
  *
- * Shape: `pe-enum` fans out to source-categories (the folders you browse), but the
- * individual techniques do NOT each dead-end at SYSTEM. Instead they flow THROUGH a
- * small set of capability/state CONVERGENCE HUBS (`pe-prim-*`, `hub: true`) — the
- * "you now have X" primitives that actually grant SYSTEM. Crucially each hub draws
- * from MULTIPLE source-categories (a Backup Operators *group* and the SeBackup
- * *token* both reach "Read Locked Files"; service ACLs, a writable service registry
- * key, Server Operators, and DnsAdmins all reach "Service Executes Your Code"), so
- * the map reads as a navigable attack DAG with shared convergence rather than a flat
- * folder tree. This mirrors the AD map's hubs (`lateral-movement-cme`, etc.).
+ * Staged as a single left→right funnel (phase = escalation STAGE, not vector type):
  *
- * The "Reuse Recovered Credentials" hub also feeds a LOCAL lateral-movement branch
- * (`pe-lateral-*`): privesc is not always an AD pivot — a shared local-admin hash or
- * a recovered service-account credential moves you host-to-host with no domain.
+ *   Enumerate -> What You Found -> Primitive -> SYSTEM -> Loot & Move
+ *
+ * - WHAT YOU FOUND (`finding`): `pe-enum` branches by what enumeration reports —
+ *   dangerous privileges (`pe-cat-tokens`), group membership (`pe-cat-groups`),
+ *   service misconfigs (`pe-cat-services`), auto-runs/installers (`pe-cat-registry`),
+ *   stored creds (`pe-cat-creds`), missing patches (`pe-cat-kernel`), medium-integrity
+ *   admin (`pe-cat-uac`). The folders + their techniques are all this stage.
+ * - PRIMITIVE (`primitive`, `pe-prim-*` + Potato, `hub: true`): the few shared
+ *   capabilities those findings converge on, and the ONLY nodes that reach SYSTEM.
+ *   Each draws from MULTIPLE findings (a Backup Operators *group* and the SeBackup
+ *   *privilege* both reach "Read Protected Files"; service ACLs, a writable service
+ *   registry key, Server Operators and DnsAdmins all reach "Service Runs Your Code").
+ * - LOOT & MOVE (`loot`, `pe-lateral-*`): privesc is not always an AD pivot — a shared
+ *   local-admin hash or a recovered service account moves you host-to-host, no domain.
  */
 export const peTechniqueNodes: TechniqueNodeDef[] = [
   // Category (grouping) nodes — pe-enum expands into these instead of ~20 techniques.
-  { id: 'pe-cat-kernel', label: 'Kernel Exploits', phase: 'kernel-exploit', kind: 'category', summary: 'Driver/kernel flaws → SYSTEM.', description: 'Exploit a vulnerable driver or unpatched kernel to execute in ring 0 and escalate directly to SYSTEM — from public LPE exploits to bring-your-own-vulnerable-driver. Reliable when the host is missing patches.' },
-  { id: 'pe-cat-services', label: 'Service Abuse', phase: 'service-abuse', kind: 'category', summary: 'Weak Windows service configs → SYSTEM.', description: 'Abuse misconfigured services that run as SYSTEM — unquoted service paths, weak service or binary permissions, and writable service executables — to run your payload with their privileges.' },
-  { id: 'pe-cat-registry', label: 'Registry & Autorun', phase: 'registry-abuse', kind: 'category', summary: 'Writable autoruns & install settings.', description: 'Hijack code that runs automatically or elevated — AlwaysInstallElevated MSI installs, writable autorun keys, and startup locations — to get your binary executed with higher privilege.' },
-  { id: 'pe-cat-tokens', label: 'Token Privileges', phase: 'token-privilege', kind: 'category', summary: 'Abuse SeImpersonate & friends → SYSTEM.', description: 'Leverage dangerous token privileges held by service accounts — SeImpersonate/SeAssignPrimaryToken (the Potato family), SeBackup, SeRestore, SeDebug — to impersonate SYSTEM or read protected data.' },
-  { id: 'pe-cat-groups', label: 'Privileged Groups', phase: 'group-abuse', kind: 'category', summary: 'Local group membership → SYSTEM.', description: 'Use membership in powerful local groups — Backup Operators, Hyper-V Administrators, and similar — whose rights can be turned into SYSTEM-level access or credential theft.' },
-  { id: 'pe-cat-creds', label: 'Credential Access', phase: 'credential-access', kind: 'category', summary: 'Loot stored secrets on the host.', description: 'Hunt credentials that enable escalation or lateral movement — unattended-install files, the registry, saved/cached creds, and config files — without needing admin first.' },
-  { id: 'pe-cat-uac', label: 'UAC Bypass', phase: 'uac-bypass', kind: 'category', summary: 'Elevate from medium to high integrity.', description: 'Bypass User Account Control to go from a medium-integrity admin context to a full high-integrity token — auto-elevating binaries and trusted-path/registry hijacks — without a consent prompt.' },
+  // Finding buckets — pe-enum branches by what enumeration actually reports.
+  { id: 'pe-cat-tokens', label: 'Dangerous Privileges', phase: 'finding', kind: 'category', summary: 'whoami /priv — SeImpersonate, SeBackup, SeDebug, …', description: 'Your token holds a privilege that converts to SYSTEM: SeImpersonate / SeAssignPrimaryToken (the Potato family), SeBackup / SeRestore (read any file), SeDebug (open LSASS), SeTakeOwnership, SeLoadDriver, or SeManageVolume. Start from whoami /priv.' },
+  { id: 'pe-cat-groups', label: 'Privileged Groups', phase: 'finding', kind: 'category', summary: 'whoami /groups — Backup/Server/Print Operators, DnsAdmins…', description: 'You belong to a powerful local group whose rights convert to SYSTEM or to credential theft: Backup Operators, Server Operators, DnsAdmins, Hyper-V Administrators, or Print Operators. Start from whoami /groups.' },
+  { id: 'pe-cat-services', label: 'Service Misconfigs', phase: 'finding', kind: 'category', summary: 'Weak service ACLs, unquoted paths, hijackable DLLs.', description: 'Enumeration flagged a SYSTEM service you can influence — a weak binPath ACL, an unquoted path, a writable binary or DLL, or a writable service registry key — so you get to choose what it runs.' },
+  { id: 'pe-cat-registry', label: 'Auto-Runs & Installers', phase: 'finding', kind: 'category', summary: 'Writable autoruns/tasks and AlwaysInstallElevated.', description: 'Code a privileged context launches automatically — Run keys and startup items, scheduled tasks, or an MSI installed with SYSTEM rights via AlwaysInstallElevated — where you control the binary that runs.' },
+  { id: 'pe-cat-creds', label: 'Stored Credentials', phase: 'finding', kind: 'category', summary: 'Secrets on disk, in the registry, and in memory.', description: 'Hunt credentials you can replay as a more privileged user — SAM / LSASS, DPAPI, autologon and unattended-install passwords, saved runas creds, and the HiveNightmare shadow-copy read. Several need no admin first.' },
+  { id: 'pe-cat-kernel', label: 'Missing Patches', phase: 'finding', kind: 'category', summary: 'systeminfo + WES-NG → unpatched kernel/privilege CVEs.', description: 'The host is behind on patches. Map its build and hotfixes to known local privilege-escalation CVEs, then run the matching exploit. Most reliable on older systems where service and token misconfigs are absent.' },
+  { id: 'pe-cat-uac', label: 'Medium-Integrity Admin', phase: 'finding', kind: 'category', summary: 'Admin token filtered by UAC → bypass to High integrity.', description: 'You are already in local Administrators but running at Medium integrity under UAC. Abuse an auto-elevating Windows binary to run code at High integrity with no consent prompt. This elevates an existing admin, not a standard user.' },
   {
     id: 'pe-kernel-enum',
     label: 'Enumerate Missing Patches',
-    phase: 'kernel-exploit',
+    phase: 'finding',
     summary: 'Map OS build/hotfixes to known kernel LPEs.',
     description: r`Collect systeminfo (OS version + installed KBs) and feed it to WES-NG, or run Watson on-host, to list kernel/privilege-escalation CVEs the system is missing patches for. This is the triage step before grabbing a specific exploit binary; prefer it on older/unpatched hosts where service/token misconfigs are absent.`,
     tools: [
@@ -55,7 +59,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-kernel-exploit',
     label: 'Kernel Exploit',
-    phase: 'kernel-exploit',
+    phase: 'finding',
     summary: 'Run a public exploit for an unpatched kernel CVE.',
     description: r`Once a missing-patch CVE is identified, run the matching public exploit to execute code in the kernel and obtain a SYSTEM context (e.g. older targets vulnerable to MS16-032, CVE-2021-1732). Verify the exact build first — wrong-build kernel exploits frequently bugcheck the host.`,
     tools: [{ name: 'SecWiki windows-kernel-exploits', url: 'https://github.com/SecWiki/windows-kernel-exploits' }],
@@ -70,7 +74,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-unquoted-service-path',
     label: 'Unquoted Service Path',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Plant a binary along an unquoted, space-containing service path.',
     description: r`When a service ImagePath contains spaces and is not wrapped in quotes (e.g. C:\Program Files\My App\svc.exe), Windows tries each space-delimited prefix as an executable — C:\Program.exe, then C:\Program Files\My.exe, and so on. If you can write to one of those intermediate directories, drop a malicious binary there and it runs as the service account on next start.`,
     tools: [
@@ -89,7 +93,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-weak-service-perms',
     label: 'Weak Service Permissions (binPath)',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Reconfigure a modifiable service binPath to your command.',
     description: r`If your user holds SERVICE_CHANGE_CONFIG (or SERVICE_ALL_ACCESS) on a SYSTEM service, rewrite its binPath to an arbitrary command, then restart it. The Service Control Manager launches your command as the service account (typically LocalSystem). Find these with accesschk or SharpUp.`,
     tools: [
@@ -109,7 +113,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-insecure-service-binary',
     label: 'Writable Service Binary',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Overwrite a service EXE you can write to.',
     description: r`If the on-disk service executable (or its containing folder) is writable by your user but the service runs as SYSTEM, replace the binary with your payload and restart the service. Distinct from binPath abuse — here the misconfiguration is filesystem ACLs on the EXE rather than the service config.`,
     tools: [
@@ -128,7 +132,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-service-dll-hijack',
     label: 'Service DLL Hijacking',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Plant a DLL a privileged service loads from a writable path.',
     description: r`A SYSTEM service that searches for a DLL by name and finds it in a writable, earlier search-order location (or a missing 'phantom' DLL) will load attacker code into its process. Identify the missing/hijackable module (e.g. with Process Monitor) and drop a matching DLL whose DllMain runs your payload.`,
     tools: [
@@ -146,7 +150,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-mssql-xpcmdshell',
     label: 'MSSQL xp_cmdshell',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Run OS commands as the SQL service account.',
     description: r`With sysadmin access to a local MSSQL instance, enable and call xp_cmdshell to execute OS commands as the SQL Server service account. If that account holds SeImpersonatePrivilege (common for service accounts), chain into a Potato attack for full SYSTEM.`,
     tools: [{ name: 'impacket-mssqlclient', url: 'https://github.com/fortra/impacket' }],
@@ -163,7 +167,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-path-dll-hijack',
     label: 'Writable %PATH% Directory',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Plant a DLL a privileged service resolves by name from %PATH%.',
     description: r`If a directory listed in the system PATH is writable by your user, any privileged process or service that loads a DLL by bare name (no full path) can resolve it from your writable directory if it precedes the legitimate one in the search order. Drop a matching DLL whose DllMain runs your payload; it loads into the privileged process. Distinct from a per-app DLL hijack — here the weakness is a globally writable PATH entry.`,
     tools: [
@@ -183,7 +187,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-printnightmare',
     label: 'PrintNightmare (CVE-2021-34527)',
-    phase: 'service-abuse',
+    phase: 'finding',
     summary: 'Spooler loads an attacker DLL as SYSTEM.',
     description: r`The Print Spooler's RpcAddPrinterDriverEx lets an authenticated user register a printer "driver" DLL that spoolsv.exe (running as SYSTEM) then loads. Run locally against the host's own spooler, the LPE variant points it at a DLL on disk and executes it as SYSTEM. Requires the Print Spooler service to be running; fully mitigated by disabling it or patching.`,
     tools: [
@@ -202,7 +206,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-always-install-elevated',
     label: 'AlwaysInstallElevated',
-    phase: 'registry-abuse',
+    phase: 'finding',
     summary: 'Install a malicious MSI that runs as SYSTEM.',
     description: r`If the AlwaysInstallElevated policy DWORD is set to 1 in BOTH HKLM and HKCU, any user can install an MSI package that executes with SYSTEM privileges. Generate a malicious MSI and install it quietly. Both keys must be set — one alone is not exploitable.`,
     tools: [
@@ -224,7 +228,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
   {
     id: 'pe-weak-registry-service',
     label: 'Weak Service Registry Perms',
-    phase: 'registry-abuse',
+    phase: 'finding',
     summary: 'Rewrite a service ImagePath via a writable registry key.',
     description: r`If your user can write to a service key under HKLM\SYSTEM\CurrentControlSet\Services (even without service-config rights via the SCM), modify the ImagePath value to point at your binary. On next start the SYSTEM service launches your executable. Enumerate writable service keys with accesschk -k.`,
     tools: [{ name: 'accesschk (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk' }],
@@ -240,7 +244,7 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
   {
     id: 'pe-autorun-writable',
     label: 'Writable Autorun',
-    phase: 'registry-abuse',
+    phase: 'finding',
     summary: 'Overwrite an autorun binary that runs as an admin.',
     description: r`Programs referenced by Run/RunOnce registry keys or the Startup folder execute when a user logs on. If an autorun entry points to a binary you can overwrite (or its key is writable), replace it; when a higher-privileged user logs in, your payload runs in their context. Enumerate with Autoruns or winPEAS.`,
     tools: [
@@ -260,7 +264,7 @@ reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, lang: 'cmd' },
   {
     id: 'pe-scheduled-task-abuse',
     label: 'Scheduled Task Abuse',
-    phase: 'registry-abuse',
+    phase: 'finding',
     summary: 'Hijack a task whose binary you can overwrite.',
     description: r`Enumerate scheduled tasks and their actions; if a task runs as SYSTEM (or another privileged user) and invokes a binary/script you can write to, overwrite it with your payload. It executes under the task principal at the next trigger. Tasks running as SYSTEM are the prize.`,
     tools: [
@@ -278,8 +282,9 @@ reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, lang: 'cmd' },
   },
   {
     id: 'pe-seimpersonate-potato',
-    label: 'SeImpersonate → Potato',
-    phase: 'token-privilege',
+    label: 'Token Impersonation (Potato)',
+    phase: 'primitive',
+    hub: true,
     summary: 'Abuse SeImpersonatePrivilege to impersonate a SYSTEM token.',
     description: r`Service accounts (IIS, MSSQL, etc.) typically hold SeImpersonatePrivilege. The 'Potato' family coerces a SYSTEM-level authentication/RPC and impersonates the resulting token to run a command as NT AUTHORITY\SYSTEM. Pick by Windows build: PrintSpoofer (needs Spooler), RoguePotato (1809/2019+, needs an OXID redirector on 135), or GodPotato (Server 2012–2022 / Win8–11 via DCOM).`,
     tools: [
@@ -302,7 +307,7 @@ reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, lang: 'cmd' },
   {
     id: 'pe-sebackup-restore',
     label: 'SeBackup / SeRestore',
-    phase: 'token-privilege',
+    phase: 'finding',
     summary: 'Read protected files (SAM/SYSTEM, NTDS) bypassing ACLs.',
     description: r`SeBackupPrivilege grants read access to any file regardless of its ACL; SeRestorePrivilege grants write. On a workstation/server, copy out the SAM and SYSTEM hives for offline hash extraction. On a Domain Controller, use diskshadow (VSS) + robocopy /b to exfiltrate ntds.dit and dump every domain hash.`,
     tools: [
@@ -324,7 +329,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-setakeownership',
     label: 'SeTakeOwnership',
-    phase: 'token-privilege',
+    phase: 'finding',
     summary: 'Take ownership of a SYSTEM binary, then replace it.',
     description: r`SeTakeOwnershipPrivilege lets you become the owner of any object. Take ownership of a binary that auto-runs as SYSTEM (classic: C:\Windows\System32\utilman.exe or sethc.exe), grant yourself write, and replace it. Trigger it from the logon screen (Ease of Access / Sticky Keys) to get a SYSTEM shell.`,
     tools: [
@@ -345,7 +350,7 @@ icacls C:\Windows\System32\utilman.exe /grant %USERNAME%:F`, lang: 'cmd' },
   {
     id: 'pe-sedebug-lsass',
     label: 'SeDebug → LSASS Dump',
-    phase: 'token-privilege',
+    phase: 'finding',
     summary: 'Open LSASS and dump in-memory credentials.',
     description: r`SeDebugPrivilege lets you open a handle to processes owned by other users, including LSASS. Dump LSASS memory (procdump, comsvcs MiniDump, or mimikatz) and extract cached credentials/hashes/tickets, which frequently include local admin or domain accounts for further escalation.`,
     tools: [
@@ -367,7 +372,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-seloaddriver',
     label: 'SeLoadDriver',
-    phase: 'token-privilege',
+    phase: 'finding',
     summary: 'Load a vulnerable signed driver, exploit it for kernel code exec.',
     description: r`SeLoadDriverPrivilege allows loading kernel-mode drivers. Use EoPLoadDriver to enable the privilege and register a service key under HKCU, then NtLoadDriver a known-vulnerable signed driver (e.g. Capcom.sys) and exploit its arbitrary-kernel-exec to elevate to SYSTEM (a BYOVD pattern).`,
     tools: [
@@ -386,7 +391,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-semanagevolume',
     label: 'SeManageVolume',
-    phase: 'token-privilege',
+    phase: 'finding',
     summary: 'Abuse volume privilege to gain write on C:\\, then DLL hijack.',
     description: r`SeManageVolumePrivilege can be abused (via the public SeManageVolumeExploit) to obtain full write access over the C:\ drive, including C:\Windows\System32. With that, plant a malicious DLL that a SYSTEM process loads (e.g. tzres.dll triggered by systeminfo, or PrintConfig.dll via PrintNotify) to execute as SYSTEM.`,
     tools: [{ name: 'SeManageVolumeExploit', url: 'https://github.com/CsEnox/SeManageVolumeExploit' }],
@@ -401,7 +406,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-backup-operators',
     label: 'Backup Operators',
-    phase: 'group-abuse',
+    phase: 'finding',
     summary: 'Group grants SeBackup/SeRestore → read SAM/NTDS.',
     description: r`Members of the Backup Operators group are granted SeBackupPrivilege and SeRestorePrivilege. Enable them in your token, then read protected hives (SAM/SYSTEM locally, or ntds.dit on a DC via VSS) and dump hashes offline — converging on the same SeBackup/SeRestore tradecraft.`,
     tools: [{ name: 'impacket-secretsdump', url: 'https://github.com/fortra/impacket' }],
@@ -418,7 +423,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-server-operators',
     label: 'Server Operators',
-    phase: 'group-abuse',
+    phase: 'finding',
     summary: 'Reconfigure a DC service binPath to run as SYSTEM.',
     description: r`On Domain Controllers, the Server Operators group can manage services. Reconfigure a SYSTEM service binPath to your command and restart it to execute as SYSTEM on the DC — directly compromising the domain.`,
     tools: [{ name: 'sc (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-config' }],
@@ -435,7 +440,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-dnsadmins',
     label: 'DnsAdmins',
-    phase: 'group-abuse',
+    phase: 'finding',
     summary: 'Load arbitrary DLL into the SYSTEM DNS service.',
     description: r`Members of DnsAdmins can set the ServerLevelPluginDll value via dnscmd, pointing the DNS service at an arbitrary DLL with no path validation. Restarting the DNS service (often on a DC, running as SYSTEM) loads your DLL as SYSTEM. Highly disruptive — the DNS service may crash.`,
     tools: [
@@ -455,7 +460,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-hyperv-admins',
     label: 'Hyper-V Administrators',
-    phase: 'group-abuse',
+    phase: 'finding',
     summary: 'Abuse vmms symlink/TOCTOU (CVE-2018-0952 / CVE-2019-0841).',
     description: r`Hyper-V Administrators can manipulate VM/.vhdx operations performed by vmms.exe as SYSTEM without impersonation. By deleting a .vhdx and planting a hardlink to a protected file, an unpatched host (vulnerable to CVE-2018-0952 / CVE-2019-0841) can be leveraged to gain SYSTEM. Patch-dependent.`,
     tools: [{ name: 'decoder.cloud writeup', url: 'https://decoder.cloud/2020/01/20/from-hyper-v-admin-to-system/' }],
@@ -468,7 +473,7 @@ sekurlsa::logonpasswords`, lang: 'cmd' },
   {
     id: 'pe-print-operators',
     label: 'Print Operators',
-    phase: 'group-abuse',
+    phase: 'finding',
     summary: 'Group holds SeLoadDriverPrivilege → load vulnerable driver.',
     description: r`The Print Operators group is granted SeLoadDriverPrivilege (to install printer drivers). This is the precondition for the SeLoadDriver → BYOVD path: load a known-vulnerable signed driver and exploit it for kernel-mode code execution as SYSTEM.`,
     tools: [{ name: 'EoPLoadDriver', url: 'https://github.com/TarlogicSecurity/EoPLoadDriver' }],
@@ -485,7 +490,7 @@ whoami /priv | findstr /i SeLoadDriver`, lang: 'cmd' },
   {
     id: 'pe-sam-system-dump',
     label: 'SAM & SYSTEM Hive Dump',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'Save SAM+SYSTEM, extract local hashes offline.',
     description: r`With admin/SYSTEM (or SeBackup), save the SAM and SYSTEM registry hives and process them offline to recover local account NTLM hashes. The SYSTEM hive holds the bootkey needed to decrypt SAM. A cracked or passed-the-hash local admin enables lateral movement.`,
     tools: [{ name: 'impacket-secretsdump', url: 'https://github.com/fortra/impacket' }],
@@ -502,7 +507,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-dpapi-creds',
     label: 'DPAPI Secrets',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'Decrypt DPAPI-protected creds/vaults with masterkeys.',
     description: r`Windows Credential Manager entries, browser logins, and vaults are DPAPI-protected. With the user password (or SYSTEM access to the masterkey, or a domain DPAPI backup key) decrypt the masterkey, then the credential blobs. SharpDPAPI / mimikatz automate this.`,
     tools: [
@@ -522,7 +527,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-stored-creds',
     label: 'Stored Credentials (runas)',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'Reuse cmdkey-saved creds via runas /savecred.',
     description: r`cmdkey /list reveals credentials saved in Credential Manager. If an admin credential is stored with /savecred, run commands as that user with runas /savecred without knowing the password — directly inheriting their privileges.`,
     tools: [
@@ -542,7 +547,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-config-password-hunt',
     label: 'unattend.xml / Config Hunting',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'Find cleartext/base64 creds in install & config files.',
     description: r`Unattended-install files (Unattend.xml, sysprep.xml/inf, Autounattend.xml) and app configs frequently leave local-admin or domain-join passwords in cleartext or base64. Search common locations (notably C:\Windows\Panther\) and decode any base64 password blobs to recover usable credentials.`,
     tools: [
@@ -562,7 +567,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-winlogon-autologon',
     label: 'Winlogon Autologon Password',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'Read a cleartext autologon password from the registry.',
     description: r`When automatic logon is configured, Windows stores the account name and its password in cleartext under the Winlogon registry key (DefaultUserName / DefaultPassword, with AutoAdminLogon = 1). Any user can read these values — if the autologon account is a local or domain admin, you have its password directly, no cracking required.`,
     tools: [{ name: 'reg (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/reg' }],
@@ -578,7 +583,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-hivenightmare',
     label: 'HiveNightmare / SeriousSAM',
-    phase: 'credential-access',
+    phase: 'finding',
     summary: 'CVE-2021-36934 — any user reads SAM via a shadow copy.',
     description: r`On affected Windows 10/11 builds the ACLs on C:\Windows\System32\config\SAM, SYSTEM and SECURITY mistakenly granted BUILTIN\Users read access. A non-admin can read these hives out of a Volume Shadow Copy and extract the local-admin hash offline — no SeBackup, no admin token required. Mitigated by patching, fixing the ACLs, and deleting existing shadow copies.`,
     tools: [
@@ -598,7 +603,7 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
   {
     id: 'pe-uac-fodhelper',
     label: 'UAC Bypass (fodhelper)',
-    phase: 'uac-bypass',
+    phase: 'finding',
     summary: 'Auto-elevate fodhelper via an HKCU ms-settings handler.',
     description: r`For an admin user stuck at Medium integrity, fodhelper.exe auto-elevates and reads HKCU\Software\Classes\ms-settings\shell\open\command (with DelegateExecute). Plant your command there and run fodhelper to execute at High integrity — no UAC prompt. Note: this elevates an existing admin to High integrity, it does not turn a standard user into admin.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
@@ -616,7 +621,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-uac-eventvwr',
     label: 'UAC Bypass (eventvwr)',
-    phase: 'uac-bypass',
+    phase: 'finding',
     summary: 'Hijack the mscfile handler eventvwr.exe auto-elevates.',
     description: r`eventvwr.exe is an auto-elevating Microsoft-signed binary that opens its .msc snap-in via the HKCU\Software\Classes\mscfile\shell\open\command handler — checked before the HKLM one and never validated. A medium-integrity admin can point that key at an arbitrary command; launching eventvwr.exe then runs it at High integrity with no UAC prompt. Like fodhelper, this elevates an EXISTING admin, not a standard user.`,
     tools: [{ name: 'UACMe', url: 'https://github.com/hfiref0x/UACME' }],
@@ -639,7 +644,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-prim-service-exec',
     label: 'Service Executes Your Code',
-    phase: 'service-abuse',
+    phase: 'primitive',
     hub: true,
     summary: 'A SYSTEM service launches your payload on (re)start.',
     description: r`The convergence point of the service-abuse branch: whether you rewrote a binPath, replaced the on-disk EXE, hijacked a DLL it loads, edited the service's registry key, reconfigured it as a Server Operator, or pointed a service plugin at your DLL (DnsAdmins) — the outcome is identical. When the Service Control Manager next starts the service, it runs your code as its account, almost always LocalSystem.`,
@@ -653,7 +658,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-prim-kernel-exec',
     label: 'Kernel-Mode Code Execution',
-    phase: 'kernel-exploit',
+    phase: 'primitive',
     hub: true,
     summary: 'Ring-0 execution collapses straight to SYSTEM.',
     description: r`Where the kernel branch converges: a public kernel-CVE exploit, or a bring-your-own-vulnerable-driver load (via SeLoadDriverPrivilege / Print Operators), gives you code execution in ring 0. From the kernel you can patch your token, steal the SYSTEM token, or spawn a SYSTEM process directly. The most powerful but least stable route — a wrong-build exploit or a blocked driver bugchecks the host.`,
@@ -665,7 +670,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-prim-file-read',
     label: 'Read Locked Files (ACL Bypass)',
-    phase: 'credential-access',
+    phase: 'primitive',
     hub: true,
     summary: 'Read SAM/SYSTEM/NTDS regardless of their ACLs.',
     description: r`SeBackupPrivilege — held directly, or granted by the Backup Operators group — lets you read any file on the host irrespective of its DACL. That read primitive turns into credentials: copy the SAM + SYSTEM hives on a workstation/server, or ntds.dit on a Domain Controller (via a VSS snapshot), then extract every hash offline.`,
@@ -677,7 +682,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-prim-cred-reuse',
     label: 'Reuse Recovered Credentials',
-    phase: 'credential-access',
+    phase: 'primitive',
     hub: true,
     summary: 'Authenticate as a privileged account you recovered.',
     description: r`The payoff of every credential-access path: a cleartext password, an NT hash, a Kerberos ticket, or a saved credential for a local-admin / privileged account. Replay it — runas /savecred, pass-the-hash, or simply logging in — to execute as that principal. On a domain-joined host these same secrets feed straight back into the Active Directory map for lateral movement.`,
@@ -689,7 +694,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-prim-trigger',
     label: 'Hijack a Privileged Auto-Run',
-    phase: 'registry-abuse',
+    phase: 'primitive',
     hub: true,
     summary: 'Plant code an elevated context runs automatically.',
     description: r`Several misconfigs share one shape: a binary or script that a higher-privileged context executes — on a schedule, at logon, or via an accessibility hook (utilman/sethc) — is writable by you, directly or after taking ownership. Overwrite it and wait for, or invoke, the trigger; your payload then runs as that principal. Quieter than a loud exploit, but you may have to wait for the trigger (e.g. an admin logon).`,
@@ -698,6 +703,18 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
     opsec: 'New/modified autorun, scheduled-task, or accessibility binaries are classic IOCs (Autoruns, Sysmon, Event ID 4698/4702). Overwriting an existing target is quieter than creating one; restore it afterward.',
     difficulty: 'medium',
   },
+  {
+    id: 'pe-prim-uac',
+    label: 'Auto-Elevate (UAC Bypass)',
+    phase: 'primitive',
+    hub: true,
+    summary: 'Jump from Medium to High integrity with no prompt.',
+    description: r`Where the UAC-bypass findings converge: an admin stuck at Medium integrity points an auto-elevating, Microsoft-signed binary (fodhelper, eventvwr, …) at an attacker command through an HKCU handler hijack, then launches it to run at High integrity with no consent prompt. That frees the filtered admin token — full local administrator on the host. Note this elevates an existing admin, not a standard user.`,
+    mitre: mitre('T1548.002'),
+    requires: ['Member of local Administrators running at Medium integrity'],
+    opsec: 'An HKCU handler key plus an auto-elevating binary spawning your shell is a well-signatured pattern. Clean up the key afterward.',
+    difficulty: 'easy',
+  },
 
   // ── Local lateral movement (no domain required) ─────────────────────────────
   // Privesc isn't always an AD pivot: a local-admin hash reused across a workgroup,
@@ -705,7 +722,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-lateral-local-pth',
     label: 'Local Admin Pass-the-Hash',
-    phase: 'lateral-movement',
+    phase: 'loot',
     summary: 'Reuse a shared local-admin hash across workgroup hosts.',
     description: r`In a workgroup — or anywhere a local administrator password is shared across machines (the classic pre-LAPS imaging sin) — the local-admin NT hash you dumped from SAM authenticates to OTHER hosts with no domain and no cleartext. Caveat: UAC remote restrictions mean only the built-in Administrator (RID 500), or a local account where LocalAccountTokenFilterPolicy = 1, receives a full elevated token over the network; other local admins are filtered.`,
     tools: [
@@ -729,7 +746,7 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /d "cmd.exe" /f`,
   {
     id: 'pe-lateral-remote-exec',
     label: 'Remote Execution (Local Admin)',
-    phase: 'lateral-movement',
+    phase: 'loot',
     hub: true,
     summary: 'Run code on an adjacent host → SYSTEM, no AD needed.',
     description: r`With valid local-admin credentials or an NT hash on a reachable host, execute code there. An SMB service channel (PsExec/SMBExec) lands you as SYSTEM directly; WMI, WinRM, or RDP land you as the user. This is how a single dumped local account spreads sideways across standalone hosts — and, the moment you land on a domain-joined machine, becomes the bridge into the Active Directory map.`,
@@ -772,8 +789,8 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-services', target: 'pe-mssql-xpcmdshell' },
   { source: 'pe-cat-services', target: 'pe-path-dll-hijack' },
   { source: 'pe-cat-services', target: 'pe-printnightmare' },
+  { source: 'pe-cat-services', target: 'pe-weak-registry-service' },
   { source: 'pe-cat-registry', target: 'pe-always-install-elevated' },
-  { source: 'pe-cat-registry', target: 'pe-weak-registry-service' },
   { source: 'pe-cat-registry', target: 'pe-autorun-writable' },
   { source: 'pe-cat-registry', target: 'pe-scheduled-task-abuse' },
   { source: 'pe-cat-tokens', target: 'pe-seimpersonate-potato' },
@@ -856,8 +873,9 @@ export const peTechniqueEdges: AttackEdge[] = [
 
   // ── Self-contained one-shots straight to SYSTEM ─────────────────────────────
   { source: 'pe-always-install-elevated', target: 'nt-system', rel: 'host-exec' },
-  { source: 'pe-semanagevolume', target: 'nt-system', label: 'DLL into System32', rel: 'host-exec' },
+  { source: 'pe-semanagevolume', target: 'pe-prim-trigger', label: 'plant a System32 DLL', rel: 'enables' },
   { source: 'pe-hyperv-admins', target: 'nt-system', rel: 'host-exec' },
-  { source: 'pe-uac-fodhelper', target: 'nt-system', rel: 'host-exec' },
-  { source: 'pe-uac-eventvwr', target: 'nt-system', rel: 'host-exec' },
+  { source: 'pe-uac-fodhelper', target: 'pe-prim-uac', rel: 'enables' },
+  { source: 'pe-uac-eventvwr', target: 'pe-prim-uac', rel: 'enables' },
+  { source: 'pe-prim-uac', target: 'nt-system', rel: 'host-exec' },
 ];
