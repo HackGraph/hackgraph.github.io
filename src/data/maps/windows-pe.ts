@@ -8,7 +8,7 @@ const anchorNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-start',
     label: 'Local Foothold',
-    phase: 'enumeration',
+    phase: 'triage',
     kind: 'start',
     summary: 'A low-privilege shell on a Windows host.',
     description:
@@ -17,11 +17,11 @@ const anchorNodes: TechniqueNodeDef[] = [
   },
   {
     id: 'pe-enum',
-    label: 'Enumerate the Host',
-    phase: 'enumeration',
-    summary: 'Triage with winPEAS / Seatbelt / PrivescCheck.',
+    label: 'Triage — Who Am I?',
+    phase: 'triage',
+    summary: 'whoami /priv & /groups first — it decides everything.',
     description:
-      'Run an automated enumeration tool to surface every escalation vector at once — vulnerable services, weak ACLs, token privileges, autoruns, stored credentials, and missing patches. Triage its output, then branch to the cheapest/quietest win.',
+      'Before any tooling, answer one question: what is this account? whoami /priv and whoami /groups resolve most boxes in seconds. A service account holding SeImpersonate goes straight to a Potato; an Administrators member filtered to medium integrity just needs a UAC bypass; a privileged group or token is a power you already hold. Only a genuinely unprivileged user has to enumerate the host and hunt for a weakness — and even then you work the findings in priority order, cheapest and quietest first.',
     tools: [
       { name: 'winPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
       { name: 'Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },
@@ -55,32 +55,36 @@ const anchorEdges: AttackEdge[] = [{ source: 'pe-start', target: 'pe-enum' }];
 /**
  * Windows local privilege-escalation map: low-priv shell -> SYSTEM.
  *
- * Local privesc is triage-and-pick, not a campaign, so the map is staged as one
- * left→right funnel rather than a phased AD-style path:
+ * Shaped as the operator's triage tree, not a technique catalogue. The first real
+ * decision on a box is "who am I?", and that gate forks the whole map:
  *
- *   Enumerate -> What You Found -> Primitive -> SYSTEM -> Loot & Move
+ *   Triage (whoami /priv /groups)
+ *     ├─ a power you already hold  -> abuse it (Potato / SeBackup / a group)  -> SYSTEM
+ *     ├─ a filtered admin (medium) -> UAC bypass                              -> SYSTEM
+ *     └─ an unprivileged user      -> enumerate, then a priority ladder:
+ *            (1) stored creds  (2) hijack a privileged execution  (3) kernel CVE -> SYSTEM
  *
- * "What You Found" branches the way enumeration actually reports (dangerous
- * privileges, group membership, service misconfigs, stored creds, missing patches,
- * medium-integrity admin); those findings converge on a few shared PRIMITIVES
- * (`pe-prim-*`, see pe-techniques) which are the only nodes that reach SYSTEM.
- * Colouring by stage (not by vector type) is what gives it a single readable spine.
+ * The common shortcuts (service account -> Potato, filtered admin -> UAC) are short
+ * express lanes; only the unprivileged case fans out, and even then in priority order
+ * (cheap+quiet -> loud+risky). Recovered credentials feed a Loot & Loop branch: a
+ * non-SYSTEM cred makes you a new principal you re-triage, or moves you host-to-host.
  */
 export const windowsPeMap: MapDefinition = {
   id: 'win-pe',
   name: 'Windows Priv Esc',
   tagline: 'From a low-priv shell to NT AUTHORITY\\SYSTEM',
   rootId: 'pe-start',
-  // Phases are escalation STAGES, not vector types — so the map reads as one
-  // left→right spine (enumerate → what you found → the primitive it grants →
-  // SYSTEM → loot & move) instead of a rainbow of parallel silos. Red is reserved
-  // for the lit-path accent.
+  // Phases follow the operator's decision tree, not technique categories. The first
+  // question on a real box is "who am I?" — colour encodes that context (a power you
+  // already hold / a filtered admin / an unprivileged user who must hunt) so you can
+  // trace your lane left→right to SYSTEM. Red stays reserved for the lit-path accent.
   phases: [
-    { id: 'enumeration', label: 'Enumerate', color: '#3f9ae8' },
-    { id: 'finding', label: 'What You Found', color: '#e0b12f' },
-    { id: 'primitive', label: 'Primitive', color: '#ef8630' },
+    { id: 'triage', label: 'Triage', color: '#3f9ae8' },
+    { id: 'hold', label: 'Power You Hold', color: '#ef8630' },
+    { id: 'admin', label: 'Filtered Admin', color: '#b04fda' },
+    { id: 'finding', label: 'Weakness You Find', color: '#e0b12f' },
     { id: 'system', label: 'SYSTEM', color: '#5f6ce6' },
-    { id: 'loot', label: 'Loot & Move', color: '#cf4fc4' },
+    { id: 'loot', label: 'Loot & Loop', color: '#cf4fc4' },
   ],
   nodes: [...anchorNodes, ...peTechniqueNodes],
   edges: [...anchorEdges, ...peTechniqueEdges],
