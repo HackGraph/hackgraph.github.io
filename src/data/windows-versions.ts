@@ -2,7 +2,7 @@
  * Canonical Windows version axis for the version filter.
  *
  * A technique node may carry `versions?: string[]` listing the version ids it applies
- * to (feature-update granularity). Omitting the field means "all versions" — only the
+ * to (feature-update granularity). Omitting the field means "all versions"; only the
  * version-SPECIFIC vectors (UAC bypasses patched in a given build, build-locked CVEs,
  * etc.) enumerate a restricted set. The filter dims any node whose `versions` is
  * defined and does NOT include the selected target version.

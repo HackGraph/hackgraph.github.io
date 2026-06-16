@@ -4,7 +4,7 @@ import { buildModel } from '../graph/buildModel';
 
 const MITRE_RE = /^T\d{4}(\.\d{3})?$/;
 const DIFFICULTY = new Set(['easy', 'medium', 'hard']);
-// References must be PUBLIC URLs — never the author's local notes.
+// References must be PUBLIC URLs, never the author's local notes.
 const FORBIDDEN = ['obsidian', '/home/', 'file:', 'localhost', '127.0.0.1'];
 
 describe('content lint', () => {

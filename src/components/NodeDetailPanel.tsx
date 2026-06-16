@@ -188,7 +188,7 @@ export function NodeDetailPanel({
               type="button"
               onPointerDown={startDrag}
               onClick={() => setPeekExpanded(false)}
-              aria-label="Collapse — drag down to minimise"
+              aria-label="Collapse, drag down to minimise"
               className="flex w-full shrink-0 cursor-grab touch-none items-center justify-center pb-1.5 pt-3 active:cursor-grabbing"
             >
               <span className="h-1 w-9 rounded-full bg-border-strong" />

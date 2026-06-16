@@ -3,14 +3,14 @@
  *
  * A "map" is a directed graph (a DAG, possibly with convergence) of attack
  * technique nodes. v1 ships the Active Directory map, but nothing here is
- * AD-specific — additional domains (web, cloud, network) are just more
+ * AD-specific: additional domains (web, cloud, network) are just more
  * MapDefinitions registered in data/index.ts.
  */
 
 /**
  * A phase is just a string id; each map declares its own ordered phases with
  * labels and colors (see PhaseDef on MapDefinition). This keeps the engine
- * domain-agnostic — AD, Windows PE, web, etc. each define their own phases.
+ * domain-agnostic: AD, Windows PE, web, etc. each define their own phases.
  */
 export type Phase = string;
 
@@ -22,7 +22,7 @@ export interface PhaseDef {
 }
 
 /** Kind drives node styling and whether it's a terminal goal.
- *  `category` nodes group techniques (a folder/section header) — clicking one
+ *  `category` nodes group techniques (a folder/section header); clicking one
  *  expands it rather than opening a detail panel. */
 export type NodeKind = 'start' | 'technique' | 'goal' | 'category';
 
@@ -36,7 +36,7 @@ export interface Tool {
 export interface Command {
   /** Short label, e.g. "Kerberoast all SPNs". */
   label?: string;
-  /** The command text — shown in a copy-able code block. */
+  /** The command text, shown in a copy-able code block. */
   code: string;
   /** Syntax hint, purely cosmetic for now (e.g. "bash", "powershell"). */
   lang?: string;
@@ -74,7 +74,7 @@ export interface TechniqueNodeDef {
   /** Detection / stealth considerations. */
   opsec?: string;
   /**
-   * Windows-version applicability — which builds the technique works on, and when it
+   * Windows-version applicability: which builds the technique works on, and when it
    * was patched. Keeps the map honest about outdated vectors (e.g. an eventvwr UAC
    * bypass patched after Win10 1607). Use "All supported Windows versions" for
    * version-independent vectors (the privilege/service model rather than a bug).
@@ -83,14 +83,14 @@ export interface TechniqueNodeDef {
   /**
    * Structured counterpart to `affects`, powering the version filter. Version ids
    * (see data/windows-versions.ts) the technique applies to. OMITTED = applies to all
-   * versions — only version-specific vectors enumerate a restricted set.
+   * versions; only version-specific vectors enumerate a restricted set.
    */
   versions?: string[];
   difficulty?: Difficulty;
   /**
    * Convergence hub: a "you now hold X" state node that many later steps lead back
    * to (the domain/local-creds hubs, the remote-exec hub). Excluded from loop
-   * unrolling so it stays a SINGLE node — incoming back-edges render as dashed
+   * unrolling so it stays a SINGLE node; incoming back-edges render as dashed
    * loop-backs instead of spawning a redundant forward copy per source.
    */
   hub?: boolean;
@@ -103,7 +103,7 @@ export interface AttackEdge {
   label?: string;
   /** Optional longer explanation of the transition, shown when the edge is clicked. */
   description?: string;
-  /** Canonical relationship id (see data/relationships.ts) — supplies a reusable
+  /** Canonical relationship id (see data/relationships.ts) that supplies a reusable
    *  label + explanation so same-meaning edges stay consistent. */
   rel?: string;
 }

@@ -26,7 +26,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'Enumerate trusts natively', code: r`nltest /domain_trusts /all_trusts /v`, lang: 'cmd' },
     ],
     mitre: mitre('T1482'),
-    references: [{ label: 'The Hacker Recipes — Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
+    references: [{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['Any valid domain account'],
     opsec: 'nltest /domain_trusts is a well-known discovery indicator (T1482); BloodHound collection is noisy. LDAP reads of trustedDomain objects blend with normal directory traffic.',
     difficulty: 'easy',
@@ -36,7 +36,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     label: 'Inter-Realm Trust Ticket',
     phase: 'domain-dominance',
     summary: 'Forge a referral TGT with the trust key to reach a trusted domain.',
-    description: r`Each trust has a shared inter-realm key, stored in a TRUSTEDDOMAIN$ trust account in the trusting domain and rotated ~every 30 days. DCSync that trust account to recover its hash, then forge an inter-realm referral TGT with ticketer.py using -spn krbtgt/<target_domain> — distinct from a golden ticket, which uses the local krbtgt key. Present the referral ticket to the target KDC (getST.py) to authenticate across the trust. SID filtering still constrains which ExtraSids the target honors.`,
+    description: r`Each trust has a shared inter-realm key, stored in a TRUSTEDDOMAIN$ trust account in the trusting domain and rotated ~every 30 days. DCSync that trust account to recover its hash, then forge an inter-realm referral TGT with ticketer.py using -spn krbtgt/<target_domain>, which is distinct from a golden ticket that uses the local krbtgt key. Present the referral ticket to the target KDC (getST.py) to authenticate across the trust. SID filtering still constrains which ExtraSids the target honors.`,
     tools: [
       { name: 'ticketer (Impacket)', url: 'https://github.com/fortra/impacket' },
       { name: 'getST (Impacket)', url: 'https://github.com/fortra/impacket' },
@@ -48,8 +48,8 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'Request a service ticket in the target domain', code: r`KRB5CCNAME=user.ccache getST.py -k -no-pass -spn CIFS/dc.target.local target.local/user@target.local`, lang: 'bash' },
     ],
     references: [
-      { label: 'HackTricks — SID-History Injection', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/sid-history-injection.html' },
-      { label: 'harmj0y — A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },{ label: 'The Hacker Recipes — Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
+      { label: 'HackTricks, SID-History Injection', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/sid-history-injection.html' },
+      { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['The inter-realm trust key (DCSync of the TRUSTEDDOMAIN$ account)', 'Source and target domain SIDs'],
     opsec: 'A forged inter-realm TGT shows golden-ticket-style anomalies (no preceding AS-REQ, odd lifetime/etype). Prefer AES over RC4. SID filtering / quarantine limits which ExtraSids are accepted.',
     difficulty: 'hard',
@@ -59,7 +59,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     label: 'External Trust Abuse',
     phase: 'lateral-movement',
     summary: 'Non-transitive external trust: password reuse, RID≥1000 ExtraSids.',
-    description: r`External trusts are typically one-way and non-transitive with SID filtering enabled — SIDs with RID < 1000 (built-in/privileged groups) are quarantined and stripped. Remaining paths: reuse of credentials/hashes overlapping both domains, plain lateral movement using any foreign principal that holds rights in the trusting domain, and (where filtering is only partial) injecting ExtraSids of custom groups with RID ≥ 1000 that happen to be privileged. Confirm trustAttributes from trust-enum first.`,
+    description: r`External trusts are typically one-way and non-transitive with SID filtering enabled: SIDs with RID < 1000 (built-in/privileged groups) are quarantined and stripped. Remaining paths: reuse of credentials/hashes overlapping both domains, plain lateral movement using any foreign principal that holds rights in the trusting domain, and (where filtering is only partial) injecting ExtraSids of custom groups with RID ≥ 1000 that happen to be privileged. Confirm trustAttributes from trust-enum first.`,
     tools: [
       { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
       { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
@@ -69,9 +69,9 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'Spray a reused credential into the trusting domain', code: r`nxc smb 10.0.0.1 -u users.txt -p 'Reused@Pass1' -d external.local --continue-on-success`, lang: 'bash' },
     ],
     references: [
-      { label: 'HackTricks — External Forest Domain (One-Way Inbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-oneway-inbound.html' },{ label: 'The Hacker Recipes — Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
+      { label: 'HackTricks, External Forest Domain (One-Way Inbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-oneway-inbound.html' },{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['A mapped external trust', 'Foreign rights or reused credentials into the trusting domain'],
-    opsec: 'SID filtering on external trusts strips RID<1000 SIDs, so Enterprise/Domain Admins ExtraSid injection fails. Whether partial filtering (TREAT_AS_EXTERNAL) leaves any RID≥1000 path is environment-specific — verify the actual trustAttributes before relying on it.',
+    opsec: 'SID filtering on external trusts strips RID<1000 SIDs, so Enterprise/Domain Admins ExtraSid injection fails. Whether partial filtering (TREAT_AS_EXTERNAL) leaves any RID≥1000 path is environment-specific. Verify the actual trustAttributes before relying on it.',
     difficulty: 'medium',
   },
   {
@@ -89,9 +89,9 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'Find SPN accounts in the foreign forest', code: r`Get-DomainUser -SPN -Domain foreign.local | Get-DomainSPNTicket`, lang: 'powershell' },
     ],
     references: [
-      { label: 'HackTricks — External Forest Domain (One-Way Outbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-one-way-outbound.html' },{ label: 'harmj0y — Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' }],
+      { label: 'HackTricks, External Forest Domain (One-Way Outbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-one-way-outbound.html' },{ label: 'harmj0y, Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' }],
     requires: ['A mapped forest (FOREST_TRANSITIVE) trust', 'A valid account in the trusting forest'],
-    opsec: 'Cross-forest TGS requests (4769) for foreign SPNs and BloodHound cross-forest collection are visible. Injecting the foreign Enterprise/Domain Admins SID is filtered — do not expect SID-history escalation across a forest boundary. Historical SID-filter bypasses (e.g. CVE-2020-0665) are patched on current builds.',
+    opsec: 'Cross-forest TGS requests (4769) for foreign SPNs and BloodHound cross-forest collection are visible. Injecting the foreign Enterprise/Domain Admins SID is filtered, so do not expect SID-history escalation across a forest boundary. Historical SID-filter bypasses (e.g. CVE-2020-0665) are patched on current builds.',
     difficulty: 'hard',
   },
   {
@@ -106,7 +106,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'Users in groups outside their domain (outgoing)', code: r`Get-DomainForeignUser`, lang: 'powershell' },
     ],
     mitre: mitre('T1482'),
-    references: [{ label: 'PowerSploit — Get-DomainForeignGroupMember', url: 'https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/' }],
+    references: [{ label: 'PowerSploit, Get-DomainForeignGroupMember', url: 'https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/' }],
     requires: ['Any valid domain account', 'At least one mapped trust'],
     opsec: 'LDAP group-membership enumeration blends with normal directory traffic; large global-catalog queries across many domains are the main signal. Read-only.',
     difficulty: 'easy',
@@ -116,7 +116,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     label: 'Domain Trust Modification',
     phase: 'persistence',
     summary: 'Create or alter a trust / federation for durable cross-domain access.',
-    description: r`With Domain Admin (or write over trust objects) an attacker can add a new domain trust, flip trustAttributes (disable SID filtering / quarantine, or set TREAT_AS_EXTERNAL), or extend AD FS federation with an attacker-controlled token-signing certificate. Loosening SID filtering re-opens the SID-history / ExtraSids hopping that filtering would otherwise block, and a rogue trust/federation is durable, low-profile persistence. Distinct from forging SID history (T1134.005) — this tampers with the trust relationship itself.`,
+    description: r`With Domain Admin (or write over trust objects) an attacker can add a new domain trust, flip trustAttributes (disable SID filtering / quarantine, or set TREAT_AS_EXTERNAL), or extend AD FS federation with an attacker-controlled token-signing certificate. Loosening SID filtering re-opens the SID-history / ExtraSids hopping that filtering would otherwise block, and a rogue trust/federation is durable, low-profile persistence. Distinct from forging SID history (T1134.005): this tampers with the trust relationship itself.`,
     tools: [
       { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
       { name: 'AD PowerShell / netdom', url: 'https://learn.microsoft.com/en-us/powershell/module/activedirectory/' },
@@ -127,11 +127,11 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1484.002'),
     references: [
-      { label: 'MITRE ATT&CK T1484.002 — Trust Modification', url: 'https://attack.mitre.org/techniques/T1484/002/' },
-      { label: 'The Hacker Recipes — Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
+      { label: 'MITRE ATT&CK T1484.002, Trust Modification', url: 'https://attack.mitre.org/techniques/T1484/002/' },
+      { label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
     ],
     requires: ['Domain Admin / write over the trustedDomain object (or AD FS admin)', 'A target domain/forest (existing or attacker-created)'],
-    opsec: 'Trust creation/modification is a high-signal directory change (Event 4706/4716/4717/4718, and 5136 on trustedDomain objects). Disabling SID filtering or adding a federation cert is a strong, durable indicator — defenders auditing trust topology will spot a new or loosened trust.',
+    opsec: 'Trust creation/modification is a high-signal directory change (Event 4706/4716/4717/4718, and 5136 on trustedDomain objects). Disabling SID filtering or adding a federation cert is a strong, durable indicator. Defenders auditing trust topology will spot a new or loosened trust.',
     difficulty: 'hard',
   },
   {
@@ -139,13 +139,13 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     label: 'Enterprise Admin (Forest Root)',
     phase: 'domain-dominance',
     kind: 'goal',
-    summary: '👑 Forest-root compromise — every domain in the forest.',
-    description: r`The forest — not the domain — is Active Directory's true security boundary, and Enterprise Admins (a group in the forest-root domain) administer every domain inside it. Reaching this node means you've escalated *beyond* a single Domain Admin by crossing an intra-forest trust to the root: a golden/inter-realm ticket whose ExtraSids carries the root Enterprise Admins SID (<root-SID>-519), a child→parent SID-history hop, or a forged inter-realm referral ticket. From forest root you control every domain's krbtgt, every DC, and can establish persistence at forest scope. This is a distinct, higher goal than the per-domain Domain Admin node — cross-forest trusts can yield several Domain Admins and, at the top, a single Enterprise Admin.`,
+    summary: '👑 Forest-root compromise: every domain in the forest.',
+    description: r`The forest, not the domain, is Active Directory's true security boundary, and Enterprise Admins (a group in the forest-root domain) administer every domain inside it. Reaching this node means you've escalated *beyond* a single Domain Admin by crossing an intra-forest trust to the root: a golden/inter-realm ticket whose ExtraSids carries the root Enterprise Admins SID (<root-SID>-519), a child→parent SID-history hop, or a forged inter-realm referral ticket. From forest root you control every domain's krbtgt, every DC, and can establish persistence at forest scope. This is a distinct, higher goal than the per-domain Domain Admin node: cross-forest trusts can yield several Domain Admins and, at the top, a single Enterprise Admin.`,
     requires: ['A cross-trust escalation: inter-realm trust ticket, parent-child krbtgt, or SID-history injection into the forest root'],
     mitre: mitre('T1134.005'),
     references: [
-      { label: 'harmj0y — A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },
-      { label: 'The Hacker Recipes — Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
+      { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },
+      { label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
     ],
     difficulty: 'hard',
   },
@@ -161,7 +161,7 @@ export const adTrustEdges: AttackEdge[] = [
   { source: 'trust-enum', target: 'foreign-membership' },
   { source: 'dcsync', target: 'trust-ticket', label: 'trust account key' },
   // An inter-realm trust ticket grants DA in the TRUSTED domain (not necessarily the
-  // forest root — that intra-forest child→root path is trust-sid-history).
+  // forest root; that intra-forest child→root path is trust-sid-history).
   { source: 'trust-ticket', target: 'domain-admin', label: 'DA in trusted domain' },
   { source: 'foreign-membership', target: 'lateral-movement-cme', label: 'exercise foreign rights' },
   { source: 'trust-external-abuse', target: 'lateral-movement-cme', label: 'into trusting domain' },

@@ -4,7 +4,7 @@ HackGraph is split into two layers so that **enriching the content never means t
 
 | Layer | Where | What |
 | --- | --- | --- |
-| **Content** | `src/data/` | The maps, nodes, edges, relationships — plain data you edit |
+| **Content** | `src/data/` | The maps, nodes, edges, relationships: plain data you edit |
 | **Engine** | `src/graph/`, `src/components/`, `src/state/` | Generic graph/animation code; never references any specific node |
 
 If you're adding techniques, you only ever edit files under **`src/data/`**. You do not need to understand React, the layout, or the animations.
@@ -47,19 +47,19 @@ interface AttackEdge {
 }
 ```
 
-These are the fields you'll usually touch — see `schema.ts` for the full interface
+These are the fields you'll usually touch. See `schema.ts` for the full interface
 (it also has an advanced `hub` flag for convergence nodes). You almost never think
 about layout: any edge that loops back to an earlier step is auto-unrolled into a fresh
 `#2`/`#3` instance, so arrows always read left→right.
 
 ## Add a technique
 
-Each chain file exports two array literals — `…Nodes` and `…Edges` (e.g.
+Each chain file exports two array literals: `…Nodes` and `…Edges` (e.g.
 `credentialAccessNodes` / `credentialAccessEdges`). You add to those arrays:
 
-1. Pick the topical file in `src/data/chains/` (e.g. `credential-access.ts`) — or make a new one.
+1. Pick the topical file in `src/data/chains/` (e.g. `credential-access.ts`), or make a new one.
 2. Add a node object to that file's exported `…Nodes` array.
-3. Add edges to the same file's `…Edges` array — at least one **incoming** edge (so it's reachable from `start`), and, unless it's a `persistence` node, at least one **outgoing** edge (no dead-ends — enforced by a test).
+3. Add edges to the same file's `…Edges` array: at least one **incoming** edge (so it's reachable from `start`), and, unless it's a `persistence` node, at least one **outgoing** edge (no dead-ends, enforced by a test).
 
 ```ts
 // src/data/chains/credential-access.ts
@@ -82,7 +82,7 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
 
 export const credentialAccessEdges: AttackEdge[] = [
   // …existing edges…
-  { source: 'local-admin-host', target: 'my-technique' }, // incoming — reachable
+  { source: 'local-admin-host', target: 'my-technique' }, // incoming, reachable
   { source: 'my-technique', target: 'valid-domain-creds', label: 'found creds' }, // outgoing
 ];
 ```
@@ -109,24 +109,24 @@ its high-level overview); the chevron expands/collapses. Give every category a
 
 1. Create `src/data/chains/<domain>-*.ts` with your nodes/edges.
 2. Create `src/data/maps/<domain>.ts` exporting a `MapDefinition` (`id`, `name`, `phases`, `nodes`, `edges`).
-3. Register it in `src/data/index.ts`: add it to the `MAPS` array. It now appears in the header selector — **no engine changes.**
+3. Register it in `src/data/index.ts`: add it to the `MAPS` array. It now appears in the header selector, with **no engine changes.**
 
 ## Conventions
 
-- **Public sources only.** Every `references[].url` must be a public https link — never a private/internal note. Enforced by the content-lint test.
+- **Public sources only.** Every `references[].url` must be a public https link, never a private/internal note. Enforced by the content-lint test.
 - **Converge, don't shortcut.** A node whose outcome is "valid credentials" should lead to a credentials hub (`valid-domain-creds` / `valid-local-creds`), not jump straight to one downstream action.
-- **No rank-skipping edges.** Avoid `A → C` when `A → B → C` already exists — the edge would render over node B.
+- **No rank-skipping edges.** Avoid `A → C` when `A → B → C` already exists; the edge would render over node B.
 - **No dead-ends.** Every non-`persistence` node needs an outgoing edge.
 
 ## Dependencies
 
-HackGraph runs on a deliberately small runtime stack — React, React Flow, dagre,
-framer-motion — because the smooth, BloodHound-style canvas *is* the product (unlike a
+HackGraph runs on a deliberately small runtime stack (React, React Flow, dagre,
+framer-motion) because the smooth, BloodHound-style canvas *is* the product (unlike a
 vanilla-JS tool, we don't hand-roll it). Two rules keep it lean:
 
 - **Content needs zero dependencies.** Adding techniques, categories, or maps is pure
-  data under `src/data/` — no packages, no build changes.
-- **New runtime dependencies are rare — raise one in an issue first.** Prefer the
+  data under `src/data/`: no packages, no build changes.
+- **New runtime dependencies are rare. Raise one in an issue first.** Prefer the
   platform and what's already here. Everything stays **fully client-side**: no backend,
   no network calls at runtime (only the static, public reference links a node points to).
 
@@ -138,7 +138,7 @@ npm run check:refs  # every reference/tool URL is reachable
 npm run build       # type-check + production build
 ```
 
-That's it — the engine, layout, and animations take care of themselves.
+That's it. The engine, layout, and animations take care of themselves.
 
 By contributing, you agree that your contributions are licensed under the project's
 [Apache License 2.0](LICENSE).

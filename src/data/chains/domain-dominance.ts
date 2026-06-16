@@ -6,7 +6,7 @@ const mitre = (id: string): { id: string; url: string } => ({
 });
 
 /**
- * Chain 3 — "Recon the privilege graph → escalate → DCSync → Golden Ticket →
+ * Chain 3: "Recon the privilege graph → escalate → DCSync → Golden Ticket →
  * Domain Admin → persistence". `domain-admin` is the convergent goal node,
  * reachable via ACL abuse, DCSync, or a forged Golden Ticket.
  */
@@ -17,7 +17,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     phase: 'enumeration',
     summary: 'Graph the domain to find the shortest path to Domain Admin.',
     description:
-      'Collect the AD graph — users, groups, sessions, ACLs, delegations — and compute attack paths from owned principals to high-value targets, turning blind enumeration into a directed plan. SharpHound / bloodhound-python collect the data, BloodHound analyses it, and PowerView / ldapdomaindump cover the same ground manually.',
+      'Collect the AD graph (users, groups, sessions, ACLs, delegations) and compute attack paths from owned principals to high-value targets, turning blind enumeration into a directed plan. SharpHound / bloodhound-python collect the data, BloodHound analyses it, and PowerView / ldapdomaindump cover the same ground manually.',
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'SharpHound', url: 'https://github.com/SpecterOps/SharpHound' },
@@ -37,8 +37,8 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     requires: ['Any valid domain account'],
     mitre: mitre('T1087.002'),
     references: [
-      { label: 'HackTricks — Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
-      { label: 'The Hacker Recipes — BloodHound', url: 'https://www.thehacker.recipes/ad/recon/bloodhound/' },
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+      { label: 'The Hacker Recipes, BloodHound', url: 'https://www.thehacker.recipes/ad/recon/bloodhound/' },
     ],
     opsec: 'Full collection generates heavy LDAP traffic and many session queries. Use stealth collection methods and avoid collecting every method at once in monitored environments.',
     difficulty: 'easy',
@@ -50,7 +50,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     kind: 'category',
     summary: 'Routes from a domain user to higher privilege.',
     description:
-      'The escalation hub: every way to climb from an ordinary domain account toward Domain Admin — ACL/DACL abuse, AD CS, Kerberos delegation, account/group manipulation, and critical CVEs. BloodHound usually shows which branch is shortest.',
+      'The escalation hub: every way to climb from an ordinary domain account toward Domain Admin, covering ACL/DACL abuse, AD CS, Kerberos delegation, account/group manipulation, and critical CVEs. BloodHound usually shows which branch is shortest.',
   },
   {
     id: 'unconstrained-delegation',
@@ -58,7 +58,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     phase: 'priv-esc',
     summary: 'Coerce a DC, capture its TGT.',
     description:
-      'A host with unconstrained delegation stores the TGT of any user that authenticates to it. Coerce a Domain Controller to authenticate to a host you control (PetitPotam/PrinterBug), capture the DC\'s TGT, and impersonate it — a direct line to domain compromise.',
+      'A host with unconstrained delegation stores the TGT of any user that authenticates to it. Coerce a Domain Controller to authenticate to a host you control (PetitPotam/PrinterBug), capture the DC\'s TGT, and impersonate it: a direct line to domain compromise.',
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
@@ -83,16 +83,16 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     opsec: 'Coercion (e.g. EfsRpc/PrinterBug) is increasingly detected and patched. Captured DC TGT enables Pass-the-Ticket as the DC.',
     difficulty: 'hard',
     references: [
-      { label: 'HackTricks — Unconstrained Delegation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/unconstrained-delegation.html' },
+      { label: 'HackTricks, Unconstrained Delegation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/unconstrained-delegation.html' },
     ],
   },
   {
     id: 'dcsync',
     label: 'DCSync',
     phase: 'domain-dominance',
-    summary: 'Replicate secrets — pull any hash, incl. krbtgt.',
+    summary: 'Replicate secrets: pull any hash, incl. krbtgt.',
     description:
-      'With replication rights (DS-Replication-Get-Changes) you can ask a DC to hand over password hashes for any principal — including krbtgt and Domain Admins — by impersonating a domain controller. No code runs on the DC.',
+      'With replication rights (DS-Replication-Get-Changes) you can ask a DC to hand over password hashes for any principal (including krbtgt and Domain Admins) by impersonating a domain controller. No code runs on the DC.',
     tools: [
       { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'Mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' },
@@ -116,8 +116,8 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     opsec: 'Replication from a non-DC source is a high-fidelity detection (Event ID 4662 with the replication GUID). Source from an expected host if possible.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — DCSync', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcsync.html' },
-      { label: 'SpecterOps — BloodHound DCSync edge', url: 'https://bloodhound.specterops.io/resources/edges/dc-sync' },
+      { label: 'HackTricks, DCSync', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcsync.html' },
+      { label: 'SpecterOps, BloodHound DCSync edge', url: 'https://bloodhound.specterops.io/resources/edges/dc-sync' },
     ],
   },
   {
@@ -126,7 +126,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     phase: 'domain-dominance',
     summary: 'The key to forge any Kerberos ticket.',
     description:
-      'The krbtgt account signs every TGT in the domain. Possessing its hash lets you forge tickets for any user with any privileges — total, durable control of Kerberos auth.',
+      'The krbtgt account signs every TGT in the domain. Possessing its hash lets you forge tickets for any user with any privileges: total, durable control of Kerberos auth.',
     requires: ['DCSync of krbtgt'],
     mitre: mitre('T1003.006'),
     difficulty: 'medium',
@@ -137,7 +137,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     phase: 'domain-dominance',
     summary: 'Forge a TGT as anyone, anytime.',
     description:
-      'Using the krbtgt hash, forge a Ticket-Granting-Ticket for an arbitrary (even non-existent) user with arbitrary group membership. It is accepted across the domain and survives most password resets — a Domain Admin equivalent and a persistence mechanism.',
+      'Using the krbtgt hash, forge a Ticket-Granting-Ticket for an arbitrary (even non-existent) user with arbitrary group membership. It is accepted across the domain and survives most password resets: a Domain Admin equivalent and a persistence mechanism.',
     tools: [
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       { name: 'ticketer (Impacket)', url: 'https://github.com/fortra/impacket' },
@@ -152,8 +152,8 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     requires: ['krbtgt hash', 'Domain SID'],
     mitre: mitre('T1558.001'),
     references: [
-      { label: 'HackTricks — Golden Ticket', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/golden-ticket.html' },
-      { label: 'The Hacker Recipes — Golden tickets', url: 'https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden' },
+      { label: 'HackTricks, Golden Ticket', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/golden-ticket.html' },
+      { label: 'The Hacker Recipes, Golden tickets', url: 'https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/golden' },
     ],
     opsec: 'Set realistic ticket lifetimes (default 10y golden tickets are an easy hunt). Mismatched RID/encryption is detectable.',
     difficulty: 'medium',
@@ -165,7 +165,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     kind: 'goal',
     summary: '👑 Full control of the domain.',
     description:
-      'You hold Domain Admin (or equivalent) — every host, every account, every secret. Reached here by ACL abuse, DCSync, or a forged Golden Ticket. The remaining branches establish durable persistence so access survives remediation.',
+      'You hold Domain Admin (or equivalent): every host, every account, every secret. Reached here by ACL abuse, DCSync, or a forged Golden Ticket. The remaining branches establish durable persistence so access survives remediation.',
     requires: ['Any one of: DA-equivalent ACL, DCSync, or a Golden Ticket'],
     mitre: mitre('T1078.002'),
     difficulty: 'medium',
@@ -191,7 +191,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     requires: ['Domain Admin / write on AdminSDHolder'],
     mitre: mitre('T1098'),
     references: [
-      { label: 'The Hacker Recipes — AdminSDHolder', url: 'https://www.thehacker.recipes/ad/persistence/adminsdholder' },
+      { label: 'The Hacker Recipes, AdminSDHolder', url: 'https://www.thehacker.recipes/ad/persistence/adminsdholder' },
     ],
     opsec: 'The injected ACE is visible to anyone auditing protected-group ACLs; pair with a low-profile principal name.',
     difficulty: 'hard',
@@ -202,7 +202,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     phase: 'persistence',
     summary: 'Use the DC local admin as a backdoor.',
     description:
-      'Every DC has a Directory Services Restore Mode local administrator. Dump its hash and flip the DsrmAdminLogonBehavior registry value so it can authenticate over the network — a stealthy, rarely-rotated DC backdoor.',
+      'Every DC has a Directory Services Restore Mode local administrator. Dump its hash and flip the DsrmAdminLogonBehavior registry value so it can authenticate over the network: a stealthy, rarely-rotated DC backdoor.',
     tools: [{ name: 'Mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' }],
     commands: [
       {
@@ -214,8 +214,8 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     requires: ['Domain Admin / local admin on a DC'],
     mitre: mitre('T1078.001'),
     references: [
-      { label: 'HackTricks — DSRM Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dsrm-credentials.html' },
-      { label: 'The Hacker Recipes — DSRM Persistence', url: 'https://www.thehacker.recipes/ad/persistence/dsrm' },
+      { label: 'HackTricks, DSRM Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dsrm-credentials.html' },
+      { label: 'The Hacker Recipes, DSRM Persistence', url: 'https://www.thehacker.recipes/ad/persistence/dsrm' },
     ],
     opsec: 'Registry change on the DC is auditable; the DSRM account rarely logs on, so its use stands out if monitored.',
     difficulty: 'hard',
@@ -238,8 +238,8 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     requires: ['Domain Admin', 'Two processes (push + SYSTEM)'],
     mitre: mitre('T1207'),
     references: [
-      { label: 'HackTricks — DCShadow', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcshadow.html' },
-      { label: 'The Hacker Recipes — DC Shadow', url: 'https://www.thehacker.recipes/ad/persistence/dcshadow/' },
+      { label: 'HackTricks, DCShadow', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcshadow.html' },
+      { label: 'The Hacker Recipes, DC Shadow', url: 'https://www.thehacker.recipes/ad/persistence/dcshadow/' },
     ],
     opsec: 'Stealthier than direct edits because changes arrive via replication, but registering an nTDSDSA object briefly is detectable by replication-metadata monitoring.',
     difficulty: 'hard',
@@ -248,7 +248,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
 
 export const domainDominanceEdges: AttackEdge[] = [
   // Enumeration (BloodHound) and the privilege-escalation categories now hang
-  // off valid-domain-creds directly (see ad-categories.ts) — BloodHound no
+  // off valid-domain-creds directly (see ad-categories.ts). BloodHound no
   // longer gates escalation. Escalation techniques converge here:
   { source: 'unconstrained-delegation', target: 'pass-the-ticket', label: 'captured DC TGT' },
   { source: 'unconstrained-delegation', target: 'dcsync' },

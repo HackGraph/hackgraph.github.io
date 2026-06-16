@@ -3,7 +3,7 @@ import { adMap } from './maps/ad';
 import { windowsPeMap } from './maps/windows-pe';
 
 /**
- * Registry of all maps. The app reads from this list — drop in another
+ * Registry of all maps. The app reads from this list; drop in another
  * MapDefinition here (web, cloud, network) and it becomes selectable in the
  * header without touching the engine.
  */

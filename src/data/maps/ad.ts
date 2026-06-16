@@ -27,7 +27,7 @@ import { adAdcsExtraNodes, adAdcsExtraEdges } from '../chains/ad-adcs-extra';
 import { adConvergenceNodes, adConvergenceEdges } from '../chains/ad-convergence';
 
 /**
- * The Active Directory attack map — three converging chains assembled into one
+ * The Active Directory attack map: three converging chains assembled into one
  * DAG. Add more techniques by editing the chain files; add an entirely new
  * domain by creating a sibling map and registering it in ../index.ts.
  */
@@ -36,10 +36,10 @@ export const adMap: MapDefinition = {
   name: 'Active Directory',
   tagline: 'From zero access to Domain Admin & persistence',
   rootId: 'start',
-  // A curated, sophisticated palette with real (but never neon) saturation —
+  // A curated, sophisticated palette with real (but never neon) saturation,
   // carried on each card's phase label + dot. Laid out by phase column, it reads
   // as an intentional left→right gradient, not a chaotic rainbow.
-  // Warm ANALOGOUS palette tuned to the red accent — gold → amber → orange →
+  // Warm ANALOGOUS palette tuned to the red accent: gold → amber → orange →
   // coral, then rose → pink → magenta → plum. All on the warm/magenta half of
   // the wheel (no blue/green/teal, which clash with red); pure red is reserved
   // for the active-path accent so the phase dots never blend into it.

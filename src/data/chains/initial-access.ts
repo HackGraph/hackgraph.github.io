@@ -6,7 +6,7 @@ const mitre = (id: string): { id: string; url: string } => ({
 });
 
 /**
- * Chain 1 — "No credentials → foothold → first domain credentials".
+ * Chain 1: "No credentials → foothold → first domain credentials".
  * Ends at the shared `valid-domain-creds` node that the other two chains
  * branch from (a key convergence point in the DAG).
  */
@@ -48,7 +48,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Network access to the internal subnet'],
     mitre: mitre('T1046'),
     references: [
-      { label: 'The Hacker Recipes — Recon', url: 'https://www.thehacker.recipes/ad/recon/' },
+      { label: 'The Hacker Recipes, Recon', url: 'https://www.thehacker.recipes/ad/recon/' },
     ],
     opsec: 'Passive listening and DNS lookups are quiet; full-range nmap scans are noisy and may trip IDS. Prefer targeted scans.',
     difficulty: 'easy',
@@ -76,7 +76,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     opsec: 'Responder is detectable: it answers names that should not resolve. Defenders deploy "honey" name lookups to catch it. Use --analyze mode first to observe without poisoning.',
     difficulty: 'easy',
     references: [
-      { label: 'HackTricks — LLMNR/NBT-NS Poisoning & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
+      { label: 'HackTricks, LLMNR/NBT-NS Poisoning & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
     ],
   },
   {
@@ -85,7 +85,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     phase: 'credential-access',
     summary: 'Relay captured auth to a host without SMB signing.',
     description:
-      'Instead of cracking the captured authentication, relay it in real time to another host where SMB signing is not enforced. If the relayed account is a local admin on the target, you get code execution or a dumped SAM — no password ever cracked.',
+      'Instead of cracking the captured authentication, relay it in real time to another host where SMB signing is not enforced. If the relayed account is a local admin on the target, you get code execution or a dumped SAM: no password ever cracked.',
     tools: [
       { name: 'ntlmrelayx (Impacket)', url: 'https://github.com/fortra/impacket' },
     ],
@@ -106,8 +106,8 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     opsec: 'Set Responder SMB/HTTP servers to OFF so it forwards to ntlmrelayx instead of competing. Relay leaves authentication logs on the target.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — LLMNR/NBT-NS Spoofing & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
-      { label: 'SpecterOps — Relay Your Heart Away (445 Takeover)', url: 'https://posts.specterops.io/relay-your-heart-away-an-opsec-conscious-approach-to-445-takeover-1c9b4666c8ac' },
+      { label: 'HackTricks, LLMNR/NBT-NS Spoofing & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
+      { label: 'SpecterOps, Relay Your Heart Away (445 Takeover)', url: 'https://posts.specterops.io/relay-your-heart-away-an-opsec-conscious-approach-to-445-takeover-1c9b4666c8ac' },
     ],
   },
   {
@@ -130,7 +130,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     ],
     requires: ['A captured NetNTLMv2 hash'],
     mitre: mitre('T1110.002'),
-    opsec: 'Fully offline — zero footprint on the target once captured.',
+    opsec: 'Fully offline: zero footprint on the target once captured.',
     difficulty: 'medium',
   },
   {
@@ -153,10 +153,10 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Local admin on the target (relayed or owned)'],
     mitre: mitre('T1021.002'),
-    opsec: 'psexec creates a service (Event ID 7045) — loud. wmiexec/smbexec are quieter. Prefer fileless execution.',
+    opsec: 'psexec creates a service (Event ID 7045), which is loud. wmiexec/smbexec are quieter. Prefer fileless execution.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — PsExec/WinExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
+      { label: 'HackTricks, PsExec/WinExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
     ],
   },
   {
@@ -165,7 +165,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     phase: 'priv-esc',
     summary: 'SYSTEM / local admin on a domain-joined host.',
     description:
-      'You hold SYSTEM or local administrator on a domain-joined host — the launchpad for credential theft. Dump LSASS, the SAM/LSA secrets, and DPAPI material to recover cached domain hashes, Kerberos tickets, and sometimes cleartext, then reuse them to move laterally to the next host.',
+      'You hold SYSTEM or local administrator on a domain-joined host: the launchpad for credential theft. Dump LSASS, the SAM/LSA secrets, and DPAPI material to recover cached domain hashes, Kerberos tickets, and sometimes cleartext, then reuse them to move laterally to the next host.',
     requires: ['Local admin / SYSTEM on a host'],
     mitre: mitre('T1078'),
     difficulty: 'medium',  },
@@ -197,7 +197,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     opsec: 'LSASS access is the single most-monitored action by EDR. Prefer protected-process bypasses, handle duplication, or dumping offline from a minidump.',
     difficulty: 'hard',
     references: [
-      { label: 'HackTricks — Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
+      { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
     ],
   },
   {
@@ -223,17 +223,17 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     opsec: 'NTLM logons are more visible than Kerberos and stand out from a workstation. Watch for "Logon Type 3" anomalies.',
     difficulty: 'medium',
     references: [
-      { label: 'HackTricks — NTLM / Pass-the-Hash', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
+      { label: 'HackTricks, NTLM / Pass-the-Hash', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
     ],
   },
   {
     id: 'valid-domain-creds',
     label: 'Valid Domain Credentials',
     phase: 'enumeration',
-    hub: true, // the domain-identity convergence hub — many creds-yielding steps lead back here
+    hub: true, // the domain-identity convergence hub: many creds-yielding steps lead back here
     summary: 'A foothold identity to enumerate and escalate from.',
     description:
-      "You hold at least one valid domain account (cleartext, hash, or ticket) — the baseline for enumeration and escalation. Always check first whether the account is already a local admin somewhere: many domain users administer their own workstation or a cluster of machines, and that standing access is often the intended path. Spray the credential across the estate and watch for NetExec's (Pwn3d!) marker, then jump straight to Local Admin on Host and start dumping.",
+      "You hold at least one valid domain account (cleartext, hash, or ticket): the baseline for enumeration and escalation. Always check first whether the account is already a local admin somewhere: many domain users administer their own workstation or a cluster of machines, and that standing access is often the intended path. Spray the credential across the estate and watch for NetExec's (Pwn3d!) marker, then jump straight to Local Admin on Host and start dumping.",
     tools: [{ name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' }],
     commands: [
       {
@@ -244,7 +244,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Any valid domain credential'],
     references: [
-      { label: 'NetExec — SMB authentication & (Pwn3d!) check', url: 'https://www.netexec.wiki/smb-protocol/authentication' },
+      { label: 'NetExec, SMB authentication & (Pwn3d!) check', url: 'https://www.netexec.wiki/smb-protocol/authentication' },
     ],
     mitre: mitre('T1078.002'),
     difficulty: 'easy',  },
@@ -253,9 +253,9 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     label: 'Valid Local Credentials',
     phase: 'initial-access',
     hub: true, // the local-identity convergence hub
-    summary: 'A local account on a host — often low-privilege; may need escalation to local admin.',
+    summary: 'A local account on a host, often low-privilege; may need escalation to local admin.',
     description:
-      'You hold a valid LOCAL account (not a domain account) — a default/weak local login, a cracked SAM hash, or creds from a config file. If it is low-privilege you must escalate locally before you can harvest secrets or pivot. Local admin on a domain-joined host is the gateway to dumping domain credentials.',
+      'You hold a valid LOCAL account (not a domain account): a default/weak local login, a cracked SAM hash, or creds from a config file. If it is low-privilege you must escalate locally before you can harvest secrets or pivot. Local admin on a domain-joined host is the gateway to dumping domain credentials.',
     requires: ['Any valid local account on a host'],
     mitre: mitre('T1078.003'),
     difficulty: 'easy',
@@ -270,7 +270,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['A low-privilege local shell on the host'],
     references: [
       {
-        label: 'HackTricks — Windows Local Privilege Escalation',
+        label: 'HackTricks, Windows Local Privilege Escalation',
         url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html',
       },
     ],
@@ -287,11 +287,11 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['A non-root shell on the host'],
     references: [
       {
-        label: 'HackTricks — Linux Privilege Escalation',
+        label: 'HackTricks, Linux Privilege Escalation',
         url: 'https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html',
       },
       { label: 'GTFOBins', url: 'https://gtfobins.github.io/' },
-      { label: 'PayloadsAllTheThings — Linux Privilege Escalation', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md' },
+      { label: 'PayloadsAllTheThings, Linux Privilege Escalation', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md' },
     ],
     tools: [
       { name: 'LinPEAS (PEASS-ng)', url: 'https://github.com/peass-ng/PEASS-ng' },
@@ -308,11 +308,11 @@ export const initialAccessEdges: AttackEdge[] = [
   { source: 'start', target: 'valid-domain-creds', label: 'have an account' },
   { source: 'start', target: 'valid-local-creds', label: 'have a local account' },
   // Low-priv local user -> escalate locally -> local admin (bridges to the PE map).
-  // Linear chain only — a direct valid-local-creds -> local-admin-host shortcut
+  // Linear chain only: a direct valid-local-creds -> local-admin-host shortcut
   // would skip a rank and draw its label straight over the Windows-privesc node.
   { source: 'valid-local-creds', target: 'windows-local-privesc', label: 'low-priv user' },
   { source: 'windows-local-privesc', target: 'local-admin-host', label: 'SYSTEM / local admin' },
-  // Domain creds that are *already* local admin somewhere (NetExec (Pwn3d!)) —
+  // Domain creds that are *already* local admin somewhere (NetExec (Pwn3d!)):
   // standing access is often the intended path, no escalation required.
   { source: 'valid-domain-creds', target: 'local-admin-host', label: 'already local admin (Pwn3d!)' },
   // network-recon -> llmnr-poisoning now routes through the 'Poisoning & Relay' category
