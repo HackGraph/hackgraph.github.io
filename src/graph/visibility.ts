@@ -70,7 +70,9 @@ export function computeVisible(
     if (!expanded.has(key)) return;
 
     for (const child of model.childrenOf.get(defId) ?? []) {
-      const label = model.edgeLabels.get(edgeKey(defId, child));
+      // On-graph caption: explicit labels only (generic relationship defaults are
+      // kept off the canvas for readability; they still show in the edge panel).
+      const label = model.edgeGraphLabels.get(edgeKey(defId, child));
       if (unrollSet.has(`${key}->${child}`)) {
         // A layout-backward edge → fresh forward instance + new dedup context.
         const childKey = `${key}~${child}`;

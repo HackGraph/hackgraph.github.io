@@ -57,8 +57,9 @@ const anchorEdges: AttackEdge[] = [];
  *            stored creds / service / DLL+PATH / tasks / app+service / CVE -> SYSTEM
  *
  * Colour encodes the lane (the account context) so you can trace your own route to
- * SYSTEM. Recovered credentials and a SYSTEM token feed a Loot & Move branch that
- * spreads host-to-host with no domain. Red stays reserved for the lit-path accent.
+ * SYSTEM, which is the goal: the map ends there. Post-exploitation (credential
+ * dumping, lateral movement) belongs to the Active Directory map. Red stays reserved
+ * for the lit-path accent.
  */
 export const windowsPeMap: MapDefinition = {
   id: 'win-pe',
@@ -74,7 +75,6 @@ export const windowsPeMap: MapDefinition = {
     { id: 'admin', label: 'Admin Users', color: '#b04fda' },
     { id: 'finding', label: 'Unprivileged Users', color: '#e0b12f' },
     { id: 'system', label: 'SYSTEM', color: '#5f6ce6' },
-    { id: 'loot', label: 'Loot & Move', color: '#cf4fc4' },
   ],
   nodes: [...anchorNodes, ...peTechniqueNodes],
   edges: [...anchorEdges, ...peTechniqueEdges],

@@ -15,8 +15,14 @@ export interface GraphModel {
   nodes: Map<NodeId, TechniqueNodeDef>;
   childrenOf: Map<NodeId, NodeId[]>;
   parentsOf: Map<NodeId, NodeId[]>;
-  /** Edge label lookup keyed by `${source}->${target}`. */
+  /** Edge label lookup keyed by `${source}->${target}` — the merged caption
+   *  (explicit label, else the relationship's default). Used by the edge panel. */
   edgeLabels: Map<string, string>;
+  /** On-graph captions, keyed by `${source}->${target}` — EXPLICIT labels only.
+   *  Generic relationship defaults ("enables", "code execution") are deliberately
+   *  omitted here so the canvas shows only meaningful captions and stays readable;
+   *  the full relationship label + explanation still surface in the edge panel. */
+  edgeGraphLabels: Map<string, string>;
   /** Optional per-edge explanation, keyed by `${source}->${target}`. */
   edgeDescriptions: Map<string, string>;
   /** Phase id -> definition (label + color). */
@@ -46,6 +52,7 @@ export function buildModel(map: MapDefinition): GraphModel {
   const childrenOf = new Map<NodeId, NodeId[]>();
   const parentsOf = new Map<NodeId, NodeId[]>();
   const edgeLabels = new Map<string, string>();
+  const edgeGraphLabels = new Map<string, string>();
   const edgeDescriptions = new Map<string, string>();
   for (const id of nodes.keys()) {
     childrenOf.set(id, []);
@@ -75,10 +82,12 @@ export function buildModel(map: MapDefinition): GraphModel {
     const label = edge.label ?? rel?.label;
     const description = edge.description ?? rel?.description;
     if (label) edgeLabels.set(key, label);
+    // Only EXPLICIT labels reach the canvas; a bare relationship default does not.
+    if (edge.label) edgeGraphLabels.set(key, edge.label);
     if (description) edgeDescriptions.set(key, description);
   }
 
   const phases = new Map(map.phases.map((p) => [p.id, p]));
 
-  return { rootId: map.rootId, nodes, childrenOf, parentsOf, edgeLabels, edgeDescriptions, phases };
+  return { rootId: map.rootId, nodes, childrenOf, parentsOf, edgeLabels, edgeGraphLabels, edgeDescriptions, phases };
 }

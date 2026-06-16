@@ -32,8 +32,8 @@ export function layoutGraph(
   const g = new dagre.graphlib.Graph();
   g.setGraph({
     rankdir: 'LR',
-    ranksep: options.ranksep ?? 110,
-    nodesep: options.nodesep ?? 28,
+    ranksep: options.ranksep ?? 130,
+    nodesep: options.nodesep ?? 48,
     ranker: 'tight-tree',
   });
   g.setDefaultEdgeLabel(() => ({}));
