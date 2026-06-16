@@ -32,6 +32,8 @@ interface GraphCanvasProps {
   onNodeHover: (id: NodeId | null) => void;
   /** "Isolate path" mode — render only this instanced attack path. */
   isolate?: IsolatePath | null;
+  /** Focus mode — re-root the visible graph at this key (a node's parent). */
+  rootKey?: NodeId;
   /** Render keys of edges on the lit attack path (fed to edge data for repaint). */
   activeEdges: ReadonlySet<string>;
   /** The currently open edge's id, and whether any node/edge is selected. */
@@ -48,6 +50,7 @@ function GraphCanvasImpl({
   onBackgroundClick,
   onNodeHover,
   isolate,
+  rootKey,
   activeEdges,
   selectedEdgeId,
   hasSelection,
@@ -59,6 +62,7 @@ function GraphCanvasImpl({
     selectedId,
     reduceMotion,
     isolate,
+    rootKey,
   });
 
   // Emphasis travels through edge DATA (not context): React Flow does not
@@ -128,13 +132,16 @@ function GraphCanvasImpl({
         onNodeMouseEnter={(_, n) => onNodeHover(n.id)}
         onNodeMouseLeave={() => onNodeHover(null)}
       >
-        <Background variant={BackgroundVariant.Dots} gap={30} size={1} color="rgba(255,255,255,0.035)" />
+        <Background variant={BackgroundVariant.Dots} gap={30} size={1} color="var(--color-dot)" />
         <Controls position="top-left" showInteractive={false} className="hg-controls" />
         <MiniMap
           pannable
           zoomable
+          // Lifted off the bottom-right corner so the floating settings button tucks
+          // beneath it without overlap.
+          style={{ bottom: 64 }}
           className="hg-minimap hidden sm:block"
-          maskColor="rgba(12,10,11,0.78)"
+          maskColor="var(--color-minimap-mask)"
           nodeColor={(n) => {
             // Strip any isolate-instance suffix (`defId__2`) back to the content id.
             const baseId = n.id.includes('__') ? n.id.slice(0, n.id.indexOf('__')) : n.id;

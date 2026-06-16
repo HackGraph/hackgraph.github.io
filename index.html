@@ -18,7 +18,20 @@
     <title>HackGraph | Interactive Attack-path Explorer</title>
     <style>
       html { background: #0c0a0b; }
+      html[data-theme='light'] { background: #f6f2f2; }
     </style>
+    <script>
+      /* Apply the saved theme before first paint so there is no flash. Dark is the
+         default identity; light is opt-in via the in-app settings toggle. */
+      (function () {
+        try {
+          var k = localStorage.getItem('hg-theme');
+          document.documentElement.dataset.theme = k === 'light' ? 'light' : 'dark';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

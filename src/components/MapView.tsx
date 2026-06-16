@@ -24,7 +24,9 @@ import { GraphCanvas } from './GraphCanvas';
 import { NodeDetailPanel } from './NodeDetailPanel';
 import { EdgeDetailPanel, type EdgeDetail } from './EdgeDetailPanel';
 import { SearchBox } from './SearchBox';
+import { SettingsFab } from './SettingsFab';
 import { Legend } from './Legend';
+import type { Theme } from '../state/useTheme';
 import { WINDOWS_VERSIONS } from '../data/windows-versions';
 import { CloseIcon, SearchIcon } from '../ui/icons';
 
@@ -53,7 +55,17 @@ function nextTrail(prev: string[], next: string, graph: VisibleGraph, root: stri
  * canvas, and the overlays. App mounts this with `key={mapId}` so switching
  * maps (or "collapse all") gets a clean reset + refit.
  */
-export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotion: boolean }) {
+export function MapView({
+  map,
+  reduceMotion,
+  theme,
+  onToggleTheme,
+}: {
+  map: MapDefinition;
+  reduceMotion: boolean;
+  theme: Theme;
+  onToggleTheme: () => void;
+}) {
   const model = useGraphModel(map);
 
   // Seed expansion/selection from a shared link, but only if it targets THIS map.
@@ -77,6 +89,10 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
   // Edge selection is parallel to node selection — only one is open at a time.
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [pathOnly, setPathOnly] = useState(false);
+  // Focus mode (settings): on each selection, collapse the graph to just the lineage
+  // of the selected node plus the node itself — so you see the route in, the node's
+  // peers at each level, and its next steps, with every unrelated branch collapsed.
+  const [focusMode, setFocusMode] = useState(false);
   // Ordered click-trail (waypoints) the user traversed; the lit path is stitched
   // through these so it follows the ACTUAL route, not just the longest one to the
   // target (see `nextTrail`). Last element is always the current selection.
@@ -119,6 +135,24 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
   // what's on screen: no synthesized steps, no mid-path gaps. Recomputed only when
   // the expansion set changes.
   const rendered = useMemo(() => resolveUnroll(model, expansion.expanded), [model, expansion.expanded]);
+
+  // Focus mode: with a node selected, re-root the CANVAS at that node's parent and
+  // show only {parent, peers, selected, selected's children} — the local
+  // neighbourhood, everything above the parent collapsed. The full `rendered` graph
+  // above stays root-based (breadcrumb, parent lookup, lit path all keep working);
+  // only what the canvas draws is the re-rooted slice.
+  const focusActive = focusMode && selection.selectedId != null;
+  const focusRoot = useMemo(() => {
+    if (!focusActive || !selection.selectedId) return undefined;
+    const path = pathInRendered(rendered.graph, model.rootId, selection.selectedId);
+    return path.length >= 2 ? path[path.length - 2] : model.rootId;
+  }, [focusActive, selection.selectedId, rendered, model.rootId]);
+  // What the canvas expands: just the parent (reveals peers) and the selected node
+  // (reveals its children). Outside focus mode, the user's real expansion set.
+  const canvasExpanded = useMemo(
+    () => (focusActive && focusRoot && selection.selectedId ? new Set<string>([focusRoot, selection.selectedId]) : expansion.expanded),
+    [focusActive, focusRoot, selection.selectedId, expansion.expanded],
+  );
 
   // Edges on the hovered node's lineage (root → node, along the drawn edges), so
   // hovering traces the whole path back to the start, not just the parent edge.
@@ -322,7 +356,9 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
       model,
       getDef: (id) => model.nodes.get(id),
       hasChildren: (id) => modelHasChildren(model, id),
-      isExpanded: (id) => expansion.expanded.has(id),
+      // Chevron state reflects what the canvas actually draws — in focus mode that
+      // is the re-rooted slice, otherwise the user's real expansion.
+      isExpanded: (id) => canvasExpanded.has(id),
       isSelected: (id) => selection.selectedId === id,
       isDimmed,
       hasSelection: selection.selectedId != null || selectedEdgeId != null,
@@ -333,12 +369,25 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
       phaseColor: (pid) => model.phases.get(pid)?.color ?? '#7c8aa0',
       phaseLabel: (pid) => model.phases.get(pid)?.label ?? pid,
       reduceMotion,
-      toggle: expansion.toggle,
+      // In focus mode every node click re-centres the view on that node (its parent
+      // becomes the local root), so the chevron navigates like the body does.
+      toggle: focusActive ? selectNode : expansion.toggle,
       select: selectNode,
       selectEdge,
     }),
-    [model, expansion.expanded, expansion.toggle, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, reduceMotion],
+    [model, canvasExpanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, reduceMotion],
   );
+
+  // Focus mode: keep the selected node's full lineage (and the node itself) in the
+  // REAL expansion set so the root-based `rendered` graph always contains it — that
+  // is what lets us look up its parent (the re-root) and resolve clicks on its
+  // freshly-revealed children. Additive, so it never collapses what the user opened;
+  // deps exclude `expanded` to avoid a loop.
+  const { expandMany } = expansion;
+  useEffect(() => {
+    if (!focusMode || !selection.selectedId) return;
+    expandMany([...keyLineage(model, selection.selectedId), selection.selectedId]);
+  }, [focusMode, selection.selectedId, model, expandMany]);
 
   // Keep the URL hash in sync so the current view is shareable / bookmarkable.
   useEffect(() => {
@@ -409,8 +458,9 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
       <ReactFlowProvider>
         <GraphCanvas
           model={model}
-          expanded={expansion.expanded}
-          lastToggled={expansion.lastToggled}
+          expanded={canvasExpanded}
+          lastToggled={focusActive && selection.selectedId ? selection.selectedId : expansion.lastToggled}
+          rootKey={focusRoot}
           selectedId={selection.selectedId}
           reduceMotion={reduceMotion}
           onBackgroundClick={clearAll}
@@ -514,6 +564,13 @@ export function MapView({ map, reduceMotion }: { map: MapDefinition; reduceMotio
       </div>
 
       <Legend phases={map.phases} />
+      <SettingsFab
+        theme={theme}
+        onToggleTheme={onToggleTheme}
+        focusMode={focusMode}
+        onToggleFocusMode={() => setFocusMode((f) => !f)}
+        reduceMotion={reduceMotion}
+      />
       <NodeDetailPanel
         def={selectedDef}
         phaseColor={selectedDef ? interaction.phaseColor(selectedDef.phase) : '#7c8aa0'}

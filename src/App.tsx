@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { MAPS, DEFAULT_MAP_ID, getMap } from './data';
 import { usePrefersReducedMotion } from './state/usePrefersReducedMotion';
+import { useTheme } from './state/useTheme';
 import { readDeepLink, writeDeepLink } from './state/deepLink';
 import { MapView } from './components/MapView';
 import { GithubIcon } from './ui/icons';
@@ -21,6 +22,7 @@ function LogoMark() {
 
 export default function App() {
   const reduceMotion = usePrefersReducedMotion();
+  const { theme, toggle: toggleTheme } = useTheme();
   const [mapId, setMapId] = useState(() => {
     const m = readDeepLink().mapId;
     return m && MAPS.some((x) => x.id === m) ? m : DEFAULT_MAP_ID;
@@ -62,6 +64,16 @@ export default function App() {
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
+          <a
+            href="https://github.com/HackGraph/hackgraph.github.io"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="GitHub repository"
+            className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-[12px] font-medium text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
+          >
+            <GithubIcon className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
           <button
             type="button"
             onClick={() => {
@@ -73,22 +85,18 @@ export default function App() {
           >
             Reset
           </button>
-          <a
-            href="https://github.com/HackGraph/hackgraph.github.io"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="GitHub repository"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-[12px] font-medium text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
-          >
-            <GithubIcon className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">GitHub</span>
-          </a>
         </div>
       </header>
 
       {/* Graph + overlays — keyed so map switch / collapse-all remounts cleanly */}
       <main className="relative flex-1 overflow-hidden">
-        <MapView key={`${mapId}:${resetNonce}`} map={map} reduceMotion={reduceMotion} />
+        <MapView
+          key={`${mapId}:${resetNonce}`}
+          map={map}
+          reduceMotion={reduceMotion}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+        />
       </main>
     </div>
   );
