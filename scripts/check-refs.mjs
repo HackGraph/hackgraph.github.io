@@ -31,21 +31,38 @@ for (const f of walk(ROOT)) {
 const list = [...urls].sort();
 console.log(`Checking ${list.length} unique reference URLs…`);
 
-async function status(url) {
+// One fetch with its own timeout, so a HEAD stall does not eat the GET's budget.
+async function fetchOnce(url, method) {
   const ctrl = new AbortController();
   const to = setTimeout(() => ctrl.abort(), TIMEOUT);
   try {
-    const opts = { redirect: 'follow', signal: ctrl.signal, headers: { 'user-agent': UA } };
-    let res = await fetch(url, { method: 'HEAD', ...opts });
-    if ([403, 405, 501, 999].includes(res.status)) res = await fetch(url, { method: 'GET', ...opts });
-    // Soft-404: some GitBook sites (e.g. HackTricks) serve a 200 that redirects to /404.html.
-    if (res.url && /\/(en\/)?404\.html$/.test(res.url)) return 404;
-    return res.status;
-  } catch {
-    return 0;
+    return await fetch(url, { method, redirect: 'follow', signal: ctrl.signal, headers: { 'user-agent': UA } });
   } finally {
     clearTimeout(to);
   }
+}
+
+async function status(url) {
+  // HEAD is cheap, but plenty of CDNs and blogs stall it, reject it, or 404 it
+  // while a real browser GET returns 200 (e.g. dirkjanm.io). So fall back to GET
+  // on ANY error or non-2xx/3xx before calling a link dead, instead of trusting a
+  // single HEAD. Failures are rare, so the extra request costs little.
+  let res = null;
+  try {
+    res = await fetchOnce(url, 'HEAD');
+  } catch {
+    // HEAD timed out or the connection failed; the GET retry below decides.
+  }
+  if (!res || res.status >= 400 || [403, 405, 501, 999].includes(res.status)) {
+    try {
+      res = await fetchOnce(url, 'GET');
+    } catch {
+      return 0;
+    }
+  }
+  // Soft-404: some GitBook sites (e.g. HackTricks) serve a 200 that redirects to /404.html.
+  if (res.url && /\/(en\/)?404\.html$/.test(res.url)) return 404;
+  return res.status;
 }
 
 const results = [];
