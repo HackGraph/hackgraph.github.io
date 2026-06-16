@@ -30,6 +30,7 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   { id: 'pe-cat-priv', label: 'Privileged Users', phase: 'hold', summary: 'A privileged token or group you already hold.', description: 'The account already holds something dangerous — an abusable token privilege or membership in a powerful local group. No hunting required: abuse the right you have.' },
   { id: 'pe-cat-admin', label: 'Admin Users', phase: 'admin', summary: 'Already a local admin, at medium (UAC-filtered) or high integrity.', description: 'The account is in the local Administrators group. If UAC filters it to a medium-integrity token, bypass UAC to obtain the high-integrity token; once high-integrity, any administrator-to-SYSTEM technique applies.' },
   { id: 'pe-cat-enum', label: 'Unprivileged Users', phase: 'finding', summary: 'No inherent privilege — enumerate for a weakness.', description: 'The account holds no useful privilege, group, or admin membership. Enumerate the host (winPEAS / PrivescCheck) and work the findings: stored credentials, service and DLL/PATH misconfigurations, tasks and autoruns, privileged app/service abuse, and known-CVE exploits.' },
+  { id: 'pe-svc-account', label: 'Service Account', phase: 'svcacct', summary: 'Running as LOCAL/NETWORK SERVICE or an application-pool identity.', description: 'Code execution as a Windows service account: LOCAL SERVICE, NETWORK SERVICE, an IIS application-pool identity, or a service such as MSSQL. whoami names the account; whoami /priv lists its privileges. Service accounts very commonly hold SeImpersonatePrivilege, which leads straight to a Potato attack for SYSTEM. Where that privilege is not present, the default privilege set can usually be recovered first, then the same Potato path applies.' },
 
   // ── Sub-folders: Privileged Users ───────────────────────────────────────────
   { id: 'pe-cat-tokens', label: 'Token Privileges', phase: 'hold', kind: 'category', summary: 'whoami /priv — abusable token privileges.', description: 'Dangerous privileges surfaced by whoami /priv: SeImpersonate / SeAssignPrimaryToken, SeBackup / SeRestore, SeDebug, SeTakeOwnership, SeLoadDriver, SeManageVolume, SeTrustedCredManAccess, SeCreateToken, SeTcb, and SeRelabel.' },
@@ -51,8 +52,8 @@ export const peTechniqueNodes: TechniqueNodeDef[] = [
   {
     id: 'pe-localservice-fullpowers',
     label: 'Restore Service Account Privileges',
-    phase: 'hold',
-    summary: 'Restore a stripped service token to its default privileges, including SeImpersonate.',
+    phase: 'svcacct',
+    summary: 'Recover a limited service token to its default privileges, including SeImpersonate.',
     affects: 'Works on Windows 10 / Server 2016 to 2019. Unreliable on Windows 11 / Server 2022 and later, where the scheduled-task privilege behaviour changed. If the account already holds SeImpersonate, skip this and go straight to a Potato (GodPotato needs only that privilege).',
     versions: [...range('win10-1507', 'win10-22h2'), 'srv2016', 'srv2019'],
     description: r`A service running as LOCAL SERVICE or NETWORK SERVICE often starts with a heavily filtered token that is missing SeImpersonatePrivilege. The account's default privilege set can be restored by relaunching through the Task Scheduler, whose tasks receive the full set when RequiredPrivileges is absent, handing back SeImpersonate / SeAssignPrimaryToken so a Potato attack becomes possible again. itm4n's FullPowers automates this, but it was archived in 2024 and is unreliable on Windows 11 / Server 2022 and later. Treat the tool as one option, not the technique itself.`,
@@ -1230,10 +1231,15 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
 ];
 
 export const peTechniqueEdges: AttackEdge[] = [
-  // Triage gate forks into three account contexts.
+  // Triage gate forks into account contexts (whoami /priv, /groups, and the account).
   { source: 'pe-start', target: 'pe-cat-priv' },
   { source: 'pe-start', target: 'pe-cat-admin' },
   { source: 'pe-start', target: 'pe-cat-enum' },
+  { source: 'pe-start', target: 'pe-svc-account' },
+
+  // Service account: hold the impersonation privilege, or recover it first.
+  { source: 'pe-svc-account', target: 'pe-seimpersonate-potato', label: 'holds SeImpersonate' },
+  { source: 'pe-svc-account', target: 'pe-localservice-fullpowers', label: 'missing SeImpersonate' },
 
   // Lane sub-folders.
   { source: 'pe-cat-priv', target: 'pe-cat-tokens' },
@@ -1248,7 +1254,6 @@ export const peTechniqueEdges: AttackEdge[] = [
   { source: 'pe-cat-enum', target: 'pe-cat-cve' },
 
   // Folder -> technique.
-  { source: 'pe-cat-tokens', target: 'pe-localservice-fullpowers' },
   { source: 'pe-cat-tokens', target: 'pe-seimpersonate-potato' },
   { source: 'pe-cat-tokens', target: 'pe-sebackup-restore' },
   { source: 'pe-cat-tokens', target: 'pe-sedebug-lsass' },
@@ -1307,11 +1312,11 @@ export const peTechniqueEdges: AttackEdge[] = [
   // edge-panel explanation; no on-graph captions.
 
   // Privileged Users -> outcome.
-  { source: 'pe-localservice-fullpowers', target: 'pe-seimpersonate-potato', rel: 'enables', label: 'restores SeImpersonate' },
   { source: 'pe-seimpersonate-potato', target: 'pe-pot-juicypotato' },
   { source: 'pe-seimpersonate-potato', target: 'pe-pot-printspoofer' },
   { source: 'pe-seimpersonate-potato', target: 'pe-pot-roguepotato' },
   { source: 'pe-seimpersonate-potato', target: 'pe-pot-godpotato' },
+  { source: 'pe-localservice-fullpowers', target: 'pe-seimpersonate-potato', rel: 'enables', label: 'restores SeImpersonate' },
   { source: 'pe-pot-juicypotato', target: 'nt-system', rel: 'host-exec' },
   { source: 'pe-pot-printspoofer', target: 'nt-system', rel: 'host-exec' },
   { source: 'pe-pot-roguepotato', target: 'nt-system', rel: 'host-exec' },

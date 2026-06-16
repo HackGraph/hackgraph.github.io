@@ -10,9 +10,9 @@ const anchorNodes: TechniqueNodeDef[] = [
     label: 'Local Foothold',
     phase: 'triage',
     kind: 'start',
-    summary: 'A low-priv shell — triage the account first.',
+    summary: 'A low-privilege shell. Triage the account first.',
     description:
-      'You have command execution as a low-privilege (or service) account on a domain-joined or standalone Windows machine; the goal is NT AUTHORITY\\SYSTEM (or local admin). Before any tooling, establish the security context: whoami /priv and whoami /groups decide which path applies — a privileged token or group, an administrator restricted by UAC, or an unprivileged user who must enumerate the host for a misconfiguration.',
+      'You have command execution as a low-privilege (or service) account on a domain-joined or standalone Windows machine; the goal is NT AUTHORITY\\SYSTEM (or local admin). Before any tooling, establish the security context. whoami names the account, so a service identity (LOCAL/NETWORK SERVICE, an application pool, MSSQL) is its own path; whoami /priv and whoami /groups decide the rest: a privileged token or group, an administrator restricted by UAC, or an unprivileged user who must enumerate the host for a misconfiguration.',
     tools: [
       { name: 'winPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
       { name: 'Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },
@@ -50,11 +50,12 @@ const anchorEdges: AttackEdge[] = [];
  * Shaped as the operator's triage tree, not a technique catalogue. The foothold node
  * is also the triage ("who am I?"), and that gate forks the whole map:
  *
- *   Local Foothold (whoami /priv /groups)
+ *   Local Foothold (whoami, whoami /priv /groups)
  *     ├─ Privileged Users   -> a token privilege or group you hold  -> SYSTEM
  *     ├─ Admin Users        -> UAC bypass, then Admin -> SYSTEM      -> SYSTEM
- *     └─ Unprivileged Users -> enumerate for a weakness:
- *            stored creds / service / DLL+PATH / tasks / app+service / CVE -> SYSTEM
+ *     ├─ Unprivileged Users -> enumerate for a weakness:
+ *     │      stored creds / service / DLL+PATH / tasks / app+service / CVE -> SYSTEM
+ *     └─ Service Account    -> hold SeImpersonate (or recover it) -> Potato -> SYSTEM
  *
  * Colour encodes the lane (the account context) so you can trace your own route to
  * SYSTEM, which is the goal: the map ends there. Post-exploitation (credential
@@ -74,6 +75,7 @@ export const windowsPeMap: MapDefinition = {
     { id: 'hold', label: 'Privileged Users', color: '#ef8630' },
     { id: 'admin', label: 'Admin Users', color: '#b04fda' },
     { id: 'finding', label: 'Unprivileged Users', color: '#e0b12f' },
+    { id: 'svcacct', label: 'Service Account', color: '#1f9e8f' },
     { id: 'system', label: 'SYSTEM', color: '#5f6ce6' },
   ],
   nodes: [...anchorNodes, ...peTechniqueNodes],
