@@ -32,10 +32,6 @@ interface UseGraphViewParams {
    *  (repeated `repeatable` nodes get distinct keys) instead of the
    *  expansion-derived visible set. */
   isolate?: IsolatePath | null;
-  /** Focus mode is on: the visible set is already pruned to the local neighbourhood
-   *  (path + peers + children), so frame ALL of it on each change instead of chasing
-   *  the selected node's children (which would push the path off-screen). */
-  focus?: boolean;
 }
 
 /** Width (px) the right-hand desktop detail panel occludes, incl. its margins. */
@@ -121,7 +117,6 @@ export function useGraphView({
   selectedId,
   reduceMotion,
   isolate,
-  focus,
 }: UseGraphViewParams): UseGraphViewResult {
   const rf = useReactFlow<AppNode, AppEdge>();
   const sizeCacheRef = useRef(new SizeCache());
@@ -143,8 +138,8 @@ export function useGraphView({
   // reconcile keeps every node mounted, fades the off-path ones, and lays the lit
   // path out straight. So toggling isolate is a glide, never a pop-and-snap.
   const visible = useMemo(
-    () => ({ model, expanded, isolate: isolate ?? null, focus: !!focus }),
-    [model, expanded, isolate, focus],
+    () => ({ model, expanded, isolate: isolate ?? null }),
+    [model, expanded, isolate],
   );
 
   const onNodesChange = useCallback<OnNodesChange<AppNode>>((changes) => {
@@ -228,7 +223,7 @@ export function useGraphView({
     //    every node mounted, lays the lit path out STRAIGHT (overriding just those
     //    positions), and fades the rest. So entering/leaving is a glide, not a
     //    remount. A fresh instance key inherits its def's cached size on first paint.
-    const { model, expanded, isolate, focus } = visible;
+    const { model, expanded, isolate } = visible;
     const main = resolveMainLayout(model, expanded, cache);
     const { nodeIds, edges, defOf } = main;
     let positions: Map<NodeId, XY> = main.positions;
@@ -315,21 +310,22 @@ export function useGraphView({
     );
 
     // 4. Camera + the isolate position glide.
-    if (isolateChanged) {
-      if (tween) {
+    if (isolateOn && pathKeys) {
+      // Frame the isolated subset (lit path, or the focus neighbourhood). Re-fit on
+      // EVERY reconcile while it's active — not just the on/off toggle — so the frame
+      // corrects after off-expansion focus nodes (siblings / downstream) get measured
+      // and re-laid-out, instead of staying stuck on the provisional first layout.
+      if (isolateChanged && tween) {
         const targets = new Map<NodeId, XY>();
         for (const id of nodeIds) targets.set(id, positions.get(id) ?? { x: 0, y: 0 });
         tweenPositions(targets, 640);
       }
-      // Frame the FINAL geometry (not the mid-tween node state): fit the straight
-      // path when isolating, the whole graph when leaving — converging with the glide.
-      const dur = reduceMotion ? 0 : 660;
-      if (isolateOn && pathKeys) {
-        const rect = boundsOf(pathKeys, positions, cache);
-        requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: dur }));
-      } else {
-        requestAnimationFrame(() => rf.fitView({ padding: 0.28, duration: dur, maxZoom: 1.1 }));
-      }
+      const rect = boundsOf(pathKeys, positions, cache);
+      const dur = reduceMotion ? 0 : isolateChanged ? 660 : 300;
+      requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: dur }));
+    } else if (isolateChanged) {
+      // Leaving isolate/focus → fit the whole graph.
+      requestAnimationFrame(() => rf.fitView({ padding: 0.28, duration: reduceMotion ? 0 : 660, maxZoom: 1.1 }));
     } else {
       // On a fresh EXPANSION, refocus onto the expanded node's CHILDREN — the next
       // steps — whether or not they were already on screen. The `expanded` Set is a
@@ -338,16 +334,9 @@ export function useGraphView({
       // that — including expanding the now-collapsible root — follows its children.
       const expandedChanged = expanded !== prevExpandedRef.current;
       const firstReconcile = prevExpandedRef.current === null;
-      if (expandedChanged && !firstReconcile) {
-        if (focus) {
-          // Focus mode: the visible set IS the local neighbourhood (the path in,
-          // the node's peers, and its children), so frame ALL of it rather than
-          // chasing just the children — that keeps the originating path in view.
-          requestAnimationFrame(() => rf.fitView({ padding: 0.22, duration: reduceMotion ? 0 : 460, maxZoom: 1.1 }));
-        } else if (expanded.has(lastToggled)) {
-          const kids = edges.filter((e) => e.source === lastToggled).map((e) => e.target);
-          if (kids.length > 0) maybeFollow(kids);
-        }
+      if (expandedChanged && !firstReconcile && expanded.has(lastToggled)) {
+        const kids = edges.filter((e) => e.source === lastToggled).map((e) => e.target);
+        if (kids.length > 0) maybeFollow(kids);
       }
     }
     prevExpandedRef.current = expanded;
@@ -399,6 +388,9 @@ export function useGraphView({
       focusedSelRef.current = null;
       return;
     }
+    // In isolate/focus mode the camera is owned by the isolate fit (which frames the
+    // whole subset); don't also centre on the selected node or the two cameras fight.
+    if (isolate) return;
     if (!readyRef.current || focusedSelRef.current === selectedId) return;
     const node = rf.getNode(selectedId);
     if (!node) return; // not laid out yet — a later `nodes` update will retry
@@ -419,7 +411,7 @@ export function useGraphView({
       duration: reduceMotion ? 0 : 450,
     });
     focusedSelRef.current = selectedId;
-  }, [selectedId, nodes, rf, reduceMotion]);
+  }, [selectedId, nodes, rf, reduceMotion, isolate]);
 
   return { nodes, edges, onNodesChange, ready, tweening };
 }

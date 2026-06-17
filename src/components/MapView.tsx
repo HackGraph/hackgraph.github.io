@@ -120,28 +120,13 @@ export function MapView({
     setHoveredId(null);
   }, [selection.selectedId]);
 
-  // The CURRENTLY-RENDERED key-graph — the same forward-unrolled visible graph the
-  // canvas draws. `resolveUnroll` is pure and size-independent, so this matches
-  // useGraphView's layout exactly. EVERY highlight (lit path, hover trace,
-  // breadcrumb) is walked over THESE edges, so it's always a connected subset of
-  // what's on screen: no synthesized steps, no mid-path gaps. Recomputed only when
-  // the expansion set changes.
-  const rendered = useMemo(() => resolveUnroll(model, expansion.expanded), [model, expansion.expanded]);
-
-  // Focus mode: keep ONLY the originating path (root → selected) and the selected
-  // node expanded, so the route in stays visible (parents NOT hidden), the node's
-  // peers and children show, and every unrelated branch folds away. The canvas
-  // renders this derived set; the full `rendered` graph stays root-based for the
-  // breadcrumb / lit path. `keyLineage` is model-based so it works regardless of
-  // what the user had expanded.
   const focusActive = focusMode && selection.selectedId != null;
-  const canvasExpanded = useMemo(
-    () =>
-      focusActive && selection.selectedId
-        ? new Set<string>([...keyLineage(model, selection.selectedId), selection.selectedId])
-        : expansion.expanded,
-    [focusActive, selection.selectedId, model, expansion.expanded],
-  );
+
+  // The CURRENTLY-RENDERED key-graph — the forward-unrolled visible graph the canvas
+  // draws, over the user's real expansion. EVERY highlight (lit path, hover, breadcrumb)
+  // and the focus subgraph are walked over THESE edges, so they're always a connected
+  // subset of what exists; focus mode then isolates a slice of it (see `isolate`).
+  const rendered = useMemo(() => resolveUnroll(model, expansion.expanded), [model, expansion.expanded]);
 
   // Edges on the hovered node's lineage (root → node, along the drawn edges), so
   // hovering traces the whole path back to the start, not just the parent edge.
@@ -279,11 +264,58 @@ export function MapView({
     return { nodes, edges };
   }, [rendered, model.rootId, trail, selection.selectedId, selectedEdgeId]);
 
-  // "Isolate path" mode renders EXACTLY the highlighted path (`activePath`) and
-  // nothing else — so it's just "hide the unrelated nodes and straighten the lit
-  // route". Same render keys as the main graph, so toggling glides; dagre lays the
-  // linear chain out straight. `#n` badges fall out of repeated def ids on the path.
+  // Isolate render — a subgraph drawn alone (dagre-laid-out, everything else faded).
+  // Two modes share it:
+  //  - FOCUS MODE: the lit ROUTE to the selected node, PLUS the node's siblings (as
+  //    leaves — their own next steps stay hidden), PLUS the selected node's full
+  //    downstream. So you see how you got here, the alternatives at this step, and
+  //    where this node leads — nothing else. Computed in DEF-id space over the model,
+  //    so the downstream shows regardless of what was expanded.
+  //  - "Isolate path" checkbox: EXACTLY the lit route, nothing else.
   const isolate = useMemo<IsolatePath | null>(() => {
+    const sel = selection.selectedId;
+
+    if (focusActive && sel) {
+      const selDef = defIdOf(sel);
+      const routeDefs = new Set([...activePath.nodes].map(defIdOf));
+      // sel's parent on the lit route = source of the route edge that lands on sel.
+      let parentDef: string | undefined;
+      for (const eid of activePath.edges) {
+        const j = eid.indexOf('->');
+        if (eid.slice(j + 2) === sel) parentDef = defIdOf(eid.slice(0, j));
+      }
+      const siblings = new Set<string>(parentDef ? model.childrenOf.get(parentDef) ?? [] : []);
+      const downstream = new Set<string>([selDef]);
+      const stack = [selDef];
+      while (stack.length) {
+        const cur = stack.pop()!;
+        for (const ch of model.childrenOf.get(cur) ?? []) if (!downstream.has(ch)) { downstream.add(ch); stack.push(ch); }
+      }
+      const focusDefs = new Set<string>([...routeDefs, ...siblings, ...downstream]);
+      // A node draws its outgoing edges only when it's on the route or downstream of
+      // sel — so siblings render as leaves (no sub-branches), per the spec.
+      const expand = (d: string) => routeDefs.has(d) || downstream.has(d);
+      const count = new Map<string, number>();
+      const nodes = [...focusDefs].map((d) => {
+        const instanceIndex = (count.get(d) ?? 0) + 1;
+        count.set(d, instanceIndex);
+        return { key: d, defId: d, instanceIndex };
+      });
+      const edges: { id: string; source: string; target: string; label?: string }[] = [];
+      const seen = new Set<string>();
+      for (const d of focusDefs) {
+        if (!expand(d)) continue;
+        for (const ch of model.childrenOf.get(d) ?? []) {
+          if (!focusDefs.has(ch)) continue;
+          const id = edgeKey(d, ch);
+          if (seen.has(id)) continue;
+          seen.add(id);
+          edges.push({ id, source: d, target: ch, label: model.edgeLabels.get(id) });
+        }
+      }
+      return { nodes, edges };
+    }
+
     if (!pathOnly || activePath.nodes.size === 0) return null;
     const count = new Map<string, number>();
     const nodes = [...activePath.nodes].map((key) => {
@@ -299,7 +331,7 @@ export function MapView({
       return { id, source, target, label: model.edgeLabels.get(edgeKey(defIdOf(source), defIdOf(target))) };
     });
     return { nodes, edges };
-  }, [pathOnly, activePath, model]);
+  }, [focusActive, pathOnly, activePath, selection.selectedId, model]);
 
   // The immediate next steps off the selected node (its children, by def id) —
   // kept fully visible during path-building instead of receding with the rest.
@@ -347,7 +379,7 @@ export function MapView({
       hasChildren: (id) => modelHasChildren(model, id),
       // Chevron state reflects what the canvas actually draws — in focus mode that
       // is the re-rooted slice, otherwise the user's real expansion.
-      isExpanded: (id) => canvasExpanded.has(id),
+      isExpanded: (id) => expansion.expanded.has(id),
       isSelected: (id) => selection.selectedId === id,
       isDimmed,
       hasSelection: selection.selectedId != null || selectedEdgeId != null,
@@ -364,7 +396,7 @@ export function MapView({
       select: selectNode,
       selectEdge,
     }),
-    [model, canvasExpanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, reduceMotion],
+    [model, expansion.expanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, reduceMotion],
   );
 
   // Focus mode: keep the selected node's full lineage (and the node itself) in the
@@ -447,9 +479,8 @@ export function MapView({
       <ReactFlowProvider>
         <GraphCanvas
           model={model}
-          expanded={canvasExpanded}
-          lastToggled={focusActive && selection.selectedId ? selection.selectedId : expansion.lastToggled}
-          focus={focusActive}
+          expanded={expansion.expanded}
+          lastToggled={expansion.lastToggled}
           selectedId={selection.selectedId}
           reduceMotion={reduceMotion}
           onBackgroundClick={clearAll}
