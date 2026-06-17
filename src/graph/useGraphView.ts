@@ -123,6 +123,11 @@ export function useGraphView({
   // Last expansion Set we reconciled — to fire the "focus children" camera only on
   // a genuine expand toggle, not on a re-measure reconcile (Set ref unchanged).
   const prevExpandedRef = useRef<ReadonlySet<string> | null>(null);
+  // Last reconcile's isolate path-key set — so a LEAVE glide can keep the off-focus
+  // edges faded (as they were during focus) until the nodes have slid back home,
+  // instead of snapping them to full opacity mid-morph where they briefly point
+  // backward (an off-focus node, e.g. a goal, is still gliding out of the focus column).
+  const prevPathKeysRef = useRef<Set<string> | null>(null);
   const [nodes, setNodes] = useState<AppNode[]>([]);
   const [edges, setEdges] = useState<AppEdge[]>([]);
   const nodesRef = useRef<AppNode[]>(nodes);
@@ -173,7 +178,7 @@ export function useGraphView({
   const prevIsolateRef = useRef(false);
   const tweenRaf = useRef<number | null>(null);
   const [tweening, setTweening] = useState(false);
-  const tweenPositions = useCallback((targets: ReadonlyMap<NodeId, XY>, duration: number) => {
+  const tweenPositions = useCallback((targets: ReadonlyMap<NodeId, XY>, duration: number, onDone?: () => void) => {
     if (tweenRaf.current != null) cancelAnimationFrame(tweenRaf.current);
     const from = new Map(nodesRef.current.map((n) => [n.id, n.position]));
     const t0 = performance.now();
@@ -196,6 +201,7 @@ export function useGraphView({
       } else {
         tweenRaf.current = null;
         setTweening(false);
+        onDone?.();
       }
     };
     tweenRaf.current = requestAnimationFrame(step);
@@ -252,6 +258,13 @@ export function useGraphView({
     const isolateOn = !!isolate;
     const isolateChanged = isolateOn !== prevIsolateRef.current;
     const tween = isolateChanged && !reduceMotion; // glide positions on the toggle
+    const leaving = isolateChanged && !isolateOn;
+    // Edge fade follows the lit path while focus is on. While LEAVING (during the
+    // glide) keep using the PREVIOUS focus path-keys so off-focus edges stay faded
+    // until the nodes settle — a post-tween reconcile then clears it. Without this an
+    // off-focus edge to a node still sliding out of the focus column flashes at full
+    // opacity pointing backward.
+    const edgeFadeKeys = pathKeys ?? (leaving && tween ? prevPathKeysRef.current : null);
 
     // 3. diff: reuse identity for survivors, mint fresh nodes for newcomers. On the
     //    isolate toggle, survivors KEEP their current position here and the JS tween
@@ -297,8 +310,8 @@ export function useGraphView({
         const sp = positions.get(e.source);
         const tp = positions.get(e.target);
         const backward = !!(sp && tp && tp.x <= sp.x);
-        // An edge fades unless BOTH endpoints are on the lit path.
-        const faded = pathKeys ? !(pathKeys.has(e.source) && pathKeys.has(e.target)) : false;
+        // An edge fades unless BOTH endpoints are on the lit path (held through a leave glide).
+        const faded = edgeFadeKeys ? !(edgeFadeKeys.has(e.source) && edgeFadeKeys.has(e.target)) : false;
         return {
           id: e.id,
           source: e.source,
@@ -310,22 +323,32 @@ export function useGraphView({
     );
 
     // 4. Camera + the isolate position glide.
+    // The toggle (either direction) glides node POSITIONS via the JS tween: on enter
+    // the diff loop pinned survivors at their current spot so they'd slide to the
+    // straightened path; on LEAVE it pinned them at their focus spot so they slide
+    // BACK to the full-graph layout. Either way the move must be driven here — without
+    // it, leaving focus left the straightened nodes frozen at their focus positions
+    // (the rest at full-layout positions) → a mangled graph.
+    if (isolateChanged && tween) {
+      const targets = new Map<NodeId, XY>();
+      for (const id of nodeIds) targets.set(id, positions.get(id) ?? { x: 0, y: 0 });
+      // On leave, reconcile once more when the glide ends to un-fade the off-focus
+      // edges (now settled, all forward). On enter there's nothing extra to clear.
+      tweenPositions(targets, 640, leaving ? () => reconcileRef.current() : undefined);
+    }
     if (isolateOn && pathKeys) {
       // Frame the isolated subset (lit path, or the focus neighbourhood). Re-fit on
       // EVERY reconcile while it's active — not just the on/off toggle — so the frame
       // corrects after off-expansion focus nodes (siblings / downstream) get measured
       // and re-laid-out, instead of staying stuck on the provisional first layout.
-      if (isolateChanged && tween) {
-        const targets = new Map<NodeId, XY>();
-        for (const id of nodeIds) targets.set(id, positions.get(id) ?? { x: 0, y: 0 });
-        tweenPositions(targets, 640);
-      }
       const rect = boundsOf(pathKeys, positions, cache);
       const dur = reduceMotion ? 0 : isolateChanged ? 660 : 300;
       requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: dur }));
     } else if (isolateChanged) {
-      // Leaving isolate/focus → fit the whole graph.
-      requestAnimationFrame(() => rf.fitView({ padding: 0.28, duration: reduceMotion ? 0 : 660, maxZoom: 1.1 }));
+      // Leaving isolate/focus → frame the whole graph. Fit the COMPUTED target bounds
+      // (not the live node positions, which are mid-tween) so the camera lands right.
+      const rect = boundsOf(nodeIds, positions, cache);
+      requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.16, duration: reduceMotion ? 0 : 660 }));
     } else {
       // On a fresh EXPANSION, refocus onto the expanded node's CHILDREN — the next
       // steps — whether or not they were already on screen. The `expanded` Set is a
@@ -341,6 +364,7 @@ export function useGraphView({
     }
     prevExpandedRef.current = expanded;
     prevIsolateRef.current = isolateOn;
+    prevPathKeysRef.current = pathKeys;
   }, [visible, maybeFollow, lastToggled, reduceMotion, rf, tweenPositions]);
 
   const reconcileRef = useRef(reconcile);
@@ -390,7 +414,12 @@ export function useGraphView({
     }
     // In isolate/focus mode the camera is owned by the isolate fit (which frames the
     // whole subset); don't also centre on the selected node or the two cameras fight.
-    if (isolate) return;
+    // Keep the ref in sync with the live selection so that when isolate turns OFF the
+    // (then unchanged) selection doesn't re-fire setCenter against the whole-graph fit.
+    if (isolate) {
+      focusedSelRef.current = selectedId;
+      return;
+    }
     if (!readyRef.current || focusedSelRef.current === selectedId) return;
     const node = rf.getNode(selectedId);
     if (!node) return; // not laid out yet — a later `nodes` update will retry

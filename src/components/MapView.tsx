@@ -267,10 +267,11 @@ export function MapView({
   // Isolate render — a subgraph drawn alone (dagre-laid-out, everything else faded).
   // Two modes share it:
   //  - FOCUS MODE: the lit ROUTE to the selected node, PLUS the node's siblings (as
-  //    leaves — their own next steps stay hidden), PLUS the selected node's full
-  //    downstream. So you see how you got here, the alternatives at this step, and
-  //    where this node leads — nothing else. Computed in DEF-id space over the model,
-  //    so the downstream shows regardless of what was expanded.
+  //    leaves — their own next steps stay hidden), PLUS the selected node's IMMEDIATE
+  //    next steps (its direct children only — the rest of the forward subtree stays
+  //    hidden). One level each way keeps focus a small, connected neighbourhood and
+  //    can't run away on the AD graph (one big SCC), so dagre always lays it out as a
+  //    clean left→right tree.
   //  - "Isolate path" checkbox: EXACTLY the lit route, nothing else.
   const isolate = useMemo<IsolatePath | null>(() => {
     const sel = selection.selectedId;
@@ -285,34 +286,38 @@ export function MapView({
         if (eid.slice(j + 2) === sel) parentDef = defIdOf(eid.slice(0, j));
       }
       const siblings = new Set<string>(parentDef ? model.childrenOf.get(parentDef) ?? [] : []);
-      const downstream = new Set<string>([selDef]);
-      const stack = [selDef];
-      while (stack.length) {
-        const cur = stack.pop()!;
-        for (const ch of model.childrenOf.get(cur) ?? []) if (!downstream.has(ch)) { downstream.add(ch); stack.push(ch); }
+      // Just the selected node's immediate next steps — its direct children, one level
+      // deep. Skip any that loop back into the route/siblings so the subgraph stays
+      // acyclic (dagre needs that for a clean tree).
+      const nextDefs = new Set<string>();
+      for (const ch of model.childrenOf.get(selDef) ?? []) {
+        if (routeDefs.has(ch) || siblings.has(ch)) continue;
+        nextDefs.add(ch);
       }
-      const focusDefs = new Set<string>([...routeDefs, ...siblings, ...downstream]);
-      // A node draws its outgoing edges only when it's on the route or downstream of
-      // sel — so siblings render as leaves (no sub-branches), per the spec.
-      const expand = (d: string) => routeDefs.has(d) || downstream.has(d);
+      const focusDefs = new Set<string>([...routeDefs, ...siblings, selDef, ...nextDefs]);
       const count = new Map<string, number>();
       const nodes = [...focusDefs].map((d) => {
         const instanceIndex = (count.get(d) ?? 0) + 1;
         count.set(d, instanceIndex);
         return { key: d, defId: d, instanceIndex };
       });
+      // Edges: the lit route, parent → each sibling, and sel → each immediate next step.
+      // All acyclic, so dagre lays it out as a clean left→right tree.
+      const edgeOf = (s: string, t: string) => ({ id: edgeKey(s, t), source: s, target: t, label: model.edgeLabels.get(edgeKey(s, t)) });
+      const seenEdge = new Set<string>();
       const edges: { id: string; source: string; target: string; label?: string }[] = [];
-      const seen = new Set<string>();
-      for (const d of focusDefs) {
-        if (!expand(d)) continue;
-        for (const ch of model.childrenOf.get(d) ?? []) {
-          if (!focusDefs.has(ch)) continue;
-          const id = edgeKey(d, ch);
-          if (seen.has(id)) continue;
-          seen.add(id);
-          edges.push({ id, source: d, target: ch, label: model.edgeLabels.get(id) });
-        }
+      const push = (s: string, t: string) => {
+        const id = edgeKey(s, t);
+        if (seenEdge.has(id) || !focusDefs.has(s) || !focusDefs.has(t)) return;
+        seenEdge.add(id);
+        edges.push(edgeOf(s, t));
+      };
+      for (const eid of activePath.edges) {
+        const j = eid.indexOf('->');
+        push(defIdOf(eid.slice(0, j)), defIdOf(eid.slice(j + 2)));
       }
+      if (parentDef) for (const sib of siblings) push(parentDef, sib);
+      for (const nd of nextDefs) push(selDef, nd);
       return { nodes, edges };
     }
 

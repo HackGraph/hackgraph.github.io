@@ -117,19 +117,13 @@ export function resolveUnroll(model: GraphModel, expanded: ReadonlySet<string>):
     for (const e of graph.edges) {
       const tgtDef = graph.defOf.get(e.target) ?? e.target;
       const tdef = model.nodes.get(tgtDef);
-      // Unroll any backward edge — every node is repeatable — except into the root
-      // (no point re-instancing the start), a category folder (no #n badge), a goal
-      // node (a terminal end-state like Domain Admin shouldn't get #2 copies), or a
-      // convergence HUB (a "you hold X" state many steps lead back to — keep it ONE
-      // node so it doesn't fan into a redundant copy per incoming source).
-      if (
-        !tdef ||
-        tgtDef === model.rootId ||
-        tdef.kind === 'category' ||
-        tdef.kind === 'goal' ||
-        tdef.hub
-      )
-        continue;
+      // Unroll any backward edge — every node is repeatable — into a fresh FORWARD
+      // instance so arrows always point right. The only exclusions are the root (no
+      // point re-instancing the start) and category folders (a duplicated folder has
+      // no #n badge and would confuse). Hubs (Valid Domain Credentials) and goals
+      // (Domain Admin) DO unroll: a technique that yields creds/DA gets its own
+      // forward "⟲2" re-entry copy instead of a long dashed arrow back to the hub.
+      if (!tdef || tgtDef === model.rootId || tdef.kind === 'category') continue;
       const sp = positions.get(e.source);
       const tp = positions.get(e.target);
       if (sp && tp && tp.x <= sp.x) {
