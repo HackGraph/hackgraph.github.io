@@ -24,9 +24,7 @@ import { GraphCanvas } from './GraphCanvas';
 import { NodeDetailPanel } from './NodeDetailPanel';
 import { EdgeDetailPanel, type EdgeDetail } from './EdgeDetailPanel';
 import { SearchBox } from './SearchBox';
-import { SettingsFab } from './SettingsFab';
 import { Legend } from './Legend';
-import type { Theme } from '../state/useTheme';
 import { WINDOWS_VERSIONS } from '../data/windows-versions';
 import { CloseIcon, SearchIcon } from '../ui/icons';
 
@@ -40,13 +38,13 @@ import { CloseIcon, SearchIcon } from '../ui/icons';
  *  - otherwise → start fresh at `next`.
  * Invariant: the last element is always the current selection.
  */
-function nextTrail(prev: string[], next: string, graph: VisibleGraph, root: string): string[] {
+function nextTrail(prev: string[], next: string, graph: VisibleGraph, root: string, skip?: ReadonlySet<string>): string[] {
   if (prev.length === 0) return [next];
   const idx = prev.indexOf(next);
   if (idx >= 0) return prev.slice(0, idx + 1);
   const last = prev[prev.length - 1];
   if (last === root) return [next];
-  const seg = pathInRendered(graph, last, next); // longest last→next over drawn edges
+  const seg = pathInRendered(graph, last, next, skip); // longest forward last→next over drawn edges
   return seg.length > 1 && seg[0] === last ? [...prev, next] : [next];
 }
 
@@ -58,13 +56,11 @@ function nextTrail(prev: string[], next: string, graph: VisibleGraph, root: stri
 export function MapView({
   map,
   reduceMotion,
-  theme,
-  onToggleTheme,
+  focusMode,
 }: {
   map: MapDefinition;
   reduceMotion: boolean;
-  theme: Theme;
-  onToggleTheme: () => void;
+  focusMode: boolean;
 }) {
   const model = useGraphModel(map);
 
@@ -89,10 +85,6 @@ export function MapView({
   // Edge selection is parallel to node selection — only one is open at a time.
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [pathOnly, setPathOnly] = useState(false);
-  // Focus mode (settings): on each selection, collapse the graph to just the lineage
-  // of the selected node plus the node itself — so you see the route in, the node's
-  // peers at each level, and its next steps, with every unrelated branch collapsed.
-  const [focusMode, setFocusMode] = useState(false);
   // Ordered click-trail (waypoints) the user traversed; the lit path is stitched
   // through these so it follows the ACTUAL route, not just the longest one to the
   // target (see `nextTrail`). Last element is always the current selection.
@@ -144,7 +136,7 @@ export function MapView({
   const focusActive = focusMode && selection.selectedId != null;
   const focusRoot = useMemo(() => {
     if (!focusActive || !selection.selectedId) return undefined;
-    const path = pathInRendered(rendered.graph, model.rootId, selection.selectedId);
+    const path = pathInRendered(rendered.graph, model.rootId, selection.selectedId, rendered.backEdges);
     return path.length >= 2 ? path[path.length - 2] : model.rootId;
   }, [focusActive, selection.selectedId, rendered, model.rootId]);
   // What the canvas expands: just the parent (reveals peers) and the selected node
@@ -159,7 +151,7 @@ export function MapView({
   const hoverEdges = useMemo(() => {
     const set = new Set<string>();
     if (hoveredId) {
-      const lin = pathInRendered(rendered.graph, model.rootId, hoveredId);
+      const lin = pathInRendered(rendered.graph, model.rootId, hoveredId, rendered.backEdges);
       for (let i = 1; i < lin.length; i++) set.add(edgeKey(lin[i - 1], lin[i]));
     }
     return set;
@@ -197,7 +189,7 @@ export function MapView({
         setTrail([]);
         selection.clear(); // re-click → deselect
       } else {
-        setTrail((prev) => nextTrail(prev, id, rendered.graph, model.rootId));
+        setTrail((prev) => nextTrail(prev, id, rendered.graph, model.rootId, rendered.backEdges));
         selection.select(id);
       }
     },
@@ -267,7 +259,7 @@ export function MapView({
       let from = model.rootId;
       let connected = true;
       for (const wp of wps) {
-        const seg = pathInRendered(rendered.graph, from, wp); // from → wp over drawn edges
+        const seg = pathInRendered(rendered.graph, from, wp, rendered.backEdges); // forward from → wp
         if (wp !== from && (seg.length < 2 || seg[0] !== from)) {
           connected = false; // a waypoint became unreachable — bail to the simple route
           break;
@@ -275,7 +267,7 @@ export function MapView({
         segs.push(seg);
         from = wp;
       }
-      const route = connected ? segs.flat() : pathInRendered(rendered.graph, model.rootId, sel);
+      const route = connected ? segs.flat() : pathInRendered(rendered.graph, model.rootId, sel, rendered.backEdges);
       route.forEach((k, i) => {
         nodes.add(k);
         // skip the duplicated junction node where consecutive segments join
@@ -417,7 +409,7 @@ export function MapView({
   const breadcrumb = useMemo(
     () =>
       selectedKey
-        ? pathInRendered(rendered.graph, model.rootId, selectedKey).map((k) => ({
+        ? pathInRendered(rendered.graph, model.rootId, selectedKey, rendered.backEdges).map((k) => ({
             id: k,
             label: model.nodes.get(defIdOf(k))?.label ?? k,
           }))
@@ -564,13 +556,6 @@ export function MapView({
       </div>
 
       <Legend phases={map.phases} />
-      <SettingsFab
-        theme={theme}
-        onToggleTheme={onToggleTheme}
-        focusMode={focusMode}
-        onToggleFocusMode={() => setFocusMode((f) => !f)}
-        reduceMotion={reduceMotion}
-      />
       <NodeDetailPanel
         def={selectedDef}
         phaseColor={selectedDef ? interaction.phaseColor(selectedDef.phase) : '#7c8aa0'}

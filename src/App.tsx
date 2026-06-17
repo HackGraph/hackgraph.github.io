@@ -4,6 +4,7 @@ import { usePrefersReducedMotion } from './state/usePrefersReducedMotion';
 import { useTheme } from './state/useTheme';
 import { readDeepLink, writeDeepLink } from './state/deepLink';
 import { MapView } from './components/MapView';
+import { SettingsMenu } from './components/SettingsMenu';
 import { GithubIcon } from './ui/icons';
 
 /** A small, calm DAG mark. */
@@ -23,6 +24,9 @@ function LogoMark() {
 export default function App() {
   const reduceMotion = usePrefersReducedMotion();
   const { theme, toggle: toggleTheme } = useTheme();
+  // Focus mode lives here (not in MapView) so the header settings menu can drive it
+  // and it survives a map switch / reset remount.
+  const [focusMode, setFocusMode] = useState(false);
   const [mapId, setMapId] = useState(() => {
     const m = readDeepLink().mapId;
     return m && MAPS.some((x) => x.id === m) ? m : DEFAULT_MAP_ID;
@@ -74,6 +78,13 @@ export default function App() {
             <GithubIcon className="h-3.5 w-3.5" />
             <span className="hidden sm:inline">GitHub</span>
           </a>
+          <SettingsMenu
+            theme={theme}
+            onToggleTheme={toggleTheme}
+            focusMode={focusMode}
+            onToggleFocusMode={() => setFocusMode((f) => !f)}
+            reduceMotion={reduceMotion}
+          />
           <button
             type="button"
             onClick={() => {
@@ -94,8 +105,7 @@ export default function App() {
           key={`${mapId}:${resetNonce}`}
           map={map}
           reduceMotion={reduceMotion}
-          theme={theme}
-          onToggleTheme={toggleTheme}
+          focusMode={focusMode}
         />
       </main>
     </div>

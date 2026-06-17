@@ -137,9 +137,6 @@ function GraphCanvasImpl({
         <MiniMap
           pannable
           zoomable
-          // Lifted off the bottom-right corner so the floating settings button tucks
-          // beneath it without overlap.
-          style={{ bottom: 64 }}
           className="hg-minimap hidden sm:block"
           maskColor="var(--color-minimap-mask)"
           nodeColor={(n) => {

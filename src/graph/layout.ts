@@ -78,6 +78,11 @@ export interface ResolvedUnroll {
   unrollSet: Set<string>;
   /** The visible graph computed WITH that unroll set — i.e. exactly what renders. */
   graph: VisibleGraph;
+  /** Edge ids that still point backward in the final layout (the dashed loop-backs
+   *  into hubs/categories/goals that aren't unrolled). Path-finding skips these so
+   *  the lit path / breadcrumb / hover trace stay forward and never sprawl back
+   *  across the canvas to reach a convergence hub. */
+  backEdges: Set<string>;
 }
 
 /**
@@ -144,5 +149,13 @@ export function resolveUnroll(
     graph = computeVisible(model, expanded, unrollSet, rootKey);
     positions = layoutGraph(graph.nodeIds, graph.edges);
   }
-  return { unrollSet, graph };
+  // Edges still pointing backward (target at/left of source) in the final layout —
+  // the dashed loop-backs into hubs/categories/goals. Path-finding skips them.
+  const backEdges = new Set<string>();
+  for (const e of graph.edges) {
+    const sp = positions.get(e.source);
+    const tp = positions.get(e.target);
+    if (sp && tp && tp.x <= sp.x) backEdges.add(e.id);
+  }
+  return { unrollSet, graph, backEdges };
 }

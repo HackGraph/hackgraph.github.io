@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Theme } from '../state/useTheme';
-import { GearIcon, MoonIcon, SunIcon, FocusIcon, CloseIcon } from '../ui/icons';
+import { GearIcon, MoonIcon, SunIcon, FocusIcon } from '../ui/icons';
 
-interface SettingsFabProps {
+interface SettingsMenuProps {
   theme: Theme;
   onToggleTheme: () => void;
   focusMode: boolean;
@@ -65,11 +65,11 @@ function Row({
 }
 
 /**
- * Floating settings control, bottom-right. Collapsed to a single gear button;
- * clicking expands a small menu (theme + focus mode). Closes on outside click or
- * Escape. Sits above the minimap (which is lifted to make room).
+ * Settings control that lives in the header toolbar (between GitHub and Reset). A
+ * gear button opens a dropdown with the theme + focus-mode toggles. Closes on
+ * outside click or Escape.
  */
-export function SettingsFab({ theme, onToggleTheme, focusMode, onToggleFocusMode, reduceMotion }: SettingsFabProps) {
+export function SettingsMenu({ theme, onToggleTheme, focusMode, onToggleFocusMode, reduceMotion }: SettingsMenuProps) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -89,31 +89,32 @@ export function SettingsFab({ theme, onToggleTheme, focusMode, onToggleFocusMode
     };
   }, [open]);
 
-  const dur = reduceMotion ? 0 : 0.16;
-
   return (
-    <div ref={wrapRef} className="absolute bottom-3 right-3 z-30 flex flex-col items-end">
+    <div ref={wrapRef} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-label="Settings"
+        aria-expanded={open}
+        className={[
+          'flex items-center justify-center rounded-lg border px-2 py-1 transition-colors',
+          open ? 'border-border-strong text-ink' : 'border-border text-ink-dim hover:border-border-strong hover:text-ink',
+        ].join(' ')}
+      >
+        <GearIcon className="h-3.5 w-3.5" />
+      </button>
+
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: 8, scale: 0.96 }}
+            initial={{ opacity: 0, y: -6, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 8, scale: 0.96 }}
-            transition={{ duration: dur, ease: [0.22, 1, 0.36, 1] }}
-            style={{ transformOrigin: 'bottom right' }}
-            className="mb-2 w-[238px] rounded-2xl border border-border bg-panel/95 p-1.5 shadow-[var(--shadow-pop)] backdrop-blur-xl"
+            exit={{ opacity: 0, y: -6, scale: 0.97 }}
+            transition={{ duration: reduceMotion ? 0 : 0.16, ease: [0.22, 1, 0.36, 1] }}
+            style={{ transformOrigin: 'top right' }}
+            className="absolute right-0 top-full z-30 mt-2 w-[244px] rounded-2xl border border-border bg-panel/95 p-1.5 shadow-[var(--shadow-pop)] backdrop-blur-xl"
           >
-            <div className="flex items-center justify-between px-2 pb-1 pt-1">
-              <span className="text-[11px] font-medium uppercase tracking-wide text-ink-faint">Settings</span>
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                aria-label="Close settings"
-                className="-mr-1 flex h-6 w-6 items-center justify-center rounded-md text-ink-faint transition-colors hover:text-ink"
-              >
-                <CloseIcon className="h-3.5 w-3.5" />
-              </button>
-            </div>
+            <div className="px-2 pb-1 pt-1 text-[11px] font-medium uppercase tracking-wide text-ink-faint">Settings</div>
             <Row
               icon={theme === 'light' ? <SunIcon className="h-4 w-4" /> : <MoonIcon className="h-4 w-4" />}
               label="Light mode"
@@ -130,25 +131,6 @@ export function SettingsFab({ theme, onToggleTheme, focusMode, onToggleFocusMode
           </motion.div>
         )}
       </AnimatePresence>
-
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-label="Settings"
-        aria-expanded={open}
-        className={[
-          'flex h-11 w-11 items-center justify-center rounded-full border bg-panel/85 shadow-[var(--shadow-card)] backdrop-blur-xl transition-colors',
-          open ? 'border-border-strong text-ink' : 'border-border text-ink-dim hover:border-border-strong hover:text-ink',
-        ].join(' ')}
-      >
-        <motion.span
-          animate={{ rotate: open ? 60 : 0 }}
-          transition={{ duration: reduceMotion ? 0 : 0.2, ease: 'easeOut' }}
-          className="flex"
-        >
-          <GearIcon className="h-[18px] w-[18px]" />
-        </motion.span>
-      </button>
     </div>
   );
 }

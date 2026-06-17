@@ -1,6 +1,8 @@
 import type { GraphModel, NodeId } from './buildModel';
 import { edgeKey } from './buildModel';
 
+const EMPTY_SET: ReadonlySet<string> = new Set();
+
 export interface VisibleEdge {
   id: string;
   source: NodeId;
@@ -152,11 +154,19 @@ export function keyLineage(model: GraphModel, key: string): string[] {
  * direct steps `a~b → a~b~c` that don't exist inside the instance's own context.
  * Pure; bounded to the visible subgraph. Returns `[target]` if it isn't drawn.
  */
-export function pathInRendered(graph: VisibleGraph, rootId: NodeId, target: string): string[] {
+export function pathInRendered(
+  graph: VisibleGraph,
+  rootId: NodeId,
+  target: string,
+  skip: ReadonlySet<string> = EMPTY_SET,
+): string[] {
   if (target === rootId || !graph.nodeIds.has(target)) return [target];
   // Reverse adjacency over the rendered edges (render key → its drawn parents).
+  // `skip` drops backward loop-back edges so the route stays forward — it never
+  // climbs a loop-back to reach a convergence hub (the long cross-canvas curve).
   const parents = new Map<string, string[]>();
   for (const e of graph.edges) {
+    if (skip.has(e.id)) continue;
     const arr = parents.get(e.target);
     if (arr) arr.push(e.source);
     else parents.set(e.target, [e.source]);
