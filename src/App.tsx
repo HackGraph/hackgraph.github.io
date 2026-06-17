@@ -73,10 +73,9 @@ export default function App() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label="GitHub repository"
-            className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1 text-[12px] font-medium text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
+            className="flex items-center justify-center rounded-lg border border-border px-2 py-1 text-ink-dim transition-colors hover:border-border-strong hover:text-ink"
           >
             <GithubIcon className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">GitHub</span>
           </a>
           <SettingsMenu
             theme={theme}

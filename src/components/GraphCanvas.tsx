@@ -32,8 +32,8 @@ interface GraphCanvasProps {
   onNodeHover: (id: NodeId | null) => void;
   /** "Isolate path" mode — render only this instanced attack path. */
   isolate?: IsolatePath | null;
-  /** Focus mode — re-root the visible graph at this key (a node's parent). */
-  rootKey?: NodeId;
+  /** Focus mode is on — frame the whole (pruned) neighbourhood on each change. */
+  focus?: boolean;
   /** Render keys of edges on the lit attack path (fed to edge data for repaint). */
   activeEdges: ReadonlySet<string>;
   /** The currently open edge's id, and whether any node/edge is selected. */
@@ -50,7 +50,7 @@ function GraphCanvasImpl({
   onBackgroundClick,
   onNodeHover,
   isolate,
-  rootKey,
+  focus,
   activeEdges,
   selectedEdgeId,
   hasSelection,
@@ -62,7 +62,7 @@ function GraphCanvasImpl({
     selectedId,
     reduceMotion,
     isolate,
-    rootKey,
+    focus,
   });
 
   // Emphasis travels through edge DATA (not context): React Flow does not

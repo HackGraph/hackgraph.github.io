@@ -128,22 +128,19 @@ export function MapView({
   // the expansion set changes.
   const rendered = useMemo(() => resolveUnroll(model, expansion.expanded), [model, expansion.expanded]);
 
-  // Focus mode: with a node selected, re-root the CANVAS at that node's parent and
-  // show only {parent, peers, selected, selected's children} — the local
-  // neighbourhood, everything above the parent collapsed. The full `rendered` graph
-  // above stays root-based (breadcrumb, parent lookup, lit path all keep working);
-  // only what the canvas draws is the re-rooted slice.
+  // Focus mode: keep ONLY the originating path (root → selected) and the selected
+  // node expanded, so the route in stays visible (parents NOT hidden), the node's
+  // peers and children show, and every unrelated branch folds away. The canvas
+  // renders this derived set; the full `rendered` graph stays root-based for the
+  // breadcrumb / lit path. `keyLineage` is model-based so it works regardless of
+  // what the user had expanded.
   const focusActive = focusMode && selection.selectedId != null;
-  const focusRoot = useMemo(() => {
-    if (!focusActive || !selection.selectedId) return undefined;
-    const path = pathInRendered(rendered.graph, model.rootId, selection.selectedId, rendered.backEdges);
-    return path.length >= 2 ? path[path.length - 2] : model.rootId;
-  }, [focusActive, selection.selectedId, rendered, model.rootId]);
-  // What the canvas expands: just the parent (reveals peers) and the selected node
-  // (reveals its children). Outside focus mode, the user's real expansion set.
   const canvasExpanded = useMemo(
-    () => (focusActive && focusRoot && selection.selectedId ? new Set<string>([focusRoot, selection.selectedId]) : expansion.expanded),
-    [focusActive, focusRoot, selection.selectedId, expansion.expanded],
+    () =>
+      focusActive && selection.selectedId
+        ? new Set<string>([...keyLineage(model, selection.selectedId), selection.selectedId])
+        : expansion.expanded,
+    [focusActive, selection.selectedId, model, expansion.expanded],
   );
 
   // Edges on the hovered node's lineage (root → node, along the drawn edges), so
@@ -452,7 +449,7 @@ export function MapView({
           model={model}
           expanded={canvasExpanded}
           lastToggled={focusActive && selection.selectedId ? selection.selectedId : expansion.lastToggled}
-          rootKey={focusRoot}
+          focus={focusActive}
           selectedId={selection.selectedId}
           reduceMotion={reduceMotion}
           onBackgroundClick={clearAll}

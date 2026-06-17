@@ -107,14 +107,9 @@ export interface ResolvedUnroll {
  * pixel positions) and `MapView` (which highlights along the returned edges) can
  * recompute identically ⇒ the lit path can never diverge from what's drawn. Pure.
  */
-export function resolveUnroll(
-  model: GraphModel,
-  expanded: ReadonlySet<string>,
-  rootKey: string = model.rootId,
-): ResolvedUnroll {
-  const rootDef = rootKey.includes('~') ? rootKey.slice(rootKey.lastIndexOf('~') + 1) : rootKey;
+export function resolveUnroll(model: GraphModel, expanded: ReadonlySet<string>): ResolvedUnroll {
   const unrollSet = new Set<string>();
-  let graph = computeVisible(model, expanded, undefined, rootKey);
+  let graph = computeVisible(model, expanded);
   let positions = layoutGraph(graph.nodeIds, graph.edges);
 
   for (let pass = 0; pass < MAX_UNROLL_PASSES; pass++) {
@@ -129,7 +124,7 @@ export function resolveUnroll(
       // node so it doesn't fan into a redundant copy per incoming source).
       if (
         !tdef ||
-        tgtDef === rootDef ||
+        tgtDef === model.rootId ||
         tdef.kind === 'category' ||
         tdef.kind === 'goal' ||
         tdef.hub
@@ -146,7 +141,7 @@ export function resolveUnroll(
       }
     }
     if (!added) break;
-    graph = computeVisible(model, expanded, unrollSet, rootKey);
+    graph = computeVisible(model, expanded, unrollSet);
     positions = layoutGraph(graph.nodeIds, graph.edges);
   }
   // Edges still pointing backward (target at/left of source) in the final layout —

@@ -46,7 +46,6 @@ export function computeVisible(
   model: GraphModel,
   expanded: ReadonlySet<string>,
   unrollSet: ReadonlySet<string> = new Set(),
-  rootKey: string = model.rootId,
 ): VisibleGraph {
   const nodeIds = new Set<string>();
   const edges: VisibleEdge[] = [];
@@ -95,12 +94,7 @@ export function computeVisible(
     }
   };
 
-  // Start from `rootKey` (default the model root). Focus mode re-roots the view at
-  // a node's parent so only the local neighbourhood draws; an instance key root
-  // (`a~b`) namespaces its descendants' keys with its own prefix.
-  const rootDef = defIdOf(rootKey);
-  const rootPrefix = rootKey.includes('~') ? `${rootKey}~` : '';
-  visit(rootDef, rootKey, rootPrefix, new Map([[rootDef, rootKey]]));
+  visit(model.rootId, model.rootId, '', new Map([[model.rootId, model.rootId]]));
   return { nodeIds, edges, defOf };
 }
 

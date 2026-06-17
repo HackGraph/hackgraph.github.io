@@ -50,23 +50,25 @@
    whole UI flips with the [data-theme] attribute set by useTheme. */
 html[data-theme='light'] {
   color-scheme: light;
-  --color-bg: #f6f2f2;
-  --color-bg-soft: #efe9ea;
+  /* A warm light-gray ground so the white panels/cards read as raised; stronger
+     hairlines + darker ink than a first pass, for legible contrast on white. */
+  --color-bg: #ece5e6;
+  --color-bg-soft: #e3dbdc;
   --color-panel: #ffffff;
-  --color-panel-2: #f3edee;
-  --color-border: rgba(58, 26, 32, 0.12);
-  --color-border-strong: rgba(58, 26, 32, 0.22);
-  --color-edge: #cdbfc1;
-  --color-ink: #1d1416;
-  --color-ink-dim: #6c5b5e;
-  --color-ink-faint: #9a8c8f;
-  --color-accent: #e23744;
-  --color-accent-soft: rgba(226, 55, 68, 0.13);
-  --shadow-card: 0 1px 2px rgba(40, 18, 22, 0.07), 0 6px 16px -8px rgba(40, 18, 22, 0.16);
-  --shadow-lift: 0 2px 4px rgba(40, 18, 22, 0.09), 0 14px 32px -12px rgba(40, 18, 22, 0.2);
-  --shadow-pop: 0 12px 44px -12px rgba(40, 18, 22, 0.24);
-  --color-dot: rgba(40, 18, 22, 0.05);
-  --color-minimap-mask: rgba(244, 240, 240, 0.72);
+  --color-panel-2: #f1eaeb;
+  --color-border: rgba(45, 18, 24, 0.20);
+  --color-border-strong: rgba(45, 18, 24, 0.34);
+  --color-edge: #9c8a8d;
+  --color-ink: #16100f;
+  --color-ink-dim: #52453f;
+  --color-ink-faint: #73645f;
+  --color-accent: #d62836;
+  --color-accent-soft: rgba(214, 40, 54, 0.14);
+  --shadow-card: 0 1px 2px rgba(40, 18, 22, 0.08), 0 6px 16px -8px rgba(40, 18, 22, 0.2);
+  --shadow-lift: 0 2px 4px rgba(40, 18, 22, 0.1), 0 14px 32px -12px rgba(40, 18, 22, 0.24);
+  --shadow-pop: 0 12px 44px -12px rgba(40, 18, 22, 0.28);
+  --color-dot: rgba(40, 18, 22, 0.07);
+  --color-minimap-mask: rgba(236, 229, 230, 0.76);
 }
 
 /* Theme transition: a brief cross-fade on the big surfaces when toggling, so the

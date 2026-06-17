@@ -32,9 +32,10 @@ interface UseGraphViewParams {
    *  (repeated `repeatable` nodes get distinct keys) instead of the
    *  expansion-derived visible set. */
   isolate?: IsolatePath | null;
-  /** Focus mode: re-root the visible graph at this key (a node's parent) so only the
-   *  local neighbourhood (peers + the node's children) draws. Defaults to the model root. */
-  rootKey?: NodeId;
+  /** Focus mode is on: the visible set is already pruned to the local neighbourhood
+   *  (path + peers + children), so frame ALL of it on each change instead of chasing
+   *  the selected node's children (which would push the path off-screen). */
+  focus?: boolean;
 }
 
 /** Width (px) the right-hand desktop detail panel occludes, incl. its margins. */
@@ -92,9 +93,8 @@ function resolveMainLayout(
   model: GraphModel,
   expanded: ReadonlySet<string>,
   cache: SizeCache,
-  rootKey?: string,
 ) {
-  const { graph } = resolveUnroll(model, expanded, rootKey);
+  const { graph } = resolveUnroll(model, expanded);
   const sizeFor = (id: NodeId) => cache.get(id) ?? cache.get(graph.defOf.get(id) ?? '');
   const positions = layoutGraph(graph.nodeIds, graph.edges, sizeFor);
   return { nodeIds: graph.nodeIds, edges: graph.edges, defOf: graph.defOf, positions };
@@ -121,7 +121,7 @@ export function useGraphView({
   selectedId,
   reduceMotion,
   isolate,
-  rootKey,
+  focus,
 }: UseGraphViewParams): UseGraphViewResult {
   const rf = useReactFlow<AppNode, AppEdge>();
   const sizeCacheRef = useRef(new SizeCache());
@@ -143,8 +143,8 @@ export function useGraphView({
   // reconcile keeps every node mounted, fades the off-path ones, and lays the lit
   // path out straight. So toggling isolate is a glide, never a pop-and-snap.
   const visible = useMemo(
-    () => ({ model, expanded, isolate: isolate ?? null, rootKey }),
-    [model, expanded, isolate, rootKey],
+    () => ({ model, expanded, isolate: isolate ?? null, focus: !!focus }),
+    [model, expanded, isolate, focus],
   );
 
   const onNodesChange = useCallback<OnNodesChange<AppNode>>((changes) => {
@@ -228,8 +228,8 @@ export function useGraphView({
     //    every node mounted, lays the lit path out STRAIGHT (overriding just those
     //    positions), and fades the rest. So entering/leaving is a glide, not a
     //    remount. A fresh instance key inherits its def's cached size on first paint.
-    const { model, expanded, isolate, rootKey } = visible;
-    const main = resolveMainLayout(model, expanded, cache, rootKey);
+    const { model, expanded, isolate, focus } = visible;
+    const main = resolveMainLayout(model, expanded, cache);
     const { nodeIds, edges, defOf } = main;
     let positions: Map<NodeId, XY> = main.positions;
     let pathKeys: Set<string> | null = null;
@@ -339,11 +339,11 @@ export function useGraphView({
       const expandedChanged = expanded !== prevExpandedRef.current;
       const firstReconcile = prevExpandedRef.current === null;
       if (expandedChanged && !firstReconcile) {
-        if (rootKey) {
-          // Focus mode: the visible set IS the local neighbourhood (parent, peers,
-          // the node, its children), so frame ALL of it rather than chasing the
-          // children — that keeps the parent and peers in view.
-          requestAnimationFrame(() => rf.fitView({ padding: 0.3, duration: reduceMotion ? 0 : 460, maxZoom: 1.1 }));
+        if (focus) {
+          // Focus mode: the visible set IS the local neighbourhood (the path in,
+          // the node's peers, and its children), so frame ALL of it rather than
+          // chasing just the children — that keeps the originating path in view.
+          requestAnimationFrame(() => rf.fitView({ padding: 0.22, duration: reduceMotion ? 0 : 460, maxZoom: 1.1 }));
         } else if (expanded.has(lastToggled)) {
           const kids = edges.filter((e) => e.source === lastToggled).map((e) => e.target);
           if (kids.length > 0) maybeFollow(kids);
