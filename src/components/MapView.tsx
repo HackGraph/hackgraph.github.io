@@ -340,7 +340,10 @@ export function MapView({
       }
       if (parentDef) for (const sib of siblings) push(parentDef, sib);
       for (const nd of nextDefs) push(selDef, nd);
-      return { nodes, edges };
+      // Keep the selected node in its natural slot among its siblings (childrenOf
+      // order) rather than letting dagre lift it to the top because it alone has
+      // children. useGraphView reorders the sibling rank's Y to this order.
+      return { nodes, edges, reorder: { keys: [...siblings], selKey: selDef, next: [...nextDefs] } };
     }
 
     if (!pathOnly || activePath.nodes.size === 0) return null;

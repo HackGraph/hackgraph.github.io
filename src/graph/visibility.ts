@@ -226,6 +226,12 @@ export interface IsolateInstance extends RenderInstance {
 export interface IsolatePath {
   nodes: IsolateInstance[];
   edges: VisibleEdge[];
+  /** FOCUS mode only: keep the selected node in its natural slot among its siblings
+   *  instead of letting dagre pull it to the top (it has children; its siblings
+   *  don't). `keys` = the sibling-rank node keys in natural (childrenOf) order; after
+   *  layout their Y positions are reassigned in that order, and `next` (the selected
+   *  node's next-step keys) shift by the same delta so they follow it. */
+  reorder?: { keys: string[]; selKey: string; next: string[] };
 }
 
 // NOTE: the isolated path is no longer rebuilt from the trail here — it is just

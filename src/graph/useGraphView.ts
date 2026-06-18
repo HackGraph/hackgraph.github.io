@@ -238,6 +238,28 @@ export function useGraphView({
       pathKeys = new Set(isolate.nodes.map((n) => n.key));
       const sizeFor = (id: NodeId) => cache.get(id) ?? cache.get(defOf.get(id) ?? '');
       const straight = layoutGraph(isolate.nodes.map((n) => n.key), isolate.edges, sizeFor);
+      // FOCUS mode: dagre lifts the selected node to the top of the sibling rank
+      // (it alone has children). Reassign the rank's Y positions in natural order so
+      // the selected node stays in its own slot, and shift its next-steps to follow.
+      if (isolate.reorder) {
+        const present = isolate.reorder.keys.filter((k) => straight.has(k));
+        if (present.length > 1) {
+          const slots = present.map((k) => straight.get(k)!.y).sort((a, b) => a - b);
+          const oldSelY = straight.get(isolate.reorder.selKey)?.y;
+          present.forEach((k, i) => {
+            const p = straight.get(k)!;
+            straight.set(k, { x: p.x, y: slots[i] });
+          });
+          const newSelY = straight.get(isolate.reorder.selKey)?.y;
+          if (oldSelY != null && newSelY != null && newSelY !== oldSelY) {
+            const dy = newSelY - oldSelY;
+            for (const nk of isolate.reorder.next) {
+              const p = straight.get(nk);
+              if (p) straight.set(nk, { x: p.x, y: p.y + dy });
+            }
+          }
+        }
+      }
       positions = new Map(main.positions);
       for (const [k, p] of straight) positions.set(k, p); // lit path straightened; rest stays put
     }
