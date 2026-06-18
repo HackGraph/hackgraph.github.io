@@ -135,6 +135,16 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
         code: 'nxc smb hosts.txt -u svc_sql -p Summer2024! -x "whoami /groups"',
         lang: 'bash',
       },
+      {
+        label: 'Run a PowerShell command (-X)',
+        code: "nxc smb <host> -u user -p pass -X '$PSVersionTable'",
+        lang: 'bash',
+      },
+      {
+        label: 'Hunt logged-on users to find a pivot',
+        code: 'nxc smb 10.0.0.0/24 -u user -p pass --loggedon-users',
+        lang: 'bash',
+      },
     ],
     requires: [
       'Credentials, an NT hash (PtH), or a Kerberos ticket (PtT)',

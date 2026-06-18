@@ -64,7 +64,7 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     ],
     commands: [
       { label: 'Discover PXE media & extract secrets', code: r`python3 pxethief.py 1`, lang: 'bash' },
-      { label: 'Crack a password-protected media blob offline', code: r`hashcat -m 19850 pxe.hash rockyou.txt`, lang: 'bash' },
+      { label: "Crack the media password offline (mode 19850 needs PXEThief's custom hashcat module, not stock hashcat)", code: r`hashcat -m 19850 pxe.hash rockyou.txt`, lang: 'bash' },
     ],
     references: [{ label: 'Misconfiguration Manager, CRED-1 (PXE)', url: 'https://github.com/subat0mik/Misconfiguration-Manager/blob/main/attack-techniques/CRED/CRED-1/cred-1_description.md' }],
     requires: ['Network access to a PXE-enabled distribution point (no credentials)'],

@@ -35,7 +35,7 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
         lang: 'bash',
       },
       {
-        label: 'Relay to LDAPS (also works when NTLMv1 is allowed)',
+        label: 'Relay to LDAPS with an interactive LDAP shell',
         code: r`ntlmrelayx.py -t ldaps://dc01 --remove-mic -i -smb2support`,
         lang: 'bash',
       },
@@ -222,6 +222,8 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       'A reachable host with SMBv1 enabled (445/tcp)',
       'Host unpatched for MS17-010 (pre March-2017)',
     ],
+    versions: ['win7', 'win8', 'win10-1507', 'win10-1607', 'srv2008', 'srv2012', 'srv2016'],
+    affects: 'SMBv1 hosts unpatched for MS17-010: Windows 7/8.1, Windows 10 1507/1607, and Server 2008/R2, 2012/R2, 2016.',
     mitre: mitre('T1210'),
     references: [
       { label: 'Microsoft, MS17-010 bulletin', url: 'https://learn.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010' },
@@ -267,8 +269,8 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
     description:
       'Pre-patch, the KDC validated the PAC signature with KdcVerifyPacSignature accepting any signature <= 20 bytes, so a non-keyed hash (MD5) was accepted as valid. A low-priv user can therefore forge a PAC claiming membership in Domain Admins and have the KDC issue a TGT honoring it. Unlike a Golden Ticket it does not need the krbtgt hash: only a domain account name, its password/hash, and its SID.',
     tools: [
-      { name: 'goldenPac (Impacket)', url: 'https://github.com/fortra/impacket' },
-      { name: 'pykek (ms14-068.py)', url: 'https://github.com/fortra/impacket/blob/master/examples/goldenPac.py' },
+      { name: 'goldenPac (Impacket)', url: 'https://github.com/fortra/impacket/blob/master/examples/goldenPac.py' },
+      { name: 'pykek (ms14-068.py)', url: 'https://github.com/mubix/pykek' },
     ],
     commands: [
       {
@@ -286,6 +288,8 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       'Any valid domain account (name, password/hash, and SID)',
       'A DC unpatched for MS14-068 (pre Nov-2014)',
     ],
+    versions: ['srv2008', 'srv2012'],
+    affects: 'Domain Controllers running Server 2008/R2 or 2012/R2 unpatched for MS14-068 (the KDC PAC-validation flaw predates Server 2016).',
     mitre: mitre('T1068'),
     references: [
       { label: 'Microsoft, MS14-068 bulletin', url: 'https://learn.microsoft.com/en-us/security-updates/securitybulletins/2014/ms14-068' },
@@ -321,6 +325,8 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       'AD CS with an enabled machine-enrollment template (e.g. Machine)',
       'DC unpatched for CVE-2022-26923 (pre May-2022)',
     ],
+    versions: ['srv2012', 'srv2016', 'srv2019', 'srv2022'],
+    affects: 'AD CS / Domain Controllers on Server 2012/R2 through 2022 unpatched for CVE-2022-26923 (pre May-2022 StrongCertificateBindingEnforcement).',
     mitre: mitre('T1068'),
     references: [
       { label: 'Oliver Lyak (IFCR), Certifried CVE-2022-26923', url: 'https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4' },
@@ -331,11 +337,11 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
   },
   {
     id: 'privexchange',
-    label: 'PrivExchange (CVE-2019-0724)',
+    label: 'PrivExchange (CVE-2019-0686 / CVE-2019-0724)',
     phase: 'priv-esc',
     summary: 'Coerce Exchange to auth -> relay to LDAP for DCSync.',
     description:
-      'The Exchange EWS PushSubscription API can be abused to make the Exchange server authenticate (over HTTP) to an attacker-controlled host, the flaw tracked as CVE-2019-0724. Because Exchange (via the Exchange Windows Permissions group) holds WriteDacl on the domain object by default, relaying that high-privileged machine authentication to LDAP lets the attacker grant a controlled user DCSync rights, escalating any mailbox-holding user toward Domain Admin.',
+      'The Exchange EWS PushSubscription API can be abused to make the Exchange server authenticate (over HTTP) to an attacker-controlled host, addressed by the Feb-2019 Exchange elevation-of-privilege fix (CVE-2019-0686 / CVE-2019-0724). Because Exchange (via the Exchange Windows Permissions group) holds WriteDacl on the domain object by default, relaying that high-privileged machine authentication to LDAP lets the attacker grant a controlled user DCSync rights, escalating any mailbox-holding user toward Domain Admin.',
     tools: [
       { name: 'PrivExchange (dirkjanm)', url: 'https://github.com/dirkjanm/PrivExchange' },
       { name: 'ntlmrelayx (Impacket)', url: 'https://github.com/fortra/impacket' },

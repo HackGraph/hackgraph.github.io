@@ -14,7 +14,7 @@ export const adAdcsExtraNodes: TechniqueNodeDef[] = [
     phase: 'credential-access',
     summary: "Steal client-auth certificates + private keys from a compromised host's stores or disk, then PKINIT as the owner.",
     description:
-      "On a host you control, harvest existing client-authentication certificates and their private keys: export them from the user/machine certificate store via CryptoAPI/CNG (THEFT1), decrypt them from the DPAPI-protected store with the user's masterkey or as SYSTEM (THEFT2/3), find PFX files left on disk (THEFT4), or recover one via PKINIT / NGC key material (THEFT5). A stolen client-auth cert is then used with PKINIT to obtain the owner's TGT (and NT hash via UnPAC), giving access that survives password resets.",
+      "On a host you control, harvest existing client-authentication certificates and their private keys: export them from the certificate store via CryptoAPI/CNG (THEFT1), decrypt them from the DPAPI-protected store with the user's masterkey (THEFT2) or as SYSTEM (THEFT3), or find PFX files left on disk (THEFT4). A stolen client-auth cert is then used with PKINIT to obtain the owner's TGT, and from that TGT the account's NTLM hash via UnPAC-the-hash (THEFT5), giving access that survives password resets.",
     tools: [
       { name: 'Certipy', url: 'https://github.com/ly4k/Certipy' },
       { name: 'SharpDPAPI (certificates)', url: 'https://github.com/GhostPack/SharpDPAPI' },
@@ -41,7 +41,7 @@ export const adAdcsExtraNodes: TechniqueNodeDef[] = [
     phase: 'persistence',
     summary: 'Enroll a client-auth certificate for a compromised account: valid ~1 year and surviving password resets.',
     description:
-      "Once you control an account (user or machine), enroll a client-authentication certificate for it (PERSIST1), for another user via an enrollment-agent cert (PERSIST2), or renew an existing one. Because certificates authenticate via PKINIT independently of the password, the cert keeps working for its full validity (often a year or more) even after the account's password is reset. A password rotation does not evict it.",
+      "Once you control an account, enroll a client-authentication certificate for a user you control (PERSIST1) or for a computer account you control (PERSIST2), or renew an existing certificate before it expires (PERSIST3). Because certificates authenticate via PKINIT independently of the password, the cert keeps working for its full validity (often a year or more) even after the account's password is reset. A password rotation does not evict it. (Enrolling on behalf of ANOTHER user via an enrollment-agent cert is ESC3, not persistence.)",
     tools: [
       { name: 'Certipy', url: 'https://github.com/ly4k/Certipy' },
       { name: 'Certify (GhostPack)', url: 'https://github.com/GhostPack/Certify' },

