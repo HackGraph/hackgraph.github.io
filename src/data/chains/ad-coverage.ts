@@ -832,7 +832,7 @@ Get-Command -CommandType Function; $ExecutionContext.SessionState.LanguageMode`,
     phase: 'lateral-movement',
     summary: 'Tunnel through a foothold to reach segmented internal networks.',
     description:
-      "A compromised host is often routable to subnets you can't reach directly. Turn it into a pivot: a SOCKS proxy driven through proxychains, SSH local / remote / dynamic port-forwards, or a userland tunnel (Ligolo-ng, Chisel, sshuttle, Metasploit autoroute) to reach internal DCs, management VLANs, and services. Pivoting grants no privilege; it grants REACH, opening the rest of the estate to enumeration and remote execution.",
+      "A compromised host is often routable to subnets you can't reach directly. Turn it into a pivot: a SOCKS proxy driven through proxychains, SSH local / remote / dynamic port-forwards, or a userland tunnel (Ligolo-ng, Chisel, sshuttle, Metasploit autoroute) to reach internal DCs, management VLANs, and services. This adds no privilege, only reach: the rest of the estate becomes available for enumeration and remote execution.",
     tools: [
       { name: 'Ligolo-ng', url: 'https://github.com/nicocha30/ligolo-ng' },
       { name: 'Chisel', url: 'https://github.com/jpillora/chisel' },

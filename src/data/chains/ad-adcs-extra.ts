@@ -41,7 +41,7 @@ export const adAdcsExtraNodes: TechniqueNodeDef[] = [
     phase: 'persistence',
     summary: 'Enroll a client-auth certificate for a compromised account: valid ~1 year and surviving password resets.',
     description:
-      "Once you control an account (user or machine), enroll a client-authentication certificate for it (PERSIST1), for another user via an enrollment-agent cert (PERSIST2), or renew an existing one. Because certificates authenticate via PKINIT independently of the password, the cert keeps working for its full validity (often a year or more) even after the account's password is reset, giving quiet, durable persistence that most credential-rotation playbooks miss.",
+      "Once you control an account (user or machine), enroll a client-authentication certificate for it (PERSIST1), for another user via an enrollment-agent cert (PERSIST2), or renew an existing one. Because certificates authenticate via PKINIT independently of the password, the cert keeps working for its full validity (often a year or more) even after the account's password is reset. A password rotation does not evict it.",
     tools: [
       { name: 'Certipy', url: 'https://github.com/ly4k/Certipy' },
       { name: 'Certify (GhostPack)', url: 'https://github.com/GhostPack/Certify' },
