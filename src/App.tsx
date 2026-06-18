@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { MAPS, DEFAULT_MAP_ID, getMap } from './data';
 import { usePrefersReducedMotion } from './state/usePrefersReducedMotion';
 import { useTheme } from './state/useTheme';
+import { usePersistedState } from './state/usePersistedState';
 import { readDeepLink, writeDeepLink } from './state/deepLink';
 import { MapView } from './components/MapView';
+import { MapSwitcher } from './components/MapSwitcher';
 import { SettingsMenu } from './components/SettingsMenu';
 import { GithubIcon } from './ui/icons';
 
@@ -25,8 +27,9 @@ export default function App() {
   const reduceMotion = usePrefersReducedMotion();
   const { theme, toggle: toggleTheme } = useTheme();
   // Focus mode lives here (not in MapView) so the header settings menu can drive it
-  // and it survives a map switch / reset remount.
-  const [focusMode, setFocusMode] = useState(false);
+  // and it survives a map switch / reset remount. Persisted so the preference also
+  // survives reloads (theme is likewise persisted, in useTheme).
+  const [focusMode, setFocusMode] = usePersistedState('hg-focus-mode', false);
   const [mapId, setMapId] = useState(() => {
     const m = readDeepLink().mapId;
     return m && MAPS.some((x) => x.id === m) ? m : DEFAULT_MAP_ID;
@@ -39,7 +42,7 @@ export default function App() {
   return (
     <div className="flex h-full flex-col bg-bg">
       {/* Header */}
-      <header className="z-20 flex flex-nowrap items-center justify-between gap-2 border-b border-border bg-bg-soft/80 px-3 py-2.5 backdrop-blur-xl sm:gap-4 sm:px-4">
+      <header className="z-30 flex flex-nowrap items-center justify-between gap-2 border-b border-border bg-bg-soft/80 px-3 py-2.5 backdrop-blur-xl sm:gap-4 sm:px-4">
         <div className="flex min-w-0 items-center gap-2 sm:gap-3">
           <div className="flex shrink-0 items-center gap-2.5">
             <LogoMark />
@@ -47,21 +50,7 @@ export default function App() {
           </div>
 
           {MAPS.length > 1 ? (
-            <div className="flex shrink-0 items-center gap-0.5 rounded-lg border border-border bg-panel p-0.5">
-              {MAPS.map((m) => (
-                <button
-                  key={m.id}
-                  type="button"
-                  onClick={() => setMapId(m.id)}
-                  className={[
-                    'whitespace-nowrap rounded-md px-2 py-1 text-[11px] font-medium transition-colors sm:px-2.5 sm:text-[12px]',
-                    m.id === mapId ? 'bg-accent-soft text-ink' : 'text-ink-dim hover:text-ink',
-                  ].join(' ')}
-                >
-                  {m.name}
-                </button>
-              ))}
-            </div>
+            <MapSwitcher maps={MAPS} mapId={mapId} onSelect={setMapId} reduceMotion={reduceMotion} />
           ) : (
             <span className="hidden truncate text-[12px] text-ink-dim md:inline">{map.tagline ?? map.name}</span>
           )}

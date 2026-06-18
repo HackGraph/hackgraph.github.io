@@ -30,6 +30,9 @@ export interface DrawInEdgeData extends Record<string, unknown> {
   dimIdle?: boolean;
   /** Edge OUT of the selected node — a next step; kept visible (not receded). */
   nextStep?: boolean;
+  /** Edge OUT of the selected node's parent (parent → a sibling) — an alternative at
+   *  the same step; kept visible (not receded) like the sibling nodes. */
+  peer?: boolean;
   /** "Isolate path" mode is on and this edge is not fully on the lit path → fade
    *  it out (kept mounted so the toggle glides instead of popping). */
   faded?: boolean;

@@ -12,11 +12,18 @@ export interface GraphInteraction {
   isDimmed: (id: NodeId) => boolean;
   /** Any node is currently selected — drives the focus-dim of unrelated nodes. */
   hasSelection: boolean;
+  /** Focus mode is active (a node is selected with focus on). The rendered subset is
+   *  already the curated neighbourhood (route + siblings + next steps), so nothing in
+   *  it should recede — siblings stay fully visible alongside the selected node. */
+  focusActive: boolean;
   /** On the path from root to the selected node (stays lit while others recede). */
   isNodeActive: (id: NodeId) => boolean;
   /** A direct next step off the selected node — kept visible (not receded) so the
    *  next choice is easy to pick while building a path. Checked by def id. */
   isNextStep: (id: NodeId) => boolean;
+  /** A sibling of the selected node (a peer under the same parent) — kept visible so
+   *  selecting a node never dims the alternatives at that step. Checked by def id. */
+  isSibling: (id: NodeId) => boolean;
   /** Edge (by `source->target` id) lies on the active path. */
   isEdgeActive: (edgeId: string) => boolean;
   /** This edge is the one currently selected (its detail panel is open). */

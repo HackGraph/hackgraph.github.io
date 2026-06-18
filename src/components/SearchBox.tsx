@@ -23,6 +23,29 @@ export function SearchBox({ nodes, onPick, phaseColor }: SearchBoxProps) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Cap the results list to the space actually visible below the input. On mobile the
+  // on-screen keyboard shrinks the visual viewport (which `vh` ignores), so a `60vh`
+  // list would run under the keyboard / off-screen. visualViewport.height tracks the
+  // real visible height, so the list always fits and scrolls within it.
+  const [maxH, setMaxH] = useState<number | undefined>(undefined);
+  useEffect(() => {
+    if (!open) return;
+    const vv = window.visualViewport;
+    const update = () => {
+      const bottom = inputRef.current?.getBoundingClientRect().bottom ?? 0;
+      const visible = vv ? vv.height : window.innerHeight;
+      setMaxH(Math.max(140, Math.round(visible - bottom - 14)));
+    };
+    update();
+    vv?.addEventListener('resize', update);
+    vv?.addEventListener('scroll', update);
+    window.addEventListener('resize', update);
+    return () => {
+      vv?.removeEventListener('resize', update);
+      vv?.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [open]);
 
   const results = useMemo(() => {
     const query = q.trim().toLowerCase();
@@ -88,7 +111,10 @@ export function SearchBox({ nodes, onPick, phaseColor }: SearchBoxProps) {
         className="w-full rounded-lg border border-border bg-panel/80 py-1.5 pl-8 pr-3 text-[12px] text-ink shadow-[var(--shadow-card)] backdrop-blur-xl placeholder:text-ink-dim focus:border-accent focus:outline-none"
       />
       {open && results.length > 0 && (
-        <ul className="hg-scroll absolute z-30 mt-1.5 max-h-[60vh] w-full overflow-auto rounded-xl border border-border bg-panel-2/90 shadow-[var(--shadow-pop)] backdrop-blur-xl">
+        <ul
+          style={{ maxHeight: maxH }}
+          className="hg-scroll absolute z-30 mt-1.5 max-h-[60vh] w-full overflow-auto rounded-xl border border-border bg-panel-2/90 shadow-[var(--shadow-pop)] backdrop-blur-xl"
+        >
           {results.map((n, i) => (
             <li key={n.id}>
               <button

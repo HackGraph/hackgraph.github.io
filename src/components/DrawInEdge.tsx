@@ -51,9 +51,10 @@ function DrawInEdgeImpl({
   const incident = hoverEdges.has(id) || (hoveredId != null && source === hoveredId);
   const emphasized = active || selected || edgeHover || incident;
   const focusOn = !!data?.dimIdle || hoveredId != null;
-  // A next step off the selected node stays at full (resting) visibility so the
-  // connection to the next choice is clear, even while everything else recedes.
-  const deemphasized = focusOn && !emphasized && !data?.nextStep;
+  // A next step off the selected node — or a parent→sibling edge (an alternative at
+  // the same step) — stays at full (resting) visibility so the choices read as
+  // connected branches, even while everything unrelated recedes.
+  const deemphasized = focusOn && !emphasized && !data?.nextStep && !data?.peer;
 
   // Resting edges read as ONE slightly-more-apparent unit: a marginally lighter,
   // marginally thicker warm line + a modest matching head (not a big red arrow).

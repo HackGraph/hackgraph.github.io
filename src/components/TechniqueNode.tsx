@@ -13,8 +13,10 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
     isSelected,
     isDimmed,
     hasSelection,
+    focusActive,
     isNodeActive,
     isNextStep,
+    isSibling,
     phaseColor,
     phaseLabel,
     toggle,
@@ -46,11 +48,12 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
   const cmdCount = def.commands?.length ?? 0;
 
   // "Isolate path" mode: nodes off the lit path are faded fully out (kept mounted
-  // so the toggle glides). Focus mode: when something is selected, nodes off the
-  // lit path recede so the chosen path stands out — EXCEPT the direct next steps
-  // off the selected node, which stay fully visible so the next choice is easy.
+  // so the toggle glides). Path-building (no focus): nodes off the lit path recede so
+  // the chosen path stands out — EXCEPT the selected node's direct next steps AND its
+  // siblings (the peers/alternatives at that step), which stay fully visible. Focus
+  // mode: the rendered subset IS the curated neighbourhood, so nothing in it recedes.
   const faded = !!data?.faded;
-  const recede = hasSelection && !active && !isNextStep(defId);
+  const recede = hasSelection && !focusActive && !active && !isNextStep(defId) && !isSibling(defId);
   const opacity = faded ? 0 : dimmed ? 0.16 : recede ? 0.3 : 1;
 
   const entrance = {

@@ -9,6 +9,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import type { GraphModel, NodeId } from '../graph/buildModel';
 import type { IsolatePath } from '../graph/visibility';
+import type { AppEdge } from '../graph/appNode';
 import { useGraphView } from '../graph/useGraphView';
 import { TechniqueNode } from './TechniqueNode';
 import { DrawInEdge } from './DrawInEdge';
@@ -34,6 +35,9 @@ interface GraphCanvasProps {
   isolate?: IsolatePath | null;
   /** Render keys of edges on the lit attack path (fed to edge data for repaint). */
   activeEdges: ReadonlySet<string>;
+  /** Edges out of the selected node's parent (parent → siblings) — kept un-dimmed so
+   *  the alternatives at that step read as connected branches. */
+  peerEdges: ReadonlySet<string>;
   /** The currently open edge's id, and whether any node/edge is selected. */
   selectedEdgeId: string | null;
   hasSelection: boolean;
@@ -49,6 +53,7 @@ function GraphCanvasImpl({
   onNodeHover,
   isolate,
   activeEdges,
+  peerEdges,
   selectedEdgeId,
   hasSelection,
 }: GraphCanvasProps) {
@@ -66,18 +71,33 @@ function GraphCanvasImpl({
   // edge object changes. Re-decorates only when the active set / selection moves.
   const decoratedEdges = useMemo(
     () =>
-      edges.map((e) => {
-        const active = activeEdges.has(e.id);
-        const selected = e.id === selectedEdgeId;
-        const nextStep = e.source === selectedId; // a next step off the selected node
-        return e.data?.active === active &&
-          e.data?.selected === selected &&
-          e.data?.dimIdle === hasSelection &&
-          e.data?.nextStep === nextStep
-          ? e
-          : { ...e, data: { ...e.data, active, selected, dimIdle: hasSelection, nextStep } };
-      }),
-    [edges, activeEdges, selectedEdgeId, hasSelection, selectedId],
+      // React Flow paints edges in ARRAY ORDER within one SVG layer (per-edge zIndex
+      // doesn't reorder them), so a lit/clicked edge can be hidden where a later
+      // regular edge crosses it. Decorate each edge, then move the emphasised ones
+      // (on the lit path, or the clicked edge) to the END so they paint on top. Edges
+      // keep their `id` key, so reordering moves the DOM node without remounting it —
+      // the draw-in animation survives. (Edges still sit below the nodes layer.)
+      (() => {
+        const base: AppEdge[] = [];
+        const top: AppEdge[] = [];
+        for (const e of edges) {
+          const active = activeEdges.has(e.id);
+          const selected = e.id === selectedEdgeId;
+          const nextStep = e.source === selectedId; // a next step off the selected node
+          const peer = peerEdges.has(e.id); // parent → sibling (alternative at this step)
+          const next =
+            e.data?.active === active &&
+            e.data?.selected === selected &&
+            e.data?.dimIdle === hasSelection &&
+            e.data?.nextStep === nextStep &&
+            e.data?.peer === peer
+              ? e
+              : { ...e, data: { ...e.data, active, selected, dimIdle: hasSelection, nextStep, peer } };
+          (active || selected ? top : base).push(next);
+        }
+        return [...base, ...top];
+      })(),
+    [edges, activeEdges, peerEdges, selectedEdgeId, hasSelection, selectedId],
   );
 
   // While the camera pans/zooms, the whole graph slides behind the fixed overlays

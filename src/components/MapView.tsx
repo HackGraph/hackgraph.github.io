@@ -130,21 +130,33 @@ export function MapView({
 
   // Edges on the hovered node's lineage (root → node, along the drawn edges), so
   // hovering traces the whole path back to the start, not just the parent edge.
+  // EXCEPT the selected node itself: its route is already lit by `activePath` (which
+  // follows the clicked trail). Re-tracing here would light the CANONICAL longest
+  // route instead — a different path into a convergent node (e.g. the goal) than the
+  // one you selected — surfacing an "unselected path" under it. So skip it.
   const hoverEdges = useMemo(() => {
     const set = new Set<string>();
-    if (hoveredId) {
+    if (hoveredId && hoveredId !== selection.selectedId) {
       const lin = pathInRendered(rendered.graph, model.rootId, hoveredId, rendered.backEdges);
       for (let i = 1; i < lin.length; i++) set.add(edgeKey(lin[i - 1], lin[i]));
     }
     return set;
-  }, [hoveredId, rendered, model.rootId]);
+  }, [hoveredId, rendered, model.rootId, selection.selectedId]);
 
   // Filter: dim technique nodes that don't match the active phase chips / target version.
   const [phaseFilter, setPhaseFilter] = useState<ReadonlySet<string>>(new Set());
   const [versionFilter, setVersionFilter] = useState<string | null>(null);
   const [toolsOpen, setToolsOpen] = useState(false);
-  // Only maps that tag nodes with `versions` (currently the PE map) get the selector.
-  const versionAware = useMemo(() => map.nodes.some((n) => n.versions && n.versions.length > 0), [map]);
+  // Version ids actually used by THIS map's nodes — drives whether the "Target"
+  // selector shows (any tagged node) and which versions/families it offers (so the AD
+  // map lists only Server releases, the PE map both). Picking a version the map never
+  // tags would otherwise dim every tagged node at once.
+  const mapVersionIds = useMemo(() => {
+    const s = new Set<string>();
+    for (const n of map.nodes) for (const v of n.versions ?? []) s.add(v);
+    return s;
+  }, [map]);
+  const versionAware = mapVersionIds.size > 0;
 
   const isDimmed = useCallback(
     (id: string) => {
@@ -256,8 +268,18 @@ export function MapView({
         if (i > 0 && route[i] !== route[i - 1]) edges.add(edgeKey(route[i - 1], route[i]));
       });
     } else if (selectedEdgeId) {
-      const [s, t] = selectedEdgeId.split('->');
-      nodes.add(s);
+      // Light the whole route THROUGH the selected edge (root → source → target), so
+      // selecting an edge reads like the path that reaches it — not just two isolated
+      // endpoints with the route to them dimmed.
+      const i = selectedEdgeId.indexOf('->');
+      const s = selectedEdgeId.slice(0, i);
+      const t = selectedEdgeId.slice(i + 2);
+      const lin = pathInRendered(rendered.graph, model.rootId, s, rendered.backEdges); // root → source
+      const route = lin.length > 1 && lin[0] === model.rootId ? lin : [s];
+      route.forEach((k, idx) => {
+        nodes.add(k);
+        if (idx > 0 && route[idx] !== route[idx - 1]) edges.add(edgeKey(route[idx - 1], route[idx]));
+      });
       nodes.add(t);
       edges.add(selectedEdgeId);
     }
@@ -345,6 +367,44 @@ export function MapView({
     [selection.selectedId, model],
   );
 
+  // The selected node's SIBLINGS — the other children of its parent on the lit route,
+  // i.e. the alternatives at the same step. Kept fully visible (like the next steps)
+  // so selecting a node never dims the peers you might pick instead.
+  const siblingDefs = useMemo(() => {
+    const sel = selection.selectedId;
+    if (!sel) return null;
+    let parentDef: string | undefined;
+    for (const eid of activePath.edges) {
+      const j = eid.indexOf('->');
+      if (eid.slice(j + 2) === sel) {
+        parentDef = defIdOf(eid.slice(0, j));
+        break;
+      }
+    }
+    if (parentDef === undefined) return null;
+    return new Set(model.childrenOf.get(parentDef) ?? []);
+  }, [selection.selectedId, activePath, model]);
+
+  // Render-key edges OUT of the selected node's parent — i.e. parent → selected and
+  // parent → each sibling. Kept un-dimmed so the alternatives at the step are visible
+  // as connected branches, matching the sibling NODES staying visible (`siblingDefs`).
+  const peerEdges = useMemo(() => {
+    const set = new Set<string>();
+    const sel = selection.selectedId;
+    if (!sel) return set;
+    let parentKey: string | undefined;
+    for (const eid of activePath.edges) {
+      const j = eid.indexOf('->');
+      if (eid.slice(j + 2) === sel) {
+        parentKey = eid.slice(0, j);
+        break;
+      }
+    }
+    if (parentKey === undefined) return set;
+    for (const e of rendered.graph.edges) if (e.source === parentKey) set.add(edgeKey(e.source, e.target));
+    return set;
+  }, [selection.selectedId, activePath, rendered]);
+
   // The selected node's next steps, browsable + pickable in the detail panel.
   // Computed over the graph AS IT WILL BE once the node is expanded (resolveUnroll
   // with the selected key added), so each child's render key is EXACT — picking
@@ -388,7 +448,9 @@ export function MapView({
       isSelected: (id) => selection.selectedId === id,
       isDimmed,
       hasSelection: selection.selectedId != null || selectedEdgeId != null,
+      focusActive,
       isNextStep: (id) => !!nextStepDefs?.has(id),
+      isSibling: (id) => !!siblingDefs?.has(id),
       isNodeActive: (id) => activePath.nodes.has(id),
       isEdgeActive: (eid) => activePath.edges.has(eid),
       isEdgeSelected: (eid) => selectedEdgeId === eid,
@@ -401,7 +463,7 @@ export function MapView({
       select: selectNode,
       selectEdge,
     }),
-    [model, expansion.expanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, reduceMotion],
+    [model, expansion.expanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, siblingDefs, reduceMotion],
   );
 
   // Focus mode: keep the selected node's full lineage (and the node itself) in the
@@ -492,6 +554,7 @@ export function MapView({
           onNodeHover={onNodeHover}
           isolate={isolate}
           activeEdges={activePath.edges}
+          peerEdges={peerEdges}
           selectedEdgeId={selectedEdgeId}
           hasSelection={selection.selectedId != null || selectedEdgeId != null}
         />
@@ -537,20 +600,21 @@ export function MapView({
                       className="rounded-md border border-border bg-bg-soft px-1.5 py-0.5 text-[11px] text-ink outline-none focus:border-border-strong"
                     >
                       <option value="">All versions</option>
-                      <optgroup label="Client">
-                        {WINDOWS_VERSIONS.filter((v) => v.family === 'client').map((v) => (
-                          <option key={v.id} value={v.id}>
-                            {v.label}
-                          </option>
-                        ))}
-                      </optgroup>
-                      <optgroup label="Server">
-                        {WINDOWS_VERSIONS.filter((v) => v.family === 'server').map((v) => (
-                          <option key={v.id} value={v.id}>
-                            {v.label}
-                          </option>
-                        ))}
-                      </optgroup>
+                      {(['client', 'server'] as const).map((fam) => {
+                        const opts = WINDOWS_VERSIONS.filter(
+                          (v) => v.family === fam && mapVersionIds.has(v.id),
+                        );
+                        if (opts.length === 0) return null;
+                        return (
+                          <optgroup key={fam} label={fam === 'client' ? 'Client' : 'Server'}>
+                            {opts.map((v) => (
+                              <option key={v.id} value={v.id}>
+                                {v.label}
+                              </option>
+                            ))}
+                          </optgroup>
+                        );
+                      })}
                     </select>
                   </label>
                   <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
