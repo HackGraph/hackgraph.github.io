@@ -100,10 +100,14 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     phase: 'enumeration',
     summary: 'Find principals from domain A with rights in domain B.',
     description: r`Trusts let a principal from one domain be a member of a group (typically a domain-local group) in another. Get-DomainForeignGroupMember enumerates a target domain's groups that contain outside members (its incoming access); Get-DomainForeignUser finds users belonging to groups outside their own domain (outgoing access). These foreign memberships are the concrete cross-trust access paths feeding external/forest-trust abuse; Get-DomainForeignUser reliably reflects only universal groups due to global-catalog replication.`,
-    tools: [{ name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' }],
+    tools: [
+      { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
+    ],
     commands: [
       { label: 'Groups with foreign members (incoming)', code: r`Get-DomainForeignGroupMember -Domain target.domain.local`, lang: 'powershell' },
       { label: 'Users in groups outside their domain (outgoing)', code: r`Get-DomainForeignUser`, lang: 'powershell' },
+      { label: 'List ForeignSecurityPrincipals (bloodyAD)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 get search --base 'CN=ForeignSecurityPrincipals,DC=domain,DC=local' --filter '(objectClass=foreignSecurityPrincipal)' --attr cn,memberOf`, lang: 'bash' },
     ],
     mitre: mitre('T1482'),
     references: [{ label: 'PowerSploit, Get-DomainForeignGroupMember', url: 'https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/' }],

