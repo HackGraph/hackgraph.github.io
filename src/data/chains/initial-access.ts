@@ -19,12 +19,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     summary: 'You have network access. Pick a path.',
     description:
       'You are plugged into the internal network (or have a low-privilege foothold). From here the goal is to acquire your first set of valid domain credentials, then escalate toward Domain Admin. Branches below split on what you currently hold: nothing, or an existing low-privilege account.',
-    difficulty: 'easy',
   },
   {
     id: 'network-recon',
     label: 'Network Recon',
     phase: 'recon',
+    needs: 'none',
     summary: 'Find the DC, hosts, and weak protocols.',
     description:
       'Map the environment before touching anything loud. Identify domain controllers, naming context, hosts with SMB signing disabled (relay targets), and whether legacy name-resolution protocols (LLMNR/NBT-NS/mDNS) are in use.',
@@ -51,12 +51,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, Recon', url: 'https://www.thehacker.recipes/ad/recon/' },
     ],
     opsec: 'Passive listening and DNS lookups are quiet; full-range nmap scans are noisy and may trip IDS. Prefer targeted scans.',
-    difficulty: 'easy',
   },
   {
     id: 'llmnr-poisoning',
     label: 'LLMNR / NBT-NS Poisoning',
     phase: 'initial-access',
+    needs: 'none',
     summary: 'Answer broadcast name queries, capture NetNTLMv2.',
     description:
       'When a host fails DNS it falls back to LLMNR/NBT-NS broadcasts. Responder answers "that\'s me", the victim authenticates to you, and you capture its NetNTLMv2 challenge/response. From here you either relay it live or crack it offline.',
@@ -79,7 +79,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Network access', 'LLMNR/NBT-NS enabled on the segment'],
     mitre: mitre('T1557.001'),
     opsec: 'Responder is detectable: it answers names that should not resolve. Defenders deploy "honey" name lookups to catch it. Run analyze mode (-A) first to observe without poisoning.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, LLMNR/NBT-NS Poisoning & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
     ],
@@ -88,6 +87,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     id: 'ntlm-relay',
     label: 'NTLM Relay',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Relay captured auth to a host without SMB signing.',
     description:
       'Instead of cracking the captured authentication, relay it in real time to another host where SMB signing is not enforced. If the relayed account is a local admin on the target, you get code execution or a dumped SAM: no password ever cracked.',
@@ -109,7 +109,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Captured/poisoned authentication', 'For SMB relay: a target with SMB signing NOT enforced', 'For the LDAP relay: LDAP signing / channel binding NOT enforced on the DC'],
     mitre: mitre('T1557.001'),
     opsec: 'Set Responder SMB/HTTP servers to OFF so it forwards to ntlmrelayx instead of competing. Relay leaves authentication logs on the target.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, LLMNR/NBT-NS Spoofing & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
       { label: 'SpecterOps, Relay Your Heart Away (445 Takeover)', url: 'https://posts.specterops.io/relay-your-heart-away-an-opsec-conscious-approach-to-445-takeover-1c9b4666c8ac' },
@@ -119,6 +118,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     id: 'crack-netntlm',
     label: 'Crack NetNTLMv2',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Offline-crack the captured hash to a password.',
     description:
       'If relaying is not viable (signing enforced everywhere), crack the captured NetNTLMv2 hash offline. Success yields a cleartext password and thus valid domain credentials.',
@@ -136,12 +136,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['A captured NetNTLMv2 hash'],
     mitre: mitre('T1110.002'),
     opsec: 'Fully offline: zero footprint on the target once captured.',
-    difficulty: 'medium',
   },
   {
     id: 'smb-exec-foothold',
     label: 'Relay to SMB → Exec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Code execution on the relayed/owned host.',
     description:
       'With a relayed session or admin creds, execute commands over SMB (service creation, WMI, or task scheduler) to land an interactive foothold on a domain-joined host.',
@@ -159,7 +159,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target (relayed or owned)'],
     mitre: mitre('T1021.002'),
     opsec: 'psexec creates a service (Event ID 7045), which is loud. wmiexec/smbexec are quieter. Prefer fileless execution.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, PsExec/WinExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
     ],
@@ -168,6 +167,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     id: 'local-admin-host',
     label: 'Local Admin on Host',
     phase: 'priv-esc',
+    needs: 'local-admin',
     summary: 'SYSTEM / local admin on a domain-joined host.',
     description:
       'You hold SYSTEM or local administrator on a domain-joined host: the launchpad for credential theft. Dump LSASS, the SAM/LSA secrets, and DPAPI material to recover cached domain hashes, Kerberos tickets, and sometimes cleartext, then reuse them to move laterally to the next host.',
@@ -183,11 +183,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
         lang: 'bash',
       },
     ],
-    difficulty: 'medium',  },
+  },
   {
     id: 'dump-lsass',
     label: 'Dump LSASS',
     phase: 'credential-access',
+    needs: 'local-admin',
     summary: 'Extract creds/tickets from memory.',
     description:
       'LSASS holds credential material for logged-on users: NTLM hashes, Kerberos tickets, and sometimes cleartext. Dump it (carefully, EDR watches LSASS closely) to harvest more powerful credentials.',
@@ -216,7 +217,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Local admin / SYSTEM on the host'],
     mitre: mitre('T1003.001'),
     opsec: 'LSASS access is the single most-monitored action by EDR. Prefer protected-process bypasses, handle duplication, or dumping offline from a minidump.',
-    difficulty: 'hard',
     references: [
       { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
     ],
@@ -225,6 +225,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     id: 'pass-the-hash',
     label: 'Pass-the-Hash',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Authenticate with the NT hash, no cracking.',
     description:
       'NTLM authentication only needs the hash, not the password. Reuse a harvested local-admin or domain NT hash to authenticate to other hosts and pivot.',
@@ -242,7 +243,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     requires: ['An NT hash', 'NTLM authentication permitted'],
     mitre: mitre('T1550.002'),
     opsec: 'NTLM logons are more visible than Kerberos and stand out from a workstation. Watch for "Logon Type 3" anomalies.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, NTLM / Pass-the-Hash', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
     ],
@@ -251,6 +251,7 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
     id: 'valid-domain-creds',
     label: 'Valid Domain Credentials',
     phase: 'enumeration',
+    needs: 'domain-user',
     hub: true, // the domain-identity convergence hub: many creds-yielding steps lead back here
     summary: 'A foothold identity to enumerate and escalate from.',
     description:
@@ -268,23 +269,24 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
       { label: 'NetExec, SMB authentication & (Pwn3d!) check', url: 'https://www.netexec.wiki/smb-protocol/authentication' },
     ],
     mitre: mitre('T1078.002'),
-    difficulty: 'easy',  },
+  },
   {
     id: 'valid-local-creds',
     label: 'Valid Local Credentials',
     phase: 'initial-access',
+    needs: 'local-admin',
     hub: true, // the local-identity convergence hub
     summary: 'A local account on a host, often low-privilege; may need escalation to local admin.',
     description:
       'You hold a valid LOCAL account (not a domain account): a default/weak local login, a cracked SAM hash, or creds from a config file. If it is low-privilege you must escalate locally before you can harvest secrets or pivot. Local admin on a domain-joined host is the gateway to dumping domain credentials.',
     requires: ['Any valid local account on a host'],
     mitre: mitre('T1078.003'),
-    difficulty: 'easy',
   },
   {
     id: 'windows-local-privesc',
     label: 'Windows Local Privilege Escalation',
     phase: 'priv-esc',
+    needs: 'local-admin',
     summary: 'Escalate a low-priv local user to local admin / SYSTEM.',
     description:
       'From a low-privilege local shell, abuse service / registry / scheduled-task misconfigurations, token privileges (Potato), AlwaysInstallElevated, an unquoted service path, or a kernel exploit to reach SYSTEM. The full technique catalogue lives in the dedicated Windows Priv Esc map.',
@@ -296,12 +298,12 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
       },
     ],
     mitre: mitre('T1068'),
-    difficulty: 'medium',
   },
   {
     id: 'linux-local-privesc',
     label: 'Linux Local Privilege Escalation',
     phase: 'priv-esc',
+    needs: 'local-admin',
     summary: 'Escalate a low-priv user to root on a Linux host.',
     description:
       "From a non-root shell on a domain-joined (or standalone) Linux host, abuse sudo misconfigurations and SUID/SGID binaries (GTFOBins), writable cron jobs, dangerous capabilities, PATH / wildcard injection, shared-library hijacking (LD_PRELOAD / LD_LIBRARY_PATH / writable RPATH), NFS no_root_squash, the docker / lxd group, or a kernel exploit to reach root. LinPEAS and pspy surface the quick wins. Root then unlocks the host's Kerberos keytabs and SSSD cache.",
@@ -320,7 +322,6 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
       { name: 'pspy', url: 'https://github.com/DominicBreuker/pspy' },
     ],
     mitre: mitre('T1068'),
-    difficulty: 'medium',
   },
 ];
 

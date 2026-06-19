@@ -16,6 +16,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'username-enum-kerbrute',
     label: 'Username Enumeration',
     phase: 'recon',
+    needs: 'none',
     summary: 'Validate AD usernames via Kerberos pre-auth, no creds.',
     description:
       'Kerbrute (and similar tools) send AS-REQs with no pre-authentication: existing accounts return KRB5KDC_ERR_PREAUTH_REQUIRED, unknown ones return KRB5KDC_ERR_C_PRINCIPAL_UNKNOWN, so valid usernames are confirmed with no credentials and without incrementing bad-password counters (no account lockout). The validated list seeds password spraying and AS-REP roasting.',
@@ -43,12 +44,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, Pre-auth bruteforce', url: 'https://www.thehacker.recipes/ad/movement/kerberos/pre-auth-bruteforce' },
     ],
     opsec: 'Bulk AS-REQ enumeration generates Kerberos pre-auth events (4768) on the DC, but does not increment badPwdCount so it will not lock accounts. High volume is detectable.',
-    difficulty: 'easy',
   },
   {
     id: 'rid-cycling',
     label: 'RID Cycling',
     phase: 'recon',
+    needs: 'none',
     summary: 'Brute-force RIDs over a null SMB session to list users.',
     description:
       'Where a host permits null or anonymous SMB sessions, the domain SID is recovered and appended with sequential RIDs to resolve account names. This yields a user/computer list with no credentials, feeding spraying and roasting.',
@@ -66,12 +67,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, MS-RPC recon', url: 'https://www.thehacker.recipes/ad/recon/ms-rpc' },
     ],
     opsec: 'Many SAMR/RPC lookups against the DC are visible; modern DCs frequently disable anonymous access (RestrictAnonymous), so this often fails on hardened domains.',
-    difficulty: 'easy',
   },
   {
     id: 'anon-ldap-dump',
     label: 'Anonymous LDAP Dump',
     phase: 'recon',
+    needs: 'none',
     summary: 'Dump directory objects via an LDAP anonymous/null bind.',
     description:
       'If the directory permits an anonymous (null) LDAP bind, you can enumerate users, groups, and computers without credentials; even a low-privilege bind reveals the full object graph. Useful for mapping and to feed BloodHound/spraying.',
@@ -89,12 +90,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, LDAP recon', url: 'https://www.thehacker.recipes/ad/recon/ldap' },
     ],
     opsec: 'Anonymous LDAP bind is disabled by default on modern AD; success usually indicates legacy/misconfigured DCs. Queries are logged but blend with normal LDAP traffic.',
-    difficulty: 'easy',
   },
   {
     id: 'password-spraying',
     label: 'Password Spraying',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Try one common password across many accounts.',
     description:
       'Rather than many passwords against one account (which locks it), spray a single likely password (e.g. Season+Year) across the whole user list. Spraying over Kerberos (AS-REQ pre-auth) is often stealthier than SMB/LDAP (it frequently avoids 4625 logon-failure events) but still increments badPwdCount, so low-and-slow timing under the lockout threshold is essential. A single hit yields valid domain credentials.',
@@ -115,12 +116,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, Password policy', url: 'https://www.thehacker.recipes/ad/recon/password-policy' },
     ],
     opsec: 'Each failed bind increments badPwdCount; SMB/LDAP spraying generates 4625/4771, while Kerberos pre-auth spraying may avoid 4625 (only 4768/4771). Read the lockout policy first, throttle to one attempt per account per window, and pause before the threshold.',
-    difficulty: 'easy',
   },
   {
     id: 'mitm6-relay',
     label: 'IPv6 DNS Takeover (DHCPv6)',
     phase: 'initial-access',
+    needs: 'none',
     summary: 'Spoof DHCPv6/DNS over IPv6, then relay NTLM.',
     description:
       'Windows prefers IPv6 and auto-requests a DHCPv6 lease. mitm6 answers as a rogue DHCPv6 server, sets itself as the victim DNS, and spoofs WPAD to coerce NTLM auth. Paired with ntlmrelayx, the captured auth is relayed to LDAP(S) to grant rights or configure RBCD: domain compromise with no creds.',
@@ -135,12 +136,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Layer-2 access to the segment', 'IPv6 enabled on victims (default)'],
     mitre: mitre('T1557.003'),
     opsec: 'Rogue DHCPv6/DNS is detectable and disrupts IPv6 on the segment. Use -d to scope to target domains; defenders monitor for unexpected DHCPv6 advertisements.',
-    difficulty: 'medium',
   },
   {
     id: 'coerced-auth',
     label: 'Coerced Authentication',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Force a machine (or DC) to authenticate to you.',
     description:
       'Authenticated RPC calls force a target, often a Domain Controller, to initiate NTLM auth back to an attacker host. PetitPotam (MS-EFSRPC), PrinterBug (MS-RPRN), and the multi-method Coercer all trigger this. The coerced auth is then relayed (to LDAP, ADCS web enrollment for ESC8) or captured by a host with unconstrained delegation.',
@@ -158,7 +159,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Usually a valid domain account', 'Reachable RPC service (EFSRPC/RPRN/DFSNM) on the target'],
     mitre: mitre('T1187'),
     opsec: 'Coercion RPC calls and the resulting outbound auth to an unusual host are increasingly detected and many vectors are patched. Have your relay/capture listener running first.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, Printers Spooler Service Abuse (Coercion)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/printers-spooler-service-abuse.html' },
     ],
@@ -167,6 +167,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'adcs-esc1',
     label: 'ADCS ESC1 (Arbitrary SAN)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Enroll a cert as any user via Enrollee-Supplies-Subject.',
     description:
       'ESC1 is the most common AD CS misconfiguration: a template with Client Authentication EKU, ENROLLEE_SUPPLIES_SUBJECT enabled, and enrollment open to low-priv users. Request a certificate specifying an arbitrary UPN/SID (e.g. a Domain Admin), then authenticate with it to recover the target NT hash or a TGT. One of the ESC1–ESC8+ family.',
@@ -182,12 +183,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, AD CS Domain Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.html' },
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },{ label: 'The Hacker Recipes, AD CS', url: 'https://www.thehacker.recipes/ad/movement/adcs/' }],
     opsec: 'Certificate requests are logged on the CA (Event ID 4886/4887); a request whose SAN/UPN differs from the requester is a strong indicator. Certificates remain valid past password resets.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc8',
     label: 'ADCS ESC8 (Relay to Web Enrollment)',
     phase: 'priv-esc',
+    needs: 'none',
     summary: 'Relay coerced NTLM to the AD CS web enrollment endpoint.',
     description:
       'ESC8 needs no vulnerable template: the AD CS HTTP web enrollment interface accepts NTLM. Coerce a Domain Controller to authenticate, relay that NTLM to the certsrv endpoint, and obtain a certificate for the DC machine account, which yields a TGT and DCSync.',
@@ -205,12 +206,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, AD CS Domain Escalation (ESC8)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/domain-escalation.html' },
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },{ label: 'The Hacker Recipes, AD CS web endpoints', url: 'https://www.thehacker.recipes/ad/movement/adcs/unsigned-endpoints' }],
     opsec: 'Combines coercion (noisy) with relay and a cross-account cert request: multiple high-fidelity detections. Mitigated by EPA / HTTPS-only on certsrv.',
-    difficulty: 'hard',
   },
   {
     id: 'acl-genericall',
     label: 'GenericAll',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Full control over an object → the abuse depends on its type.',
     description:
       'GenericAll is full control over a target object: it implies WriteDacl, WriteOwner, every property write, and the control-access rights. The abuse depends on the object TYPE: over a USER, reset the password (ForceChangePassword), write a shadow credential, or set an SPN to Kerberoast; over a GROUP, add a member; over a COMPUTER, configure RBCD or read LAPS; over the DOMAIN object, grant yourself DCSync. The widest single BloodHound edge.',
@@ -228,12 +229,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
       { label: 'SpecterOps, BloodHound GenericAll edge', url: 'https://bloodhound.specterops.io/resources/edges/generic-all' },{ label: 'The Hacker Recipes, DACL abuse', url: 'https://www.thehacker.recipes/ad/movement/dacl/' }],
     opsec: 'DACL writes generate directory-change events (4662/5136). Revert added ACEs after use; choose the lowest-noise follow-on the edge allows.',
-    difficulty: 'medium',
   },
   {
     id: 'acl-genericwrite',
     label: 'GenericWrite',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: "Write a target's attributes, but NOT its DACL or owner.",
     description:
       "GenericWrite lets you write a target's attributes, but (unlike GenericAll) NOT its DACL or owner, and not the control-access rights. So it grants NO DCSync and NO password reset; instead you abuse specific writable attributes: set an SPN to Kerberoast, flip DONT_REQ_PREAUTH for AS-REP roasting, write msDS-KeyCredentialLink for shadow credentials, write msDS-AllowedToActOnBehalfOfOtherIdentity for RBCD (over a computer), set scriptPath for a logon script, or write a group's member attribute.",
@@ -252,12 +253,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, BloodHound GenericWrite edge', url: 'https://bloodhound.specterops.io/resources/edges/generic-write' },
     ],
     opsec: 'Attribute writes log 4662/5136. Shadow credentials and SPN-set are quieter than a password reset and easily reverted, so prefer them.',
-    difficulty: 'medium',
   },
   {
     id: 'acl-forcechangepassword',
     label: 'ForceChangePassword',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: "Reset a target user's password without the old one.",
     description:
       'The User-Force-Change-Password extended right lets you set a target user password without knowing the current one. Reset it, then log in as that user: a direct identity takeover, often the cheapest edge from a low-priv user to a privileged account.',
@@ -275,12 +276,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
       { label: 'SpecterOps, BloodHound ForceChangePassword edge', url: 'https://bloodhound.specterops.io/resources/edges/force-change-password' },{ label: 'The Hacker Recipes, DACL abuse', url: 'https://www.thehacker.recipes/ad/movement/dacl/' }],
     opsec: 'A password reset is auditable (Event ID 4724) and locks out the legitimate user. Prefer shadow credentials or targeted Kerberoast when stealth matters.',
-    difficulty: 'easy',
   },
   {
     id: 'acl-addself-group',
     label: 'AddSelf / AddMember to Group',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Add yourself to a privileged group.',
     description:
       'With Self-Membership (AddSelf), GenericWrite/GenericAll, or WriteProperty on a group member attribute, add your principal to it. If the group is privileged (e.g. Domain Admins, or one nested into it), you inherit its rights immediately.',
@@ -295,12 +296,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
       { label: 'SpecterOps, BloodHound AddSelf edge', url: 'https://bloodhound.specterops.io/resources/edges/add-self' },{ label: 'The Hacker Recipes, DACL abuse', url: 'https://www.thehacker.recipes/ad/movement/dacl/' }],
     opsec: 'Membership changes to protected groups are high-signal (4728/4756) and may be reverted by AdminSDHolder/SDProp. Remove yourself promptly.',
-    difficulty: 'easy',
   },
   {
     id: 'shadow-credentials',
     label: 'Shadow Credentials',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Write msDS-KeyCredentialLink -> PKINIT as the target.',
     description:
       'With write rights over a target msDS-KeyCredentialLink (via GenericWrite/GenericAll), add an attacker-controlled key credential, then authenticate via PKINIT to obtain a TGT and the target NT hash: no password reset, and easily reverted. Requires a PKINIT-capable DC (AD CS / a KDC cert).',
@@ -322,12 +323,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Shadow Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/shadow-credentials.html' },
       { label: 'SpecterOps, Shadow Credentials', url: 'https://posts.specterops.io/shadow-credentials-abusing-key-trust-account-mapping-for-takeover-8ee1a53566ab' },{ label: 'The Hacker Recipes, Shadow Credentials', url: 'https://www.thehacker.recipes/ad/movement/kerberos/shadow-credentials' }],
     opsec: 'Stealthier than a password reset (no lockout, attribute restored after use), but the key-credential write and PKINIT logon are auditable. Clean up the msDS-KeyCredentialLink value afterward.',
-    difficulty: 'medium',
   },
   {
     id: 'targeted-kerberoast',
     label: 'Targeted Kerberoasting',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Set a temp SPN on a controlled user, then roast it.',
     description:
       'With GenericWrite/GenericAll over a target user that has no SPN, temporarily set a servicePrincipalName, request a TGS, then remove the SPN. The TGS is encrypted with the target password hash and cracked offline, turning a write-ACL edge into a credential.',
@@ -345,12 +346,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     references: [
       { label: 'HackTricks, Kerberoast', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/kerberoast.html' },{ label: 'The Hacker Recipes, Targeted Kerberoasting', url: 'https://www.thehacker.recipes/ad/movement/dacl/targeted-kerberoasting' }],
     opsec: 'Setting an SPN and the TGS request are logged (5136 / 4769). The tool removes the SPN automatically, but the brief change is detectable; cracking is offline.',
-    difficulty: 'medium',
   },
   {
     id: 'constrained-delegation',
     label: 'Constrained Delegation (S4U2Proxy)',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Abuse KCD to impersonate any user to allowed SPNs.',
     description:
       'An account configured for constrained delegation (msDS-AllowedToDelegateTo) can use S4U2Self + S4U2Proxy to get a service ticket impersonating an arbitrary user to the allowed SPNs. If you hold that account key, impersonate Administrator to the target service. The alt-service trick widens the SPN reached.',
@@ -369,12 +370,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     references: [
       { label: 'HackTricks, Constrained Delegation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/constrained-delegation.html' },{ label: 'The Hacker Recipes, Constrained Delegation', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/constrained' }],
     opsec: 'S4U2Self/S4U2Proxy TGS requests (4769) for a sensitive impersonated user are detectable. The alt-service SPN-substitution trick (e.g. cifs vs host) expands access beyond the configured SPN.',
-    difficulty: 'hard',
   },
   {
     id: 'rbcd',
     label: 'Resource-Based Constrained Delegation',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Write msDS-AllowedToActOnBehalfOfOtherIdentity -> impersonate.',
     description:
       'If you can write a target computer msDS-AllowedToActOnBehalfOfOtherIdentity, point it at a machine account you control (default MachineAccountQuota allows 10), then use S4U2Self+S4U2Proxy to impersonate any user to that host. A common outcome of a GenericWrite/GenericAll edge over a computer or an LDAP relay.',
@@ -395,12 +396,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Resource-based Constrained Delegation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/resource-based-constrained-delegation.html' },
       { label: 'SpecterOps, Wagging the Dog (RBCD)', url: 'https://posts.specterops.io/wagging-the-dog-abusing-resource-based-constrained-delegation-to-attack-active-directory-1d04ca246da6' },{ label: 'The Hacker Recipes, RBCD', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd' }],
     opsec: 'Machine-account creation (4741), the delegation write (5136), and S4U requests (4769) are all logged. Setting MachineAccountQuota to 0 mitigates the account-creation step.',
-    difficulty: 'medium',
   },
   {
     id: 'overpass-the-hash',
     label: 'OverPass-the-Hash',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Turn an NT hash (or AES key) into a Kerberos TGT.',
     description:
       'Instead of NTLM Pass-the-Hash, use a captured NT hash or AES key to request a Kerberos TGT ("pass the key"), then operate over Kerberos. Blends in better than NTLM and enables Pass-the-Ticket.',
@@ -415,7 +416,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['An NT hash or AES key for the target account'],
     mitre: mitre('T1550.002'),
     opsec: 'Quieter than NTLM PtH, but an AS-REQ using RC4 when the account supports AES is anomalous. Prefer the AES key (/aes256) where available.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, OverPass-the-Hash / Pass-the-Key', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/over-pass-the-hash-pass-the-key.html' },
     ],
@@ -424,6 +424,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'pass-the-ticket',
     label: 'Pass-the-Ticket',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Inject a stolen/forged Kerberos ticket into a session.',
     description:
       'Reuse a Kerberos ticket (TGT or TGS) you stole from memory or forged (silver/golden) by injecting it into a logon session: authenticate as that principal with no password. On Windows the ticket is loaded with Rubeus/Mimikatz (.kirbi); on Linux the same idea is "pass-the-cache", where you point KRB5CCNAME at a .ccache (converting formats with impacket ticketConverter if needed). The convergence point for OverPass-the-Hash, Silver, and Golden tickets.',
@@ -444,12 +445,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'MITRE ATT&CK, Pass the Ticket (T1550.003)', url: 'https://attack.mitre.org/techniques/T1550/003/' },
     ],
     opsec: 'Ticket use itself is normal Kerberos; anomalies come from lifetime, encryption type, or a TGT appearing on an unexpected host. Match realistic lifetimes/etypes.',
-    difficulty: 'medium',
   },
   {
     id: 'silver-ticket',
     label: 'Silver Ticket',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: "Forge a TGS from a service account's hash.",
     description:
       "With a service account's password hash (e.g. from Kerberoasting or a machine account), forge a TGS directly for that service SPN: no KDC interaction, so it never touches a DC. Scoped to one service on one host but stealthy and offline to create.",
@@ -464,7 +465,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['The target service account hash (NT or AES)', 'Domain SID'],
     mitre: mitre('T1558.002'),
     opsec: 'No DC contact at forge time; detection relies on host-side TGS anomalies and (where enabled) PAC validation. A forged PAC without a real AS/TGS exchange can be caught by KDC PAC checks.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, Silver Ticket', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/silver-ticket.html' },
     ],
@@ -473,6 +473,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'zerologon',
     label: 'ZeroLogon (CVE-2020-1472)',
     phase: 'priv-esc',
+    needs: 'none',
     summary: "Netlogon flaw resets the DC machine password to empty.",
     description:
       "A cryptographic flaw in Netlogon's AES-CFB8 use lets an unauthenticated attacker with network access to a DC set its machine account password to empty, then DCSync to dump all hashes. Devastating but destructive: it breaks the DC secure channel until restored, so use with care.",
@@ -491,12 +492,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     affects: 'Server 2008 R2 through Server 2019 DCs (Netlogon, before the Aug-2020 patch); disclosed before Server 2022 shipped.',
     mitre: mitre('T1068'),
     opsec: 'High-signal: many anomalous Netlogon auths (4742/5805) and a DC password change. Emptying the DC password breaks replication, so always restore the original machine password afterward.',
-    difficulty: 'medium',
   },
   {
     id: 'nopac',
     label: 'noPac (CVE-2021-42278/42287)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'sAMAccountName spoofing -> impersonate a DC.',
     description:
       'Chaining CVE-2021-42278 (no validation of the trailing $ on a machine account name) and CVE-2021-42287 (KDC retries with a trailing $), a low-priv user creates a machine account, renames it to a DC name, gets a TGT, then drops the rename so S4U2self returns a ticket as a DC. Standard-user to Domain Admin in one chain.',
@@ -524,12 +525,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       },
     ],
     opsec: 'Machine-account creation/rename (4741/4781) and DC-name collisions are detectable. Setting MachineAccountQuota to 0 and patching close the path.',
-    difficulty: 'medium',
   },
   {
     id: 'winrm-evil',
     label: 'WinRM Execution',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Interactive shell over WinRM (5985/5986).',
     description:
       'With credentials/hash and the target Remote Management Users membership, evil-winrm gives an interactive PowerShell session over WinRM. Cleaner than service-based exec and supports pass-the-hash and Kerberos auth.',
@@ -544,7 +545,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin or Remote Management Users membership', 'WinRM enabled (5985/5986)'],
     mitre: mitre('T1021.006'),
     opsec: 'WinRM logons create 4624 type-3 events and PowerShell/WinRM operational logs; script-block logging captures commands. Blend with admin activity windows.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, WinRM (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/winrm.html' },
     ],
@@ -553,6 +553,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'wmiexec',
     label: 'WMI Exec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Semi-interactive exec over WMI (135/DCOM).',
     description:
       "Impacket's wmiexec runs commands via WMI over DCOM/RPC, returning output through a temp file on ADMIN$: no service is created, so it is quieter than psexec. Supports pass-the-hash and Kerberos.",
@@ -567,7 +568,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target', 'RPC/DCOM (135) + SMB (445) reachable'],
     mitre: mitre('T1047'),
     opsec: 'No service event (quieter than psexec), but WMI process creation, the ADMIN$ temp file, and 4624 type-3 logons are detectable. Defenders flag wmiexec command-line patterns.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, WmiExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/wmiexec.html' },
     ],
@@ -576,6 +576,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'dcom-exec',
     label: 'DCOM Exec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Code execution via DCOM objects (e.g. MMC20).',
     description:
       'Certain DCOM objects (MMC20.Application, ShellWindows, ShellBrowserWindow) expose methods that spawn processes, allowing remote execution over DCOM/RPC. A less-monitored alternative when SMB/WMI exec are blocked.',
@@ -586,7 +587,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target', 'DCOM/RPC (135 + dynamic ports) reachable'],
     mitre: mitre('T1021.003'),
     opsec: 'DCOM lateral movement is less commonly monitored but leaves a child process under a COM host and 4624 type-3 logons. Object availability varies by Windows version.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, DCOMExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/dcomexec.html' },
     ],
@@ -595,6 +595,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'psexec',
     label: 'PsExec / Service Exec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'SYSTEM shell via a service over SMB (445).',
     description:
       "The loud-but-reliable classic: drop a binary to ADMIN$ and register + start a Windows service through the SCM over SMB/RPC, running as SYSTEM. Sysinternals PsExec and Impacket's psexec.py both hand you a full interactive SYSTEM shell; both support pass-the-hash and Kerberos.",
@@ -610,7 +611,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target', 'SMB (445) + ADMIN$ reachable'],
     mitre: mitre('T1021.002'),
     opsec: 'The loudest of the exec family: a service install (Security 7045 / System 7045) plus the dropped binary on ADMIN$. EDR flags the PSEXESVC pattern, so prefer wmiexec or atexec when stealth matters.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, PsExec / WinExec', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
     ],
@@ -619,6 +619,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'smbexec',
     label: 'SMBExec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Semi-interactive SMB shell, no binary dropped.',
     description:
       "Impacket's smbexec spawns a temporary service that runs each command through cmd.exe and pipes the output back over SMB: nothing is written to disk as a payload binary, sidestepping the PsExec exe drop. Runs as SYSTEM and supports pass-the-hash; the trade-off is a service created per command.",
@@ -633,7 +634,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target', 'SMB (445) reachable'],
     mitre: mitre('T1021.002'),
     opsec: 'No payload binary on disk, but a service is created per command (repeated 7045), noisy in the event log even though ADMIN$ stays clean. Defenders signature the smbexec service-name/command pattern.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, PsExec / SMBExec family', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
       { label: 'Impacket, smbexec.py source', url: 'https://github.com/fortra/impacket/blob/master/examples/smbexec.py' },
@@ -643,6 +643,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'atexec',
     label: 'Scheduled-Task Exec',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'Run as SYSTEM via a remote scheduled task.',
     description:
       "Impacket's atexec registers a one-shot scheduled task through the Task Scheduler service (ATSVC over RPC/SMB), runs it as SYSTEM, captures the output, and deletes the task: no service install, so it is quieter than PsExec. A solid fallback when service-based exec is blocked or closely watched.",
@@ -657,7 +658,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin on the target', 'RPC (135) + SMB (445) reachable'],
     mitre: mitre('T1053.005'),
     opsec: 'Task create/delete logs to Security 4698/4699 and the TaskScheduler operational log. No service event and no binary drop, so quieter than PsExec, but scheduled-task artifacts are well-monitored.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, AtExec', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/atexec.html' },
     ],
@@ -666,6 +666,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'rdp-lateral',
     label: 'RDP',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Interactive desktop over RDP (3389).',
     description:
       'Log in to a full interactive desktop with a password, or with just an NT hash via Restricted Admin mode (pass-the-hash over RDP). Needs only Remote Desktop Users membership or local admin on that host, so you may land as a non-admin user. Useful to reach GUI-only tooling or ride an existing session.',
@@ -681,7 +682,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Remote Desktop Users membership or local admin', 'RDP (3389) reachable', 'Restricted Admin mode enabled for pass-the-hash'],
     mitre: mitre('T1021.001'),
     opsec: 'A type-10 interactive logon (4624) the console user can literally see, plus rich artifacts (bitmap cache, RDP operational logs). Restricted Admin must be enabled host-side for PtH and itself weakens the target.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, Pentesting RDP', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-rdp.html' },
     ],
@@ -690,6 +690,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'ssh-lateral',
     label: 'SSH',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Shell over SSH (22): Linux & OpenSSH hosts.',
     description:
       'In mixed estates SSH is a first-class lateral channel: Linux servers, network appliances, hypervisors, and Windows hosts running OpenSSH. Authenticate with reused passwords, recovered private keys, or (on domain-joined Linux) Kerberos/GSSAPI. Any account allowed to log in works; you need not be an admin (escalate locally afterward if not).',
@@ -705,7 +706,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['A valid SSH login on the target: password, private key, or Kerberos', 'SSH (22) reachable'],
     mitre: mitre('T1021.004'),
     opsec: 'Logs to auth.log / sshd (and the Windows OpenSSH operational log). Key-based reuse blends in and often survives password rotations. Hunt for private keys on every host you own.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, Pentesting SSH', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-ssh.html' },
       { label: 'HighOn.Coffee, SSH Lateral Movement Cheat Sheet', url: 'https://highon.coffee/blog/ssh-lateral-movement-cheat-sheet/' },
@@ -715,6 +715,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'reverse-shell',
     label: 'Reverse / Bind Shell',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Turn one-shot exec into an interactive session.',
     description:
       'When the execution primitive is one-shot or non-interactive (a single wmiexec/atexec command, a web shell, MSSQL xp_cmdshell, an Office macro) or inbound ports are firewalled, drop a payload that connects back to your listener for an interactive shell (a bind shell is the ingress-allowed inverse). Pick a one-liner that matches the target runtime: PowerShell, cmd, bash, python, or nc.',
@@ -731,7 +732,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Any command-execution primitive on the target', 'An outbound path (reverse) or open inbound port (bind) to your listener'],
     mitre: mitre('T1059'),
     opsec: 'An outbound connection to an attacker IP/port and a shell-spawning parent (w3wp/sqlservr → powershell) are prime EDR signals. Use common ports (443), encrypt where you can, and avoid stock one-liners that signatures already know.',
-    difficulty: 'easy',
     references: [
       { label: 'PayloadsAllTheThings, Reverse Shell Cheatsheet', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md' },
       { label: 'HackTricks, Windows Reverse Shells', url: 'https://book.hacktricks.wiki/en/generic-hacking/reverse-shells/windows.html' },
@@ -741,6 +741,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'user-foothold',
     label: 'User-Context Foothold',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     hub: true, // convergence point: every "shell as some user/service account" lands here
     summary: 'Operate as the authenticating user: their privileges, identity, and secrets.',
     description:
@@ -752,7 +753,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Code execution as a user on the host'],
     mitre: mitre('T1078'),
     opsec: 'Operating as the legitimate user is quiet: their logons and process activity are expected. The tell is a privileged account suddenly running recon, or a burst of escalation attempts from a normal user.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' },
     ],
@@ -761,6 +761,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'sam-lsa-dump',
     label: 'SAM & LSA Secrets Dump',
     phase: 'credential-access',
+    needs: 'local-admin',
     summary: 'Pull local hashes, cached creds, and LSA secrets.',
     description:
       'With SYSTEM/local admin you can dump the local SAM (local account hashes), cached domain credentials (MSCACHE), and LSA secrets (service-account / machine-account passwords): either save the registry hives and parse offline, or read them directly with secretsdump. A reliable credential source that never touches LSASS memory.',
@@ -776,7 +777,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     requires: ['Local admin / SYSTEM on the host (or admin creds for remote)'],
     mitre: mitre('T1003.002'),
     opsec: 'reg save of SAM/SECURITY and remote secretsdump (creates a service for some methods, 7045) are monitored. LSA secrets often yield a service or machine account, quieter than LSASS dumping.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
     ],
@@ -785,6 +785,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'laps-read',
     label: 'Read LAPS Password',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Read the LAPS-managed local admin password from AD.',
     description:
       'LAPS stores each host\'s rotated local administrator password in AD: legacy LAPS in the cleartext ms-Mcs-AdmPwd attribute, Windows LAPS (April 2023+) in msLAPS-Password (JSON) or the AES-256 msLAPS-EncryptedPassword. Any principal granted the confidential read right (CONTROL_ACCESS / All-Extended-Rights, surfaced in BloodHound as ReadLAPSPassword) can recover the password and log in as local admin on that host.',
@@ -805,12 +806,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'NetExec wiki, Defeating LAPS', url: 'https://www.netexec.wiki/smb-protocol/defeating-laps' },
     ],
     opsec: 'Reading the password attribute is an LDAP query (directory-read; 4662 when SACLs are configured) and does not rotate the password. The recovered password is valid until the next LAPS rotation interval.',
-    difficulty: 'easy',
   },
   {
     id: 'gmsa-read',
     label: 'Read gMSA Password',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Read msDS-ManagedPassword to derive a gMSA NT hash.',
     description:
       'A Group Managed Service Account\'s password is computed by the KDC and exposed in the msDS-ManagedPassword blob. Principals listed in msDS-GroupMSAMembership (BloodHound: ReadGMSAPassword) can read that blob and derive the account\'s NT hash (and AES keys), then pass-the-hash or overpass-the-hash as the gMSA, which is often a privileged service identity.',
@@ -832,12 +833,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'NetExec wiki, Dump gMSA', url: 'https://www.netexec.wiki/ldap-protocol/dump-gmsa' },
     ],
     opsec: 'The managed-password read is an LDAP query; Windows refuses to return the blob over cleartext LDAP, so retrieval typically forces LDAPS. The derived hash stays valid until the gMSA rotates (default 30 days).',
-    difficulty: 'easy',
   },
   {
     id: 'gpo-abuse',
     label: 'GPO Abuse',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Edit a writable GPO -> immediate task / local admin on linked hosts.',
     description:
       'With edit rights (GenericWrite/WriteDacl/WriteProperty, BloodHound: GenericWrite over a GPO) you can modify a Group Policy Object\'s files in SYSVOL. Inject an immediate scheduled task or add a local administrator; the change applies as SYSTEM (computer policy) to every computer the GPO is linked to (potentially an OU full of servers or even Domain Controllers), turning one ACL into domain-wide code execution.',
@@ -856,12 +857,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
       { label: 'SpecterOps, A Red Teamer\'s Guide to GPOs and OUs', url: 'https://posts.specterops.io/a-red-teamers-guide-to-gpos-and-ous-f0d03976a31e' },{ label: 'The Hacker Recipes, Group policies', url: 'https://www.thehacker.recipes/ad/movement/group-policies' }],
     opsec: 'Writing to SYSVOL changes gPCMachineExtensionNames and the policy files (5136 / file-share auditing); an immediate task triggers gpupdate followed by an unexpected scheduled task and a child process. Remove the task and revert the GPO after use.',
-    difficulty: 'medium',
   },
   {
     id: 'gpp-cpassword',
     label: 'GPP cPassword (MS14-025)',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Decrypt cpassword from SYSVOL Groups.xml to cleartext.',
     description:
       'Group Policy Preferences could push credentials (e.g. a local admin set via Groups.xml, or scheduled-task/service/mapped-drive creds). The password is stored in a cpassword attribute encrypted with a 32-byte AES key Microsoft published in MSDN, so any authenticated domain user who can read SYSVOL can decrypt it to cleartext. MS14-025 stopped new GPP credentials but left existing XML in place.',
@@ -879,12 +880,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     mitre: mitre('T1552.006'),
     references: [{ label: 'MITRE ATT&CK T1552.006', url: 'https://attack.mitre.org/techniques/T1552/006/' }],
     opsec: 'SYSVOL reads are normal domain traffic and decryption is fully offline, so this is very low-signal. Modern, well-patched domains have usually purged GPP cpassword files.',
-    difficulty: 'easy',
   },
   {
     id: 'trust-sid-history',
     label: 'Trust / SID History (Child -> Forest)',
     phase: 'domain-dominance',
+    needs: 'domain-admin',
     summary: 'Forge a ticket with the Enterprise Admins SID via sidHistory.',
     description:
       'Within a single forest there is no SID filtering on intra-forest trusts, so the sidHistory / ExtraSids field of a ticket is honored across the trust. With the child domain\'s krbtgt key, forge an inter-realm or golden ticket whose ExtraSids contains the root domain\'s Enterprise Admins SID (<root-SID>-519); the parent KDC treats you as an Enterprise Admin, escalating from child Domain Admin to full forest compromise.',
@@ -902,12 +903,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     references: [
       { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },{ label: 'HackTricks, SID-History Injection', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/sid-history-injection.html' }],
     opsec: 'A forged golden TGT containing a high-privilege ExtraSid is detectable by the same anomalies as golden tickets (no preceding AS-REQ, odd lifetime/etype). Enabling SID filtering / quarantine on the trust breaks the path.',
-    difficulty: 'hard',
   },
   {
     id: 'printnightmare',
     label: 'PrintNightmare (CVE-2021-34527)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Print Spooler driver load -> code execution as SYSTEM.',
     description:
       'A flaw in the Print Spooler (RpcAddPrinterDriverEx / AddPrinterDriver) lets an authenticated user supply a malicious driver DLL that the spooler loads as SYSTEM. CVE-2021-1675 is the local LPE; CVE-2021-34527 extends it to remote code execution against any host (including a DC) running the Spooler. Drop a DLL on a share, point the spooler at it, and you execute as SYSTEM.',
@@ -926,7 +927,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     affects: 'Print Spooler on Server 2008 R2 through Server 2022, before the July-2021 out-of-band update; disclosed before Server 2025 shipped.',
     mitre: mitre('T1068'),
     opsec: 'Spooler driver loads and the new DLL under the spool drivers path are detectable (RpcAddPrinterDriverEx, 808/4688 events). Disabling the Print Spooler where it is not needed fully mitigates it.',
-    difficulty: 'medium',
     references: [
       { label: 'HackTricks, PrintNightmare', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/printnightmare.html' },
     ],
@@ -935,6 +935,7 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     id: 'skeleton-key',
     label: 'Skeleton Key',
     phase: 'persistence',
+    needs: 'domain-admin',
     summary: 'Patch LSASS on a DC -> master password for every account.',
     description:
       'mimikatz misc::skeleton patches LSASS on a Domain Controller so that, alongside each account\'s real password, a single master password ("mimikatz" by default) authenticates as any domain user. It is an in-memory patch: it survives until the DC reboots and downgrades affected auth to RC4_HMAC, so it is fast but volatile persistence.',
@@ -953,12 +954,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, Skeleton key', url: 'https://www.thehacker.recipes/ad/persistence/skeleton-key/' },
     ],
     opsec: 'Patching LSASS on a DC is high-signal and lost on reboot; the forced RC4 downgrade is itself anomalous. LSASS as a Protected Process (RunAsPPL) blocks the patch.',
-    difficulty: 'medium',
   },
   {
     id: 'diamond-ticket',
     label: 'Diamond Ticket',
     phase: 'domain-dominance',
+    needs: 'domain-admin',
     summary: 'Modify a real KDC-issued TGT with the krbtgt key.',
     description:
       'Rather than forging a TGT from scratch (golden ticket), a diamond ticket requests a legitimate TGT from the DC, decrypts it with the krbtgt key (AES256 preferred), edits the PAC (e.g. add Domain Admins), then re-encrypts and re-signs it. Because a genuine AS-REQ precedes its use, it evades golden-ticket detections that flag a TGS with no preceding AS exchange.',
@@ -975,12 +976,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     references: [
       { label: 'HackTricks, Diamond Ticket', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/diamond-ticket.html' },{ label: 'The Hacker Recipes, Diamond tickets', url: 'https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/diamond' }],
     opsec: 'Stealthier than a golden ticket because a real AS-REQ precedes the TGS; use /opsec (Rubeus) to mimic a Windows AS-REQ and stick to AES256. PAC values that diverge from the account\'s real group memberships can still be caught by PAC validation.',
-    difficulty: 'hard',
   },
   {
     id: 'pass-the-certificate',
     label: 'Pass-the-Certificate',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'PKINIT with a client-auth cert -> TGT, then UnPAC the NT hash.',
     description:
       'A certificate with the Client Authentication EKU (from ADCS abuse, shadow credentials, or a stolen PFX) can pre-authenticate via PKINIT to obtain a Kerberos TGT for that principal. UnPAC-the-hash then recovers the account\'s NT hash from the PAC (using the AS-REP key), giving you both a usable ticket and a reusable hash without ever knowing the password.',
@@ -1001,12 +1002,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, UnPAC the hash', url: 'https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash' },
     ],
     opsec: 'PKINIT logons are auditable (4768 with certificate info) and certificates outlive password resets, making them durable. Certipy auth performs UnPAC-the-hash automatically after obtaining the TGT.',
-    difficulty: 'medium',
   },
   {
     id: 'mssql-linked-servers',
     label: 'MSSQL Linked Servers',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Pivot through trusted MSSQL links -> xp_cmdshell.',
     description:
       'MSSQL linked servers let one instance query another, often executing on the remote side under a higher-privileged mapped login. By chaining EXECUTE AT / OPENQUERY across links you can crawl from a low-priv login to a sysadmin context on another SQL host, then enable and run xp_cmdshell to get OS command execution as the (frequently privileged) SQL service account.',
@@ -1026,12 +1027,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     mitre: mitre('T1210'),
     references: [{ label: 'HackTricks, Abusing AD MSSQL', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html' }],
     opsec: 'xp_cmdshell spawns processes under the SQL Server service account (4688) and is disabled by default; enabling it via sp_configure is logged. Linked-server hops appear as distributed queries in SQL audit/trace.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc4',
     label: 'ADCS ESC4 (Template ACL)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Write a cert template into an ESC1-vulnerable state, then enroll.',
     description:
       'ESC4 is a dangerous ACL (WriteOwner/WriteDacl/WriteProperty/GenericAll, BloodHound: ADCSESC4) over a certificate template object rather than over the issued certs. Rewrite the template to be ESC1-vulnerable (enable Client Authentication EKU and ENROLLEE_SUPPLIES_SUBJECT and open enrollment), then perform the ESC1 attack to impersonate a Domain Admin, and restore the template afterward.',
@@ -1049,12 +1050,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, AD CS', url: 'https://www.thehacker.recipes/ad/movement/adcs/' },
     ],
     opsec: 'Editing a template is a directory write (5136) and momentarily exposes an over-permissive template domain-wide; the subsequent cross-account cert request is logged on the CA (4886/4887). Restore the template promptly to limit the window.',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc2',
     label: 'ADCS ESC2 (Any Purpose / No EKU)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Template with Any-Purpose (or no) EKU -> use as enrollment agent.',
     description:
       'ESC2 is a template whose EKU is "Any Purpose" (or has no EKU at all), so the issued certificate can be used for anything, including acting as an enrollment agent. Unlike ESC1 you cannot specify an arbitrary SAN directly, but you can enroll, then use that cert to request a client-auth certificate on behalf of a privileged user (the ESC3 abuse), and authenticate as them.',
@@ -1072,12 +1073,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
     opsec: 'Cert requests are logged on the CA (4886/4887); an on-behalf-of request whose subject differs from the requester is a strong signal. Certificates outlive password resets.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc3',
     label: 'ADCS ESC3 (Enrollment Agent)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Enroll a Certificate Request Agent cert -> request on behalf of anyone.',
     description:
       'ESC3 is a template carrying the Certificate Request Agent EKU (1.3.6.1.4.1.311.20.2.1) open to low-priv enrollment. Enroll to obtain an enrollment-agent certificate, then use it to request a client-authentication certificate on behalf of a privileged user from a second (e.g. default "User") template, and authenticate as that user.',
@@ -1095,12 +1096,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
     opsec: 'Enrollment-agent enrollment and the subsequent on-behalf-of request are both logged on the CA (4886/4887). Enrollment-agent restrictions on the CA can constrain who an agent may enroll for.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc5',
     label: 'ADCS ESC5 (PKI Object ACL)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Weak ACL on a PKI AD object / CA host -> compromise the PKI.',
     description:
       'ESC5 covers vulnerable access control over the wider PKI footprint rather than a single template: the CA computer object, the CA server host, and AD objects under the Public Key Services container (Certificate Templates, Enrollment Services, NTAuthCertificates, AIA/CDP). Control over any of these lets you reconfigure the PKI (e.g. take over the CA host, push a rogue CA into NTAuth, or grant yourself rights), which generally collapses into a golden-certificate / forging position.',
@@ -1120,12 +1121,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
     opsec: 'No single clean technique: outcome depends on the object abused. DACL writes on PKI objects generate 4662/5136; CA-host takeover and key export are highly privileged actions. (T1649 once forging begins.)',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc6',
     label: 'ADCS ESC6 (EDITF_ATTRIBUTESUBJECTALTNAME2)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'CA-wide flag lets any request specify an arbitrary SAN.',
     description:
       'When the CA has the EDITF_ATTRIBUTESUBJECTALTNAME2 flag set, it honours a requester-supplied subjectAltName on ANY template, so even a benign client-auth template (e.g. the default User) becomes ESC1-like. Request a certificate with an arbitrary UPN/SID and authenticate as that user. Post-May-2022 patches mean it must be combined with a SID-mapping gap (ESC9/ESC16) to fully impersonate.',
@@ -1143,12 +1144,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
     opsec: 'The misconfig is CA-wide and easy to flag with Certipy; cross-account requests are logged (4886/4887). Setting/clearing the flag requires CertSvc restart and is itself auditable.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc7',
     label: 'ADCS ESC7 (Vulnerable CA ACL)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'ManageCA / Manage Certificates on the CA -> issue arbitrary certs.',
     description:
       'ESC7 is a dangerous ACL on the CA itself: the ManageCA ("CA Administrator") or Manage Certificates ("Certificate Manager") right. With ManageCA you can grant yourself the officer/Manage-Certificates right, enable the built-in SubCA template, submit a request that gets denied, then approve your own pending request and retrieve the cert. ManageCA can also flip EDITF_ATTRIBUTESUBJECTALTNAME2 to enable ESC6.',
@@ -1168,12 +1169,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, Certified Pre-Owned', url: 'https://posts.specterops.io/certified-pre-owned-d95910965cd2' },
     ],
     opsec: 'CA configuration/permission changes and request approvals are logged on the CA (4882/4885/4887). The SubCA dance leaves a denied-then-issued request trail; enabling SubCA exposes a powerful template briefly.',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc9',
     label: 'ADCS ESC9 (No Security Extension)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Template lacks the SID extension -> UPN-swap impersonation.',
     description:
       'ESC9 templates set CT_FLAG_NO_SECURITY_EXTENSION in msPKI-Enrollment-Flag, so the issued certificate omits the szOID_NTDS_CA_SECURITY_EXT (SID) extension and the KDC falls back to UPN-based mapping. With write rights over a victim account, set its userPrincipalName to a target (e.g. administrator), enroll as the victim, revert the UPN, then authenticate: the cert maps to the target. Needs StrongCertificateBindingEnforcement not in full-enforcement (2) mode.',
@@ -1193,12 +1194,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Certipy wiki, Privilege Escalation', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
     ],
     opsec: 'The UPN edits on the victim (5136) bracket the attack and should be reverted; cert request and PKINIT logon are logged. The KB5014754 full-enforcement mode (2) breaks ESC9.',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc10',
     label: 'ADCS ESC10 (Weak Cert Mappings)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Weak DC mapping registry -> UPN-swap or altSecID impersonation.',
     description:
       'ESC10 abuses weak certificate-to-account mapping on the DCs. Case 1, StrongCertificateBindingEnforcement = 0: like ESC9, write a victim UPN to the target and enroll/auth (no SID extension required). Case 2, CertificateMappingMethods = 0x4 (UPN-only): repoint a victim UPN at an account with no UPN (a machine account or built-in Administrator) and authenticate as it, typically via Schannel/LDAP. Both turn a write-over-a-victim edge into impersonation.',
@@ -1217,12 +1218,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Certipy wiki, Privilege Escalation', url: 'https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation' },
     ],
     opsec: 'Relies on misconfigured DC registry mappings KB5014754 is meant to harden. UPN writes (5136) should be reverted; Case 2 commonly drives an LDAP/Schannel session rather than PKINIT.',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc11',
     label: 'ADCS ESC11 (Relay to ICertPassage/RPC)',
     phase: 'priv-esc',
+    needs: 'none',
     summary: 'Relay coerced NTLM to the CA RPC (ICPR) enrollment endpoint.',
     description:
       'ESC11 is the RPC analogue of ESC8: if the CA MS-ICPR RPC interface does not require packet privacy (IF_ENFORCEENCRYPTICERTREQUEST not set), coerced NTLM can be relayed to the ICertPassage endpoint to enroll a certificate for the victim principal. Relay a coerced DC to obtain a DC certificate, then authenticate for a TGT and DCSync.',
@@ -1244,12 +1245,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, ESC11', url: 'https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc11-ntlm-relay-to-ad-cs-rpc-interfaces' },
     ],
     opsec: 'Coercion is noisy and the relayed cross-account enrollment is logged on the CA. Enforcing RPC packet privacy on the CA mitigates it. Have the relay listener up before coercing.',
-    difficulty: 'hard',
   },
   {
     id: 'adcs-esc13',
     label: 'ADCS ESC13 (Issuance Policy -> Group)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Enroll a template whose policy OID is linked to a privileged group.',
     description:
       'ESC13 abuses an issuance policy OID (in msPKI-Certificate-Policy) that is linked, via the OID object msDS-OIDToGroupLink, to an AD group. Authenticating with a certificate from such a template injects that group membership into the token. If a template you can enroll is linked to a privileged group (e.g. a group nested into Domain Admins), enroll and authenticate to inherit those rights, with no SAN spoofing needed.',
@@ -1267,12 +1268,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, Certificate templates', url: 'https://www.thehacker.recipes/ad/movement/adcs/certificate-templates' },
     ],
     opsec: 'Enrollment looks legitimate (no SAN spoof), making ESC13 subtle; the cert request is still logged (4886/4887) and the OID-to-group link is discoverable in AD. The injected group membership appears in the resulting logon.',
-    difficulty: 'medium',
   },
   {
     id: 'adcs-esc15',
     label: 'ADCS ESC15 (EKUwu / CVE-2024-49019)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Inject application policies into a v1 template CSR (EKUwu).',
     description:
       'ESC15 (EKUwu, CVE-2024-49019) abuses schema-version-1 templates that allow enrollee-supplied subjects: an attacker injects arbitrary Application Policies into the CSR, and the CA embeds them in the issued cert regardless of the template EKU. Inject Client Authentication (1.3.6.1.5.5.7.3.2) for an ESC1-style impersonation, or Certificate Request Agent (1.3.6.1.4.1.311.20.2.1) for an ESC3-style on-behalf-of. Because the cert EKU may not satisfy PKINIT, authentication is often done over LDAP/Schannel (PassTheCert).',
@@ -1293,12 +1294,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'SpecterOps, ESC15', url: 'https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc15-ekuwu-application-policy-injection' },
     ],
     opsec: 'The `-application-policies` flag is recent; verify your Certipy build supports it (Certify uses `--application-policy`). PKINIT may reject the cert (EKU mismatch), so LDAP/Schannel auth via PassTheCert is the reliable path. Patched (Nov 2024) CAs ignore the injected policy.',
-    difficulty: 'hard',
   },
   {
     id: 'golden-certificate',
     label: 'Golden Certificate (Forge CA)',
     phase: 'persistence',
+    needs: 'domain-admin',
     summary: 'Steal the CA private key -> forge certs for any principal forever.',
     description:
       'With the CA private key (extracted after compromising the CA host, e.g. via ESC5/ESC7 or DA), you can forge a client-authentication certificate for ANY domain principal offline: no enrollment, no CA interaction. This "golden certificate" survives password resets and persists until the CA cert expires or is revoked, making it a durable domain-persistence primitive.',
@@ -1316,12 +1317,12 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
       { label: 'Certipy wiki, Golden Certificates', url: 'https://github.com/ly4k/Certipy/wiki' },
     ],
     opsec: 'Forging happens entirely offline, so it is far quieter than enrollment, but exporting the CA private key is highly privileged and detectable on the CA host. Forged certs are only invalidated by CA key rotation/revocation, not password changes.',
-    difficulty: 'hard',
   },
   {
     id: 'domain-object-enum',
     label: 'Domain Object Enumeration',
     phase: 'enumeration',
+    needs: 'domain-user',
     summary: 'Targeted LDAP / PowerView queries for SPNs, ACLs, delegation, GPOs and trusts.',
     description:
       "Beyond BloodHound's graph, query the directory directly for specific abuse primitives: kerberoastable SPNs, AS-REP-roastable users, unconstrained / constrained delegation, dangerous ACLs, GPO links, LAPS/gMSA readers, MachineAccountQuota, and trust topology. PowerView, windapsearch and ldapdomaindump answer these precisely without the noise of a full BloodHound collection.",
@@ -1344,7 +1345,6 @@ export const adAdditionNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Any valid domain account'],
     opsec: 'Targeted LDAP reads blend with normal directory traffic far better than full BloodHound collection; large recursive GC queries are the main signal.',
-    difficulty: 'easy',
   },
 ];
 

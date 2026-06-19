@@ -16,6 +16,7 @@ export const adBoxesNodes: TechniqueNodeDef[] = [
     id: 'adcs-esc16',
     label: 'ADCS ESC16 (CA Security Extension Disabled)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'SID security extension disabled CA-wide → a cert maps to a victim by UPN alone: set your account UPN to a target, enroll, authenticate as them.',
     description:
       "ESC16 is a CA-wide state where szOID_NTDS_CA_SECURITY_EXT (1.3.6.1.4.1.311.25.2) is on the CA's DisableExtensionList, so every issued certificate carries no SID and the DC can only map it to an account by UPN. Like ESC9, an attacker who can write the userPrincipalName of an account they control sets it to a privileged target (e.g. administrator), enrolls an ordinary client-auth cert, reverts the UPN, then authenticates via PKINIT: the DC maps the cert to the target by UPN and returns its TGT / NT hash. Because no SID extension exists CA-wide, the 2022 StrongCertificateBindingEnforcement hardening cannot pin the cert to the real account. This is NOT the ESC1 'arbitrary SAN' trick: the default User template forbids requester-supplied subjects, so the bypass is the implicit UPN mapping. Setting the CA flag needs ManageCA (often reached via ESC7).",
@@ -39,12 +40,12 @@ certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn s
     ],
     requires: ['ManageCA on the CA to set DisableExtensionList (or the CA already in that state)', 'Write access to userPrincipalName on an account you control'],
     opsec: 'Toggling DisableExtensionList restarts the CA service (logged) and affects ALL future certificates domain-wide; the UPN edits and the cert request + PKINIT auth raise 5136/4886/4887/4768. Revert the UPN and the CA flag after use.',
-    difficulty: 'medium',
   },
   {
     id: 'rodc-keylist-abuse',
     label: 'RODC Abuse (Golden Ticket + KeyList)',
     phase: 'domain-dominance',
+    needs: 'local-admin',
     summary: "From SYSTEM on a Read-Only DC: dump krbtgt_<N>, allow a target in the Password Replication Policy, forge an RODC golden ticket, then KeyList-request a writable DC for the target's real keys.",
     description:
       "A Read-Only DC holds its own krbtgt account (krbtgt_<N>, N = the number in its msDS-KrbTgtLink). With admin/SYSTEM on the RODC, dump the krbtgt_<N> AES/RC4 key. Because an RODC only caches accounts allowed by its Password Replication Policy, first add the target (e.g. Administrator) to msDS-RevealOnDemandGroup and clear msDS-NeverRevealGroup. Forge an RODC golden ticket with Rubeus golden /rodcNumber:<N>, then send it to a WRITABLE DC in a TGS-REQ carrying a KERB-KEY-LIST-REQ (Rubeus asktgs /keyList): the writable DC returns the target's real long-term keys (NT hash), turning RODC-local SYSTEM into full domain compromise.",
@@ -66,12 +67,12 @@ certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn s
     ],
     requires: ['Admin / SYSTEM on a Read-Only DC (e.g. via RBCD or WriteAccountRestrictions on the RODC object)', 'A writable DC to answer the KeyList request'],
     opsec: 'Editing msDS-RevealOnDemandGroup / NeverRevealGroup on a DC object is a high-signal directory change (revert it). The KeyList TGS-REQ to the writable DC is unusual traffic; prefer AES over RC4 to reduce ticket anomalies.',
-    difficulty: 'hard',
   },
   {
     id: 'passback-attack',
     label: 'Pass-Back Attack (LDAP/Printer Creds)',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Reconfigure a printer/MFP or app to authenticate to your rogue server, then hit "test connection" so it discloses its stored service credentials in cleartext.',
     description:
       "Devices and apps that store service credentials for LDAP/SMTP/SMB (printers, MFPs, scanners, web-app config panels) usually expose a 'Test Connection' that binds using the stored secret. Point the configured server host at an attacker-controlled listener and trigger the test: the device sends its credentials to you. For a simple/unencrypted LDAP bind this yields the password in CLEARTEXT (caught with Responder or a rogue LDAP/netcat listener): no cracking or NetNTLM relay needed, because the device decrypts and transmits the secret itself. Distinct from relay/coercion, which capture a challenge-response rather than cleartext.",
@@ -92,12 +93,12 @@ certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn s
     ],
     requires: ['Admin access to the device/app config panel (default creds often suffice)', 'A rogue LDAP/SMTP listener (Responder / netcat)'],
     opsec: 'Changing the configured server breaks the legitimate service until reverted; an unexpected outbound LDAP/SMTP connection to an attacker IP may alert NDR. Restore the original config after capture.',
-    difficulty: 'easy',
   },
   {
     id: 'set-ntlm-hash',
     label: 'Set Password via NT Hash (changentlm)',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: "Given a target's current NT hash (but not its cleartext), set its password to a known value over NTLM, enabling a password-based logon a PtH session can't do.",
     description:
       "When you hold an account's NT hash but need an actual password (e.g. for a password-based interactive/service logon that restores privileges a pass-the-hash token lacks), mimikatz lsadump::changentlm or impacket changepasswd can set a new password. changentlm authenticates with the OLD NT hash and sets a new password without ever knowing the cleartext. This is a credential-manipulation primitive distinct from the DACL-based force-change edge, which relies on a granted reset right rather than knowledge of the current hash.",
@@ -117,12 +118,12 @@ certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn s
     ],
     requires: ["The target account's current NT hash", 'A DC that accepts the NTLM password change'],
     opsec: 'Changing a service account password may break the legitimate service and raises password-change events (4723/4724); AD allows one change per day per account. Note the original hash to revert.',
-    difficulty: 'easy',
   },
   {
     id: 'ad-recycle-bin-reanimation',
     label: 'AD Recycle Bin Reanimation',
     phase: 'enumeration',
+    needs: 'domain-user',
     summary: 'Mine the AD Recycle Bin for secrets, or restore a deleted privileged object to regain its SID, group memberships and ACL edges.',
     description:
       "With the AD Recycle Bin enabled, deleted objects are retained with all attributes intact. Anyone who can read deleted objects (Get-ADObject -IncludeDeletedObjects) can mine them for secrets (cleartext in description/info, key material) or, with restore rights, reanimate a deleted account via Restore-ADObject: the restored account instantly regains its original SID, group memberships, delegations and ACL edges, which can re-open a privilege-escalation path.",
@@ -142,7 +143,6 @@ certipy-ad account -u svc_infra -p 'PASS' -dc-ip 10.0.0.1 -user svc_infra -upn s
     ],
     requires: ['Read access to deleted objects (and restore rights to reanimate)', 'AD Recycle Bin enabled'],
     opsec: 'Restore operations are logged (5136 / 4781) and may surface a previously-deleted, possibly-monitored account; prefer read-only attribute mining where the goal is only secret recovery.',
-    difficulty: 'medium',
   },
 ];
 

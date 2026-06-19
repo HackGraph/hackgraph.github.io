@@ -15,6 +15,7 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     id: 'kerberoasting',
     label: 'Kerberoasting',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Request TGS for SPN accounts, crack offline.',
     description:
       'Any authenticated user can request a service ticket (TGS) for accounts with a Service Principal Name. Part of that ticket is encrypted with the service account\'s password hash, so it can be cracked offline with no special privileges needed, and service accounts are often over-privileged.',
@@ -43,7 +44,6 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     requires: ['Any valid domain account', 'Target accounts with an SPN set'],
     mitre: mitre('T1558.003'),
     opsec: 'Requesting many TGS quickly, or requesting RC4 (etype 0x17) when AES is available, triggers detections (Event ID 4769). Throttle and prefer accounts that only support RC4.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, Kerberoast', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/kerberoast.html' },
       { label: 'harmj0y, Kerberoasting Revisited', url: 'https://blog.harmj0y.net/redteaming/kerberoasting-revisited/' },
@@ -53,6 +53,7 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     id: 'asrep-roasting',
     label: 'AS-REP Roasting',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Roast accounts with pre-auth disabled.',
     description:
       'Accounts with "Do not require Kerberos pre-authentication" set will return an AS-REP containing data encrypted with the account\'s key, crackable offline. You can enumerate these even without credentials if you have a user list.',
@@ -76,7 +77,6 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     requires: ['A user list (creds optional)', 'Accounts with pre-auth disabled'],
     mitre: mitre('T1558.004'),
     opsec: 'Bulk AS-REQ enumeration generates many 4768 events. Spread requests out and target known accounts.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, ASREPRoast', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/asreproast.html' },
       { label: 'harmj0y, Roasting AS-REPs', url: 'https://blog.harmj0y.net/redteaming/roasting-as-reps/' },
@@ -86,6 +86,7 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     id: 'crack-hash-offline',
     label: 'Crack Hash Offline',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Recover the cleartext from a roasted ticket.',
     description:
       'Both Kerberoast (TGS) and AS-REP outputs are crackable offline with a wordlist + rules. A cracked service-account or user password becomes your next identity. This node converges the two roasting branches.',
@@ -108,12 +109,12 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     requires: ['A roasted ticket/hash', 'A weak-enough password'],
     mitre: mitre('T1110.002'),
     opsec: 'Offline and invisible to the target. Strong/AES-only passwords resist this; escalate via a different branch if cracking fails.',
-    difficulty: 'medium',
   },
   {
     id: 'service-account-creds',
     label: 'Service Account Creds',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Often over-privileged. Reuse them.',
     description:
       'Cracked service accounts frequently have local admin on many servers, or membership in privileged groups. Validate where these creds are admin, then move.',
@@ -127,12 +128,12 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Cracked service-account credentials'],
     mitre: mitre('T1078.002'),
-    difficulty: 'medium',
   },
   {
     id: 'lateral-movement-cme',
     label: 'Remote Execution',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     hub: true, // the creds-reuse / remote-exec convergence hub
     summary: 'Pick a transport to run code on another host.',
     description:
@@ -164,7 +165,6 @@ export const credentialAccessNodes: TechniqueNodeDef[] = [
     ],
     mitre: mitre('T1021'),
     opsec: 'Each hop generates logon events (4624) keyed to the transport: type 3 for SMB/WMI, type 10 for RDP. Reuse legitimate admin tooling and change windows to blend in; do not spray every host at once.',
-    difficulty: 'medium',
   },
 ];
 

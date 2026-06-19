@@ -26,6 +26,7 @@ import { EdgeDetailPanel, type EdgeDetail } from './EdgeDetailPanel';
 import { SearchBox } from './SearchBox';
 import { Legend } from './Legend';
 import { WINDOWS_VERSIONS } from '../data/windows-versions';
+import { FOOTHOLDS } from '../data/footholds';
 import { CloseIcon, SearchIcon } from '../ui/icons';
 
 /**
@@ -143,9 +144,11 @@ export function MapView({
     return set;
   }, [hoveredId, rendered, model.rootId, selection.selectedId]);
 
-  // Filter: dim technique nodes that don't match the active phase chips / target version.
-  const [phaseFilter, setPhaseFilter] = useState<ReadonlySet<string>>(new Set());
+  // Filters: dim technique nodes that don't apply to the target version, or that need
+  // access you don't hold. `hold` is a SET (footholds are independent capabilities, not
+  // a ladder), so a domain user who is also a local admin holds both.
   const [versionFilter, setVersionFilter] = useState<string | null>(null);
+  const [hold, setHold] = useState<ReadonlySet<string>>(new Set());
   const [toolsOpen, setToolsOpen] = useState(false);
   // Version ids actually used by THIS map's nodes — drives whether the "Target"
   // selector shows (any tagged node) and which versions/families it offers (so the AD
@@ -157,19 +160,28 @@ export function MapView({
     return s;
   }, [map]);
   const versionAware = mapVersionIds.size > 0;
+  // The foothold ("I hold") selector only shows if this map tags any node with `needs`.
+  const footholdAware = useMemo(() => map.nodes.some((n) => n.needs), [map]);
 
   const isDimmed = useCallback(
     (id: string) => {
-      if (phaseFilter.size === 0 && !versionFilter) return false;
+      if (!versionFilter && hold.size === 0) return false;
       const def = model.nodes.get(id);
       if (!def || def.kind === 'category' || def.kind === 'start' || def.kind === 'goal') return false;
-      if (phaseFilter.size > 0 && !phaseFilter.has(def.phase)) return true;
       // A node with a restricted `versions` set that excludes the selected target is
       // dimmed; an untagged node (applies to all versions) always passes.
       if (versionFilter && def.versions && !def.versions.includes(versionFilter)) return true;
+      // Foothold gate: you hold a SET of capabilities. A node is reachable if it needs
+      // no credentials (always doable), if you hold its tier, or if you hold Domain
+      // Admin (does everything). An untagged node (no `needs`) is never gated.
+      if (hold.size > 0 && def.needs) {
+        const reachable =
+          def.needs === 'none' || hold.has(def.needs) || hold.has('domain-admin');
+        if (!reachable) return true;
+      }
       return false;
     },
-    [model, phaseFilter, versionFilter],
+    [model, versionFilter, hold],
   );
 
   // Picking a node (by click or expand) makes it THE selected node and the lit
@@ -535,13 +547,7 @@ export function MapView({
     };
   }, [selectedEdgeId, model]);
 
-  const toggleIn = (set: ReadonlySet<string>, key: string): ReadonlySet<string> => {
-    const next = new Set(set);
-    if (next.has(key)) next.delete(key);
-    else next.add(key);
-    return next;
-  };
-  const filterActive = phaseFilter.size > 0 || versionFilter != null;
+  const filterActive = versionFilter != null || hold.size > 0;
 
   return (
     <GraphInteractionProvider value={interaction}>
@@ -591,9 +597,41 @@ export function MapView({
                 <CloseIcon className="h-4 w-4" />
               </button>
             </div>
-            <div className="pointer-events-auto flex max-w-[min(94vw,660px)] flex-wrap items-center justify-center gap-1 rounded-xl border border-border bg-panel/75 px-2 py-1.5 shadow-[var(--shadow-card)] backdrop-blur-xl">
-              {versionAware && (
-                <>
+            {(footholdAware || versionAware) && (
+              <div className="pointer-events-auto flex max-w-[min(94vw,660px)] flex-wrap items-center justify-center gap-1 rounded-xl border border-border bg-panel/75 px-2 py-1.5 shadow-[var(--shadow-card)] backdrop-blur-xl">
+                {footholdAware && (
+                  <div
+                    className="flex items-center gap-1"
+                    title="Toggle what you currently hold; techniques you can't yet reach dim out"
+                  >
+                    <span className="text-[11px] text-ink-faint">I hold</span>
+                    {FOOTHOLDS.map((f) => (
+                      <button
+                        key={f.id}
+                        type="button"
+                        onClick={() =>
+                          setHold((s) => {
+                            const next = new Set(s);
+                            if (next.has(f.id)) next.delete(f.id);
+                            else next.add(f.id);
+                            return next;
+                          })
+                        }
+                        title={f.hint}
+                        className={[
+                          'rounded-full px-2 py-0.5 text-[11px] transition-colors',
+                          hold.has(f.id) ? 'bg-white/[0.08] text-ink' : 'text-ink-dim hover:text-ink',
+                        ].join(' ')}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {footholdAware && versionAware && (
+                  <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
+                )}
+                {versionAware && (
                   <label className="flex items-center gap-1.5 text-[11px] text-ink-dim">
                     <span className="text-ink-faint">Target</span>
                     <select
@@ -620,37 +658,22 @@ export function MapView({
                       })}
                     </select>
                   </label>
-                  <span className="mx-0.5 h-4 w-px bg-border" aria-hidden />
-                </>
-              )}
-              {map.phases.map((p) => (
-                <button
-                  key={p.id}
-                  type="button"
-                  onClick={() => setPhaseFilter((s) => toggleIn(s, p.id))}
-                  className={[
-                    'flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[11px] transition-colors',
-                    phaseFilter.has(p.id) ? 'bg-white/[0.08] text-ink' : 'text-ink-dim hover:text-ink',
-                  ].join(' ')}
-                >
-                  <span className="h-1.5 w-1.5 rounded-full" style={{ background: p.color }} />
-                  {p.label}
-                </button>
-              ))}
-              {filterActive && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPhaseFilter(new Set());
-                    setVersionFilter(null);
-                  }}
-                  className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-ink-dim transition-colors hover:text-ink"
-                >
-                  Clear
-                  <CloseIcon className="h-3 w-3" />
-                </button>
-              )}
-            </div>
+                )}
+                {filterActive && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setVersionFilter(null);
+                      setHold(new Set());
+                    }}
+                    className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-ink-dim transition-colors hover:text-ink"
+                  >
+                    Clear
+                    <CloseIcon className="h-3 w-3" />
+                  </button>
+                )}
+              </div>
+            )}
           </>
         )}
       </div>

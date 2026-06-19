@@ -26,7 +26,6 @@ const anchorNodes: TechniqueNodeDef[] = [
     requires: ['A low-privilege shell on the host'],
     references: [{ label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }],
     opsec: 'winPEAS/Seatbelt are noisy on disk and signatured by EDR. Consider running in-memory or using the built-in whoami/accesschk checks on monitored hosts.',
-    difficulty: 'easy',
   },
   {
     id: 'nt-system',
@@ -37,7 +36,6 @@ const anchorNodes: TechniqueNodeDef[] = [
     description:
       'You hold SYSTEM (or local administrator) on the host, with full control of the machine, its services, and any credentials in memory or on disk. From here, dump credentials and pivot. On a domain-joined host this feeds straight back into the Active Directory map, but it is not always AD: a dumped local-admin hash reused across a workgroup, or a recovered service-account credential, moves you host-to-host with no domain involved (see the Local Lateral Movement branch).',
     requires: ['Any one successful local escalation vector'],
-    difficulty: 'medium',
   },
 ];
 

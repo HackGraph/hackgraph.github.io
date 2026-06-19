@@ -1,9 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { MAPS } from './index';
 import { buildModel } from '../graph/buildModel';
+import { FOOTHOLDS } from './footholds';
 
 const MITRE_RE = /^T\d{4}(\.\d{3})?$/;
-const DIFFICULTY = new Set(['easy', 'medium', 'hard']);
+const FOOTHOLD_IDS = new Set(FOOTHOLDS.map((f) => f.id));
 // References must be PUBLIC URLs, never the author's local notes.
 const FORBIDDEN = ['obsidian', '/home/', 'file:', 'localhost', '127.0.0.1'];
 
@@ -30,11 +31,19 @@ describe('content lint', () => {
         expect(bad).toEqual([]);
       });
 
-      it('difficulty values are valid', () => {
-        const bad = map.nodes
-          .filter((n) => n.difficulty && !DIFFICULTY.has(n.difficulty))
-          .map((n) => n.id);
-        expect(bad).toEqual([]);
+      // The "what you hold" filter only makes sense if every technique carries a
+      // foothold tag and non-techniques (start/category/goal) carry none. A map that
+      // opts out of footholds entirely (no node tagged) is exempt.
+      it('foothold (needs) tags are complete and valid where used', () => {
+        if (!map.nodes.some((n) => n.needs)) return;
+        const problems: string[] = [];
+        for (const n of map.nodes) {
+          const isTechnique = !n.kind || n.kind === 'technique';
+          if (n.needs && !FOOTHOLD_IDS.has(n.needs)) problems.push(`${n.id}: invalid needs "${n.needs}"`);
+          if (isTechnique && !n.needs) problems.push(`${n.id}: technique missing needs`);
+          if (!isTechnique && n.needs) problems.push(`${n.id}: ${n.kind} should not carry needs`);
+        }
+        expect(problems).toEqual([]);
       });
 
       it('all reference & tool URLs are public https (no local note paths)', () => {

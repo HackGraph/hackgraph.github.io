@@ -12,6 +12,7 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     id: 'sccm-recon',
     label: 'SCCM Site Discovery',
     phase: 'enumeration',
+    needs: 'domain-user',
     summary: 'Locate management points, site servers & SMS providers via LDAP/SMB.',
     description:
       'SCCM/MECM infrastructure is published to AD: management points, the System Management container, PXE-enabled distribution points, and host-naming conventions are discoverable by any authenticated user. sccmhunter\'s find module queries LDAP for these objects and profiles likely site systems, the targets the rest of the branch depends on (Misconfiguration Manager RECON-1/2).',
@@ -26,12 +27,12 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     references: [{ label: 'Misconfiguration Manager, RECON-1', url: 'https://github.com/subat0mik/Misconfiguration-Manager/blob/main/attack-techniques/RECON/RECON-1/recon-1_description.md' }],
     requires: ['Any valid domain account (authenticated LDAP enumeration)'],
     opsec: 'Authenticated LDAP queries are low-noise and look like normal directory traffic. The find module is read-only against AD; no writes to SCCM occur.',
-    difficulty: 'easy',
   },
   {
     id: 'sccm-naa-creds',
     label: 'Extract NAA Credentials',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Register a rogue client, request machine policy, deobfuscate NAA creds.',
     description:
       'With SCCM/AD defaults, any domain user can register a device as an SCCM client, request the machine policy from a management point, and deobfuscate the Network Access Account creds in the NAAConfig policy (CRED-2). On an existing client the same secrets can be recovered locally from DPAPI blobs (CRED-3). NAAs are domain accounts and frequently over-privileged.',
@@ -49,12 +50,12 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Any valid domain account (CRED-2) or local admin on a client (CRED-3)', 'SCCM site using NAAs with defaults'],
     opsec: 'Registering a rogue device creates an AD computer object and an SCCM client record, both auditable. DPAPI recovery (CRED-3) is local and quieter but needs admin on the client. Clean up the registered device.',
-    difficulty: 'medium',
   },
   {
     id: 'sccm-pxe-creds',
     label: 'PXE Boot Media Creds',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Pull & decrypt PXE boot media from a PXE-enabled DP, no auth needed.',
     description:
       'PXE-enabled distribution points serve OS-deployment boot media over TFTP, and the policies inside (NAAConfig, TaskSequence) carry credential material. An unauthenticated attacker can locate the PXE DP via DHCPDISCOVER, pull the media, and use cleartext secrets or crack the protecting password offline (CRED-1). One of the few SCCM attacks needing no domain credentials.',
@@ -69,12 +70,12 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     references: [{ label: 'Misconfiguration Manager, CRED-1 (PXE)', url: 'https://github.com/subat0mik/Misconfiguration-Manager/blob/main/attack-techniques/CRED/CRED-1/cred-1_description.md' }],
     requires: ['Network access to a PXE-enabled distribution point (no credentials)'],
     opsec: 'A sudden boot-media pull from an unexpected host can stand out; cracking is offline and invisible. Verify the current hashcat mode for protected PXE media against PXEThief docs before relying on it.',
-    difficulty: 'medium',
   },
   {
     id: 'sccm-relay-mssql',
     label: 'Relay to Site MSSQL (Takeover)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Coerce the site server, relay NTLM to the site DB, grant Full Admin.',
     description:
       'When the site database runs on a separate host, coerce NTLM from a site server and relay it to MSSQL, where the site-server account is db_owner. Then INSERT yourself into RBAC_Admins / RBAC_ExtendedPermissions to grant the Full Administrator role: full hierarchy takeover (TAKEOVER-1). sccmhunter generates the SID + SQL; ntlmrelayx performs the relay.',
@@ -93,12 +94,12 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     requires: ['Valid domain credentials', 'Site DB on a separate host', 'SMB to site server + MSSQL from relay to DB', 'NTLM/EPA defaults'],
     mitre: mitre('T1557.001'),
     opsec: 'Coercion and a new RBAC_Admins row are detectable; SQL writes are visible to anyone auditing the site DB. Remove planted admin rows when finished.',
-    difficulty: 'hard',
   },
   {
     id: 'sccm-relay-clientpush',
     label: 'Relay Client Push (Elevate)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Abuse automatic client push to coerce the site server, relay its auth.',
     description:
       'If automatic client push is enabled, any low-priv user can register a rogue device pointing at an attacker host and send a heartbeat DDR, causing the primary site server to push the agent, authenticating to you with the client-push account and/or the site-server machine account (ELEVATE-2). Relay that to SMB on another site system for local admin, or to LDAP(S) on a DC for Shadow Credentials / RBCD.',
@@ -115,12 +116,12 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     requires: ['Any valid domain account', 'Automatic client push enabled + NTLM fallback', 'Relay target without SMB signing / EPA'],
     mitre: mitre('T1557.001'),
     opsec: 'Registering a rogue client and triggering a push leaves SCCM records and install attempts. Its prerequisites (auto push + NTLM fallback + auto device approval) are non-default in hardened sites, so success is environment-dependent.',
-    difficulty: 'hard',
   },
   {
     id: 'sccm-deploy-app',
     label: 'Deploy App as SYSTEM',
     phase: 'lateral-movement',
+    needs: 'local-admin',
     summary: 'As an SCCM admin, deploy an app/script to run as SYSTEM on targets.',
     description:
       'With Full Administrator or Application Administrator rights, create an application/script deployment targeting any device or collection and run it in the SYSTEM context (EXEC-1/2). SharpSCCM automates the flow: create a collection, add the target, create the app with a payload, deploy, and force a policy refresh. This is the post-exploitation payoff: fan out to managed endpoints as SYSTEM.',
@@ -133,7 +134,6 @@ export const adSccmNodes: TechniqueNodeDef[] = [
     references: [{ label: 'MITRE T1072, Software Deployment Tools', url: 'https://attack.mitre.org/techniques/T1072/' }],
     requires: ['SCCM Full Administrator or Application Administrator role', 'Reachability to the SMS Provider / management point'],
     opsec: 'Deployments are logged in SCCM and leave deployment objects, collections, and client execution records. Scope to specific devices and clean up created objects.',
-    difficulty: 'medium',
   },
 ];
 

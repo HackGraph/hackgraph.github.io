@@ -12,6 +12,7 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     id: 'trust-enum',
     label: 'Trust Enumeration',
     phase: 'enumeration',
+    needs: 'domain-user',
     summary: 'Map every trust: direction, transitivity, SID filtering.',
     description: r`Before any trust attack, map the topology: which domains trust which, the direction, transitivity, and the trustAttributes flags (WITHIN_FOREST 0x20, FOREST_TRANSITIVE 0x8, QUARANTINED_DOMAIN 0x4, TREAT_AS_EXTERNAL 0x40). PowerView's Get-DomainTrustMapping crawls reachable trusts, nltest queries them natively, and BloodHound renders the graph. The trustAttributes value tells you whether SID filtering is in play and therefore which abuse paths are viable.`,
     tools: [
@@ -29,12 +30,12 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     references: [{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['Any valid domain account'],
     opsec: 'nltest /domain_trusts is a well-known discovery indicator (T1482); BloodHound collection is noisy. LDAP reads of trustedDomain objects blend with normal directory traffic.',
-    difficulty: 'easy',
   },
   {
     id: 'trust-ticket',
     label: 'Inter-Realm Trust Ticket',
     phase: 'domain-dominance',
+    needs: 'domain-admin',
     summary: 'Forge a referral TGT with the trust key to reach a trusted domain.',
     description: r`Each trust has a shared inter-realm key, stored in a TRUSTEDDOMAIN$ trust account in the trusting domain and rotated ~every 30 days. DCSync that trust account to recover its hash, then forge an inter-realm referral TGT with ticketer.py using -spn krbtgt/<target_domain>, which is distinct from a golden ticket that uses the local krbtgt key. Present the referral ticket to the target KDC (getST.py) to authenticate across the trust. SID filtering still constrains which ExtraSids the target honors.`,
     tools: [
@@ -52,12 +53,12 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['The inter-realm trust key (DCSync of the TRUSTEDDOMAIN$ account)', 'Source and target domain SIDs'],
     opsec: 'A forged inter-realm TGT shows golden-ticket-style anomalies (no preceding AS-REQ, odd lifetime/etype). Prefer AES over RC4. SID filtering / quarantine limits which ExtraSids are accepted.',
-    difficulty: 'hard',
   },
   {
     id: 'trust-external-abuse',
     label: 'External Trust Abuse',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Non-transitive external trust: password reuse, RID≥1000 ExtraSids.',
     description: r`External trusts are typically one-way and non-transitive with SID filtering enabled: SIDs with RID < 1000 (built-in/privileged groups) are quarantined and stripped. Remaining paths: reuse of credentials/hashes overlapping both domains, plain lateral movement using any foreign principal that holds rights in the trusting domain, and (where filtering is only partial) injecting ExtraSids of custom groups with RID ≥ 1000 that happen to be privileged. Confirm trustAttributes from trust-enum first.`,
     tools: [
@@ -72,12 +73,12 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, External Forest Domain (One-Way Inbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-oneway-inbound.html' },{ label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' }],
     requires: ['A mapped external trust', 'Foreign rights or reused credentials into the trusting domain'],
     opsec: 'SID filtering on external trusts strips RID<1000 SIDs, so Enterprise/Domain Admins ExtraSid injection fails. Whether partial filtering (TREAT_AS_EXTERNAL) leaves any RID≥1000 path is environment-specific. Verify the actual trustAttributes before relying on it.',
-    difficulty: 'medium',
   },
   {
     id: 'trust-forest-abuse',
     label: 'Inter-Forest Trust Abuse',
     phase: 'lateral-movement',
+    needs: 'domain-user',
     summary: 'Forest-transitive trust: cross-forest Kerberoast & foreign ACLs.',
     description: r`Forest trusts are FOREST_TRANSITIVE (trustAttributes 0x8) and span every domain in both forests, but SID filtering is enabled by default, so cross-forest SID-history hopping is blocked. The realistic surface is access-based: Kerberoast service accounts in the foreign forest, and abuse foreign principals that hold ACLs or local-group membership in your forest (and vice-versa). Enumerate those foreign access relationships before acting.`,
     tools: [
@@ -92,12 +93,12 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, External Forest Domain (One-Way Outbound)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/external-forest-domain-one-way-outbound.html' },{ label: 'harmj0y, Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' }],
     requires: ['A mapped forest (FOREST_TRANSITIVE) trust', 'A valid account in the trusting forest'],
     opsec: 'Cross-forest TGS requests (4769) for foreign SPNs and BloodHound cross-forest collection are visible. Injecting the foreign Enterprise/Domain Admins SID is filtered, so do not expect SID-history escalation across a forest boundary. Historical SID-filter bypasses (e.g. CVE-2020-0665) are patched on current builds.',
-    difficulty: 'hard',
   },
   {
     id: 'foreign-membership',
     label: 'Foreign Group Membership',
     phase: 'enumeration',
+    needs: 'domain-user',
     summary: 'Find principals from domain A with rights in domain B.',
     description: r`Trusts let a principal from one domain be a member of a group (typically a domain-local group) in another. Get-DomainForeignGroupMember enumerates a target domain's groups that contain outside members (its incoming access); Get-DomainForeignUser finds users belonging to groups outside their own domain (outgoing access). These foreign memberships are the concrete cross-trust access paths feeding external/forest-trust abuse; Get-DomainForeignUser reliably reflects only universal groups due to global-catalog replication.`,
     tools: [
@@ -113,12 +114,12 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     references: [{ label: 'PowerSploit, Get-DomainForeignGroupMember', url: 'https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/' }],
     requires: ['Any valid domain account', 'At least one mapped trust'],
     opsec: 'LDAP group-membership enumeration blends with normal directory traffic; large global-catalog queries across many domains are the main signal. Read-only.',
-    difficulty: 'easy',
   },
   {
     id: 'trust-modification',
     label: 'Domain Trust Modification',
     phase: 'persistence',
+    needs: 'domain-admin',
     summary: 'Create or alter a trust / federation for durable cross-domain access.',
     description: r`With Domain Admin (or write over trust objects) an attacker can add a new domain trust, flip trustAttributes (disable SID filtering / quarantine, or set TREAT_AS_EXTERNAL), or extend AD FS federation with an attacker-controlled token-signing certificate. Loosening SID filtering re-opens the SID-history / ExtraSids hopping that filtering would otherwise block, and a rogue trust/federation is durable, low-profile persistence. Distinct from forging SID history (T1134.005): this tampers with the trust relationship itself.`,
     tools: [
@@ -136,7 +137,6 @@ export const adTrustNodes: TechniqueNodeDef[] = [
     ],
     requires: ['Domain Admin / write over the trustedDomain object (or AD FS admin)', 'A target domain/forest (existing or attacker-created)'],
     opsec: 'Trust creation/modification is a high-signal directory change (Event 4706/4716/4717/4718, and 5136 on trustedDomain objects). Disabling SID filtering or adding a federation cert is a strong, durable indicator. Defenders auditing trust topology will spot a new or loosened trust.',
-    difficulty: 'hard',
   },
   {
     id: 'enterprise-admin',
@@ -151,7 +151,6 @@ export const adTrustNodes: TechniqueNodeDef[] = [
       { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },
       { label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
     ],
-    difficulty: 'hard',
   },
 ];
 

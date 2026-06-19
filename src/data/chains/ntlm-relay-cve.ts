@@ -22,6 +22,7 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
     id: 'relay-drop-mic',
     label: 'Drop-the-MIC (CVE-2019-1040)',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Strip the NTLM MIC to relay cross-protocol (SMB -> LDAP).',
     description:
       'The Message Integrity Code (MIC) is meant to stop attackers from tampering with NTLM messages while relaying them. CVE-2019-1040 ("Drop the MIC") showed the server accepts the authentication even when the MIC is removed despite the flag claiming its presence, letting an attacker clear the session-signing negotiation flags. ntlmrelayx implements this with --remove-mic, enabling cross-protocol unsigning relays such as SMB to LDAP. Relaying a machine/user to LDAP this way lets you grant DCSync rights (WriteDacl on the domain) or configure delegation.',
@@ -51,12 +52,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, NTLM relay', url: 'https://www.thehacker.recipes/ad/movement/ntlm/relay' },
     ],
     opsec: 'CVE PoC: only works against DCs unpatched for CVE-2019-1040, and the LDAP-side ACL/escalation change (DCSync grant, 5136 directory-modification) is high-signal and persistent. Enforcing LDAP signing + channel binding mitigates the relay entirely.',
-    difficulty: 'hard',
   },
   {
     id: 'relay-to-mssql',
     label: 'Relay to MSSQL',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Relay auth to a SQL Server, run xp_cmdshell as the login.',
     description:
       'Instead of relaying to SMB/LDAP, point ntlmrelayx at a MSSQL instance with -t mssql://. The relayed identity is authenticated to the database; if that login is sysadmin (or can enable it) you can turn on and run xp_cmdshell to execute OS commands as the SQL Server service account. ntlmrelayx exposes an interactive MSSQL prompt with -i (a SOCKS proxy via -socks is the multi-target alternative).',
@@ -85,12 +86,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'Compass Security, Relaying NTLM to MSSQL', url: 'https://blog.compass-security.com/2023/10/relaying-ntlm-to-mssql/' },
     ],
     opsec: 'xp_cmdshell execution and the sp_configure change are logged by SQL Server audit/EDR and the spawned cmd runs as the SQL service account. Disabling xp_cmdshell and enforcing Extended Protection on SQL endpoints closes this path.',
-    difficulty: 'medium',
   },
   {
     id: 'relay-to-wsus',
     label: 'Relay / Abuse WSUS',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Relay WSUS client auth, or push a malicious update.',
     description:
       'WSUS clients authenticate to the update server, so an attacker spoofing/relaying WSUS (commonly over the cleartext HTTP port 8530) can capture and relay machine and user authentications to SMB, LDAP/S or AD CS (ESC8). A separate, more invasive angle is update weaponization: when WSUS runs over HTTP, a MITM can inject a signed-but-attacker-chosen Microsoft-signed binary (e.g. PsExec) as a "patch", running as SYSTEM on the client. Note the relay and the update-injection are distinct attacks with different tooling.',
@@ -122,12 +123,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'GoSecure, Abusing WSUS to enable NTLM relaying', url: 'https://gosecure.ai/blog/2021/11/22/gosecure-investigates-abusing-windows-server-update-services-wsus-to-enable-ntlm-relaying-attacks/' },
     ],
     opsec: 'Destructive/disruptive: serving a fake update deploys a binary to clients as SYSTEM and shows up as an out-of-band patch in WSUS reporting; the MITM/poisoning leg is itself noisy. Configuring WSUS over HTTPS with TLS mitigates the update-injection variant. (PyWSUS command is illustrative: confirm flags against the tool README for your version.)',
-    difficulty: 'hard',
   },
   {
     id: 'kerberos-relay',
     label: 'Kerberos Relay',
     phase: 'credential-access',
+    needs: 'none',
     summary: 'Relay a Kerberos AP-REQ (e.g. to LDAP) for RBCD.',
     description:
       'Kerberos auth can also be relayed: an AP-REQ initiated by a victim for one service is forwarded to another service that does not enforce signing/encryption. dirkjanm\'s krbrelayx (paired with mitm6 to coerce auth via DNS) relays the ticket (supported targets are HTTP and LDAP) while KrbRelayUp packages a local self-relay on Windows where LDAP signing is not enforced (the default), coercing the local machine account, relaying to LDAP, and configuring RBCD over the host to gain SYSTEM. Note: relaying to LDAP is often hard by default because of channel binding/signing, so AD CS (HTTP) is a common alternative target.',
@@ -161,12 +162,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'Microsoft, Detecting KrbRelayUp', url: 'https://www.microsoft.com/en-us/security/blog/2022/05/25/detecting-and-preventing-privilege-escalation-attacks-leveraging-kerberos-relaying-krbrelayup/' },
     ],
     opsec: 'Creating/renaming a machine account (4741/4781) and the RBCD attribute write (5136 on msDS-AllowedToActOnBehalfOfOtherIdentity) are detectable; mitm6/DNS poisoning is noisy. Enforcing LDAP signing + channel binding and setting MachineAccountQuota to 0 break the chain.',
-    difficulty: 'hard',
   },
   {
     id: 'relay-to-ldap',
     label: 'Relay to LDAP(S)',
     phase: 'lateral-movement',
+    needs: 'none',
     summary: 'Relay the captured NTLM auth to a DC over LDAP(S) for a directory write.',
     description: r`Relay the coerced/poisoned NTLM authentication to LDAP or LDAPS on a Domain Controller. Plain LDAP requires signing, so LDAPS is the usual target (viable when channel binding is not enforced). The relayed session acts as the victim in the directory, so ntlmrelayx can perform a write attack: configure Resource-Based Constrained Delegation on a computer object (auto-creating an attacker-controlled computer with --delegate-access) or add Shadow Credentials (--shadow-credentials) to a principal. A relayed machine account is ideal because it can write over its own object.`,
     tools: [
@@ -182,7 +183,6 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'HackTricks, LDAP Signing & Channel Binding', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ldap-signing-and-channel-binding.html' },{ label: 'The Hacker Recipes, NTLM relay', url: 'https://www.thehacker.recipes/ad/movement/ntlm/relay' }],
     requires: ['Captured/coerced NTLM auth (a machine account is ideal)', 'LDAP signing / channel binding NOT enforced on the DC'],
     opsec: 'Writing msDS-AllowedToActOnBehalfOfToOtherIdentity or msDS-KeyCredentialLink is an auditable directory change (5136); --delegate-access also creates a computer account (4741). Enforcing LDAP signing + channel binding breaks this. Clean up the attribute afterwards.',
-    difficulty: 'medium',
   },
 
   // ── GROUP 2: quick-compromise CVEs (parent = ad-cat-quick-compromise) ────
@@ -199,6 +199,7 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
     id: 'eternalblue',
     label: 'EternalBlue (MS17-010)',
     phase: 'initial-access',
+    needs: 'none',
     summary: 'SMBv1 buffer overflow -> remote code execution as SYSTEM.',
     description:
       'MS17-010 (CVE-2017-0143/0144/...) is a set of flaws in the SMBv1 server where specially crafted packets cause a pool buffer overflow, allowing unauthenticated remote code execution. The NSA-developed exploit (leaked by the Shadow Brokers and used by WannaCry) yields SYSTEM on an unpatched, SMBv1-enabled host. Scan first, then exploit.',
@@ -230,12 +231,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'CVE-2017-0144 (NVD)', url: 'https://nvd.nist.gov/vuln/detail/cve-2017-0144' },
     ],
     opsec: 'Memory-corruption PoC: can BSOD/crash the target if the kernel grooming fails, a real risk on production hosts. SMBv1 exploit traffic and the resulting SYSTEM-level process are detectable; disabling SMBv1 and patching fully mitigate.',
-    difficulty: 'medium',
   },
   {
     id: 'proxyshell',
     label: 'ProxyShell (Exchange)',
     phase: 'initial-access',
+    needs: 'none',
     summary: 'Exchange SSRF + privesc + file-write chain -> webshell/RCE.',
     description:
       'ProxyShell chains three on-prem Exchange CVEs: CVE-2021-34473 (Autodiscover SSRF / URL path confusion reaching the backend as the Exchange machine account), CVE-2021-34523 (PowerShell backend privilege escalation via X-Rps-CAT), and CVE-2021-31207 (arbitrary file write via New-MailboxExportRequest). Combined, an unauthenticated attacker exports a mailbox containing an ASPX webshell into a web-accessible directory, then triggers it for RCE as SYSTEM/Exchange.',
@@ -259,12 +260,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'Qualys, ProxyShell CVE-2021-34473/34523/31207', url: 'https://threatprotect.qualys.com/2021/08/10/proxyshell-a-new-attack-surface-on-microsoft-exchange-server-cve-2021-34473-cve-2021-34523-cve-2021-31207/' },
     ],
     opsec: 'Drops an ASPX webshell on disk (a durable, easily-hunted artifact in Exchange web dirs) and leaves IIS/Exchange request logs of the Autodiscover SSRF and New-MailboxExportRequest. Patch Exchange and monitor for unexpected mailbox export requests.',
-    difficulty: 'medium',
   },
   {
     id: 'ms14-068',
     label: 'MS14-068 (CVE-2014-6324)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Forge a PAC with elevated group SIDs via the checksum flaw.',
     description:
       'Pre-patch, the KDC validated the PAC signature with KdcVerifyPacSignature accepting any signature <= 20 bytes, so a non-keyed hash (MD5) was accepted as valid. A low-priv user can therefore forge a PAC claiming membership in Domain Admins and have the KDC issue a TGT honoring it. Unlike a Golden Ticket it does not need the krbtgt hash: only a domain account name, its password/hash, and its SID.',
@@ -296,12 +297,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, MS14-068', url: 'https://www.thehacker.recipes/ad/movement/kerberos/forged-tickets/ms14-068' },
     ],
     opsec: 'CVE PoC, only against DCs unpatched since 2014 (rare today). The forged-PAC TGT and the privileged logon it enables are anomalous (4768/4769 with mismatched group membership). No mitigation needed beyond the long-available patch.',
-    difficulty: 'medium',
   },
   {
     id: 'certifried',
     label: 'Certifried (CVE-2022-26923)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Spoof a machine certificate to impersonate a DC.',
     description:
       'AD CS embeds the requesting machine\'s dNSHostName in the issued certificate, and pre-patch that attribute did not need to be unique. A low-priv user with MachineAccountQuota can create a computer account, set its dNSHostName to a Domain Controller\'s, and request a Machine-template certificate, which then authenticates as the DC. PKINIT auth with that cert returns the DC\'s NT hash, enabling DCSync and full domain takeover.',
@@ -333,12 +334,12 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'HackTheBox, CVE-2022-26923 explained', url: 'https://www.hackthebox.com/blog/cve-2022-26923-certifried-explained' },
     ],
     opsec: 'Machine-account creation (4741) and a certificate request whose dNSHostName collides with a DC are detectable in AD CS / directory logs. The May-2022 patch (and StrongCertificateBindingEnforcement) ties the cert to the account SID, closing the spoof.',
-    difficulty: 'medium',
   },
   {
     id: 'privexchange',
     label: 'PrivExchange (CVE-2019-0686 / CVE-2019-0724)',
     phase: 'priv-esc',
+    needs: 'domain-user',
     summary: 'Coerce Exchange to auth -> relay to LDAP for DCSync.',
     description:
       'The Exchange EWS PushSubscription API can be abused to make the Exchange server authenticate (over HTTP) to an attacker-controlled host, addressed by the Feb-2019 Exchange elevation-of-privilege fix (CVE-2019-0686 / CVE-2019-0724). Because Exchange (via the Exchange Windows Permissions group) holds WriteDacl on the domain object by default, relaying that high-privileged machine authentication to LDAP lets the attacker grant a controlled user DCSync rights, escalating any mailbox-holding user toward Domain Admin.',
@@ -369,7 +370,6 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
       { label: 'The Hacker Recipes, PrivExchange', url: 'https://www.thehacker.recipes/ad/movement/ntlm/relay' },
     ],
     opsec: 'The coerced Exchange auth and the resulting DCSync ACL grant (5136 directory modification) are high-signal. Microsoft\'s Feb-2019 update removed Exchange\'s domain WriteDacl; enforcing LDAP signing/channel binding also blocks the relay.',
-    difficulty: 'hard',
   },
 ];
 

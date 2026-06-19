@@ -7,6 +7,8 @@
  * MapDefinitions registered in data/index.ts.
  */
 
+import type { FootholdId } from './footholds';
+
 /**
  * A phase is just a string id; each map declares its own ordered phases with
  * labels and colors (see PhaseDef on MapDefinition). This keeps the engine
@@ -25,8 +27,6 @@ export interface PhaseDef {
  *  `category` nodes group techniques (a folder/section header); clicking one
  *  expands it rather than opening a detail panel. */
 export type NodeKind = 'start' | 'technique' | 'goal' | 'category';
-
-export type Difficulty = 'easy' | 'medium' | 'hard';
 
 export interface Tool {
   name: string;
@@ -86,7 +86,13 @@ export interface TechniqueNodeDef {
    * versions; only version-specific vectors enumerate a restricted set.
    */
   versions?: string[];
-  difficulty?: Difficulty;
+  /**
+   * Foothold gate for the "what you hold" filter: the MINIMUM access a reader must
+   * already possess to attempt this step (see data/footholds.ts). Environmental
+   * conditions and the specific ACL edge / group abused stay in `requires`. OMITTED
+   * = no gate (never dimmed by the foothold filter). Not set on start/category/goal.
+   */
+  needs?: FootholdId;
   /**
    * Convergence hub: a "you now hold X" state node that many later steps lead back
    * to (the domain/local-creds hubs, the remote-exec hub). Excluded from loop
