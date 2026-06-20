@@ -15,7 +15,7 @@ import {
 } from '../graph/visibility';
 import { resolveUnroll } from '../graph/layout';
 import { edgeKey } from '../graph/buildModel';
-import { readDeepLink, writeDeepLink } from '../state/deepLink';
+import { readDeepLink, writeDeepLink, shareUrl } from '../state/deepLink';
 import {
   GraphInteractionProvider,
   type GraphInteraction,
@@ -249,16 +249,11 @@ export function MapView({
   }, []);
   const closeNote = useCallback(() => setNotePopover(null), []);
 
-  // A shareable deep-link straight to this node (revealed + selected).
+  // A shareable deep-link straight to this node (revealed + selected), compressed.
   const copyLink = useCallback(
     async (defId: string) => {
       try {
-        const params = new URLSearchParams();
-        params.set('map', map.id);
-        const open = keyLineage(model, defId);
-        if (open.length) params.set('open', open.join(','));
-        params.set('sel', defId);
-        const url = `${window.location.origin}${window.location.pathname}#${params.toString()}`;
+        const url = shareUrl({ mapId: map.id, open: keyLineage(model, defId), sel: defId });
         await navigator.clipboard.writeText(url);
         return true;
       } catch {
