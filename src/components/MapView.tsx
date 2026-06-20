@@ -374,18 +374,22 @@ export function MapView({
         const j = eid.indexOf('->');
         if (eid.slice(j + 2) === sel) parentKey = eid.slice(0, j);
       }
-      // Siblings + immediate next steps come from the RENDERED graph (render keys too),
-      // so a hub's re-entry instance gets its own forward children instead of pointing
-      // back at the canonical node. Skip next steps that loop into the route/siblings
-      // so the slice stays acyclic.
-      const siblings = new Set<string>();
-      if (parentKey) for (const e of g.edges) if (e.source === parentKey && e.target !== sel) siblings.add(e.target);
+      // The parent's rendered children, in natural order, INCLUDING sel. Coming from
+      // the RENDERED graph (render keys) means a hub's re-entry instance gets its own
+      // forward children instead of pointing back at the canonical node. sel MUST be in
+      // this set: the reorder below pins each child to its natural slot, so the selected
+      // node keeps its place instead of dagre lifting it to the top (because it alone
+      // has next-steps) — which made the whole sibling column jump on every click.
+      const siblingKeys: string[] = [];
+      if (parentKey) for (const e of g.edges) if (e.source === parentKey) siblingKeys.push(e.target);
+      // Immediate next steps = sel's rendered children, skipping any that loop back into
+      // the route/siblings so the slice stays acyclic.
       const nextKeys = new Set<string>();
       for (const e of g.edges) {
-        if (e.source !== sel || routeKeys.has(e.target) || siblings.has(e.target)) continue;
+        if (e.source !== sel || routeKeys.has(e.target) || siblingKeys.includes(e.target)) continue;
         nextKeys.add(e.target);
       }
-      const focusKeys = new Set<string>([...routeKeys, ...siblings, sel, ...nextKeys]);
+      const focusKeys = new Set<string>([...routeKeys, ...siblingKeys, sel, ...nextKeys]);
       const count = new Map<string, number>();
       const nodes = [...focusKeys].map((k) => {
         const defId = defIdOf(k);
@@ -394,7 +398,8 @@ export function MapView({
         return { key: k, defId, instanceIndex };
       });
       // Edges: the lit route, parent → each sibling, sel → each next step. Labels are
-      // looked up by the underlying def-id pair.
+      // looked up by the underlying def-id pair. (parent → sel is also a route edge; the
+      // seen-set dedupes it.)
       const seenEdge = new Set<string>();
       const edges: { id: string; source: string; target: string; label?: string }[] = [];
       const push = (s: string, t: string) => {
@@ -407,12 +412,9 @@ export function MapView({
         const j = eid.indexOf('->');
         push(eid.slice(0, j), eid.slice(j + 2));
       }
-      if (parentKey) for (const sib of siblings) push(parentKey, sib);
+      if (parentKey) for (const sib of siblingKeys) push(parentKey, sib);
       for (const nk of nextKeys) push(sel, nk);
-      // Keep the selected node in its natural slot among its siblings (rather than
-      // letting dagre lift it because it alone has children). useGraphView reorders
-      // the sibling rank's Y to this order.
-      return { nodes, edges, reorder: { keys: [...siblings], selKey: sel, next: [...nextKeys] } };
+      return { nodes, edges, reorder: { keys: siblingKeys, selKey: sel, next: [...nextKeys] } };
     }
 
     if (!pathOnly || activePath.nodes.size === 0) return null;
