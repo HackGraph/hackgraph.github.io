@@ -184,6 +184,12 @@ export function useGraphView({
   // of the boxes (the old "a pile of arrows pre-drawn in the middle" look).
   const prevIsolateRef = useRef(false);
   const tweenRaf = useRef<number | null>(null);
+  // Focus-mode camera: the frame to fit, and a debounce timer. A single selection fires
+  // several reconciles (isolate change, lineage expand, re-measure); without coalescing,
+  // each one calls fitBounds and the overlapping animations reverse mid-flight (flicker).
+  const camFrameRef = useRef<string[] | null>(null);
+  const camFitTimerRef = useRef(0);
+  const lastFitFrameRef = useRef<string | null>(null);
   const [tweening, setTweening] = useState(false);
   const tweenPositions = useCallback((targets: ReadonlyMap<NodeId, XY>, duration: number, onDone?: () => void) => {
     if (tweenRaf.current != null) cancelAnimationFrame(tweenRaf.current);
@@ -213,6 +219,23 @@ export function useGraphView({
     };
     tweenRaf.current = requestAnimationFrame(step);
   }, []);
+  // Fit the camera to the current focus frame (`camFrameRef`) using the LIVE node
+  // positions, so it lands on the settled layout. Skipped while a position tween is
+  // running (mid-tween positions are wrong); the tween's onDone calls it once finished.
+  const fitFocusFrame = useCallback(() => {
+    const keys = camFrameRef.current;
+    if (!keys || keys.length === 0 || tweenRaf.current != null) return;
+    const live = new Map<NodeId, XY>();
+    for (const n of rf.getNodes()) live.set(n.id, n.position);
+    void rf.fitBounds(boundsOf(keys, live, sizeCacheRef.current), {
+      padding: 0.22,
+      duration: reduceMotion ? 0 : 320,
+      // Pan/zoom in a straight line. The default 'smooth' interpolation is d3's fly-zoom
+      // (zoom OUT to travel, then back IN), which on the tight focus frame reads as the
+      // camera bouncing/flickering between selections.
+      interpolate: 'linear',
+    });
+  }, [rf, reduceMotion]);
   useEffect(
     () => () => {
       if (tweenRaf.current != null) cancelAnimationFrame(tweenRaf.current);
@@ -365,31 +388,53 @@ export function useGraphView({
     if (isolateChanged && tween) {
       const targets = new Map<NodeId, XY>();
       for (const id of nodeIds) targets.set(id, positions.get(id) ?? { x: 0, y: 0 });
-      // On leave, reconcile once more when the glide ends to un-fade the off-focus
-      // edges (now settled, all forward). On enter there's nothing extra to clear.
+      // On leave, reconcile once more when the glide ends to un-fade the off-focus edges
+      // (now settled, all forward). On enter, the settle-fit below handles the camera.
       tweenPositions(targets, 640, leaving ? () => reconcileRef.current() : undefined);
     }
     if (isolateOn && pathKeys) {
-      // Frame the isolated subset (lit path, or the focus neighbourhood). Re-fit on
-      // EVERY reconcile while it's active — not just the on/off toggle — so the frame
-      // corrects after off-expansion focus nodes (siblings / downstream) get measured
-      // and re-laid-out, instead of staying stuck on the provisional first layout.
-      // On a NARROW (mobile) viewport, fitting the whole neighbourhood (route + every
-      // sibling + next steps) zooms too far out — so frame just the selected node and
-      // its next steps (where you are + where you can go). A leaf with no next steps
-      // falls back to its sibling rank so a single card doesn't over-zoom.
+      // The frame to fit. On a NARROW (mobile) viewport, fitting the whole neighbourhood
+      // (route + every sibling + next steps) zooms too far out — so frame just the
+      // selected node and its next steps (where you are + where you can go). A leaf with
+      // no next steps falls back to its sibling rank so a single card doesn't over-zoom.
       const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
-      let frameKeys: Iterable<string> = pathKeys;
+      let frameKeys: string[] = [...pathKeys];
       if (isMobile && isolate?.reorder) {
         const { selKey, next, keys } = isolate.reorder;
-        frameKeys = next.length > 0 ? [selKey, ...next] : keys;
+        frameKeys = next.length > 0 ? [selKey, ...next] : [...keys];
       }
-      const rect = boundsOf(frameKeys, positions, cache);
-      const dur = reduceMotion ? 0 : isolateChanged ? 660 : 300;
-      requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: dur }));
+      camFrameRef.current = frameKeys;
+      const sig = frameKeys.join('|');
+      if (isolateChanged) {
+        // ENTERING focus: glide the camera WITH the node tween toward the target frame
+        // (live positions are mid-tween, so use the computed targets here).
+        const rect = boundsOf(frameKeys, positions, cache);
+        requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: reduceMotion ? 0 : 660, interpolate: 'linear' }));
+        lastFitFrameRef.current = null; // let the settle-fit below still run once
+      }
+      // A single selection fires a BURST of reconciles (selection, lineage expand, then
+      // re-measure), each shifting the layout slightly. Coalesce them into ONE camera fit
+      // once it goes quiet — keep re-arming while the frame still changes or a position
+      // tween is running, then fit and record the frame so a late re-measure for the SAME
+      // frame doesn't re-animate. Without this the overlapping fits reverse mid-flight (the
+      // flicker). The fit uses LIVE positions, so it lands on the settled layout.
+      if (sig !== lastFitFrameRef.current) {
+        if (camFitTimerRef.current) clearTimeout(camFitTimerRef.current);
+        const tick = () => {
+          if (tweenRaf.current != null) {
+            camFitTimerRef.current = window.setTimeout(tick, 80); // wait out the glide
+            return;
+          }
+          fitFocusFrame();
+          lastFitFrameRef.current = camFrameRef.current ? camFrameRef.current.join('|') : null;
+        };
+        camFitTimerRef.current = window.setTimeout(tick, 110);
+      }
     } else if (isolateChanged) {
       // Leaving isolate/focus → frame the whole graph. Fit the COMPUTED target bounds
       // (not the live node positions, which are mid-tween) so the camera lands right.
+      if (camFitTimerRef.current) clearTimeout(camFitTimerRef.current);
+      lastFitFrameRef.current = null;
       const rect = boundsOf(nodeIds, positions, cache);
       requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.16, duration: reduceMotion ? 0 : 660 }));
     } else {
@@ -408,7 +453,7 @@ export function useGraphView({
     prevExpandedRef.current = expanded;
     prevIsolateRef.current = isolateOn;
     prevIsolateEdgesRef.current = isolateEdgeIds;
-  }, [visible, maybeFollow, lastToggled, reduceMotion, rf, tweenPositions]);
+  }, [visible, maybeFollow, lastToggled, reduceMotion, rf, tweenPositions, fitFocusFrame]);
 
   const reconcileRef = useRef(reconcile);
   reconcileRef.current = reconcile;
