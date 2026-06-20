@@ -129,3 +129,31 @@ export const FocusIcon = (p: IconProps) => (
     <path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
   </Base>
 );
+
+export const LinkIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M9.5 14.5 14.5 9.5" />
+    <path d="M8 12 6 14a3 3 0 1 0 4 4l2-2" />
+    <path d="M16 12l2-2a3 3 0 1 0-4-4l-2 2" />
+  </Base>
+);
+
+export const NoteIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M16 3.5 20.5 8 9 19.5 4 21l1.5-5L16 3.5Z" />
+    <path d="M14 6.5 17.5 10" />
+  </Base>
+);
+
+export const BanIcon = (p: IconProps) => (
+  <Base {...p}>
+    <circle cx="12" cy="12" r="8.5" />
+    <path d="m6 6 12 12" />
+  </Base>
+);
+
+export const TrashIcon = (p: IconProps) => (
+  <Base {...p}>
+    <path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13" />
+  </Base>
+);

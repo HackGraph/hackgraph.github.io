@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import type { Theme } from '../state/useTheme';
-import { GearIcon, MoonIcon, SunIcon, FocusIcon } from '../ui/icons';
+import { GearIcon, MoonIcon, SunIcon, FocusIcon, NoteIcon } from '../ui/icons';
 
 interface SettingsMenuProps {
   theme: Theme;
   onToggleTheme: () => void;
   focusMode: boolean;
   onToggleFocusMode: () => void;
+  notesInline: boolean;
+  onToggleNotesInline: () => void;
   reduceMotion: boolean;
 }
 
@@ -69,7 +71,15 @@ function Row({
  * gear button opens a dropdown with the theme + focus-mode toggles. Closes on
  * outside click or Escape.
  */
-export function SettingsMenu({ theme, onToggleTheme, focusMode, onToggleFocusMode, reduceMotion }: SettingsMenuProps) {
+export function SettingsMenu({
+  theme,
+  onToggleTheme,
+  focusMode,
+  onToggleFocusMode,
+  notesInline,
+  onToggleNotesInline,
+  reduceMotion,
+}: SettingsMenuProps) {
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
@@ -127,6 +137,13 @@ export function SettingsMenu({ theme, onToggleTheme, focusMode, onToggleFocusMod
               hint="Collapse unrelated branches around the selected node"
               on={focusMode}
               onClick={onToggleFocusMode}
+            />
+            <Row
+              icon={<NoteIcon className="h-4 w-4" />}
+              label="Notes on nodes"
+              hint="Show note text on the card (off: tap the note icon)"
+              on={notesInline}
+              onClick={onToggleNotesInline}
             />
           </motion.div>
         )}

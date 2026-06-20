@@ -1,9 +1,11 @@
-import { memo } from 'react';
+import { memo, useRef } from 'react';
 import { Handle, Position, type NodeProps } from '@xyflow/react';
 import { motion } from 'framer-motion';
 import type { AppNode } from '../graph/appNode';
 import { useGraphInteraction } from '../graph/GraphInteractionContext';
-import { ChevronRightIcon, FolderIcon } from '../ui/icons';
+import { BanIcon, CheckIcon, ChevronRightIcon, FolderIcon, NoteIcon } from '../ui/icons';
+
+const LONG_PRESS_MS = 500;
 
 function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
   const {
@@ -17,10 +19,17 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
     isNodeActive,
     isNextStep,
     isSibling,
+    isOwned,
+    isInapplicable,
+    hasNote,
+    getNote,
+    notesInline,
     phaseColor,
     phaseLabel,
     toggle,
     select,
+    openMenu,
+    openNote,
     reduceMotion,
   } = useGraphInteraction();
   // A repeated/unrolled node renders under a distinct render KEY (the React Flow
@@ -40,6 +49,69 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
   const isStart = def.kind === 'start';
   const isCategory = def.kind === 'category';
   const instanceIndex = data?.instanceIndex ?? 1;
+  // Annotations are keyed by the RENDER KEY (`key`), not the content `defId`, so two
+  // rendered instances of the same convergence hub (e.g. "Valid Domain Credentials"
+  // #1 and #2) carry independent marks and notes. For a normal node key === defId.
+  const owned = isOwned(key);
+  const inapplicable = isInapplicable(key);
+  const noted = hasNote(key);
+  const note = noted ? getNote(key) : '';
+  // Tappable note badge — opens the note in a popover (works on touch, where the
+  // hover preview can't). Stops propagation so it doesn't select/long-press the node.
+  const noteBadge = noted && (
+    <button
+      type="button"
+      aria-label="View note"
+      onPointerDown={(e) => e.stopPropagation()}
+      onClick={(e) => {
+        e.stopPropagation();
+        openNote(key, def.label, e.clientX, e.clientY);
+      }}
+      className="-m-1 flex items-center justify-center rounded p-1 text-ink-faint transition-colors hover:text-ink"
+    >
+      <NoteIcon className="h-3 w-3" />
+    </button>
+  );
+
+  // Long-press opens the context menu on touch (mouse uses native right-click, wired
+  // at the canvas level). A drag past ~10px is a pan, not a press, so it cancels.
+  const lp = useRef({ timer: 0, fired: false, x: 0, y: 0 });
+  const clearLP = () => {
+    if (lp.current.timer) window.clearTimeout(lp.current.timer);
+    lp.current.timer = 0;
+  };
+  const onPointerDown = (e: React.PointerEvent) => {
+    if (e.pointerType === 'mouse') return;
+    lp.current.fired = false;
+    lp.current.x = e.clientX;
+    lp.current.y = e.clientY;
+    clearLP();
+    lp.current.timer = window.setTimeout(() => {
+      lp.current.fired = true;
+      openMenu(key, defId, lp.current.x, lp.current.y);
+    }, LONG_PRESS_MS);
+  };
+  const onPointerMove = (e: React.PointerEvent) => {
+    if (!lp.current.timer) return;
+    const dx = e.clientX - lp.current.x;
+    const dy = e.clientY - lp.current.y;
+    if (dx * dx + dy * dy > 100) clearLP();
+  };
+  // Swallow the click that follows a long-press so it doesn't also select the node.
+  const onCardClick = () => {
+    if (lp.current.fired) {
+      lp.current.fired = false;
+      return;
+    }
+    select(key);
+  };
+  const pressHandlers = {
+    onPointerDown,
+    onPointerMove,
+    onPointerUp: clearLP,
+    onPointerCancel: clearLP,
+    onPointerLeave: clearLP,
+  };
 
   const childCount = model.childrenOf.get(defId)?.length ?? 0;
   // The root is now an ordinary collapsible node too, so it gets a chevron.
@@ -54,7 +126,9 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
   // mode: the rendered subset IS the curated neighbourhood, so nothing in it recedes.
   const faded = !!data?.faded;
   const recede = hasSelection && !focusActive && !active && !isNextStep(defId) && !isSibling(defId);
-  const opacity = faded ? 0 : dimmed ? 0.16 : recede ? 0.3 : 1;
+  // An inapplicable node is dimmed to read as "ruled out" (but stays clickable so it
+  // can be un-marked); an active filter or fade still wins.
+  const opacity = faded ? 0 : dimmed ? 0.16 : inapplicable && !active && !selected ? 0.42 : recede ? 0.3 : 1;
 
   const entrance = {
     initial: reduceMotion ? false : { opacity: 0, scale: 0.97, y: 2 },
@@ -115,7 +189,12 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
     return (
       <motion.div
         {...entrance}
-        onClick={() => select(key)}
+        {...pressHandlers}
+        onClick={onCardClick}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          openMenu(key, defId, e.clientX, e.clientY);
+        }}
         className="group relative w-[212px] cursor-pointer rounded-xl border px-3.5 py-3 text-left transition-colors"
         style={{
           borderColor,
@@ -131,7 +210,16 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
         {port}
         <div className="flex items-center gap-2">
           <FolderIcon className="h-4 w-4 shrink-0" style={{ color }} />
-          <span className="text-[13px] font-medium leading-tight text-ink">{def.label}</span>
+          <span className={`text-[13px] font-medium leading-tight text-ink${inapplicable ? ' line-through decoration-ink-faint' : ''}`}>
+            {def.label}
+          </span>
+          {(owned || inapplicable || noted) && (
+            <span className="ml-auto flex shrink-0 items-center gap-1">
+              {noteBadge}
+              {inapplicable && <BanIcon className="h-3.5 w-3.5 text-ink-faint" />}
+              {owned && <CheckIcon className="h-3.5 w-3.5 text-accent" />}
+            </span>
+          )}
         </div>
         <div className="mt-1 pl-6 text-[11px] text-ink-faint">
           {childCount} technique{childCount === 1 ? '' : 's'}
@@ -143,7 +231,12 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
   return (
     <motion.div
       {...entrance}
-      onClick={() => select(key)}
+      {...pressHandlers}
+      onClick={onCardClick}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        openMenu(key, defId, e.clientX, e.clientY);
+      }}
       className="group relative w-[228px] cursor-pointer rounded-xl border bg-panel px-3.5 py-3 text-left transition-colors hover:border-border-strong"
       style={{ borderColor, boxShadow, background, pointerEvents: faded ? 'none' : undefined }}
     >
@@ -155,10 +248,17 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
       <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-medium" style={{ color }}>
         <span className="h-2 w-2 rounded-full" style={{ background: color }} />
         <span>{isGoal ? 'Goal' : isStart ? 'Start' : phaseLabel(def.phase)}</span>
+        {(owned || inapplicable || noted) && (
+          <span className="ml-auto flex shrink-0 items-center gap-1">
+            {noteBadge}
+            {inapplicable && <BanIcon className="h-3.5 w-3.5 text-ink-faint" />}
+            {owned && <CheckIcon className="h-3.5 w-3.5 text-accent" />}
+          </span>
+        )}
       </div>
 
       {/* title */}
-      <div className="text-[13.5px] font-semibold leading-snug text-ink">
+      <div className={`text-[13.5px] font-semibold leading-snug text-ink${inapplicable ? ' line-through decoration-ink-faint' : ''}`}>
         {def.label}
         {instanceIndex > 1 && (
           <span className="ml-1.5 align-baseline text-[11px] font-medium tabular-nums text-ink-faint">
@@ -178,6 +278,15 @@ function TechniqueNodeImpl({ id, data }: NodeProps<AppNode>) {
           {[toolCount && `${toolCount} tool${toolCount === 1 ? '' : 's'}`, cmdCount && `${cmdCount} cmd${cmdCount === 1 ? '' : 's'}`]
             .filter(Boolean)
             .join('  ·  ')}
+        </div>
+      )}
+
+      {/* user note shown inline on the card (when the setting is on); otherwise it's
+          read by tapping the note badge, which opens a popover */}
+      {noted && notesInline && (
+        <div className="mt-2 flex items-start gap-1.5 rounded-lg border border-border bg-bg-soft px-2 py-1.5">
+          <NoteIcon className="mt-px h-3 w-3 shrink-0 text-ink-faint" />
+          <span className="line-clamp-3 whitespace-pre-wrap text-[11px] leading-snug text-ink-dim">{note}</span>
         </div>
       )}
     </motion.div>

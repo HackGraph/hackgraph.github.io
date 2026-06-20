@@ -4,6 +4,7 @@ import type { Command, TechniqueNodeDef } from '../data/schema';
 import { useIsMobile } from '../state/useIsMobile';
 import {
   ArrowRightIcon,
+  BanIcon,
   CheckIcon,
   ChevronRightIcon,
   CloseIcon,
@@ -28,6 +29,16 @@ interface NodeDetailPanelProps {
   onTogglePathOnly?: () => void;
   onNavigate?: (id: string) => void;
   onClose: () => void;
+  /** User annotations for this node (persisted on this device). */
+  owned?: boolean;
+  onToggleOwned?: () => void;
+  inapplicable?: boolean;
+  onToggleInapplicable?: () => void;
+  note?: string;
+  onNoteChange?: (text: string) => void;
+  /** Focus the notes field on open (the context menu's "Add note" action). */
+  autoFocusNote?: boolean;
+  onNoteFocused?: () => void;
 }
 
 function CopyButton({ text }: { text: string }) {
@@ -86,8 +97,17 @@ export function NodeDetailPanel({
   onTogglePathOnly,
   onNavigate,
   onClose,
+  owned,
+  onToggleOwned,
+  inapplicable,
+  onToggleInapplicable,
+  note,
+  onNoteChange,
+  autoFocusNote,
+  onNoteFocused,
 }: NodeDetailPanelProps) {
   const isMobile = useIsMobile();
+  const noteRef = useRef<HTMLTextAreaElement>(null);
   // The next-steps list defaults to collapsed (a prominent CTA button); the panel
   // remounts per selection (`key={def.id}`) so it resets closed for each new node.
   const [nextOpen, setNextOpen] = useState(false);
@@ -105,9 +125,22 @@ export function NodeDetailPanel({
   // On mobile the panel defaults to a compact bottom PEEK (just enough to know
   // what you tapped) and expands to the full sheet only when you choose to read.
   // Desktop always shows the full right-hand panel. `key={def.id}` remounts per
-  // selection, so each new node starts collapsed.
-  const [peekExpanded, setPeekExpanded] = useState(false);
+  // selection, so each new node starts collapsed — EXCEPT when opened via "Add note",
+  // which needs the full sheet so the notes field exists to focus.
+  const [peekExpanded, setPeekExpanded] = useState<boolean>(() => !!autoFocusNote);
   const collapsed = isMobile && !peekExpanded;
+  // "Add note" from the context menu opens the panel and drops the cursor into the
+  // notes field. Expand the sheet first (mobile peek hides the body), then focus.
+  useEffect(() => {
+    if (!autoFocusNote) return;
+    setPeekExpanded(true);
+    const t = window.setTimeout(() => {
+      noteRef.current?.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+      noteRef.current?.focus();
+      onNoteFocused?.();
+    }, reduceMotion ? 0 : 120);
+    return () => window.clearTimeout(t);
+  }, [autoFocusNote, reduceMotion, onNoteFocused]);
   // Drag starts only from the top (grabber + header) via controls (dragListener
   // off), so scrolling the body never drags the sheet. The close button opts out.
   const dragControls = useDragControls();
@@ -207,6 +240,49 @@ export function NodeDetailPanel({
               <h2 className="mt-1.5 text-[17px] font-semibold leading-tight tracking-[-0.01em] text-ink">
                 {def.label}
               </h2>
+              {(onToggleOwned || onToggleInapplicable) && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  {onToggleOwned && (
+                    <button
+                      type="button"
+                      data-no-drag
+                      onClick={onToggleOwned}
+                      className={[
+                        'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors',
+                        owned
+                          ? 'border-accent bg-accent-soft text-ink'
+                          : 'border-border text-ink-dim hover:border-border-strong hover:text-ink',
+                      ].join(' ')}
+                    >
+                      <span
+                        className={[
+                          'flex h-3.5 w-3.5 items-center justify-center rounded-full border transition-colors',
+                          owned ? 'border-accent bg-accent text-white' : 'border-border-strong',
+                        ].join(' ')}
+                      >
+                        {owned && <CheckIcon className="h-2.5 w-2.5" />}
+                      </span>
+                      {owned ? 'Cleared' : 'Mark cleared'}
+                    </button>
+                  )}
+                  {onToggleInapplicable && (
+                    <button
+                      type="button"
+                      data-no-drag
+                      onClick={onToggleInapplicable}
+                      className={[
+                        'inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-medium transition-colors',
+                        inapplicable
+                          ? 'border-border-strong bg-bg-soft text-ink'
+                          : 'border-border text-ink-dim hover:border-border-strong hover:text-ink',
+                      ].join(' ')}
+                    >
+                      <BanIcon className="h-3 w-3" />
+                      {inapplicable ? 'Inapplicable' : 'Mark N/A'}
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
             <button
               type="button"
@@ -345,6 +421,20 @@ export function NodeDetailPanel({
                     </a>
                   ))}
                 </div>
+              </Section>
+            )}
+
+            {onNoteChange && (
+              <Section title="Your notes">
+                <textarea
+                  ref={noteRef}
+                  data-no-drag
+                  value={note ?? ''}
+                  onChange={(e) => onNoteChange(e.target.value)}
+                  rows={3}
+                  placeholder="Popped accounts, hosts, what else you found… (saved on this device)"
+                  className="hg-scroll w-full resize-y rounded-lg border border-border bg-bg px-2.5 py-2 text-[12px] leading-relaxed text-ink outline-none placeholder:text-ink-faint focus:border-border-strong"
+                />
               </Section>
             )}
 

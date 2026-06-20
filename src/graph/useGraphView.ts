@@ -32,6 +32,9 @@ interface UseGraphViewParams {
    *  (repeated `repeatable` nodes get distinct keys) instead of the
    *  expansion-derived visible set. */
   isolate?: IsolatePath | null;
+  /** Signature that changes when inline notes alter card heights; a change forces a
+   *  re-measure + re-layout so the taller/shorter cards don't overlap. */
+  notesLayoutKey?: string;
 }
 
 /** Width (px) the right-hand desktop detail panel occludes, incl. its margins. */
@@ -117,17 +120,21 @@ export function useGraphView({
   selectedId,
   reduceMotion,
   isolate,
+  notesLayoutKey,
 }: UseGraphViewParams): UseGraphViewResult {
   const rf = useReactFlow<AppNode, AppEdge>();
   const sizeCacheRef = useRef(new SizeCache());
   // Last expansion Set we reconciled — to fire the "focus children" camera only on
   // a genuine expand toggle, not on a re-measure reconcile (Set ref unchanged).
   const prevExpandedRef = useRef<ReadonlySet<string> | null>(null);
-  // Last reconcile's isolate path-key set — so a LEAVE glide can keep the off-focus
-  // edges faded (as they were during focus) until the nodes have slid back home,
-  // instead of snapping them to full opacity mid-morph where they briefly point
-  // backward (an off-focus node, e.g. a goal, is still gliding out of the focus column).
-  const prevPathKeysRef = useRef<Set<string> | null>(null);
+  // Last reconcile's isolate edge-id set — so a LEAVE glide keeps the off-focus edges
+  // faded (as they were during focus) until the nodes have slid back home, instead of
+  // snapping them to full opacity mid-morph where they briefly point backward (an
+  // off-focus node still gliding out of the focus column). It's the isolate's intended
+  // edges (route + parent→siblings + sel→next); focus mode lights ONLY those and fades
+  // every other rendered edge, incl. a sibling→sibling shortcut ("saved DA creds"
+  // between two peers) that isn't part of the focus story and would render backward.
+  const prevIsolateEdgesRef = useRef<Set<string> | null>(null);
   const [nodes, setNodes] = useState<AppNode[]>([]);
   const [edges, setEdges] = useState<AppEdge[]>([]);
   const nodesRef = useRef<AppNode[]>(nodes);
@@ -234,8 +241,10 @@ export function useGraphView({
     const { nodeIds, edges, defOf } = main;
     let positions: Map<NodeId, XY> = main.positions;
     let pathKeys: Set<string> | null = null;
+    let isolateEdgeIds: Set<string> | null = null;
     if (isolate) {
       pathKeys = new Set(isolate.nodes.map((n) => n.key));
+      isolateEdgeIds = new Set(isolate.edges.map((e) => e.id));
       const sizeFor = (id: NodeId) => cache.get(id) ?? cache.get(defOf.get(id) ?? '');
       const straight = layoutGraph(isolate.nodes.map((n) => n.key), isolate.edges, sizeFor);
       // FOCUS mode: dagre lifts the selected node to the top of the sibling rank
@@ -286,7 +295,7 @@ export function useGraphView({
     // until the nodes settle — a post-tween reconcile then clears it. Without this an
     // off-focus edge to a node still sliding out of the focus column flashes at full
     // opacity pointing backward.
-    const edgeFadeKeys = pathKeys ?? (leaving && tween ? prevPathKeysRef.current : null);
+    const edgeFadeEdges = isolateEdgeIds ?? (leaving && tween ? prevIsolateEdgesRef.current : null);
 
     // 3. diff: reuse identity for survivors, mint fresh nodes for newcomers. On the
     //    isolate toggle, survivors KEEP their current position here and the JS tween
@@ -332,8 +341,10 @@ export function useGraphView({
         const sp = positions.get(e.source);
         const tp = positions.get(e.target);
         const backward = !!(sp && tp && tp.x <= sp.x);
-        // An edge fades unless BOTH endpoints are on the lit path (held through a leave glide).
-        const faded = edgeFadeKeys ? !(edgeFadeKeys.has(e.source) && edgeFadeKeys.has(e.target)) : false;
+        // In focus/isolate mode an edge shows only if it's one of the slice's own
+        // edges (the route, parent→siblings, sel→next); everything else fades, so no
+        // stray shortcut between two lit peers renders backward.
+        const faded = edgeFadeEdges ? !edgeFadeEdges.has(e.id) : false;
         return {
           id: e.id,
           source: e.source,
@@ -386,7 +397,7 @@ export function useGraphView({
     }
     prevExpandedRef.current = expanded;
     prevIsolateRef.current = isolateOn;
-    prevPathKeysRef.current = pathKeys;
+    prevIsolateEdgesRef.current = isolateEdgeIds;
   }, [visible, maybeFollow, lastToggled, reduceMotion, rf, tweenPositions]);
 
   const reconcileRef = useRef(reconcile);
@@ -403,6 +414,15 @@ export function useGraphView({
     if (!initialized) return;
     reconcileRef.current();
   }, [initialized]);
+
+  // Inline notes change card heights. Once the resized cards have been re-measured
+  // (a short beat after the toggle/edit), re-layout so they don't overlap. Skipped
+  // before first paint — the initial layout already measures notes that load with it.
+  useEffect(() => {
+    if (!readyRef.current) return;
+    const id = window.setTimeout(() => reconcileRef.current(), 90);
+    return () => window.clearTimeout(id);
+  }, [notesLayoutKey]);
 
   // First paint: wait for measurement + fonts, then reveal + fit the whole map.
   useEffect(() => {

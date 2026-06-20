@@ -30,6 +30,8 @@ export default function App() {
   // and it survives a map switch / reset remount. Persisted so the preference also
   // survives reloads (theme is likewise persisted, in useTheme).
   const [focusMode, setFocusMode] = usePersistedState('hg-focus-mode', false);
+  // Whether per-node notes render inline on the card (vs. on hover). Persisted.
+  const [notesInline, setNotesInline] = usePersistedState('hg-notes-inline', false);
   const [mapId, setMapId] = useState(() => {
     const m = readDeepLink().mapId;
     return m && MAPS.some((x) => x.id === m) ? m : DEFAULT_MAP_ID;
@@ -71,6 +73,8 @@ export default function App() {
             onToggleTheme={toggleTheme}
             focusMode={focusMode}
             onToggleFocusMode={() => setFocusMode((f) => !f)}
+            notesInline={notesInline}
+            onToggleNotesInline={() => setNotesInline((v) => !v)}
             reduceMotion={reduceMotion}
           />
           <button
@@ -94,6 +98,7 @@ export default function App() {
           map={map}
           reduceMotion={reduceMotion}
           focusMode={focusMode}
+          notesInline={notesInline}
         />
       </main>
     </div>

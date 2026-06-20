@@ -31,6 +31,8 @@ interface GraphCanvasProps {
   onBackgroundClick: () => void;
   /** Hovered-node tracking for trace-on-hover edge highlighting. */
   onNodeHover: (id: NodeId | null) => void;
+  /** Signature that changes when inline-note heights change — forces a re-layout. */
+  notesLayoutKey: string;
   /** "Isolate path" mode — render only this instanced attack path. */
   isolate?: IsolatePath | null;
   /** Render keys of edges on the lit attack path (fed to edge data for repaint). */
@@ -51,6 +53,7 @@ function GraphCanvasImpl({
   reduceMotion,
   onBackgroundClick,
   onNodeHover,
+  notesLayoutKey,
   isolate,
   activeEdges,
   peerEdges,
@@ -64,6 +67,7 @@ function GraphCanvasImpl({
     selectedId,
     reduceMotion,
     isolate,
+    notesLayoutKey,
   });
 
   // Emphasis travels through edge DATA (not context): React Flow does not

@@ -36,6 +36,24 @@ export interface GraphInteraction {
   select: (id: NodeId) => void;
   /** Open an edge's detail panel (clears any node selection). */
   selectEdge: (edgeId: string) => void;
+  /** This node is flagged cleared/owned. Keyed by RENDER KEY, so repeated instances
+   *  of a convergence hub are independent. */
+  isOwned: (key: NodeId) => boolean;
+  /** This node is flagged inapplicable / ruled out (by render key). */
+  isInapplicable: (key: NodeId) => boolean;
+  /** This node has a non-empty user note (by render key). */
+  hasNote: (key: NodeId) => boolean;
+  /** The user's note text for this node (by render key; '' if none). */
+  getNote: (key: NodeId) => string;
+  /** Render note text inline on the card (vs. only on hover). */
+  notesInline: boolean;
+  /** Open the node context menu at viewport coords (right-click / long-press). `key`
+   *  is the render key (drives expand/collapse); `defId` is the content id (notes,
+   *  owned, copy-link). */
+  openMenu: (key: NodeId, defId: NodeId, x: number, y: number) => void;
+  /** View a node's note in a popover at viewport coords (tap/click the note badge).
+   *  Keyed by render key. */
+  openNote: (key: NodeId, label: string, x: number, y: number) => void;
 }
 
 const GraphInteractionContext = createContext<GraphInteraction | null>(null);

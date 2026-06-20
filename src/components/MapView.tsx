@@ -4,6 +4,7 @@ import type { MapDefinition } from '../data/schema';
 import { useGraphModel } from '../graph/useGraphModel';
 import { useExpansion } from '../graph/useExpansion';
 import { useSelection } from '../state/useSelection';
+import { useAnnotations } from '../state/useAnnotations';
 import {
   hasChildren as modelHasChildren,
   defIdOf,
@@ -22,6 +23,8 @@ import {
 import { HoverProvider } from '../graph/HoverContext';
 import { GraphCanvas } from './GraphCanvas';
 import { NodeDetailPanel } from './NodeDetailPanel';
+import { NodeContextMenu, type NodeMenuTarget } from './NodeContextMenu';
+import { NotePopover, type NotePopoverTarget } from './NotePopover';
 import { EdgeDetailPanel, type EdgeDetail } from './EdgeDetailPanel';
 import { SearchBox } from './SearchBox';
 import { Legend } from './Legend';
@@ -58,10 +61,12 @@ export function MapView({
   map,
   reduceMotion,
   focusMode,
+  notesInline,
 }: {
   map: MapDefinition;
   reduceMotion: boolean;
   focusMode: boolean;
+  notesInline: boolean;
 }) {
   const model = useGraphModel(map);
 
@@ -83,6 +88,12 @@ export function MapView({
   const initialOpen = seed.open.length > 0 || seed.sel ? [model.rootId, ...seed.open] : [];
   const expansion = useExpansion(model.rootId, initialOpen);
   const selection = useSelection(seed.sel);
+  const annotations = useAnnotations();
+  // Right-click / long-press context menu target; the node whose notes field the
+  // panel should focus on open ("Add note"); and the note popover (tap a note badge).
+  const [menu, setMenu] = useState<NodeMenuTarget | null>(null);
+  const [focusNotesFor, setFocusNotesFor] = useState<string | null>(null);
+  const [notePopover, setNotePopover] = useState<NotePopoverTarget | null>(null);
   // Edge selection is parallel to node selection — only one is open at a time.
   const [selectedEdgeId, setSelectedEdgeId] = useState<string | null>(null);
   const [pathOnly, setPathOnly] = useState(false);
@@ -228,6 +239,45 @@ export function MapView({
     [expansion, selection, model],
   );
 
+  // ---- Right-click / long-press context menu ----
+  const openMenu = useCallback((key: string, defId: string, x: number, y: number) => {
+    setMenu({ key, defId, x, y });
+  }, []);
+  const closeMenu = useCallback(() => setMenu(null), []);
+  const openNote = useCallback((key: string, label: string, x: number, y: number) => {
+    setNotePopover({ key, label, x, y });
+  }, []);
+  const closeNote = useCallback(() => setNotePopover(null), []);
+
+  // A shareable deep-link straight to this node (revealed + selected).
+  const copyLink = useCallback(
+    async (defId: string) => {
+      try {
+        const params = new URLSearchParams();
+        params.set('map', map.id);
+        const open = keyLineage(model, defId);
+        if (open.length) params.set('open', open.join(','));
+        params.set('sel', defId);
+        const url = `${window.location.origin}${window.location.pathname}#${params.toString()}`;
+        await navigator.clipboard.writeText(url);
+        return true;
+      } catch {
+        return false;
+      }
+    },
+    [map.id, model],
+  );
+
+  // "Add note" from the context menu: open the node's panel and drop the cursor into
+  // its notes field. Keyed by render key so the right instance's note opens.
+  const addNote = useCallback(
+    (key: string) => {
+      revealAndSelect(key);
+      setFocusNotesFor(key);
+    },
+    [revealAndSelect],
+  );
+
   // Picking a "next step" from the detail panel: open the selected node (so its
   // children render) and select the chosen child. `childKey` is an exact render
   // key from `nextSteps` (computed over the post-expansion graph), so it lands on
@@ -311,51 +361,58 @@ export function MapView({
     const sel = selection.selectedId;
 
     if (focusActive && sel) {
-      const selDef = defIdOf(sel);
-      const routeDefs = new Set([...activePath.nodes].map(defIdOf));
-      // sel's parent on the lit route = source of the route edge that lands on sel.
-      let parentDef: string | undefined;
+      // Build the focus slice from RENDER KEYS (like the main graph), NOT def ids.
+      // Collapsing to def ids folds a hub re-entry ("creds lead to another set of
+      // creds") into a cycle, which dagre can't lay out as a tree — the source of the
+      // backward edges + overlapping cards. Render keys keep each instance distinct,
+      // so the route stays acyclic and lays out cleanly forward.
+      const g = rendered.graph; // edges keyed by render keys
+      const routeKeys = new Set<string>(activePath.nodes);
+      // sel's parent on the lit route = source KEY of the route edge landing on sel.
+      let parentKey: string | undefined;
       for (const eid of activePath.edges) {
         const j = eid.indexOf('->');
-        if (eid.slice(j + 2) === sel) parentDef = defIdOf(eid.slice(0, j));
+        if (eid.slice(j + 2) === sel) parentKey = eid.slice(0, j);
       }
-      const siblings = new Set<string>(parentDef ? model.childrenOf.get(parentDef) ?? [] : []);
-      // Just the selected node's immediate next steps — its direct children, one level
-      // deep. Skip any that loop back into the route/siblings so the subgraph stays
-      // acyclic (dagre needs that for a clean tree).
-      const nextDefs = new Set<string>();
-      for (const ch of model.childrenOf.get(selDef) ?? []) {
-        if (routeDefs.has(ch) || siblings.has(ch)) continue;
-        nextDefs.add(ch);
+      // Siblings + immediate next steps come from the RENDERED graph (render keys too),
+      // so a hub's re-entry instance gets its own forward children instead of pointing
+      // back at the canonical node. Skip next steps that loop into the route/siblings
+      // so the slice stays acyclic.
+      const siblings = new Set<string>();
+      if (parentKey) for (const e of g.edges) if (e.source === parentKey && e.target !== sel) siblings.add(e.target);
+      const nextKeys = new Set<string>();
+      for (const e of g.edges) {
+        if (e.source !== sel || routeKeys.has(e.target) || siblings.has(e.target)) continue;
+        nextKeys.add(e.target);
       }
-      const focusDefs = new Set<string>([...routeDefs, ...siblings, selDef, ...nextDefs]);
+      const focusKeys = new Set<string>([...routeKeys, ...siblings, sel, ...nextKeys]);
       const count = new Map<string, number>();
-      const nodes = [...focusDefs].map((d) => {
-        const instanceIndex = (count.get(d) ?? 0) + 1;
-        count.set(d, instanceIndex);
-        return { key: d, defId: d, instanceIndex };
+      const nodes = [...focusKeys].map((k) => {
+        const defId = defIdOf(k);
+        const instanceIndex = (count.get(defId) ?? 0) + 1;
+        count.set(defId, instanceIndex);
+        return { key: k, defId, instanceIndex };
       });
-      // Edges: the lit route, parent → each sibling, and sel → each immediate next step.
-      // All acyclic, so dagre lays it out as a clean left→right tree.
-      const edgeOf = (s: string, t: string) => ({ id: edgeKey(s, t), source: s, target: t, label: model.edgeLabels.get(edgeKey(s, t)) });
+      // Edges: the lit route, parent → each sibling, sel → each next step. Labels are
+      // looked up by the underlying def-id pair.
       const seenEdge = new Set<string>();
       const edges: { id: string; source: string; target: string; label?: string }[] = [];
       const push = (s: string, t: string) => {
         const id = edgeKey(s, t);
-        if (seenEdge.has(id) || !focusDefs.has(s) || !focusDefs.has(t)) return;
+        if (seenEdge.has(id) || !focusKeys.has(s) || !focusKeys.has(t)) return;
         seenEdge.add(id);
-        edges.push(edgeOf(s, t));
+        edges.push({ id, source: s, target: t, label: model.edgeLabels.get(edgeKey(defIdOf(s), defIdOf(t))) });
       };
       for (const eid of activePath.edges) {
         const j = eid.indexOf('->');
-        push(defIdOf(eid.slice(0, j)), defIdOf(eid.slice(j + 2)));
+        push(eid.slice(0, j), eid.slice(j + 2));
       }
-      if (parentDef) for (const sib of siblings) push(parentDef, sib);
-      for (const nd of nextDefs) push(selDef, nd);
-      // Keep the selected node in its natural slot among its siblings (childrenOf
-      // order) rather than letting dagre lift it to the top because it alone has
-      // children. useGraphView reorders the sibling rank's Y to this order.
-      return { nodes, edges, reorder: { keys: [...siblings], selKey: selDef, next: [...nextDefs] } };
+      if (parentKey) for (const sib of siblings) push(parentKey, sib);
+      for (const nk of nextKeys) push(sel, nk);
+      // Keep the selected node in its natural slot among its siblings (rather than
+      // letting dagre lift it because it alone has children). useGraphView reorders
+      // the sibling rank's Y to this order.
+      return { nodes, edges, reorder: { keys: [...siblings], selKey: sel, next: [...nextKeys] } };
     }
 
     if (!pathOnly || activePath.nodes.size === 0) return null;
@@ -373,7 +430,7 @@ export function MapView({
       return { id, source, target, label: model.edgeLabels.get(edgeKey(defIdOf(source), defIdOf(target))) };
     });
     return { nodes, edges };
-  }, [focusActive, pathOnly, activePath, selection.selectedId, model]);
+  }, [focusActive, pathOnly, activePath, selection.selectedId, model, rendered]);
 
   // The immediate next steps off the selected node (its children, by def id) —
   // kept fully visible during path-building instead of receding with the rest.
@@ -469,6 +526,11 @@ export function MapView({
       isNodeActive: (id) => activePath.nodes.has(id),
       isEdgeActive: (eid) => activePath.edges.has(eid),
       isEdgeSelected: (eid) => selectedEdgeId === eid,
+      isOwned: annotations.isOwned,
+      isInapplicable: annotations.isInapplicable,
+      hasNote: annotations.hasNote,
+      getNote: annotations.getNote,
+      notesInline,
       phaseColor: (pid) => model.phases.get(pid)?.color ?? '#7c8aa0',
       phaseLabel: (pid) => model.phases.get(pid)?.label ?? pid,
       reduceMotion,
@@ -477,8 +539,10 @@ export function MapView({
       toggle: focusActive ? selectNode : expansion.toggle,
       select: selectNode,
       selectEdge,
+      openMenu,
+      openNote,
     }),
-    [model, expansion.expanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, siblingDefs, reduceMotion],
+    [model, expansion.expanded, expansion.toggle, focusActive, selection.selectedId, selectNode, selectEdge, selectedEdgeId, isDimmed, activePath, nextStepDefs, siblingDefs, annotations.isOwned, annotations.isInapplicable, annotations.hasNote, annotations.getNote, notesInline, openMenu, openNote, reduceMotion],
   );
 
   // Focus mode: keep the selected node's full lineage (and the node itself) in the
@@ -561,6 +625,7 @@ export function MapView({
           reduceMotion={reduceMotion}
           onBackgroundClick={clearAll}
           onNodeHover={onNodeHover}
+          notesLayoutKey={notesInline ? annotations.notedIds.join(',') : ''}
           isolate={isolate}
           activeEdges={activePath.edges}
           peerEdges={peerEdges}
@@ -691,6 +756,14 @@ export function MapView({
         onTogglePathOnly={() => setPathOnly((p) => !p)}
         onNavigate={revealAndSelect}
         onClose={clearAll}
+        owned={selection.selectedId != null && annotations.isOwned(selection.selectedId)}
+        onToggleOwned={() => selection.selectedId && annotations.toggleOwned(selection.selectedId)}
+        inapplicable={selection.selectedId != null && annotations.isInapplicable(selection.selectedId)}
+        onToggleInapplicable={() => selection.selectedId && annotations.toggleInapplicable(selection.selectedId)}
+        note={selection.selectedId ? annotations.getNote(selection.selectedId) : ''}
+        onNoteChange={(t) => selection.selectedId && annotations.setNote(selection.selectedId, t)}
+        autoFocusNote={selection.selectedId != null && focusNotesFor === selection.selectedId}
+        onNoteFocused={() => setFocusNotesFor(null)}
       />
       <EdgeDetailPanel
         edge={selectedEdge}
@@ -699,6 +772,25 @@ export function MapView({
         reduceMotion={reduceMotion}
         onSelectNode={revealAndSelect}
         onClose={clearAll}
+      />
+      {menu && (
+        <NodeContextMenu
+          target={menu}
+          def={model.nodes.get(menu.defId) ?? null}
+          owned={annotations.isOwned(menu.key)}
+          inapplicable={annotations.isInapplicable(menu.key)}
+          hasNote={annotations.hasNote(menu.key)}
+          onClose={closeMenu}
+          onCopyLink={() => copyLink(menu.defId)}
+          onToggleOwned={() => annotations.toggleOwned(menu.key)}
+          onToggleInapplicable={() => annotations.toggleInapplicable(menu.key)}
+          onAddNote={() => addNote(menu.key)}
+        />
+      )}
+      <NotePopover
+        target={notePopover}
+        note={notePopover ? annotations.getNote(notePopover.key) : ''}
+        onClose={closeNote}
       />
       </HoverProvider>
     </GraphInteractionProvider>
