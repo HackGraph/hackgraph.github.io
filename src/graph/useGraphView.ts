@@ -188,6 +188,7 @@ export function useGraphView({
   // several reconciles (isolate change, lineage expand, re-measure); without coalescing,
   // each one calls fitBounds and the overlapping animations reverse mid-flight (flicker).
   const camFrameRef = useRef<string[] | null>(null);
+  const camPositionsRef = useRef<ReadonlyMap<NodeId, XY> | null>(null);
   const camFitTimerRef = useRef(0);
   const lastFitFrameRef = useRef<string | null>(null);
   const [tweening, setTweening] = useState(false);
@@ -219,15 +220,17 @@ export function useGraphView({
     };
     tweenRaf.current = requestAnimationFrame(step);
   }, []);
-  // Fit the camera to the current focus frame (`camFrameRef`) using the LIVE node
-  // positions, so it lands on the settled layout. Skipped while a position tween is
-  // running (mid-tween positions are wrong); the tween's onDone calls it once finished.
+  // Fit the camera to the current focus frame (`camFrameRef`) using the reconcile's
+  // COMPUTED isolate positions (`camPositionsRef`), not live `rf.getNodes()`. A frame
+  // node can be a convergence hub shared with the main graph; its live position is
+  // briefly the far-away MAIN position before the isolate override commits, which makes
+  // the bounds explode and the camera zoom way out then snap back. The computed isolate
+  // layout has every frame node at its in-focus slot, so the fit is stable.
   const fitFocusFrame = useCallback(() => {
     const keys = camFrameRef.current;
-    if (!keys || keys.length === 0 || tweenRaf.current != null) return;
-    const live = new Map<NodeId, XY>();
-    for (const n of rf.getNodes()) live.set(n.id, n.position);
-    void rf.fitBounds(boundsOf(keys, live, sizeCacheRef.current), {
+    const pos = camPositionsRef.current;
+    if (!keys || keys.length === 0 || !pos || tweenRaf.current != null) return;
+    void rf.fitBounds(boundsOf(keys, pos, sizeCacheRef.current), {
       padding: 0.22,
       duration: reduceMotion ? 0 : 320,
       // Pan/zoom in a straight line. The default 'smooth' interpolation is d3's fly-zoom
@@ -404,20 +407,15 @@ export function useGraphView({
         frameKeys = next.length > 0 ? [selKey, ...next] : [...keys];
       }
       camFrameRef.current = frameKeys;
+      camPositionsRef.current = positions;
       const sig = frameKeys.join('|');
-      if (isolateChanged) {
-        // ENTERING focus: glide the camera WITH the node tween toward the target frame
-        // (live positions are mid-tween, so use the computed targets here).
-        const rect = boundsOf(frameKeys, positions, cache);
-        requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: reduceMotion ? 0 : 660, interpolate: 'linear' }));
-        lastFitFrameRef.current = null; // let the settle-fit below still run once
-      }
-      // A single selection fires a BURST of reconciles (selection, lineage expand, then
-      // re-measure), each shifting the layout slightly. Coalesce them into ONE camera fit
-      // once it goes quiet — keep re-arming while the frame still changes or a position
-      // tween is running, then fit and record the frame so a late re-measure for the SAME
-      // frame doesn't re-animate. Without this the overlapping fits reverse mid-flight (the
-      // flicker). The fit uses LIVE positions, so it lands on the settled layout.
+      // ALL focus camera moves go through one debounced fit — entering focus, selecting a
+      // sibling, and drilling into a next step. A single action fires a BURST of reconciles
+      // (selection, lineage expand, re-measure) and may flip isolate off→on (a deselect
+      // then reselect); firing a fit per reconcile stacks overlapping fitBounds that reverse
+      // mid-flight (the flicker). Instead: keep re-arming while the frame still changes or a
+      // position tween is running, then do ONE fit on the settled layout, recording the
+      // frame so a late re-measure for the SAME frame doesn't re-animate.
       if (sig !== lastFitFrameRef.current) {
         if (camFitTimerRef.current) clearTimeout(camFitTimerRef.current);
         const tick = () => {
