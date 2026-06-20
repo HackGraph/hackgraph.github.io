@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion, useDragControls } from 'framer-motion';
 import type { Command, TechniqueNodeDef } from '../data/schema';
 import { useIsMobile } from '../state/useIsMobile';
+import { copyToClipboard } from '../state/clipboard';
 import {
   ArrowRightIcon,
   BanIcon,
@@ -47,12 +48,9 @@ function CopyButton({ text }: { text: string }) {
     <button
       type="button"
       onClick={async () => {
-        try {
-          await navigator.clipboard.writeText(text);
+        if (await copyToClipboard(text)) {
           setCopied(true);
           window.setTimeout(() => setCopied(false), 1400);
-        } catch {
-          /* clipboard unavailable */
         }
       }}
       className="rounded-md px-2 py-0.5 text-[11px] text-ink-dim transition-colors hover:bg-white/[0.06] hover:text-ink"

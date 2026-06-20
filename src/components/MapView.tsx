@@ -16,6 +16,7 @@ import {
 import { resolveUnroll } from '../graph/layout';
 import { edgeKey } from '../graph/buildModel';
 import { readDeepLink, writeDeepLink, shareUrl } from '../state/deepLink';
+import { copyToClipboard } from '../state/clipboard';
 import {
   GraphInteractionProvider,
   type GraphInteraction,
@@ -250,16 +251,9 @@ export function MapView({
   const closeNote = useCallback(() => setNotePopover(null), []);
 
   // A shareable deep-link straight to this node (revealed + selected), compressed.
+  // Routed through copyToClipboard so it also works on an insecure-context dev server.
   const copyLink = useCallback(
-    async (defId: string) => {
-      try {
-        const url = shareUrl({ mapId: map.id, open: keyLineage(model, defId), sel: defId });
-        await navigator.clipboard.writeText(url);
-        return true;
-      } catch {
-        return false;
-      }
-    },
+    (defId: string) => copyToClipboard(shareUrl({ mapId: map.id, open: keyLineage(model, defId), sel: defId })),
     [map.id, model],
   );
 
