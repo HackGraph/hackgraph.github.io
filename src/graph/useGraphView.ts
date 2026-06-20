@@ -374,7 +374,17 @@ export function useGraphView({
       // EVERY reconcile while it's active — not just the on/off toggle — so the frame
       // corrects after off-expansion focus nodes (siblings / downstream) get measured
       // and re-laid-out, instead of staying stuck on the provisional first layout.
-      const rect = boundsOf(pathKeys, positions, cache);
+      // On a NARROW (mobile) viewport, fitting the whole neighbourhood (route + every
+      // sibling + next steps) zooms too far out — so frame just the selected node and
+      // its next steps (where you are + where you can go). A leaf with no next steps
+      // falls back to its sibling rank so a single card doesn't over-zoom.
+      const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
+      let frameKeys: Iterable<string> = pathKeys;
+      if (isMobile && isolate?.reorder) {
+        const { selKey, next, keys } = isolate.reorder;
+        frameKeys = next.length > 0 ? [selKey, ...next] : keys;
+      }
+      const rect = boundsOf(frameKeys, positions, cache);
       const dur = reduceMotion ? 0 : isolateChanged ? 660 : 300;
       requestAnimationFrame(() => void rf.fitBounds(rect, { padding: 0.22, duration: dur }));
     } else if (isolateChanged) {
