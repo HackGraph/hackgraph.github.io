@@ -163,6 +163,16 @@ const AD_SCOPE: readonly string[] = [
 
 /** Windows Privilege Escalation map. BoK ch.16 (Windows PrivEsc) + ch.15 (AV Evasion). */
 const WINPE_SCOPE: readonly string[] = [
+  // Structural routing scaffold — NOT techniques, but they must stay visible or the
+  // filter rules out the navigation to the in-scope techniques below. The identity
+  // lane-folders (who you already are) and the SYSTEM-convergence hubs (where findings
+  // collapse to SYSTEM). The 4th identity lane, pe-svc-account, is already listed below.
+  'pe-cat-priv', // identity lane: a privileged token/group you already hold
+  'pe-cat-admin', // identity lane: already a local admin (UAC-filtered or high integrity)
+  'pe-cat-enum', // identity lane: unprivileged, enumerate for a weakness
+  'pe-prim-service-exec', // hub: a privileged service runs your code
+  'pe-prim-trigger', // hub: an autorun / scheduled task / accessibility trigger runs your code
+  'pe-prim-kernel-exec', // hub: ring-0 execution collapses straight to SYSTEM
   // Enumeration — ch.16.1 / 16.3.2 missing patches
   'pe-kernel-enum',
   // Service abuse — ch.16.2
