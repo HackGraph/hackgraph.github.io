@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- The Branch mark (see LogoMark in App.tsx) on the dark ground tile. -->
+  <rect width="32" height="32" rx="8" fill="#0c0a0b"/>
+  <g transform="translate(4 4)">
+    <path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" fill="none" stroke="#a59699"
+          stroke-width="1.8" stroke-linejoin="round"/>
+    <rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/>
+    <rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/>
+    <rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/>
+  </g>
+</svg>

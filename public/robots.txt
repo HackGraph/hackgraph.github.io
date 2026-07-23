@@ -1,0 +1,5 @@
+# HackGraph — https://hackgraph.github.io/
+User-agent: *
+Allow: /
+
+Sitemap: https://hackgraph.github.io/sitemap.xml

@@ -1,0 +1,35 @@
+name: Security audit
+
+# Dependency vulnerability monitoring. Runs on push/PR to main AND weekly, so a
+# newly-disclosed advisory surfaces even with no code change.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "0 6 * * 1" # Mondays 06:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      # HARD GATE: fail if a vulnerability reaches the SHIPPED app (runtime deps).
+      # This is the only code users actually run, so it must stay clean.
+      - name: Audit production dependencies (fail on high+)
+        run: npm audit --omit=dev --audit-level=high
+
+      # VISIBILITY: report dev/build-tool advisories too, but don't block — they
+      # never ship to users (static site: no server, no npm at runtime).
+      - name: Audit all dependencies (report-only)
+        run: npm audit || true

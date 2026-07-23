@@ -1,0 +1,20 @@
+# HackGraph
+
+> Interactive attack-path explorer. Click to expand each step from a foothold to Domain Admin or root, with commands, tools, OPSEC and detection notes, and cited primary sources for every technique. It currently covers Active Directory, Windows, and Linux privilege escalation, with more maps planned.
+
+HackGraph is an open-source, client-side web app and offensive-security study reference. Each map is a graph of techniques that converge on shared "you now have X" nodes, so it reads as an attack path rather than a flat checklist. It is built for penetration testing, red teaming, and CTFs, for certification study (OSCP, OSEP, CRTP, CRTE, PNPT), and as a detection reference for blue teams.
+
+## Maps
+
+- [Active Directory](https://hackgraph.github.io/reference/active-directory.html): recon, Kerberoasting and AS-REP roasting, NTLM relay, AD CS (ESC1 to ESC16), DACL/ACL and delegation abuse, DCSync, golden and silver tickets, lateral movement, and the major CVEs.
+- [Windows Privilege Escalation](https://hackgraph.github.io/reference/windows-privilege-escalation.html): token privileges (SeImpersonate, the Potato family), UAC bypass, service and DLL misconfigurations, unquoted service paths, stored credentials, and privileged groups.
+- [Linux Privilege Escalation](https://hackgraph.github.io/reference/linux-privilege-escalation.html): sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files and PATH hijacking, credential hunting, privileged groups, container escapes, and kernel exploits.
+
+## Reference (plain-text, crawlable)
+
+- [All references](https://hackgraph.github.io/reference.html)
+- [Sitemap](https://hackgraph.github.io/sitemap.xml)
+
+## Source
+
+- [GitHub repository](https://github.com/HackGraph/hackgraph.github.io)

@@ -1,0 +1,20 @@
+name: Check reference links
+
+# Reference URLs rot over time (domains move, repos vanish). Run the liveness
+# sweep weekly + on demand so dead links surface without blocking normal CI.
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+
+jobs:
+  check-refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run check:refs

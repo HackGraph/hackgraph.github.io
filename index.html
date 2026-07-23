@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0c0a0b" />
+    <meta name="google-site-verification" content="Mig3N7VsWRpoeizKRhnflY8RkwdNVf-7cZx07smCMaU" />
+    <meta
+      name="description"
+      content="HackGraph is an interactive attack-path explorer. Click to expand each step from a foothold to Domain Admin or root, with the commands, tools, OPSEC notes, and cited primary sources for every technique."
+    />
+    <link rel="canonical" href="https://hackgraph.github.io/" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="application-name" content="HackGraph" />
+    <meta name="author" content="HackGraph" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="HackGraph" />
+    <meta property="og:title" content="HackGraph | Interactive Attack-path Explorer" />
+    <meta
+      property="og:description"
+      content="An interactive, click-to-expand attack-path explorer, from a foothold to Domain Admin or root."
+    />
+    <meta property="og:url" content="https://hackgraph.github.io/" />
+    <meta property="og:image" content="https://hackgraph.github.io/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="HackGraph, interactive attack-path explorer" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="HackGraph | Interactive Attack-path Explorer" />
+    <meta
+      name="twitter:description"
+      content="An interactive, click-to-expand attack-path explorer for offensive security."
+    />
+    <meta name="twitter:image" content="https://hackgraph.github.io/og-image.png" />
+    <!-- Self-hosted latin subsets (only the weights actually used); preloaded so
+         first paint uses the real face. Mono loads on demand (command blocks). -->
+    <link rel="preload" href="/fonts/geist-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/geist-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <title>HackGraph | Interactive Attack-path Explorer</title>
+    <style>
+      html { background: #0c0a0b; }
+      html[data-theme='light'] { background: #f6f2f2; }
+    </style>
+    <script>
+      /* Apply the saved theme before first paint so there is no flash. Dark is the
+         default identity; light is opt-in via the in-app settings toggle. */
+      (function () {
+        try {
+          var k = localStorage.getItem('hg-theme');
+          document.documentElement.dataset.theme = k === 'light' ? 'light' : 'dark';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'dark';
+        }
+      })();
+    </script>
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://hackgraph.github.io/#website",
+            "url": "https://hackgraph.github.io/",
+            "name": "HackGraph",
+            "description": "Interactive attack-path explorer for offensive security."
+          },
+          {
+            "@type": "WebApplication",
+            "name": "HackGraph",
+            "url": "https://hackgraph.github.io/",
+            "applicationCategory": "SecurityApplication",
+            "operatingSystem": "Any (web browser)",
+            "browserRequirements": "Requires JavaScript.",
+            "inLanguage": "en",
+            "description": "An interactive, click-to-expand attack-path explorer, from a foothold to Domain Admin or root. Every technique includes commands, tools, OPSEC notes, and cited primary sources."
+          }
+        ]
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <noscript>
+      <div style="max-width: 680px; margin: 12vh auto; padding: 0 24px; font-family: system-ui, sans-serif; color: #f0eaec; background: #0c0a0b">
+        <h1>HackGraph</h1>
+        <p>
+          HackGraph is an interactive, click-to-expand attack-path explorer. It traces the route from a foothold
+          to Domain Admin or root, and needs JavaScript for the interactive graph; please enable it.
+        </p>
+        <p>
+          Prefer text, or reading without JavaScript? The full
+          <a href="/reference.html">HackGraph reference</a> lists every technique, command, and source in plain HTML:
+          <a href="/reference/active-directory.html">Active Directory attack paths</a>,
+          <a href="/reference/windows-privilege-escalation.html">Windows privilege escalation</a>, and
+          <a href="/reference/linux-privilege-escalation.html">Linux privilege escalation</a>.
+        </p>
+      </div>
+    </noscript>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
