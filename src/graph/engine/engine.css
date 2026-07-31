@@ -135,11 +135,13 @@
 .fg-edges {
   position: absolute; left: 0; top: 0;
   overflow: visible; pointer-events: none;
-  /* Above the quiet edge tags, below the cards. The lit route is the thing being read, so
-     a tag belonging to a branch you are NOT on must not interrupt it. Every layer here is
-     explicit rather than left to DOM order, which is what put tags over the route. */
-  z-index: 1;
+  /* Quiet edges run UNDER the tags, so a tag is always readable on top of its own line.
+     The lit layer below runs OVER them, so the route you are reading is never interrupted
+     by a tag belonging to a branch you are not on. Every level is explicit rather than
+     left to DOM order. */
+  z-index: 0;
 }
+.fg-edges-top { z-index: 2; }
 .edge {
   fill: none;
   stroke: var(--edge);
@@ -184,7 +186,7 @@
   text-align: center;
   line-height: 1.25;
   cursor: pointer;
-  z-index: 0;                        /* under the edges; the lit ones lift to 3 below */
+  z-index: 1;                        /* over the quiet edges, under the lit ones */
   transition: opacity .4s ease, color .2s ease, border-color .2s ease;
 }
 .elabel:hover { color: var(--ink); border-color: var(--line-strong); }
@@ -205,7 +207,7 @@
 
 .card {
   position: absolute; left: 0; top: 0;
-  z-index: 2;                        /* cards sit over every edge and tag */
+  z-index: 4;                        /* cards sit over every edge and tag */
   width: 262px;
   padding: 12px 14px 13px;
   border-radius: 12px;
@@ -235,7 +237,7 @@
   background: color-mix(in oklab, var(--accent) 16%, var(--card));
   box-shadow: 0 0 0 2px var(--accent), var(--shadow);
 }
-.card.lit, .card.sel { z-index: 2; }
+.card.lit, .card.sel { z-index: 5; }
 .fg.focused .card:not(.lit):not(.sel):not(.keep):not(.exit) { opacity: .25; }
 .fg.hidenotes .note { display: none; }
 

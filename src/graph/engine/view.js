@@ -42,6 +42,7 @@ const MARKUP = `
   <div class="fg-world" data-el="world">
     <svg class="fg-edges" data-el="edges" width="10" height="10"></svg>
     <div class="fg-elabels" data-el="elabels"></div>
+    <svg class="fg-edges fg-edges-top" data-el="edgestop" width="10" height="10"></svg>
   </div>
 </div>
 <div class="fg-bar" data-el="bar">
@@ -173,12 +174,14 @@ function mount(container, options = {}) {
   const CHEV_R = '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M3.2 1.8 6.4 5 3.2 8.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const CHEV_D = '<svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M1.8 3.6 5 6.8 8.2 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 
-  // two edge layers: red (lit / hovered) edges live in gTop, so they can never
-  // end up underneath a grey edge no matter what order edges were created in
+  // Two edge layers, and they are separate SVGs on purpose. Lit edges have to outrank the
+  // quiet tags of branches you are not on, and paint order inside one SVG cannot do that —
+  // the tags are HTML in a sibling layer. So the quiet edges sit UNDER the tags and the lit
+  // ones OVER them, which also keeps every tag readable on top of its own line.
   const gBase = document.createElementNS(SVGNS, 'g');
   const gTop = document.createElementNS(SVGNS, 'g');
   svg.appendChild(gBase);
-  svg.appendChild(gTop);
+  $('edgestop').appendChild(gTop);
 
   function relayerEdges() {
     edgeRecs.forEach(rec => {
