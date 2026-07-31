@@ -273,10 +273,12 @@
   font-size: 11.5px; line-height: 16px;
   color: var(--ink-dim);
 }
-/* A folder is title-only: no eyebrow above, no summary below, so it sits about half the
-   height of a technique card and a column of them reads as an index. */
-.card.folder { padding: 13px 14px; }
+/* A folder drops the phase eyebrow but keeps its summary, so it is a little shorter than
+   a technique card and led by a mark rather than a coloured dot. */
+.card.folder { padding-top: 13px; }
 .card.folder .ttl { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+/* the summary hangs under the title text, not under the mark, so the two read as one block */
+.card.folder .desc { padding-left: 21px; }
 /* the title still truncates — the folder mark must not be what gets clipped */
 .card.folder .ttl .tx { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 /* categories never unroll, so this badge should never show; keep it out of the title
@@ -544,6 +546,7 @@
 .fg-crumbs {
   position: absolute; bottom: 44px; left: 50%;
   transform: translateX(-50%);
+  transition: left .2s ease, max-width .2s ease;
   display: flex; align-items: center; gap: 4px;
   max-width: 86vw;
   overflow-x: auto;
@@ -553,6 +556,14 @@
   padding: 5px 10px;
   z-index: 10;
   scrollbar-width: none;
+}
+/* The trail only exists while a node is selected, which is exactly when the panel is
+   open — so a bar centred on the whole viewport was hidden behind the sheet every time
+   it had something to say. Centre it on what the sheet leaves instead.
+   396px = the 372px sheet + its 12px margin + a 12px gap. */
+.fg:has(.fg-panel:not([hidden])) .fg-crumbs {
+  left: calc((100% - 396px) / 2);
+  max-width: calc(100% - 420px);
 }
 .crumb {
   font-family: inherit;

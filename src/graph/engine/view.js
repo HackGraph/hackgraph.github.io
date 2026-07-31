@@ -428,17 +428,17 @@ function mount(container, options = {}) {
     const badge = head.appendChild(mk('span', 'badge'));
     badge.hidden = true;
     if (marks.has(defId)) el.appendChild(mk('span', 'mark', '★'));
-    // A group is not a step: it gets a folder mark and no summary, because what a folder
-    // is "about" is the list of what it holds, and the graph draws that already. Two
-    // differences at a glance — the mark and the missing body — read faster than one.
+    // A group is not a step, so its title carries a folder mark. It keeps its summary:
+    // a title on its own left the card looking like a step whose author had not filled
+    // it in, which is the impression the mark exists to prevent.
     if (folder) {
       const ttl = el.appendChild(mk('div', 'ttl'));
       ttl.appendChild(mk('span', 'fico')).innerHTML = FOLDER;
       ttl.appendChild(mk('span', 'tx', def.label));
     } else {
       el.appendChild(mk('div', 'ttl', def.label));
-      el.appendChild(mk('div', 'desc', def.summary || ''));
     }
+    el.appendChild(mk('div', 'desc', def.summary || ''));
     if (notes[key]) el.appendChild(mk('div', 'note', notes[key]));
     if (hasChildren(model, defId)) {
       const t = el.appendChild(mk('button', 'toggle'));
