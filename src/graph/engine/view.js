@@ -173,6 +173,8 @@ function mount(container, options = {}) {
   const SVGNS = 'http://www.w3.org/2000/svg';
   const CHEV_R = '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M3.2 1.8 6.4 5 3.2 8.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const CHEV_D = '<svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M1.8 3.6 5 6.8 8.2 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  // marks a card that groups other nodes rather than being a step of its own
+  const FOLDER = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1.6 4.2a1.1 1.1 0 0 1 1.1-1.1h2.2l1.3 1.6h4.2a1.1 1.1 0 0 1 1.1 1.1v4.5a1.1 1.1 0 0 1-1.1 1.1H2.7a1.1 1.1 0 0 1-1.1-1.1V4.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>';
 
   // Two edge layers, and they are separate SVGs on purpose. Lit edges have to outrank the
   // quiet tags of branches you are not on, and paint order inside one SVG cannot do that —
@@ -406,21 +408,37 @@ function mount(container, options = {}) {
       xDisp: 0, targetX: 0, cyDisp: 0, targetCy: 0,
       el: null, badgeEl: null,
     };
+    const folder = def.kind === 'category';
     const el = document.createElement('div');
-    el.className = 'card' + (na.has(defId) ? ' na' : '');
+    el.className = 'card' + (folder ? ' folder' : '') + (na.has(defId) ? ' na' : '');
     el.dataset.key = key;
     el.style.setProperty('--c', safeColor(model.colorOf.get(def.group)));
     // Built as DOM, never as an HTML string: label/group/summary are DATASET values, and
     // string concatenation into innerHTML makes any map that carries `<img onerror=…>`
     // a script-execution vector in the host page.
-    const cat = el.appendChild(mk('div', 'cat'));
-    cat.appendChild(mk('span', 'dot'));
-    cat.appendChild(mk('span', null, def.group));
-    const badge = cat.appendChild(mk('span', 'badge'));
+    // A folder skips the phase eyebrow: for most groups it only repeated the title
+    // ("Enumeration" sitting under "Enumeration"), and the tint and the folder mark
+    // already carry the phase colour.
+    const head = folder ? el : el.appendChild(mk('div', 'cat'));
+    if (!folder) {
+      head.appendChild(mk('span', 'dot'));
+      head.appendChild(mk('span', null, def.group));
+    }
+    // Every card owns a badge, folder included: the unroll pass writes to it unguarded.
+    const badge = head.appendChild(mk('span', 'badge'));
     badge.hidden = true;
     if (marks.has(defId)) el.appendChild(mk('span', 'mark', '★'));
-    el.appendChild(mk('div', 'ttl', def.label));
-    el.appendChild(mk('div', 'desc', def.summary || ''));
+    // A group is not a step: it gets a folder mark and no summary, because what a folder
+    // is "about" is the list of what it holds, and the graph draws that already. Two
+    // differences at a glance — the mark and the missing body — read faster than one.
+    if (folder) {
+      const ttl = el.appendChild(mk('div', 'ttl'));
+      ttl.appendChild(mk('span', 'fico')).innerHTML = FOLDER;
+      ttl.appendChild(mk('span', 'tx', def.label));
+    } else {
+      el.appendChild(mk('div', 'ttl', def.label));
+      el.appendChild(mk('div', 'desc', def.summary || ''));
+    }
     if (notes[key]) el.appendChild(mk('div', 'note', notes[key]));
     if (hasChildren(model, defId)) {
       const t = el.appendChild(mk('button', 'toggle'));

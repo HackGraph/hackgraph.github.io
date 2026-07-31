@@ -273,6 +273,20 @@
   font-size: 11.5px; line-height: 16px;
   color: var(--ink-dim);
 }
+/* A folder is title-only: no eyebrow above, no summary below, so it sits about half the
+   height of a technique card and a column of them reads as an index. */
+.card.folder { padding: 13px 14px; }
+.card.folder .ttl { margin-top: 0; display: flex; align-items: center; gap: 8px; }
+/* the title still truncates — the folder mark must not be what gets clipped */
+.card.folder .ttl .tx { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+/* categories never unroll, so this badge should never show; keep it out of the title
+   row regardless, rather than have it push the label sideways if one ever did */
+.card.folder > .badge { position: absolute; top: 9px; right: 12px; margin-left: 0; }
+/* On a technique the star sits in the eyebrow row. A folder has no eyebrow, so it lands
+   over the title instead — reserve room for it, but only when one is actually there. */
+.card.folder:has(.mark) .ttl { padding-right: 18px; }
+.fico { flex: none; display: flex; color: var(--c); }
+.fico svg { display: block; }
 .note {
   margin-top: 8px; padding-top: 7px;
   border-top: 1px solid color-mix(in srgb, var(--c) 20%, var(--card-mix));
