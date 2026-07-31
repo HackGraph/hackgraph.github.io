@@ -1821,6 +1821,9 @@ function mount(container, options = {}) {
     results.forEach((r, i) => {
       const row = el('div', 'result' + (i === hot ? ' hot' : ''));
       row.appendChild(el('span', null, r.label));
+      // a hit on the user's own note is worth naming: otherwise the row looks unrelated
+      // to what they typed and reads as a bad result
+      if (r.via === 'note') row.appendChild(el('span', 'rvia', 'note'));
       row.appendChild(el('span', 'rg', r.group));
       row.addEventListener('mousedown', e => { e.preventDefault(); pickResult(i); });
       box.appendChild(row);
@@ -2159,7 +2162,9 @@ function mount(container, options = {}) {
     trail = [];
     trailMemory = [];
     if (isolateOn) setIsolate(false);
-    expandedKeys = new Set([model.rootId]);
+    // whatever a cold start shows, reset shows: with expandRoot:false that is the entry
+    // point alone, not the root already fanned out
+    expandedKeys = new Set(options.expandRoot === false ? [] : [model.rootId]);
     views.forEach(setToggle);
     reconcile(model.rootId);
     const v = initialView();

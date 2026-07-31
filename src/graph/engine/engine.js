@@ -665,11 +665,17 @@ function scoreEntry(e, q) {
     if (i === 0) return prefix;
     return /[\s.]/.test(hay[i - 1]) ? word : base;
   };
-  let sc = bonus(e.l, e.l.indexOf(q), 55, 100, 80);        // label outranks…
-  sc = Math.max(sc, bonus(e.s, e.s.indexOf(q), 12, 35, 25)); // …summary…
-  sc = Math.max(sc, e.g.startsWith(q) ? 20 : 0);             // …group
-  sc = Math.max(sc, e.x ? bonus(e.x, e.x.indexOf(q), 8, 18, 14) : 0);  // …host extras (notes)
-  return sc;
+  let sc = bonus(e.l, e.l.indexOf(q), 55, 100, 80);          // label outranks…
+  let via = sc ? 'label' : null;
+  const take = (v, name) => { if (v > sc) { sc = v; via = name; } };
+  take(bonus(e.s, e.s.indexOf(q), 12, 35, 25), 'summary');   // …summary…
+  take(e.g.startsWith(q) ? 20 : 0, 'group');                 // …group
+  // Host extras are the user's OWN text (their notes). Weighted close to a label,
+  // because someone searching words they wrote themselves expects to find them —
+  // at the old weight a note lost to every technique whose name merely contained
+  // the string, and never survived the result limit.
+  take(e.x ? bonus(e.x, e.x.indexOf(q), 45, 90, 70) : 0, 'note');
+  return { sc, via };
 }
 
 function searchMap(index, query, limit = 8) {
@@ -677,10 +683,10 @@ function searchMap(index, query, limit = 8) {
   if (!q) return [];
   return index
     .map(e => [scoreEntry(e, q), e])
-    .filter(([s]) => s > 0)
-    .sort((a, b) => b[0] - a[0] || a[1].label.localeCompare(b[1].label))
+    .filter(([r]) => r.sc > 0)
+    .sort((a, b) => b[0].sc - a[0].sc || a[1].label.localeCompare(b[1].label))
     .slice(0, limit)
-    .map(([, e]) => e);
+    .map(([r, e]) => ({ ...e, via: r.via }));
 }
 
 /* ---------- share tokens ----------

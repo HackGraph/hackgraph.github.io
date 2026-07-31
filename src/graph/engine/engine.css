@@ -415,6 +415,13 @@
   cursor: pointer;
   font-size: 12.5px;
 }
+.rvia {
+  font-size: var(--t-2xs); letter-spacing: .04em; text-transform: uppercase;
+  color: var(--ink-faint);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
 .result .rg { margin-left: auto; font-size: 10.5px; color: var(--ink-faint); }
 .result.hot, .result:hover { background: var(--chip-hover); }
 
