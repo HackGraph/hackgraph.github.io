@@ -33,6 +33,10 @@ export const winFootholdNodes: TechniqueNodeDef[] = [
   // ── Lane: Credentialed Logon (by auth method) ──────────────────────────────────
   {
     id: 'win-cat-logon',
+    mitre: mitre('T1021'),
+    references: [
+      { label: 'HackTricks, Lateral Movement', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/index.html' },
+    ],
     label: 'Credentialed Logon',
     phase: 'access',
     kind: 'category',
@@ -150,6 +154,10 @@ export KRB5CCNAME=<user>.ccache`, lang: 'bash' },
   //     however you got in (credentialed logon OR code-exec) — not only to RCE. ──
   {
     id: 'win-cat-evasion',
+    mitre: mitre('T1562.001'),
+    references: [
+      { label: 'HackTricks, Antivirus (AV) Bypass', url: 'https://book.hacktricks.wiki/en/windows-hardening/av-bypass.html' },
+    ],
     label: 'Defense Evasion',
     phase: 'execution',
     kind: 'category',

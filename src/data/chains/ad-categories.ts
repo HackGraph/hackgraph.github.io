@@ -16,61 +16,291 @@ import { cat } from '../lib';
  */
 export const adCategoryNodes: TechniqueNodeDef[] = [
   // No-credentials branch (off network-recon)
-  cat('ad-cat-noauth', 'No-Cred Enumeration', 'recon', 'Map the domain before you hold any account.', 'Reconnaissance from the network with no credentials. Enumerate valid usernames, cycle RIDs, and pull anonymous LDAP/SMB data to build a target list and find low-hanging accounts before you ever authenticate.'),
-  cat('ad-cat-poisoning', 'Poisoning & Relay', 'initial-access', 'Capture or relay authentication from network traffic.', 'Abuse multicast/broadcast name resolution (LLMNR/NBT-NS/mDNS) and IPv6/DHCPv6 spoofing to coerce victims into authenticating to you, then crack the captured NetNTLM hashes offline or relay them straight to other hosts for code execution.'),
-  cat('ad-cat-services', 'Exposed Services & Apps', 'initial-access', 'Foothold via an exposed service, device, or app, no domain creds.', 'Turn network-reachable, unauthenticated attack surface into a foothold or credentials: printer/MFP/app pass-back (redirect stored LDAP/SMTP creds to you), internal web apps (Jenkins, GitLab, Tomcat, Splunk) with default creds or RCE, weak or legacy protocols (FTP, Telnet, NFS, SNMP, rsync, VNC), and anonymous or guest-readable SMB shares. None of these need a domain account.'),
+  cat('ad-cat-noauth', 'No-Cred Enumeration', 'recon', 'Map the domain before you hold any account.', 'Reconnaissance from the network with no credentials. Enumerate valid usernames, cycle RIDs, and pull anonymous LDAP/SMB data to build a target list and find low-hanging accounts before you ever authenticate.', {
+    mitre: 'T1087',
+    references: [
+      { label: 'The Hacker Recipes, MS-RPC recon', url: 'https://www.thehacker.recipes/ad/recon/ms-rpc' },
+    ],
+  }),
+  cat('ad-cat-poisoning', 'Poisoning & Relay', 'initial-access', 'Capture or relay authentication from network traffic.', 'Abuse multicast/broadcast name resolution (LLMNR/NBT-NS/mDNS) and IPv6/DHCPv6 spoofing to coerce victims into authenticating to you, then crack the captured NetNTLM hashes offline or relay them straight to other hosts for code execution.', {
+    mitre: 'T1557',
+    references: [
+      { label: 'HackTricks, LLMNR/NBT-NS Poisoning & Relay', url: 'https://book.hacktricks.wiki/en/generic-methodologies-and-resources/pentesting-network/spoofing-llmnr-nbt-ns-mdns-dns-and-wpad-and-relay-attacks.html' },
+    ],
+  }),
+  cat('ad-cat-services', 'Exposed Services & Apps', 'initial-access', 'Foothold via an exposed service, device, or app, no domain creds.', 'Turn network-reachable, unauthenticated attack surface into a foothold or credentials: printer/MFP/app pass-back (redirect stored LDAP/SMTP creds to you), internal web apps (Jenkins, GitLab, Tomcat, Splunk) with default creds or RCE, weak or legacy protocols (FTP, Telnet, NFS, SNMP, rsync, VNC), and anonymous or guest-readable SMB shares. None of these need a domain account.', {
+    mitre: 'T1190',
+    references: [
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+    ],
+  }),
   // Valid-credentials branch (tactic folders)
-  cat('ad-cat-enum', 'Enumeration', 'enumeration', 'Map attack paths from a domain foothold.', 'With a valid account, enumerate the directory (users, groups, ACLs, sessions, delegation) and run BloodHound to find the shortest path to privilege.'),
-  cat('ad-cat-credaccess', 'Credential Access', 'credential-access', 'Harvest more (and better) credentials.', 'Collect more secrets you can authenticate with: roastable Kerberos tickets, GPP passwords left in SYSVOL, and AD-managed secrets like LAPS and gMSA. These widen access toward higher-privileged accounts.'),
-  cat('ad-cat-coercion', 'Coercion & Forced Auth', 'credential-access', 'Make a victim authenticate to you.', 'Force a machine or user account to authenticate to an attacker-controlled host (PetitPotam, PrinterBug, WebDAV, malicious files), then relay or capture that authentication, frequently from a Domain Controller machine account.'),
-  cat('ad-cat-roasting', 'Kerberos Roasting', 'credential-access', 'Request offline-crackable Kerberos tickets.', 'Abuse Kerberos for crackable material: Kerberoasting pulls TGS-REP hashes for accounts with SPNs, and AS-REP roasting targets accounts with pre-authentication disabled.'),
-  cat('ad-cat-managed-secrets', 'Managed Secrets (LAPS/gMSA)', 'credential-access', 'Read AD-rotated local-admin & service secrets.', 'Recover secrets that Active Directory stores and rotates (LAPS local-administrator passwords and gMSA managed-account passwords) wherever your principal holds the right to read them.'),
-  cat('ad-cat-dacl', 'DACL / ACL Abuse', 'priv-esc', 'Abuse object permissions to seize principals.', 'Exploit misconfigured ACEs on AD objects (GenericAll/GenericWrite, WriteDACL, WriteOwner, ForceChangePassword, AddMember, replication rights, read LAPS, GPO control) to take over users, groups, and computers and walk the permission graph toward Domain Admin. Effective rights include those the groups you belong to hold, not just your own account.'),
-  cat('ad-cat-adcs', 'AD CS Abuse', 'priv-esc', 'Turn the PKI into a privesc engine.', 'Abuse Active Directory Certificate Services. Vulnerable templates and CA misconfigurations (the ESC1-ESC16 family) let you enroll certificates that authenticate as any account, up to Domain Admin.'),
-  cat('ad-cat-adcs-template', 'Vulnerable Templates', 'priv-esc', 'Enrollment-based ESC1-class template abuse.', 'Certificate templates that let a low-privileged user request a cert for an arbitrary identity by supplying a SAN, off-template EKUs, or weak mappings (ESC1/2/3/4/9/13/15). The resulting cert authenticates as, or is granted the privileges of, a higher-privileged principal or group.'),
-  cat('ad-cat-adcs-ca', 'CA, Relay & Forging', 'priv-esc', 'Attack the CA host, relay, and forge certs.', 'Go after the PKI infrastructure itself: relay to the web-enrollment endpoint (ESC8), abuse CA settings (ESC6/7), take over the CA host (ESC5), or forge certificates outright with a stolen CA key (Golden Certificate).'),
-  cat('ad-cat-delegation', 'Kerberos Delegation', 'priv-esc', 'Abuse delegation to impersonate users.', 'Exploit Kerberos delegation in its unconstrained, constrained (S4U2Proxy), and resource-based constrained (RBCD) forms to impersonate arbitrary users, including Domain Admins, to target services.'),
-  cat('ad-cat-cve', 'Critical CVEs', 'priv-esc', 'High-impact named vulnerabilities.', 'Patchable flaws that often shortcut straight to SYSTEM or Domain Admin on an unpatched host: ZeroLogon, PrintNightmare, noPac, MS14-068, Certifried, PrivExchange.'),
-  cat('ad-cat-lateral', 'Lateral Movement', 'lateral-movement', 'Reuse credentials to spread across hosts.', 'Move between machines with harvested credentials (pass-the-hash, overpass-the-hash, pass-the-ticket) via remote execution over SMB (PsExec/SMBExec/scheduled tasks), WMI, DCOM, WinRM, RDP and SSH, plus service-layer pivots through MSSQL and SCCM.'),
-  cat('ad-cat-cred-reuse', 'Credential Reuse', 'lateral-movement', 'Authenticate as the account with stolen secrets.', 'Reuse harvested credential material without the cleartext: replay an NT hash (pass-the-hash), turn a hash or key into a Kerberos TGT (overpass-the-hash), inject a stolen or forged ticket (pass-the-ticket), or RDP in with Restricted Admin mode. Each authenticates you as the account and runs code on the target host.'),
-  cat('ad-cat-mssql', 'MSSQL Abuse', 'lateral-movement', 'Pivot through SQL Server.', 'Abuse MSSQL access (xp_cmdshell for OS command execution, database/login impersonation, and linked-server chains) to run as the service account or hop to other servers.'),
-  cat('ad-cat-sccm', 'SCCM / MECM', 'lateral-movement', 'Abuse the software-deployment platform.', 'Target Configuration Manager: recover network-access-account credentials, abuse client-push and NTLM relay to take over clients or the site server, and deploy applications as SYSTEM across the estate.'),
-  cat('ad-cat-deploy-abuse', 'Deployment Platform Abuse', 'lateral-movement', 'Push code to the whole estate via a management platform.', 'Central deployment, monitoring, and configuration-management platforms push software and run scripts on every endpoint they manage, so abusing one you can reach lets you execute as a service account (often SYSTEM/root) across the estate at once. Splunk forwarders, Ansible/Salt/Puppet, and RMM suites (PDQ, Tanium, ManageEngine, Intune) are common targets; the Microsoft-native equivalents, SCCM and WSUS, are covered separately.'),
+  cat('ad-cat-enum', 'Enumeration', 'enumeration', 'Map attack paths from a domain foothold.', 'With a valid account, enumerate the directory (users, groups, ACLs, sessions, delegation) and run BloodHound to find the shortest path to privilege.', {
+    mitre: 'T1087.002',
+    references: [
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+      { label: 'The Hacker Recipes, BloodHound', url: 'https://www.thehacker.recipes/ad/recon/bloodhound/' },
+    ],
+  }),
+  cat('ad-cat-credaccess', 'Credential Access', 'credential-access', 'Harvest more (and better) credentials.', 'Collect more secrets you can authenticate with: roastable Kerberos tickets, GPP passwords left in SYSVOL, and AD-managed secrets like LAPS and gMSA. These widen access toward higher-privileged accounts.', {
+    mitre: 'T1552',
+    references: [
+      { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
+    ],
+  }),
+  cat('ad-cat-coercion', 'Coercion & Forced Auth', 'credential-access', 'Make a victim authenticate to you.', 'Force a machine or user account to authenticate to an attacker-controlled host (PetitPotam, PrinterBug, WebDAV, malicious files), then relay or capture that authentication, frequently from a Domain Controller machine account.', {
+    mitre: 'T1187',
+    references: [
+      { label: 'HackTricks, Printers Spooler Service Abuse (Coercion)', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/printers-spooler-service-abuse.html' },
+    ],
+  }),
+  cat('ad-cat-roasting', 'Kerberos Roasting', 'credential-access', 'Request offline-crackable Kerberos tickets.', 'Abuse Kerberos for crackable material: Kerberoasting pulls TGS-REP hashes for accounts with SPNs, and AS-REP roasting targets accounts with pre-authentication disabled.', {
+    mitre: 'T1558',
+    references: [
+      { label: 'HackTricks, Kerberoast', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/kerberoast.html' },
+      { label: 'HackTricks, ASREPRoast', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/asreproast.html' },
+    ],
+  }),
+  cat('ad-cat-managed-secrets', 'Managed Secrets (LAPS/gMSA)', 'credential-access', 'Read AD-rotated local-admin & service secrets.', 'Recover secrets that Active Directory stores and rotates (LAPS local-administrator passwords and gMSA managed-account passwords) wherever your principal holds the right to read them.', {
+    references: [
+      { label: 'HackTricks, LAPS', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/laps.html' },
+      { label: 'The Hacker Recipes, ReadLAPSPassword', url: 'https://www.thehacker.recipes/ad/movement/dacl/readlapspassword' },
+    ],
+  }),
+  cat('ad-cat-dacl', 'DACL / ACL Abuse', 'priv-esc', 'Abuse object permissions to seize principals.', 'Exploit misconfigured ACEs on AD objects (GenericAll/GenericWrite, WriteDACL, WriteOwner, ForceChangePassword, AddMember, replication rights, read LAPS, GPO control) to take over users, groups, and computers and walk the permission graph toward Domain Admin. Effective rights include those the groups you belong to hold, not just your own account.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
+      { label: 'The Hacker Recipes, DACL abuse', url: 'https://www.thehacker.recipes/ad/movement/dacl/' },
+    ],
+  }),
+  cat('ad-cat-adcs', 'AD CS Abuse', 'priv-esc', 'Turn the PKI into a privesc engine.', 'Abuse Active Directory Certificate Services. Vulnerable templates and CA misconfigurations (the ESC1-ESC16 family) let you enroll certificates that authenticate as any account, up to Domain Admin.', {
+    mitre: 'T1649',
+    references: [
+      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://specterops.io/blog/2021/06/17/certified-pre-owned/' },
+      { label: 'The Hacker Recipes, AD CS', url: 'https://www.thehacker.recipes/ad/movement/adcs/' },
+    ],
+  }),
+  cat('ad-cat-adcs-template', 'Vulnerable Templates', 'priv-esc', 'Enrollment-based ESC1-class template abuse.', 'Certificate templates that let a low-privileged user request a cert for an arbitrary identity by supplying a SAN, off-template EKUs, or weak mappings (ESC1/2/3/4/9/13/15). The resulting cert authenticates as, or is granted the privileges of, a higher-privileged principal or group.', {
+    mitre: 'T1649',
+    references: [
+      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://specterops.io/blog/2021/06/17/certified-pre-owned/' },
+      { label: 'The Hacker Recipes, Certificate templates', url: 'https://www.thehacker.recipes/ad/movement/adcs/certificate-templates' },
+    ],
+  }),
+  cat('ad-cat-adcs-ca', 'CA, Relay & Forging', 'priv-esc', 'Attack the CA host, relay, and forge certs.', 'Go after the PKI infrastructure itself: relay to the web-enrollment endpoint (ESC8), abuse CA settings (ESC6/7), take over the CA host (ESC5), or forge certificates outright with a stolen CA key (Golden Certificate).', {
+    mitre: 'T1649',
+    references: [
+      { label: 'SpecterOps, Certified Pre-Owned', url: 'https://specterops.io/blog/2021/06/17/certified-pre-owned/' },
+      { label: 'The Hacker Recipes, Access controls', url: 'https://www.thehacker.recipes/ad/movement/adcs/access-controls' },
+    ],
+  }),
+  cat('ad-cat-delegation', 'Kerberos Delegation', 'priv-esc', 'Abuse delegation to impersonate users.', 'Exploit Kerberos delegation in its unconstrained, constrained (S4U2Proxy), and resource-based constrained (RBCD) forms to impersonate arbitrary users, including Domain Admins, to target services.', {
+    mitre: 'T1558',
+    references: [
+      { label: 'HackTricks, Unconstrained Delegation', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/unconstrained-delegation.html' },
+      { label: 'The Hacker Recipes, Constrained delegation', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/constrained' },
+    ],
+  }),
+  cat('ad-cat-cve', 'Critical CVEs', 'priv-esc', 'High-impact named vulnerabilities.', 'Patchable flaws that often shortcut straight to SYSTEM or Domain Admin on an unpatched host: ZeroLogon, PrintNightmare, noPac, MS14-068, Certifried, PrivExchange.', {
+    mitre: 'T1068',
+    references: [
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+    ],
+  }),
+  cat('ad-cat-lateral', 'Lateral Movement', 'lateral-movement', 'Reuse credentials to spread across hosts.', 'Move between machines with harvested credentials (pass-the-hash, overpass-the-hash, pass-the-ticket) via remote execution over SMB (PsExec/SMBExec/scheduled tasks), WMI, DCOM, WinRM, RDP and SSH, plus service-layer pivots through MSSQL and SCCM.', {
+    mitre: 'T1021',
+    references: [
+      { label: 'HackTricks, Lateral Movement', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/index.html' },
+    ],
+  }),
+  cat('ad-cat-cred-reuse', 'Credential Reuse', 'lateral-movement', 'Authenticate as the account with stolen secrets.', 'Reuse harvested credential material without the cleartext: replay an NT hash (pass-the-hash), turn a hash or key into a Kerberos TGT (overpass-the-hash), inject a stolen or forged ticket (pass-the-ticket), or RDP in with Restricted Admin mode. Each authenticates you as the account and runs code on the target host.', {
+    mitre: 'T1550',
+    references: [
+      { label: 'HackTricks, NTLM / Pass-the-Hash', url: 'https://book.hacktricks.wiki/en/windows-hardening/ntlm/index.html' },
+    ],
+  }),
+  cat('ad-cat-mssql', 'MSSQL Abuse', 'lateral-movement', 'Pivot through SQL Server.', 'Abuse MSSQL access (xp_cmdshell for OS command execution, database/login impersonation, and linked-server chains) to run as the service account or hop to other servers.', {
+    references: [
+      { label: 'HackTricks, Abusing AD MSSQL', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html' },
+    ],
+  }),
+  cat('ad-cat-sccm', 'SCCM / MECM', 'lateral-movement', 'Abuse the software-deployment platform.', 'Target Configuration Manager: recover network-access-account credentials, abuse client-push and NTLM relay to take over clients or the site server, and deploy applications as SYSTEM across the estate.', {
+    references: [
+      { label: 'Misconfiguration Manager (SCCM attack technique matrix)', url: 'https://github.com/subat0mik/Misconfiguration-Manager' },
+    ],
+  }),
+  cat('ad-cat-deploy-abuse', 'Deployment Platform Abuse', 'lateral-movement', 'Push code to the whole estate via a management platform.', 'Central deployment, monitoring, and configuration-management platforms push software and run scripts on every endpoint they manage, so abusing one you can reach lets you execute as a service account (often SYSTEM/root) across the estate at once. Splunk forwarders, Ansible/Salt/Puppet, and RMM suites (PDQ, Tanium, ManageEngine, Intune) are common targets; the Microsoft-native equivalents, SCCM and WSUS, are covered separately.', {
+    mitre: 'T1072',
+  }),
   // Service & Platform Abuse: wraps the server-side service / management-platform pivots.
-  cat('ad-cat-platform', 'Service & Platform Abuse', 'lateral-movement', 'Abuse a privileged server-side service or management platform to spread.', 'Turn a database service (MSSQL), a software-deployment platform (SCCM/MECM), or a config-management / RMM suite (Splunk, Ansible, Salt) against the estate: run code as the service account, or push it to every host they manage.'),
+  cat('ad-cat-platform', 'Service & Platform Abuse', 'lateral-movement', 'Abuse a privileged server-side service or management platform to spread.', 'Turn a database service (MSSQL), a software-deployment platform (SCCM/MECM), or a config-management / RMM suite (Splunk, Ansible, Salt) against the estate: run code as the service account, or push it to every host they manage.', {
+    references: [
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+    ],
+  }),
   // Remote Execution transport groups (under lateral-movement-cme), by mechanism.
-  cat('lat-cat-smb', 'SMB Service Exec', 'lateral-movement', 'Run code via an SMB service; lands SYSTEM.', 'PsExec / SMBExec / scheduled-task execution over SMB (445): create or trigger a service or task that runs your command as SYSTEM. All require local admin on the target over SMB. PsExec drops a service binary to ADMIN$; SMBExec writes its command output to C$ and drops no payload binary; scheduled-task exec runs via the Task Scheduler RPC (ATSVC over IPC$) and needs no writable ADMIN$.'),
-  cat('lat-cat-wmidcom', 'WMI / DCOM', 'lateral-movement', 'Semi-interactive execution over WMI or DCOM.', 'Run commands through WMI (135/DCOM) or a DCOM object such as MMC20.Application: needs local admin and RPC/DCOM reachable, and drops no service binary, so it is quieter than PsExec.'),
-  cat('lat-cat-logon', 'Interactive Logon', 'lateral-movement', 'Log on over WinRM, RDP, or SSH.', 'Open a session with a remote-access right: WinRM (5985/5986) for a PowerShell shell, RDP (3389) for a desktop, or SSH (22). The privilege you land with depends on the account.'),
-  cat('lat-cat-shell', 'Shells & Breakouts', 'lateral-movement', 'Turn code exec into a session, or break out of a constrained one.', 'Catch a reverse or bind shell from a code-execution primitive, or escape a constrained JEA endpoint to its RunAs identity, when a clean credentialed logon is not available.'),
-  cat('ad-cat-account-abuse', 'Account & Group Abuse', 'priv-esc', 'Manipulate accounts, groups, and quotas.', 'Abuse the right to create or modify principals to gain or persist privilege: machine-account-quota computer creation, dMSA (BadSuccessor), and adding yourself to privileged groups.'),
+  cat('lat-cat-smb', 'SMB Service Exec', 'lateral-movement', 'Run code via an SMB service; lands SYSTEM.', 'PsExec / SMBExec / scheduled-task execution over SMB (445): create or trigger a service or task that runs your command as SYSTEM. All require local admin on the target over SMB. PsExec drops a service binary to ADMIN$; SMBExec writes its command output to C$ and drops no payload binary; scheduled-task exec runs via the Task Scheduler RPC (ATSVC over IPC$) and needs no writable ADMIN$.', {
+    mitre: 'T1021.002',
+    references: [
+      { label: 'HackTricks, PsExec / WinExec', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/psexec-and-winexec.html' },
+    ],
+  }),
+  cat('lat-cat-wmidcom', 'WMI / DCOM', 'lateral-movement', 'Semi-interactive execution over WMI or DCOM.', 'Run commands through WMI (135/DCOM) or a DCOM object such as MMC20.Application: needs local admin and RPC/DCOM reachable, and drops no service binary, so it is quieter than PsExec.', {
+    mitre: 'T1047',
+    references: [
+      { label: 'HackTricks, WmiExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/wmiexec.html' },
+      { label: 'HackTricks, DCOMExec (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/dcomexec.html' },
+    ],
+  }),
+  cat('lat-cat-logon', 'Interactive Logon', 'lateral-movement', 'Log on over WinRM, RDP, or SSH.', 'Open a session with a remote-access right: WinRM (5985/5986) for a PowerShell shell, RDP (3389) for a desktop, or SSH (22). The privilege you land with depends on the account.', {
+    mitre: 'T1021',
+    references: [
+      { label: 'HackTricks, WinRM (Lateral Movement)', url: 'https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/winrm.html' },
+    ],
+  }),
+  cat('lat-cat-shell', 'Shells & Breakouts', 'lateral-movement', 'Turn code exec into a session, or break out of a constrained one.', 'Catch a reverse or bind shell from a code-execution primitive, or escape a constrained JEA endpoint to its RunAs identity, when a clean credentialed logon is not available.', {
+    mitre: 'T1059',
+    references: [
+      { label: 'PayloadsAllTheThings, Reverse Shell Cheatsheet', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md' },
+    ],
+  }),
+  cat('ad-cat-account-abuse', 'Account & Group Abuse', 'priv-esc', 'Manipulate accounts, groups, and quotas.', 'Abuse the right to create or modify principals to gain or persist privilege: machine-account-quota computer creation, dMSA (BadSuccessor), and adding yourself to privileged groups.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'The Hacker Recipes, MachineAccountQuota', url: 'https://www.thehacker.recipes/ad/movement/builtins/machineaccountquota' },
+    ],
+  }),
   // ACL abuse grouped by the TARGET object you control (object-first framing).
-  cat('acl-tgt-control', 'Control-Granting Rights', 'priv-esc', 'Rights that hand you write access over an object, whatever its type.', 'Rights that give you control regardless of target type: GenericAll (full control), GenericWrite (attribute writes only, not the DACL or owner), WriteOwner (take ownership, then rewrite the DACL), and WriteDACL (grant yourself GenericAll or replication rights). Once you hold one, the abuse depends on the object type.'),
-  cat('acl-tgt-user', 'Over a User', 'priv-esc', 'Rights over a user account: reset it, forge creds, or roast it.', 'With GenericAll, GenericWrite, or a targeted right over a USER object: reset its password (ForceChangePassword), add a shadow credential (msDS-KeyCredentialLink), set an SPN to Kerberoast it, flip DONT_REQ_PREAUTH to AS-REP roast it, hijack its logon script (scriptPath), or fix its account state into a usable credential.'),
-  cat('acl-tgt-computer', 'Over a Computer', 'priv-esc', 'Rights over a computer account: impersonate to it or read its secrets.', 'With a right over a COMPUTER object, the abuse depends on which right you hold. Configure resource-based constrained delegation to impersonate any user to it by writing msDS-AllowedToActOnBehalfOfOtherIdentity (GenericAll, GenericWrite, WriteDACL, WriteAccountRestrictions, or AddAllowedToAct). Add a shadow credential to authenticate as it by writing msDS-KeyCredentialLink (GenericAll or GenericWrite). Read the LAPS local-admin password stored on this computer with Control Access / All Extended Rights (GenericAll or an explicit read right, not plain GenericWrite); if this computer is authorized to retrieve a gMSA, act as it (pivot via shadow creds or RBCD) and read that gMSA\'s password, which lives on the separate gMSA account object. AddAllowedToAct only yields RBCD. Delegation is what sets computers apart from users here.'),
-  cat('acl-tgt-group', 'Over a Group', 'priv-esc', 'Rights over a group: add yourself to inherit its access.', 'With AddMember/AddSelf, GenericWrite, or GenericAll over a GROUP: add yourself or a controlled principal as a member to inherit whatever the group holds, including a further ACL over downstream objects or membership of a privileged group.'),
-  cat('acl-tgt-policy', 'Over a GPO, OU or Domain', 'priv-esc', 'Rights over policy objects or the domain: push code or replicate secrets.', 'With control over a Group Policy Object, an OU, or the domain object: edit a writable GPO to run a task or script on every host it applies to, link a malicious GPO to an OU (gPLink), or use replication rights (DS-Replication-Get-Changes and DS-Replication-Get-Changes-All) to DCSync the domain.'),
+  cat('acl-tgt-control', 'Control-Granting Rights', 'priv-esc', 'Rights that hand you write access over an object, whatever its type.', 'Rights that give you control regardless of target type: GenericAll (full control), GenericWrite (attribute writes only, not the DACL or owner), WriteOwner (take ownership, then rewrite the DACL), and WriteDACL (grant yourself GenericAll or replication rights). Once you hold one, the abuse depends on the object type.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
+      { label: 'The Hacker Recipes, DACL abuse', url: 'https://www.thehacker.recipes/ad/movement/dacl/' },
+    ],
+  }),
+  cat('acl-tgt-user', 'Over a User', 'priv-esc', 'Rights over a user account: reset it, forge creds, or roast it.', 'With GenericAll, GenericWrite, or a targeted right over a USER object: reset its password (ForceChangePassword), add a shadow credential (msDS-KeyCredentialLink), set an SPN to Kerberoast it, flip DONT_REQ_PREAUTH to AS-REP roast it, hijack its logon script (scriptPath), or fix its account state into a usable credential.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
+    ],
+  }),
+  cat('acl-tgt-computer', 'Over a Computer', 'priv-esc', 'Rights over a computer account: impersonate to it or read its secrets.', 'With a right over a COMPUTER object, the abuse depends on which right you hold. Configure resource-based constrained delegation to impersonate any user to it by writing msDS-AllowedToActOnBehalfOfOtherIdentity (GenericAll, GenericWrite, WriteDACL, WriteAccountRestrictions, or AddAllowedToAct). Add a shadow credential to authenticate as it by writing msDS-KeyCredentialLink (GenericAll or GenericWrite). Read the LAPS local-admin password stored on this computer with Control Access / All Extended Rights (GenericAll or an explicit read right, not plain GenericWrite); if this computer is authorized to retrieve a gMSA, act as it (pivot via shadow creds or RBCD) and read that gMSA\'s password, which lives on the separate gMSA account object. AddAllowedToAct only yields RBCD. Delegation is what sets computers apart from users here.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'The Hacker Recipes, RBCD', url: 'https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd' },
+    ],
+  }),
+  cat('acl-tgt-group', 'Over a Group', 'priv-esc', 'Rights over a group: add yourself to inherit its access.', 'With AddMember/AddSelf, GenericWrite, or GenericAll over a GROUP: add yourself or a controlled principal as a member to inherit whatever the group holds, including a further ACL over downstream objects or membership of a privileged group.', {
+    mitre: 'T1098.007',
+    references: [
+      { label: 'HackTricks, Abusing AD ACLs/ACEs', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/acl-persistence-abuse/index.html' },
+    ],
+  }),
+  cat('acl-tgt-policy', 'Over a GPO, OU or Domain', 'priv-esc', 'Rights over policy objects or the domain: push code or replicate secrets.', 'With control over a Group Policy Object, an OU, or the domain object: edit a writable GPO to run a task or script on every host it applies to, link a malicious GPO to an OU (gPLink), or use replication rights (DS-Replication-Get-Changes and DS-Replication-Get-Changes-All) to DCSync the domain.', {
+    mitre: 'T1484.001',
+    references: [
+      { label: 'SpecterOps, A Red Teamer\'s Guide to GPOs and OUs', url: 'https://specterops.io/blog/2018/02/26/a-red-teamers-guide-to-gpos-and-ous/' },
+    ],
+  }),
   // Persistence grouped by mechanism.
-  cat('persist-forgery', 'Offline Credential Forgery', 'persistence', 'Forge tickets or derive account secrets offline.', 'Sapphire tickets forge Kerberos tickets from the krbtgt key, valid until krbtgt is reset twice; Golden gMSA derives gMSA account passwords offline from the KDS root key, which is effectively never rotated.'),
-  cat('persist-implant', 'DC-Resident Implants', 'persistence', 'Domain-persistence tradecraft against a Domain Controller.', 'Patch or register code on a DC: Skeleton Key (patches LSASS), a DSRM backdoor, or a malicious Security Support Provider that logs credentials. DCShadow is grouped here too but works differently: it abuses AD replication from a transient rogue DC to push changes to a real one, rather than persisting code on the DC.'),
-  cat('persist-backdoor', 'ACL & Rights Backdoors', 'persistence', 'Durable rights stamped into the directory or a host.', 'AdminSDHolder rights, host security-descriptor backdoors (DAMP), or an attacker-controlled computer account keep quiet access, often with no new user account or group change.'),
-  cat('persist-fed', 'Federation, Certs & Secrets', 'persistence', 'Token, certificate, and key-material persistence.', 'Forge SAML tokens (Golden SAML), enroll a long-lived client-auth certificate, or steal the domain DPAPI backup key.'),
+  cat('persist-forgery', 'Offline Credential Forgery', 'persistence', 'Forge tickets or derive account secrets offline.', 'Sapphire tickets forge Kerberos tickets from the krbtgt key, valid until krbtgt is reset twice; Golden gMSA derives gMSA account passwords offline from the KDS root key, which is effectively never rotated.', {
+    mitre: 'T1558',
+    references: [
+      { label: 'Unit 42, Next-Gen Kerberos Attacks (Sapphire/Diamond)', url: 'https://unit42.paloaltonetworks.com/next-gen-kerberos-attacks/' },
+    ],
+  }),
+  cat('persist-implant', 'DC-Resident Implants', 'persistence', 'Domain-persistence tradecraft against a Domain Controller.', 'Patch or register code on a DC: Skeleton Key (patches LSASS), a DSRM backdoor, or a malicious Security Support Provider that logs credentials. DCShadow is grouped here too but works differently: it abuses AD replication from a transient rogue DC to push changes to a real one, rather than persisting code on the DC.', {
+    references: [
+      { label: 'The Hacker Recipes, DSRM Persistence', url: 'https://www.thehacker.recipes/ad/persistence/dsrm' },
+    ],
+  }),
+  cat('persist-backdoor', 'ACL & Rights Backdoors', 'persistence', 'Durable rights stamped into the directory or a host.', 'AdminSDHolder rights, host security-descriptor backdoors (DAMP), or an attacker-controlled computer account keep quiet access, often with no new user account or group change.', {
+    mitre: 'T1098',
+    references: [
+      { label: 'The Hacker Recipes, AdminSDHolder', url: 'https://www.thehacker.recipes/ad/persistence/adminsdholder' },
+    ],
+  }),
+  cat('persist-fed', 'Federation, Certs & Secrets', 'persistence', 'Token, certificate, and key-material persistence.', 'Forge SAML tokens (Golden SAML), enroll a long-lived client-auth certificate, or steal the domain DPAPI backup key.', {
+    references: [
+      { label: 'CyberArk, Golden SAML (original research)', url: 'https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps' },
+    ],
+  }),
   // Critical CVEs grouped by attack surface.
-  cat('cvegrp-kerberos', 'Kerberos / Directory CVEs', 'priv-esc', 'Kerberos and directory protocol flaws.', 'noPac, MS14-068, Certifried, and NTLM Reflection abuse Kerberos or directory flaws to impersonate a DC (noPac, Certifried), forge a privileged PAC (MS14-068), or relay a coerced host\'s authentication back to itself for local SYSTEM (NTLM Reflection).'),
-  cat('cvegrp-exchange', 'Exchange CVEs', 'priv-esc', 'On-prem Exchange flaws.', 'PrivExchange and ProxyNotShell abuse on-prem Exchange for relay-to-DCSync or authenticated RCE.'),
-  cat('cvegrp-smbprint', 'SMB / Print CVEs', 'priv-esc', 'SMB and Print Spooler flaws.', 'SMBGhost (SMBv3 compression RCE) and PrintNightmare (Print Spooler driver load) reach SYSTEM on unpatched hosts.'),
+  cat('cvegrp-kerberos', 'Kerberos / Directory CVEs', 'priv-esc', 'Kerberos and directory protocol flaws.', 'noPac, MS14-068, Certifried, and NTLM Reflection abuse Kerberos or directory flaws to impersonate a DC (noPac, Certifried), forge a privileged PAC (MS14-068), or relay a coerced host\'s authentication back to itself for local SYSTEM (NTLM Reflection).', {
+    mitre: 'T1068',
+    references: [
+      { label: 'exploit.ph, CVE-2021-42278/42287 weaponisation', url: 'https://exploit.ph/cve-2021-42287-cve-2021-42278-weaponisation.html' },
+    ],
+  }),
+  cat('cvegrp-exchange', 'Exchange CVEs', 'priv-esc', 'On-prem Exchange flaws.', 'PrivExchange and ProxyNotShell abuse on-prem Exchange for relay-to-DCSync or authenticated RCE.', {
+    mitre: 'T1068',
+    references: [
+      { label: 'dirkjanm, Abusing Exchange: One API call away from Domain Admin', url: 'https://dirkjanm.io/abusing-exchange-one-api-call-away-from-domain-admin/' },
+    ],
+  }),
+  cat('cvegrp-smbprint', 'SMB / Print CVEs', 'priv-esc', 'SMB and Print Spooler flaws.', 'SMBGhost (SMBv3 compression RCE) and PrintNightmare (Print Spooler driver load) reach SYSTEM on unpatched hosts.', {
+    mitre: 'T1068',
+    references: [
+      { label: 'HackTricks, PrintNightmare', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/printnightmare.html' },
+    ],
+  }),
   // Privileged groups grouped by type.
-  cat('pgcat-ops', 'AD Operators', 'priv-esc', 'Built-in *Operators groups.', 'Membership in Account, Server, or Backup Operators grants rights on Domain Controllers that convert to domain compromise.'),
-  cat('pgcat-service', 'Service & Directory Roles', 'priv-esc', 'Role-installed and directory groups.', 'DnsAdmins (load a DLL into the DNS service), Cert Publishers (PKI), and Schema Admins (forest schema) each hold a role-specific path to privilege.'),
-  cat('pgcat-deploy', 'Deployment Admins', 'priv-esc', 'Deployment-platform admin groups and roles.', 'WSUS and SCCM administrators can push code as SYSTEM to every managed host.'),
+  cat('pgcat-ops', 'AD Operators', 'priv-esc', 'Built-in *Operators groups.', 'Membership in Account, Server, or Backup Operators grants rights on Domain Controllers that convert to domain compromise.', {
+    references: [
+      { label: 'HackTricks, Privileged Groups & Token Privileges', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html' },
+      { label: 'The Hacker Recipes, Built-in security groups', url: 'https://www.thehacker.recipes/ad/movement/builtins/security-groups' },
+    ],
+  }),
+  cat('pgcat-service', 'Service & Directory Roles', 'priv-esc', 'Role-installed and directory groups.', 'DnsAdmins (load a DLL into the DNS service), Cert Publishers (PKI), and Schema Admins (forest schema) each hold a role-specific path to privilege.', {
+    references: [
+      { label: 'HackTricks, Privileged Groups & Token Privileges', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html' },
+      { label: 'The Hacker Recipes, Built-in security groups', url: 'https://www.thehacker.recipes/ad/movement/builtins/security-groups' },
+    ],
+  }),
+  cat('pgcat-deploy', 'Deployment Admins', 'priv-esc', 'Deployment-platform admin groups and roles.', 'WSUS and SCCM administrators can push code as SYSTEM to every managed host.', {
+    mitre: 'T1072',
+    references: [
+      { label: 'SpecterOps, SCCM Hierarchy Takeover', url: 'https://specterops.io/blog/2023/09/25/sccm-hierarchy-takeover/' },
+    ],
+  }),
   // Post-exploitation branches
-  cat('ad-cat-cred-dump', 'Credential Dumping', 'credential-access', 'Extract secrets from a compromised host.', 'From local admin / SYSTEM, dump credential material such as LSASS memory, SAM/LSA secrets, DPAPI, and app and browser secrets, plus, with replication rights, the DC\'s entire credential store.'),
+  cat('ad-cat-cred-dump', 'Credential Dumping', 'credential-access', 'Extract secrets from a compromised host.', 'From local admin / SYSTEM, dump credential material such as LSASS memory, SAM/LSA secrets, DPAPI, and app and browser secrets, plus, with replication rights, the DC\'s entire credential store.', {
+    mitre: 'T1003',
+    references: [
+      { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
+    ],
+  }),
   // Credential-dumping sub-groups by source (DC dumping is red because it needs DA / replication rights)
-  cat('ad-cat-host-dump', 'Host & LSASS Secrets', 'credential-access', 'Dump in-memory and on-disk host secrets.', 'Harvest credentials cached on a host you own: LSASS memory (hashes, tickets, sometimes cleartext), the local SAM/LSA secrets, and PPL/WDigest tricks to defeat protections.'),
-  cat('ad-cat-user-secrets', 'App & User Secrets', 'credential-access', 'Loot application and user-stored secrets.', 'Recover secrets stashed by users and apps: DPAPI-protected blobs, KeePass databases, saved browser logins and cookies, and live RDP sessions to hijack.'),
-  cat('ad-cat-dc-dump', 'DC Credential Dumping', 'domain-dominance', 'Pull secrets straight from a Domain Controller.', 'With DA or replication rights, the DCSync and NTDS.dit paths extract the domain\'s entire credential store (DCSync over DRSUAPI replication, or an offline NTDS.dit dump), including the krbtgt key; the RODC KeyList path is bounded to the secrets the RODC is allowed to reveal.'),
-  cat('ad-cat-trusts', 'Domain Trusts', 'domain-dominance', 'Cross domain & forest trust boundaries.', 'Enumerate and abuse trust relationships (inter-realm tickets, intra-forest SID-history hopping, and external/forest-trust access paths) to pivot between domains and reach the forest root.'),
-  cat('ad-cat-persistence', 'Persistence', 'persistence', 'Survive remediation with durable access.', 'Establish footholds that outlive password resets and re-imaging: AdminSDHolder, DSRM, DCShadow, Skeleton Key, golden/silver tickets, and certificate-based backdoors.'),
+  cat('ad-cat-host-dump', 'Host & LSASS Secrets', 'credential-access', 'Dump in-memory and on-disk host secrets.', 'Harvest credentials cached on a host you own: LSASS memory (hashes, tickets, sometimes cleartext), the local SAM/LSA secrets, and PPL/WDigest tricks to defeat protections.', {
+    mitre: 'T1003.001',
+    references: [
+      { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' },
+    ],
+  }),
+  cat('ad-cat-user-secrets', 'App & User Secrets', 'credential-access', 'Loot application and user-stored secrets.', 'Recover secrets stashed by users and apps: DPAPI-protected blobs, KeePass databases, saved browser logins and cookies, and live RDP sessions to hijack.', {
+    mitre: 'T1555',
+    references: [
+      { label: 'HackTricks, DPAPI: Extracting Passwords', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html' },
+    ],
+  }),
+  cat('ad-cat-dc-dump', 'DC Credential Dumping', 'domain-dominance', 'Pull secrets straight from a Domain Controller.', 'With DA or replication rights, the DCSync and NTDS.dit paths extract the domain\'s entire credential store (DCSync over DRSUAPI replication, or an offline NTDS.dit dump), including the krbtgt key; the RODC KeyList path is bounded to the secrets the RODC is allowed to reveal.', {
+    mitre: 'T1003.006',
+    references: [
+      { label: 'HackTricks, DCSync', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/dcsync.html' },
+    ],
+  }),
+  cat('ad-cat-trusts', 'Domain Trusts', 'domain-dominance', 'Cross domain & forest trust boundaries.', 'Enumerate and abuse trust relationships (inter-realm tickets, intra-forest SID-history hopping, and external/forest-trust access paths) to pivot between domains and reach the forest root.', {
+    mitre: 'T1482',
+    references: [
+      { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },
+    ],
+  }),
+  cat('ad-cat-persistence', 'Persistence', 'persistence', 'Survive remediation with durable access.', 'Establish footholds that outlive password resets and re-imaging: AdminSDHolder, DSRM, DCShadow, Skeleton Key, golden/silver tickets, and certificate-based backdoors.', {
+    references: [
+      { label: 'Sean Metcalf, Sneaky Active Directory Persistence Tricks', url: 'https://adsecurity.org/?p=1929' },
+    ],
+  }),
 ];
 
 export const adCategoryEdges: AttackEdge[] = [

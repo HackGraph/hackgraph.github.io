@@ -183,6 +183,10 @@ export const ntlmRelayCveNodes: TechniqueNodeDef[] = [
   // ── GROUP 2: quick-compromise CVEs (parent = ad-cat-quick-compromise) ────
   {
     id: 'ad-cat-quick-compromise',
+    mitre: mitre('T1068'),
+    references: [
+      { label: 'Secura, Zerologon whitepaper (Tom Tervoort)', url: 'https://www.secura.com/uploads/whitepapers/Zerologon.pdf' },
+    ],
     label: 'Quick Compromise',
     phase: 'initial-access',
     kind: 'category',

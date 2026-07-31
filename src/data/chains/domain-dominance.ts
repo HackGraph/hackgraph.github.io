@@ -41,6 +41,9 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
   },
   {
     id: 'find-privesc-path',
+    references: [
+      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
+    ],
     label: 'Privilege Escalation',
     phase: 'priv-esc',
     kind: 'category',

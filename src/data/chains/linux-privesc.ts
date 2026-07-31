@@ -25,13 +25,48 @@ import { cat, mitre, r } from '../lib';
  */
 export const linuxPrivescNodes: TechniqueNodeDef[] = [
   // ── Lane categories ────────────────────────────────────────────────────────
-  cat('lin-cat-sudo', 'Sudo Abuse', 'sudo', 'Turn a sudo right or a sudo bug into a root shell.', 'The most common Linux privesc. sudo -l reveals commands you may run as root and the environment variables sudo preserves (env_keep in the matching Defaults); sudo -V shows the version, which you compare against known-vulnerable ranges. A permissive rule, a shell-spawning binary, LD_PRELOAD, argument injection, or a sudo CVE each gets you a root shell.'),
-  cat('lin-cat-suid', 'SUID / SGID & Capabilities', 'suid', 'Abuse a binary that runs with elevated privilege regardless of the caller.', 'setuid/setgid binaries and file capabilities let a program keep root (or another owner) power no matter who launches it. Abuse a known shell escape, hijack a library or a relatively-named command it loads, use a dangerous capability, or reverse a custom binary for a flaw.'),
-  cat('lin-cat-jobs', 'Scheduled Jobs & Services', 'jobs', 'Hijack something root runs on a schedule or on demand.', 'Cron, systemd timers, logrotate, and root-run scripts execute as root on a schedule or event. If you can write the job, its target script, a directory it uses, or influence a wildcard it expands, your code runs as root the next time it fires.'),
-  cat('lin-cat-creds', 'Credentials & Secrets', 'creds', 'Find or capture a credential that unlocks root or another user.', 'Operators leave secrets everywhere: config files, histories, git repos, databases, SSH keys, and live process memory. Recover one, reuse a password, crack a hash, or hijack a privileged terminal session or process to become root or a higher-privileged user.'),
-  cat('lin-cat-files', 'Writable Files & Shares', 'files', 'Abuse a write to a sensitive system file or an unsquashed share.', 'When the wrong file or share is writable, root follows directly: add an account to /etc/passwd, crack or replace a hash in /etc/shadow, turn an arbitrary-write primitive into authorized_keys or a cron job, or plant a setuid binary on an NFS export mounted no_root_squash.'),
-  cat('lin-cat-containers', 'Privileged Groups & Containers', 'containers', 'Escape a container or ride a root-equivalent group to the host.', 'Some group memberships (docker, lxd, disk) are root by another name, and a mis-scoped container is a shell away from the host. Drive the Docker daemon, spin an LXD image, or exploit an over-permissioned or vulnerable runtime to break out to the underlying host.'),
-  cat('lin-cat-kernel', 'Kernel & Library Exploits', 'kernel', 'Exploit a bug in the kernel, a core library, or a versioned service.', 'When the configuration is clean, a code bug still works. Match the exact kernel, glibc, polkit, or service version to a public exploit: Dirty Pipe, GameOver(lay), nf_tables, Looney Tunables, PwnKit and their kin turn an unprivileged shell into root on an unpatched host.'),
+  cat('lin-cat-sudo', 'Sudo Abuse', 'sudo', 'Turn a sudo right or a sudo bug into a root shell.', 'The most common Linux privesc. sudo -l reveals commands you may run as root and the environment variables sudo preserves (env_keep in the matching Defaults); sudo -V shows the version, which you compare against known-vulnerable ranges. A permissive rule, a shell-spawning binary, LD_PRELOAD, argument injection, or a sudo CVE each gets you a root shell.', {
+    mitre: 'T1548.003',
+    references: [
+      { label: 'GTFOBins, Sudo', url: 'https://gtfobins.github.io/#+sudo' },
+    ],
+  }),
+  cat('lin-cat-suid', 'SUID / SGID & Capabilities', 'suid', 'Abuse a binary that runs with elevated privilege regardless of the caller.', 'setuid/setgid binaries and file capabilities let a program keep root (or another owner) power no matter who launches it. Abuse a known shell escape, hijack a library or a relatively-named command it loads, use a dangerous capability, or reverse a custom binary for a flaw.', {
+    mitre: 'T1548.001',
+    references: [
+      { label: 'GTFOBins, SUID', url: 'https://gtfobins.github.io/#+suid' },
+    ],
+  }),
+  cat('lin-cat-jobs', 'Scheduled Jobs & Services', 'jobs', 'Hijack something root runs on a schedule or on demand.', 'Cron, systemd timers, logrotate, and root-run scripts execute as root on a schedule or event. If you can write the job, its target script, a directory it uses, or influence a wildcard it expands, your code runs as root the next time it fires.', {
+    mitre: 'T1053.003',
+    references: [
+      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    ],
+  }),
+  cat('lin-cat-creds', 'Credentials & Secrets', 'creds', 'Find or capture a credential that unlocks root or another user.', 'Operators leave secrets everywhere: config files, histories, git repos, databases, SSH keys, and live process memory. Recover one, reuse a password, crack a hash, or hijack a privileged terminal session or process to become root or a higher-privileged user.', {
+    mitre: 'T1552.001',
+    references: [
+      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    ],
+  }),
+  cat('lin-cat-files', 'Writable Files & Shares', 'files', 'Abuse a write to a sensitive system file or an unsquashed share.', 'When the wrong file or share is writable, root follows directly: add an account to /etc/passwd, crack or replace a hash in /etc/shadow, turn an arbitrary-write primitive into authorized_keys or a cron job, or plant a setuid binary on an NFS export mounted no_root_squash.', {
+    mitre: 'T1222.002',
+    references: [
+      { label: 'MITRE, CWE-732: Incorrect Permission Assignment', url: 'https://cwe.mitre.org/data/definitions/732.html' },
+    ],
+  }),
+  cat('lin-cat-containers', 'Privileged Groups & Containers', 'containers', 'Escape a container or ride a root-equivalent group to the host.', 'Some group memberships (docker, lxd, disk) are root by another name, and a mis-scoped container is a shell away from the host. Drive the Docker daemon, spin an LXD image, or exploit an over-permissioned or vulnerable runtime to break out to the underlying host.', {
+    mitre: 'T1611',
+    references: [
+      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    ],
+  }),
+  cat('lin-cat-kernel', 'Kernel & Library Exploits', 'kernel', 'Exploit a bug in the kernel, a core library, or a versioned service.', 'When the configuration is clean, a code bug still works. Match the exact kernel, glibc, polkit, or service version to a public exploit: Dirty Pipe, GameOver(lay), nf_tables, Looney Tunables, PwnKit and their kin turn an unprivileged shell into root on an unpatched host.', {
+    mitre: 'T1068',
+    references: [
+      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    ],
+  }),
 
   // ── Lane 1: Sudo Abuse ───────────────────────────────────────────────────────
   {

@@ -13,14 +13,24 @@ export const mitre = (id: string): { id: string; url: string } => ({
 });
 
 /** A category (grouping) node. Its summary/description give the high-level
- *  "what lives in this folder" overview shown when the category is selected. */
+ *  "what lives in this folder" overview shown when the category is selected.
+ *
+ *  `sources` carries reading for the FAMILY, not for any one technique in it: the ATT&CK
+ *  entry the children sit under, and an overview page worth reading before picking a
+ *  branch. A category with nothing to read is a dead end for anyone who does not already
+ *  know which child they want. */
 export const cat = (
   id: string,
   label: string,
   phase: TechniqueNodeDef['phase'],
   summary: string,
   description: string,
-): TechniqueNodeDef => ({ id, label, phase, kind: 'category', summary, description });
+  sources?: { mitre?: string; references?: { label: string; url: string }[] },
+): TechniqueNodeDef => ({
+  id, label, phase, kind: 'category', summary, description,
+  ...(sources?.mitre ? { mitre: mitre(sources.mitre) } : {}),
+  ...(sources?.references ? { references: sources.references } : {}),
+});
 
 /** Raw-string tag: `r\`net use \\\\host\`` keeps backslashes literally, so command
  *  snippets read as typed without doubling every escape. */
