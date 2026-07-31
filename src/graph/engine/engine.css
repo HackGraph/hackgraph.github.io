@@ -132,7 +132,14 @@
 }
 .fg-world.glide { transition: transform .55s cubic-bezier(.22, .8, .26, 1); }
 
-.fg-edges { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.fg-edges {
+  position: absolute; left: 0; top: 0;
+  overflow: visible; pointer-events: none;
+  /* Above the quiet edge tags, below the cards. The lit route is the thing being read, so
+     a tag belonging to a branch you are NOT on must not interrupt it. Every layer here is
+     explicit rather than left to DOM order, which is what put tags over the route. */
+  z-index: 1;
+}
 .edge {
   fill: none;
   stroke: var(--edge);
@@ -147,7 +154,7 @@
    OUT-SPECIFY the opacity-0 rules below and re-reveal hidden cards */
 .fg.tracing:not(.iso) .edge:not(.hl):not(.lit) { opacity: .35; }
 .fg.focused:not(.iso) .edge:not(.lit):not(.hl):not(.keep) { opacity: .12; }
-.fg.iso .edge:not(.lit) { opacity: 0; }
+.fg.iso .edge:not(.lit):not(.keep) { opacity: 0; }
 .edge.fdim { opacity: .08; }
 .edgehit {
   fill: none;
@@ -156,7 +163,7 @@
   pointer-events: stroke;
   cursor: pointer;
 }
-.fg.iso .edgehit:not(.lit) { pointer-events: none; }
+.fg.iso .edgehit:not(.lit):not(.keep) { pointer-events: none; }
 
 /* relationship tags: pills riding the edge itself, in world space so they
    scale with zoom exactly like the cards do */
@@ -178,7 +185,7 @@
   text-align: center;
   line-height: 1.25;
   cursor: pointer;
-  z-index: 1;
+  z-index: 0;                        /* under the edges; the lit ones lift to 3 below */
   transition: opacity .4s ease, color .2s ease, border-color .2s ease;
 }
 .elabel:hover { color: var(--ink); border-color: var(--line-strong); }
@@ -192,7 +199,7 @@
 }
 .fg.tracing:not(.iso) .elabel:not(.hl):not(.lit) { opacity: .35; }
 .fg.focused:not(.iso) .elabel:not(.lit):not(.hl):not(.keep) { opacity: .12; }
-.fg.iso .elabel:not(.lit) { opacity: 0; pointer-events: none; }
+.fg.iso .elabel:not(.lit):not(.keep) { opacity: 0; pointer-events: none; }
 .elabel.fdim { opacity: .1; }
 .fg.hidelabels .elabel { display: none; }
 
@@ -200,6 +207,7 @@
 
 .card {
   position: absolute; left: 0; top: 0;
+  z-index: 2;                        /* cards sit over every edge and tag */
   width: 262px;
   padding: 12px 14px 13px;
   border-radius: 12px;
@@ -231,7 +239,7 @@
 }
 .card.lit, .card.sel { z-index: 2; }
 .fg.focused:not(.iso) .card:not(.lit):not(.sel):not(.keep):not(.exit) { opacity: .25; }
-.fg.iso .card:not(.lit):not(.exit) { opacity: 0; pointer-events: none; }
+.fg.iso .card:not(.lit):not(.keep):not(.exit) { opacity: 0; pointer-events: none; }
 .fg.hidenotes .note { display: none; }
 
 .cat {

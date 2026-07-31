@@ -1000,6 +1000,27 @@ function mount(container, options = {}) {
         rec.cv.el.classList.add('keep');
         litEls.push(rec.el, rec.cv.el);
       });
+      // Under isolate the captured path stays on screen wherever the selection sits. The
+      // route alone would shrink to the click, hiding everything past it and leaving no way
+      // forward — the reader would have to leave isolate to get their path back.
+      if (isolateOn && isoPath) {
+        route.forEach(k => isoPath.add(k));           // going further extends the path
+        isoPath.forEach(k => {
+          const v = views.get(k);
+          if (v) { v.el.classList.add('keep'); litEls.push(v.el); }
+        });
+        const ordered = [...isoPath];
+        for (let i = 0; i < ordered.length - 1; i++) {
+          for (let j = i + 1; j < ordered.length; j++) {
+            const rec = edgeRecs.get(ordered[i] + '|' + ordered[j]);
+            if (!rec) continue;
+            rec.el.classList.add('keep');
+            rec.hit.classList.add('keep');
+            if (rec.label) rec.label.classList.add('keep');
+            litEls.push(rec.el, rec.hit);
+          }
+        }
+      }
       if (chrome.panel) renderPanel(selKey);
       emit('onSelect', { key: selKey, defId: defIdOf(selKey), node: model.defs.get(defIdOf(selKey)), route: route.slice() });
     } else {
@@ -1011,11 +1032,12 @@ function mount(container, options = {}) {
     emit('onRouteChange', { route: route.slice(), trail: trail.slice() });
 
     if (isolateOn && route.length > 1) {
-      const base = views.get(route[0]);
-      route.forEach(k => { const v = views.get(k); if (v) v.targetCy = base.targetCy; });
+      const shown = isoPath ? [...isoPath] : route;
+      const base = views.get(shown[0]) || views.get(route[0]);
+      shown.forEach(k => { const v = views.get(k); if (v) v.targetCy = base.targetCy; });
       if (!inReconcile) {
         startAnim();
-        frameBounds(bboxOf(route.map(k => views.get(k)).filter(Boolean)));
+        frameBounds(bboxOf(shown.map(k => views.get(k)).filter(Boolean)));
       }
     } else if (isolateOn) {
       exitIsolate(inReconcile);       // the route dissolved underneath isolate
@@ -1046,13 +1068,17 @@ function mount(container, options = {}) {
 
   /* ---------- isolate: the lit path only, laid out straight ---------- */
 
-  let isoSnap = null;                 // positions + camera to restore on exit
+  let isoSnap = null;
+  // The path isolation was entered on. It only ever GROWS: stepping back to an earlier node
+  // must not delete the rest of the path from the screen, and going further extends it.
+  let isoPath = null;                 // positions + camera to restore on exit
 
   function setIsolate(on) {
     if (on && !isolateOn && route.length > 1) {
       isoSnap = { cam: { ...view }, pos: new Map() };
       [...views.values(), ...ways.values()].forEach(it => isoSnap.pos.set(it, it.targetCy));
       isolateOn = true;
+      isoPath = new Set(route);
       root.classList.add('iso');
       $('isolate').classList.add('on');
       syncIsolateUi();
@@ -1080,6 +1106,7 @@ function mount(container, options = {}) {
 
   function exitIsolate(inReconcile) {
     isolateOn = false;
+    isoPath = null;
     root.classList.remove('iso');
     $('isolate').classList.remove('on');
     syncIsolateUi();
