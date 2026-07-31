@@ -6,10 +6,19 @@
  * so it can be decoded on hover, which is the one panel feature the engine did not already
  * have. The tokenizer and the term list are unchanged — the same ones the React panel used.
  *
- * The tooltip is CSS-only (a `::after` fed from `data-def`), so there is no JS listener per
- * term and nothing to tear down when the panel re-renders.
+ * The tooltip is a `::after` fed from `data-def`, so its content and styling cost nothing
+ * per term. The one listener each term does carry only decides which SIDE it opens on:
+ * CSS cannot see the viewport, and a right-opening tooltip is cropped by the window for any
+ * term near the edge.
  */
 import { tokenizeGlossary } from '../glossary';
+
+/** Open the tooltip leftward when there is not room for it on the right. */
+function flipIfClipped(event: Event) {
+  const term = event.currentTarget as HTMLElement;
+  const room = window.innerWidth - term.getBoundingClientRect().left;
+  term.classList.toggle('gloss-left', room < 280);
+}
 
 /** Replace `el`'s contents with glossary-aware markup. Safe: every part is textContent. */
 export function decorateProse(el: HTMLElement, text: string): void {
@@ -30,6 +39,11 @@ export function decorateProse(el: HTMLElement, text: string): void {
     term.setAttribute('tabindex', '0');
     term.setAttribute('role', 'note');
     term.setAttribute('aria-label', `${seg.term}: ${seg.def}`);
+    // The tooltip opens to the right of its term, which crops it at the window edge for
+    // terms late in a line. Decide the side when it opens, from where the term actually
+    // sits — CSS alone cannot see the viewport.
+    term.addEventListener('pointerenter', flipIfClipped);
+    term.addEventListener('focus', flipIfClipped);
     el.appendChild(term);
   }
 }

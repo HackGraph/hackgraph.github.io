@@ -77,6 +77,7 @@ const MARKUP = `
   <div class="fg-filtersbody" data-el="filtersbody"></div>
 </div>
 <div class="fg-crumbs" data-el="crumbs" hidden></div>
+<button class="fg-isoexit" data-el="isoexit" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Back to the full graph</button>
 <aside class="fg-panel" data-el="panel" hidden>
   <div class="fg-grab" data-el="grab"><span></span></div>
   <div class="fg-panelhead">
@@ -306,6 +307,11 @@ function mount(container, options = {}) {
     const v = initialView();
     view.x = v.x; view.y = v.y; view.s = v.s;
     apply();
+    // A shared link names a selection; land on it. Framing the whole restored graph and
+    // leaving the reader to find the node the link was about defeats the point of sharing.
+    const selKey = trail[trail.length - 1];
+    const selView = selKey && views.get(selKey);
+    if (selView) centerOnNode(selView);
   }
 
   /* ---------- cards ---------- */
@@ -811,13 +817,24 @@ function mount(container, options = {}) {
             (ah - (b.maxY - b.minY) * s) / 2 - b.minY * s, s);
   }
 
+  // Frame what is ACTUALLY rendered rather than a fixed root-plus-one-column box. That
+  // box assumed the root was already fanned out, so a collapsed start put the single card
+  // half a column left of centre. Honours the panel reserve, so "centred" means centred in
+  // the space the graph actually has.
   function initialView() {
-    const w = vw(), h = vh();
-    const W = COL_PITCH + CARD_W;
-    const H = 7 * 112 + 6 * VGAP;
-    const s = Math.max(0.5, Math.min(1, (w - 90) / W, (h - 60) / H));
-    const rootCy = views.get(model.rootId)?.targetCy || 0;
-    return { x: (w - W * s) / 2, y: h / 2 - rootCy * s, s };
+    const live = [...views.values()];
+    if (!live.length) return { x: vw() / 2, y: vh() / 2, s: 1 };
+    const b = bboxOf(live);
+    const { rx, ry } = reserve();
+    const m = 140;
+    const aw = vw() - rx, ah = vh() - ry;
+    const s = Math.max(0.5, Math.min(1,
+      (aw - m) / Math.max(1, b.maxX - b.minX), (ah - m) / Math.max(1, b.maxY - b.minY)));
+    return {
+      x: (aw - (b.maxX - b.minX) * s) / 2 - b.minX * s,
+      y: (ah - (b.maxY - b.minY) * s) / 2 - b.minY * s,
+      s,
+    };
   }
 
   /* ---------- pan / zoom ---------- */
@@ -1007,7 +1024,9 @@ function mount(container, options = {}) {
 
   function renderCrumbs() {
     const bar = $('crumbs');
-    bar.hidden = route.length < 2;
+    // under isolate the whole screen already IS the trail, so the bar is noise; the way out
+    // takes its place (see syncIsolateUi, which owns both when the mode changes)
+    bar.hidden = isolateOn || route.length < 2;
     if (bar.hidden) { bar.innerHTML = ''; return; }
     bar.innerHTML = '';
     route.forEach((k, i) => {
@@ -1036,6 +1055,7 @@ function mount(container, options = {}) {
       isolateOn = true;
       root.classList.add('iso');
       $('isolate').classList.add('on');
+      syncIsolateUi();
       refreshRoute(false);
     } else if (!on && isolateOn) {
       exitIsolate(false);
@@ -1044,10 +1064,25 @@ function mount(container, options = {}) {
 
   // put every card back exactly where it was (and the camera too) — leaving
   // isolate must never strand nodes on the straightened line
+  // the panel's isolate control is rendered once but the mode can change from the toolbar,
+  // Escape or a reset — mirror the live flag onto it rather than trusting the render
+  function syncIsolateUi() {
+    const b = $('panelfoot').querySelector('.pfoot');
+    if (b) {
+      b.classList.toggle('on', isolateOn);
+      b.setAttribute('aria-checked', String(isolateOn));
+    }
+    // here rather than in renderCrumbs: leaving isolate restores positions directly and
+    // never reconciles, so the crumb render that used to own this simply did not run
+    $('isoexit').hidden = !isolateOn;
+    if (chrome.crumbs) $('crumbs').hidden = isolateOn || route.length < 2;
+  }
+
   function exitIsolate(inReconcile) {
     isolateOn = false;
     root.classList.remove('iso');
     $('isolate').classList.remove('on');
+    syncIsolateUi();
     if (inReconcile) { isoSnap = null; return; }   // a fresh layout supersedes it
     if (!isoSnap) { reconcile(trail[trail.length - 1] || model.rootId); return; }
     isoSnap.pos.forEach((y, it) => { it.targetCy = y; });
@@ -1139,6 +1174,9 @@ function mount(container, options = {}) {
     }
     const cardEl = e.target.closest('.card');
     if (!cardEl || cardEl.classList.contains('exit')) {
+      // Under isolate the route IS the view, so clearing the trail would silently dismantle
+      // it. Leaving isolate is a deliberate act: the button, Escape, or reset.
+      if (isolateOn) return;
       if (trail.length) { trail = []; refreshRoute(false); }
       return;
     }
@@ -1384,8 +1422,11 @@ function mount(container, options = {}) {
     route.forEach((k, i) => {
       if (i) crumb.appendChild(el('span', 'psep', '›'));
       const label = model.defs.get(defIdOf(k)).label;
-      if (i === route.length - 1) crumb.appendChild(el('b', null, label));
-      else crumb.appendChild(document.createTextNode(label));
+      if (i === route.length - 1) { crumb.appendChild(el('b', null, label)); return; }
+      // every earlier step is a way back: the trail is the point of the panel
+      const step = el('button', 'pcrumb-step', label);
+      step.addEventListener('click', () => trailClick(k));
+      crumb.appendChild(step);
     });
     body.appendChild(crumb);
 
@@ -2156,6 +2197,7 @@ function mount(container, options = {}) {
   });
 
   $('isolate').addEventListener('click', () => setIsolate(!isolateOn));
+  $('isoexit').addEventListener('click', () => setIsolate(false));
   $('share').addEventListener('click', copyLink);
   $('fit').addEventListener('click', () => frameBounds(bboxOf([...views.values()])));
   $('reset').addEventListener('click', () => {

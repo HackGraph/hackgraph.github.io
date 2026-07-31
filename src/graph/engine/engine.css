@@ -170,7 +170,13 @@
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 3px 6px;
-  white-space: nowrap;
+  /* The tag lives in the gap dagre reserved between columns (COL_GAP, 150px). A long one
+     used to run straight out of that gap and under the next card, so it wraps to a second
+     line inside the gap instead of overflowing it. */
+  max-width: 132px;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.25;
   cursor: pointer;
   z-index: 1;
   transition: opacity .4s ease, color .2s ease, border-color .2s ease;
@@ -576,7 +582,23 @@
 }
 .fg-panelx svg { display: block; flex: none; }
 .fg-panelx:hover { color: var(--ink); background: var(--chip); }
-.fg-panelbody { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 15px 16px 18px; scrollbar-width: thin; }
+.fg-panelbody {
+  flex: 1 1 auto;
+  overflow-y: auto; overflow-x: hidden;
+  padding: 15px 16px 18px;
+  /* a hairline that matches the panel rather than the OS */
+  scrollbar-width: thin;
+  scrollbar-color: var(--line-strong) transparent;
+}
+.fg-panelbody::-webkit-scrollbar { width: 8px; }
+.fg-panelbody::-webkit-scrollbar-track { background: transparent; }
+.fg-panelbody::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border: 2px solid transparent;
+  background-clip: content-box;
+  border-radius: 999px;
+}
+.fg-panelbody::-webkit-scrollbar-thumb:hover { background: var(--ink-faint); background-clip: content-box; }
 .fg-panelbody .pcrumb {
   display: flex; flex-wrap: wrap; align-items: center; gap: 3px;
   font-size: var(--t-xs); color: var(--ink-dim);
@@ -977,6 +999,37 @@
   cursor: pointer;
 }
 .poprow button:hover { background: var(--chip-hover); color: var(--ink); }
+
+/* the way out of isolate, standing where the trail bar normally sits */
+.fg-isoexit {
+  position: absolute; bottom: 16px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 7px;
+  font-family: inherit; font-size: var(--t-sm); font-weight: 500;
+  color: var(--ink);
+  background: var(--bar);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 8px 15px 8px 12px;
+  box-shadow: var(--shadow-pop);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  z-index: 12;
+  transition: border-color .15s, color .15s;
+}
+.fg-isoexit:hover { border-color: var(--accent); }
+.fg-isoexit svg { display: block; flex: none; }
+
+/* every earlier step in the panel's trail is a way back to it */
+.fg-panelbody .pcrumb-step {
+  font-family: inherit; font-size: inherit; font-weight: inherit;
+  color: var(--ink-dim);
+  background: none; border: 0; padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: color .15s;
+}
+.fg-panelbody .pcrumb-step:hover { color: var(--ink); text-decoration: underline; }
 
 /* ---------- hint ---------- */
 

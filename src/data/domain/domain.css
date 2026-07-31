@@ -48,6 +48,11 @@
 .fg .hg-gloss:focus-visible::after {
   display: block;
 }
+/* set when the term sits too close to the window edge for a right-opening tooltip */
+.fg .hg-gloss.gloss-left::after {
+  left: auto;
+  right: 0;
+}
 
 /* ---------- host filter controls ---------- */
 .fg .fselect {
