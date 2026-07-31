@@ -1,7 +1,5 @@
 import { execSync } from 'node:child_process';
 import { defineConfig } from 'vite';
-import react from '@vitejs/plugin-react';
-import tailwindcss from '@tailwindcss/vite';
 
 // Stamp the build with the git commit + date so the UI can show "how current is
 // this?" and report-issue links are reproducible. Self-updating (no hand-bumped
@@ -22,7 +20,6 @@ export default defineConfig({
   base: '/',
   // Expose the dev server on the LAN/tailnet by default (no `--host` flag needed).
   server: { host: true },
-  plugins: [react(), tailwindcss()],
   define: {
     __BUILD_HASH__: JSON.stringify(build.hash),
     __BUILD_DATE__: JSON.stringify(build.date),
@@ -31,11 +28,6 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // Split the heavy graph/animation libs into cacheable vendor chunks.
-        manualChunks: {
-          reactflow: ['@xyflow/react'],
-          motion: ['framer-motion'],
-          dagre: ['@dagrejs/dagre'],
-        },
       },
     },
   },

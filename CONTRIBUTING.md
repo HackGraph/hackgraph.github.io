@@ -5,7 +5,8 @@ HackGraph is split into two layers so you can add content without touching the e
 | Layer | Where | What |
 | --- | --- | --- |
 | **Content** | `src/data/` | The maps, nodes, edges, relationships: plain data you edit |
-| **Engine** | `src/graph/`, `src/components/`, `src/state/` | Generic graph/animation code; never references any specific node |
+| **Engine** | `src/graph/engine/` | The graph engine, vendored from its own repo. Domain-blind: it never references any specific node |
+| **Seam** | `src/graph/engineAdapter.ts`, `src/data/domain/` | The only code that knows both sides: map conversion, the two filters, the glossary |
 
 If you're adding techniques, you only ever edit files under **`src/data/`**.
 
@@ -119,14 +120,18 @@ its high-level overview); the chevron expands/collapses. Give every category a
 
 ## Dependencies
 
-HackGraph runs on a small runtime stack (React, React Flow, dagre, framer-motion).
-Two rules keep it lean:
+HackGraph has **no runtime dependencies at all**. The interface is the vendored graph
+engine (`src/graph/engine/`), which is plain JavaScript with no framework, and the build
+is Vite plus TypeScript. Two rules keep it that way:
 
 - **Content needs zero dependencies.** Adding techniques, categories, or maps is pure
   data under `src/data/`: no packages, no build changes.
 - **New runtime dependencies are rare. Raise one in an issue first.** Prefer the
   platform and what's already here. Everything stays **fully client-side**: no backend,
   no network calls at runtime (only the static, public reference links a node points to).
+- **Never edit `src/graph/engine/`.** Those files are copied byte-for-byte from the
+  engine's own repository, and the copy is how the two stay in step. Fix it upstream and
+  re-vendor, or the next sync silently reverts you.
 
 ## Before you open a PR
 

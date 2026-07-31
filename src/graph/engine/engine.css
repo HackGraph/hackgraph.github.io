@@ -1,0 +1,1098 @@
+/* Fan-Out Graph — stylesheet for the embeddable view.
+   EVERYTHING is scoped under `.fg` (the mounted root element), so the host
+   page keeps its own resets, ids and layout. Instances are independent: put
+   two on a page and each carries its own tokens, theme and state classes. */
+
+/* ---------- typeface ----------
+   Geist, self-hosted (latin subset) in the three weights actually used, plus
+   mono for code. No CDN request, works offline, and `swap` covers a cold cache. */
+@font-face{font-family:'Geist';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-style:normal;font-weight:500;font-display:swap;src:url('fonts/geist-sans-latin-500-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-style:normal;font-weight:600;font-display:swap;src:url('fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-style:normal;font-weight:400;font-display:swap;src:url('fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+
+/* ---------- theme tokens ----------
+   A deep, faintly WARM graphite ground — tinted, not dead grey — with layered
+   surfaces, warm hairlines and warm ink. ONE accent: a confident red, used for
+   the lit route, the active map and primary controls, and nowhere else. No glow
+   anywhere: depth comes from soft NEUTRAL shadows only. */
+.fg {
+  --bg0: #0c0a0b;
+  --bg1: #120e10;
+  --card: #1a1517;
+  --card-mix: #241c1f;
+  --panel: #1a1517;
+  --field: #120e10;
+  --ink: #f0eaec;
+  --ink-mid: #c9bcbf;
+  --ink-dim: #a59699;
+  --ink-faint: #8a7d80;
+  --line: rgba(214, 168, 172, .11);
+  --line-strong: rgba(228, 178, 182, .24);
+  --chip: #241c1f;
+  --chip-hover: #2e2427;
+  --bar: rgba(26, 21, 23, .92);
+  --edge: #4b3e41;
+  --edge-strong: #6e5b5f;
+  --accent: #f04450;
+  --accent-fill: #d62836;
+  --accent-soft: rgba(240, 68, 80, .16);
+  --mark: #d4bb43;
+  --ok: #7fd6a4;
+  /* elevation: soft, diffuse, NEUTRAL — never a coloured bloom */
+  --shadow-card: 0 1px 2px rgba(0,0,0,.3), 0 6px 16px -8px rgba(0,0,0,.5);
+  --shadow: 0 2px 4px rgba(0,0,0,.35), 0 14px 32px -12px rgba(0,0,0,.62);
+  --shadow-pop: 0 12px 44px -12px rgba(0,0,0,.66);
+  --dot: rgba(255,255,255,.035);
+  /* type scale — whole pixels; fractional px render soft at 1x */
+  --t-2xs: 10px; --t-xs: 11px; --t-sm: 12px; --t-base: 13px; --t-lg: 15px; --t-xl: 17px;
+}
+.fg[data-theme="light"] {
+  --bg0: #ece5e6;
+  --bg1: #e3dbdc;
+  --card: #fdfbfb;
+  --card-mix: #f1eaeb;
+  --panel: #fdfbfb;
+  --field: #f1eaeb;
+  --ink: #16100f;
+  --ink-mid: #3a2f2b;
+  --ink-dim: #52453f;
+  --ink-faint: #73645f;
+  --line: rgba(45, 18, 24, .20);
+  --line-strong: rgba(45, 18, 24, .34);
+  --chip: #f1eaeb;
+  --chip-hover: #e7dfe0;
+  --bar: rgba(253, 251, 251, .92);
+  --edge: #9c8a8d;
+  --edge-strong: #6f5c60;
+  /* deeper crimson on a light ground: the bright red reads as an error state */
+  --accent: #c22331;
+  --accent-fill: #c22331;
+  --accent-soft: rgba(194, 35, 49, .11);
+  --shadow-card: 0 1px 2px rgba(40,18,22,.08), 0 6px 16px -8px rgba(40,18,22,.2);
+  --shadow: 0 2px 4px rgba(40,18,22,.1), 0 14px 32px -12px rgba(40,18,22,.24);
+  --shadow-pop: 0 12px 44px -12px rgba(40,18,22,.28);
+  --dot: rgba(40,18,22,.07);
+}
+
+.fg, .fg *, .fg *::before, .fg *::after {
+  margin: 0; padding: 0; box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+/* author display rules (flex etc.) beat the UA's [hidden] — reassert it hard,
+   or "hidden" panels sit invisible over the canvas eating every click */
+.fg [hidden] { display: none !important; }
+.fg {
+  position: relative;               /* the whole UI is absolute within here */
+  overflow: hidden;
+  min-height: 240px;
+  font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Inter, Roboto, sans-serif;
+  letter-spacing: -.011em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background: radial-gradient(1400px 900px at 50% 32%, var(--bg1), var(--bg0));
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+}
+/* the demo page mounts full-window; hosts can size the container any way */
+.fg-fill { position: fixed; inset: 0; }
+
+/* measured-perf degradation: flat ground, no blur, no soft shadows */
+.fg.lowfx { background: var(--bg0); }
+.fg.lowfx .card, .fg.lowfx .toggle, .fg.lowfx .fg-bar,
+.fg.lowfx .pop, .fg.lowfx .fg-panel { box-shadow: none !important; }
+.fg.lowfx .fg-bar { backdrop-filter: none; }
+
+/* ---------- canvas ---------- */
+
+.fg-viewport {
+  position: absolute; inset: 0;
+  /* A barely-there dot grid: enough to read as a surface with depth, invisible enough
+     that it never competes with the cards. */
+  background-color: var(--bg0);
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 30px 30px;
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+.fg-bar, .fg-filters, .fg-crumbs, .pop, .fg-panelbody .prow, .fg-panelbody .nextstep, .fg-panelbody .chips {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.fg-viewport.panning { cursor: grabbing; }
+
+.fg-world {
+  position: absolute; left: 0; top: 0;
+  width: 0; height: 0;
+  transform-origin: 0 0;
+}
+.fg-world.glide { transition: transform .55s cubic-bezier(.22, .8, .26, 1); }
+
+.fg-edges { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.edge {
+  fill: none;
+  stroke: var(--edge);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: opacity .4s ease, stroke .3s ease, stroke-width .3s ease;
+}
+.edge.back { stroke-dasharray: 5 5; }
+.edge.lit, .edge.hl { stroke: var(--accent); stroke-width: 2; }
+/* focused/hover dims are scoped :not(.iso): under isolate they would otherwise
+   OUT-SPECIFY the opacity-0 rules below and re-reveal hidden cards */
+.fg.tracing:not(.iso) .edge:not(.hl):not(.lit) { opacity: .35; }
+.fg.focused:not(.iso) .edge:not(.lit):not(.hl):not(.keep) { opacity: .12; }
+.fg.iso .edge:not(.lit) { opacity: 0; }
+.edge.fdim { opacity: .08; }
+.edgehit {
+  fill: none;
+  stroke: transparent;
+  stroke-width: 18;
+  pointer-events: stroke;
+  cursor: pointer;
+}
+.fg.iso .edgehit:not(.lit) { pointer-events: none; }
+
+/* relationship tags: pills riding the edge itself, in world space so they
+   scale with zoom exactly like the cards do */
+.fg-elabels { position: absolute; left: 0; top: 0; width: 0; height: 0; }
+.elabel {
+  position: absolute; left: 0; top: 0;
+  font-size: 10px; font-weight: 500; letter-spacing: .1px;
+  line-height: 1;
+  color: var(--ink-dim);
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 3px 6px;
+  white-space: nowrap;
+  cursor: pointer;
+  z-index: 1;
+  transition: opacity .4s ease, color .2s ease, border-color .2s ease;
+}
+.elabel:hover { color: var(--ink); border-color: var(--line-strong); }
+/* the lit state marks the edge, not the word: border takes the accent, the text stays
+   neutral so the label keeps reading as a label rather than as another accent object */
+.elabel.lit, .elabel.hl {
+  color: var(--ink);
+  border-color: var(--accent);
+  background: var(--chip);
+  z-index: 3;
+}
+.fg.tracing:not(.iso) .elabel:not(.hl):not(.lit) { opacity: .35; }
+.fg.focused:not(.iso) .elabel:not(.lit):not(.hl):not(.keep) { opacity: .12; }
+.fg.iso .elabel:not(.lit) { opacity: 0; pointer-events: none; }
+.elabel.fdim { opacity: .1; }
+.fg.hidelabels .elabel { display: none; }
+
+/* ---------- cards ---------- */
+
+.card {
+  position: absolute; left: 0; top: 0;
+  width: 262px;
+  padding: 12px 14px 13px;
+  border-radius: 12px;
+  /* The phase tint is what makes a column readable at a glance. 11% over the panel
+     is the point where the hue registers without the card turning muddy. */
+  --bg: color-mix(in oklab, var(--c) 11%, var(--card));
+  background: var(--bg);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow-card);
+  cursor: pointer;
+  will-change: transform;
+  z-index: 1;
+  transition: border-color .2s ease, background-color .2s ease, box-shadow .2s ease, opacity .35s ease;
+}
+.card:hover { border-color: var(--line-strong); }
+.card.lit, .card.sel {
+  /* On-path: a solid accent ring, never a glow. The selected end rings strongest. */
+  border-color: var(--accent);
+  background: color-mix(in oklab, var(--accent) 12%, var(--card));
+  box-shadow: 0 0 0 1px var(--accent), var(--shadow-card);
+}
+.card.exit { pointer-events: none; z-index: 0; }
+.card.fdim { opacity: .22; }
+.card.na { opacity: .45; }
+.card.na .ttl { text-decoration: line-through; color: var(--ink-dim); }
+.card.sel {
+  background: color-mix(in oklab, var(--accent) 16%, var(--card));
+  box-shadow: 0 0 0 2px var(--accent), var(--shadow);
+}
+.card.lit, .card.sel { z-index: 2; }
+.fg.focused:not(.iso) .card:not(.lit):not(.sel):not(.keep):not(.exit) { opacity: .25; }
+.fg.iso .card:not(.lit):not(.exit) { opacity: 0; pointer-events: none; }
+.fg.hidenotes .note { display: none; }
+
+.cat {
+  display: flex; align-items: center; gap: 7px;
+  font-size: var(--t-xs); font-weight: 500; letter-spacing: 0;
+  line-height: 15px;
+  color: var(--c);
+}
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--c); }
+.badge {
+  margin-left: auto;
+  font-size: 10.5px; font-weight: 700;
+  color: var(--ink-dim);
+  background: var(--chip);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 1px 7px;
+}
+.mark {
+  position: absolute; top: 9px; right: 12px;
+  font-size: 12px; color: var(--mark);
+}
+.ttl {
+  margin-top: 6px;
+  font-size: 13.5px; font-weight: 600; letter-spacing: -.006em;
+  line-height: 18px;
+  color: var(--ink);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.desc {
+  margin-top: 4px;
+  font-size: 11.5px; line-height: 16px;
+  color: var(--ink-dim);
+}
+.note {
+  margin-top: 8px; padding-top: 7px;
+  border-top: 1px solid color-mix(in srgb, var(--c) 20%, var(--card-mix));
+  font-size: 12px; line-height: 17px; font-style: italic;
+  color: var(--ink-mid);
+  white-space: pre-wrap;
+}
+
+.toggle {
+  position: absolute; right: -14px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; align-items: center; justify-content: center;
+  /* Fixed 28px circle. As a min-width pill its shape AND centre shifted with the
+     digit count, and again when the count vanished on expand — a moving target. */
+  width: 28px; height: 28px; padding: 0;
+  font: 600 11.5px/1 inherit;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--card-mix);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background-color .15s, border-color .15s, color .15s;
+  z-index: 2;
+}
+/* transparent ring: pads the hit area to ~40px for touch without growing the dot */
+.toggle::before { content: ''; position: absolute; inset: -6px; border-radius: 999px; }
+.toggle svg { display: block; color: var(--ink); transition: color .15s; }
+.toggle:hover { border-color: var(--accent); color: var(--accent); }
+.toggle:hover svg { color: var(--accent); }
+.toggle.open { right: -14px; }
+
+/* ---------- top bar ---------- */
+
+.fg-bar {
+  /* A slim header spanning the top, not a floating island: the canvas reads as the
+     surface and the chrome as a quiet frame around it. */
+  position: absolute; top: 0; left: 0; right: 0;
+  display: flex; align-items: center; gap: 10px;
+  background: var(--bar);
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  padding: 9px 14px;
+  backdrop-filter: blur(12px);
+  box-shadow: none;
+  z-index: 10;
+}
+.brand {
+  display: flex; align-items: center; gap: 8px;
+  font-size: var(--t-lg); font-weight: 600; letter-spacing: -.014em;
+  color: var(--ink);
+  white-space: nowrap;
+  margin-right: 4px;
+}
+.brand-dot { width: 8px; height: 8px; border-radius: 2px; background: var(--accent); }
+.fg-bar button {
+  font-family: inherit;
+  font-size: var(--t-sm); font-weight: 500;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 11px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color .15s, border-color .15s, color .15s;
+}
+.fg-bar button:hover { border-color: var(--line-strong); color: var(--ink); }
+.fg-bar button.on {
+  background: var(--accent-soft);
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--line-strong));
+  color: var(--ink);
+}
+
+/* map switcher: segmented on desktop, dropdown on narrow screens */
+.fg-maps { display: flex; gap: 2px; border: 0; border-radius: 10px; overflow: hidden; padding: 2px; background: var(--chip); }
+.fg-maps button {
+  border: 1px solid transparent; border-radius: 8px;
+  background: transparent;
+  padding: 4px 11px;
+}
+.fg-maps button:hover { background: transparent; }
+.fg-maps button.on {
+  background: var(--accent-soft);
+  border-color: color-mix(in oklab, var(--accent) 42%, var(--line-strong));
+  color: var(--ink);
+}
+.fg-mapsel {
+  display: none;
+  font-family: inherit; font-size: 11.5px; font-weight: 600;
+  color: var(--ink-mid);
+  background: var(--chip);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.fg.narrow .fg-maps { display: none; }
+.fg.narrow .fg-mapsel { display: block; min-width: 0; }
+.fg.narrow .fg-bar { gap: 6px; padding-left: 10px; padding-right: 10px; }
+.fg.narrow .brand span:last-child { display: none; }
+
+/* Narrow: the field costs more width than the bar has, so it collapses to its own icon
+   and takes over the bar only while open. */
+.fg.narrow .fg-searchbox { display: none; }
+.fg.narrow .fg-icon.fg-searchbtn { display: inline-flex; }
+.fg.narrow.searchopen .fg-searchbox { display: inline-flex; flex: 1 1 auto; min-width: 0; }
+.fg.narrow.searchopen .brand,
+.fg.narrow.searchopen .fg-mapsel,
+.fg.narrow.searchopen [data-el="repo"],
+.fg.narrow.searchopen [data-el="reset"] { display: none; }
+.fg.narrow.searchopen .fg-search,
+.fg.narrow.searchopen .fg-search:focus { width: 100%; }
+.fg.narrow .fg-results { left: 0; right: 0; min-width: 0; }
+
+.fg-searchbox { position: relative; display: inline-flex; align-items: center; }
+.fg-searchicon {
+  position: absolute; left: 11px;
+  display: flex;
+  color: var(--ink-faint);
+  pointer-events: none;
+}
+.fg-searchicon svg { display: block; flex: none; width: 13px; height: 13px; }
+.fg-search {
+  font-family: inherit;
+  font-size: 12px;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  padding: 6px 13px 6px 31px;
+  width: 180px;
+  outline: none;
+  transition: border-color .15s, width .2s;
+}
+.fg-search:focus { border-color: var(--line-strong); width: 230px; }
+/* .fg-icon sets display later in the file, so this needs both classes to win */
+.fg-icon.fg-searchbtn { display: none; }
+.fg-results {
+  position: absolute; top: calc(100% + 8px); right: 0;
+  min-width: 300px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  box-shadow: var(--shadow-pop);
+  overflow: hidden;
+  z-index: 20;
+}
+.result {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 12.5px;
+}
+.result .rg { margin-left: auto; font-size: 10.5px; color: var(--ink-faint); }
+.result.hot, .result:hover { background: var(--chip-hover); }
+
+/* ---------- filters ---------- */
+
+/* ---------- zoom controls ---------- */
+
+.fg-zoom {
+  position: absolute; left: 12px; top: 70px;
+  display: flex; flex-direction: column;
+  background: var(--bar);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  overflow: hidden;
+  z-index: 10;
+}
+.fg-zoom button {
+  display: flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; padding: 0;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  transition: color .15s, background-color .15s;
+}
+.fg-zoom button + button { border-top: 1px solid var(--line); }
+.fg-zoom button:hover { color: var(--ink); background: var(--chip); }
+.fg-zoom svg { display: block; flex: none; width: 15px; height: 15px; }
+
+/* ---------- filters ---------- */
+
+/* Docked bottom-left and collapsed by default: the filters are a detour, not something
+   you read while following a path. */
+.fg-filterdock { position: absolute; left: 12px; bottom: 12px; z-index: 11; }
+.fg-icon.fg-filterbtn {
+  position: relative;
+  display: inline-flex;
+  background: var(--bar);
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+}
+.fdot {
+  position: absolute; top: -3px; right: -3px;
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 1.5px solid var(--bg0);
+}
+/* a sibling of the dock, not a child of it: on narrow this becomes a full-width sheet,
+   which it could never be inside an absolutely-positioned 30px button */
+.fg-filters {
+  position: absolute; left: 12px; bottom: 54px;
+  min-width: 190px;
+  display: flex; flex-direction: column; gap: 4px;
+  max-height: 62vh; overflow-y: auto;
+  padding: 10px 10px 12px;
+  background: var(--bar);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow-card);
+  backdrop-filter: blur(12px);
+  z-index: 10;
+  scrollbar-width: none;
+}
+.fhead {
+  font-size: var(--t-2xs); font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 8px 2px 3px;
+}
+.fg-filters .fhead:first-child { margin-top: 0; }
+.fchip {
+  display: flex; align-items: center; gap: 7px;
+  font-family: inherit;
+  font-size: var(--t-xs); font-weight: 500;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: opacity .15s, border-color .15s, color .15s;
+}
+.fchip:not(.off) { color: var(--ink); }
+.fchip .dot { width: 7px; height: 7px; }
+.fchip.off { opacity: .38; }
+.fchip:hover { border-color: var(--line-strong); }
+
+/* ---------- crumbs ---------- */
+
+.fg-crumbs {
+  position: absolute; bottom: 44px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px;
+  max-width: 86vw;
+  overflow-x: auto;
+  background: var(--bar);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  z-index: 10;
+  scrollbar-width: none;
+}
+.crumb {
+  font-family: inherit;
+  font-size: 11px; font-weight: 550;
+  color: var(--ink-mid);
+  background: none; border: none;
+  padding: 3px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.crumb:hover { background: var(--chip-hover); color: var(--ink); }
+.crumb.last { color: var(--accent); }
+.crumbsep { color: var(--ink-faint); font-size: 10px; }
+
+/* ---------- detail panel: right dock, bottom sheet on mobile ---------- */
+
+.fg-panel {
+  position: absolute; top: 70px; right: 12px; bottom: 12px;
+  width: 372px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+  z-index: 12;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+/* header and footer are fixed; only the middle scrolls, so the title of what you are
+   reading never leaves the panel */
+.fg-panelhead {
+  flex: 0 0 auto;
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 14px 16px 13px;
+  border-bottom: 1px solid var(--line);
+}
+.fg-panelhead-main { min-width: 0; flex: 1 1 auto; }
+.fg-panelx {
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  width: 26px; height: 26px; padding: 0;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color .15s, background-color .15s;
+}
+.fg-panelx svg { display: block; flex: none; }
+.fg-panelx:hover { color: var(--ink); background: var(--chip); }
+.fg-panelbody { flex: 1 1 auto; overflow-y: auto; padding: 15px 16px 18px; scrollbar-width: thin; }
+.fg-panelbody .pcrumb {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 3px;
+  font-size: var(--t-xs); color: var(--ink-dim);
+  margin-bottom: 14px;
+}
+.fg-panelbody .pcrumb b { color: var(--ink); font-weight: 400; }
+.fg-panelbody .psep { color: var(--ink-faint); }
+/* the phase reads as a coloured dot next to neutral text: colour on the panel means
+   state (lit, marked), never identity, so the group name stays grey */
+.fg-panelhead .pcat {
+  display: flex; align-items: center; gap: 6px;
+  font-size: var(--t-sm); font-weight: 400; letter-spacing: 0;
+  color: var(--ink-dim);
+}
+.fg-panelhead .pcat .dot { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c, #8f939b); }
+.fg-panelhead h2 {
+  font-size: 20px; font-weight: 600; line-height: 1.2; letter-spacing: -.01em;
+  color: var(--ink);
+  margin-top: 6px;
+}
+.fg-panelhead h2 .badge { vertical-align: 3px; margin-left: 6px; }
+.pmarks { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 9px; }
+.pmark {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: inherit; font-size: var(--t-xs); font-weight: 500;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 4px 10px 4px 7px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.pmark:hover { color: var(--ink); border-color: var(--line-strong); }
+.pmdot {
+  flex: none; width: 11px; height: 11px;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 50%;
+  transition: background-color .15s, border-color .15s;
+}
+.pmark.on { color: var(--ink); border-color: color-mix(in srgb, var(--mark) 45%, var(--line-strong)); }
+.pmark.on .pmdot { background: var(--mark); border-color: var(--mark); }
+.pmark.na.on { border-color: var(--line-strong); }
+.pmark.na.on .pmdot { background: var(--ink-faint); border-color: var(--ink-faint); }
+
+.fg-panelbody .psum { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+.fg-panelbody .pdesc { font-size: 14px; color: var(--ink-dim); line-height: 1.6; margin-top: 12px; }
+
+/* ---------- next steps ---------- */
+
+.pnext { margin-top: 20px; }
+.pnextbtn {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  width: 100%;
+  font-family: inherit; font-size: var(--t-base); font-weight: 600;
+  text-align: left;
+  color: #fff;
+  background: var(--accent-fill);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 10px 13px;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: background-color .15s, color .15s, border-color .15s;
+}
+.pnextbtn:hover { background: color-mix(in srgb, var(--accent-fill) 85%, #fff); }
+.pnext.open .pnextbtn {
+  color: var(--ink);
+  background: var(--chip);
+  border-color: var(--line-strong);
+  box-shadow: none;
+}
+.pnext.open .pnextbtn:hover { background: var(--chip-hover); }
+.pnextlead { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.pnextcount {
+  flex: none;
+  border-radius: 999px; padding: 2px 7px;
+  font-size: var(--t-2xs); font-weight: 500; font-variant-numeric: tabular-nums;
+  background: rgb(255 255 255 / .25); color: #fff;
+}
+.pnext.open .pnextcount { background: color-mix(in srgb, var(--line) 80%, transparent); color: var(--ink-dim); }
+.pnextchev { flex: none; width: 15px; height: 15px; transform: rotate(90deg); transition: transform .2s; }
+.pnext.open .pnextchev { transform: rotate(-90deg); }
+/* 0fr -> 1fr animates to the list's natural height without measuring it */
+.pnextlist {
+  display: grid; grid-template-rows: 0fr;
+  transition: grid-template-rows .22s cubic-bezier(.22, 1, .36, 1);
+}
+.pnext.open .pnextlist { grid-template-rows: 1fr; }
+.pnextinner { overflow: hidden; display: flex; flex-direction: column; gap: 6px; }
+.pnext.open .pnextinner { padding-top: 8px; }
+.pnextitem {
+  display: flex; align-items: flex-start; gap: 10px;
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 10px;
+  cursor: pointer;
+  transition: border-color .15s, background-color .15s;
+}
+.pnextitem:hover { border-color: var(--line-strong); background: var(--chip-hover); }
+.pnextitem .dot { flex: none; width: 8px; height: 8px; margin-top: 5px; border-radius: 50%; }
+.pnextitem .ptext { min-width: 0; flex: 1 1 auto; }
+.pnextitem .plabel { display: block; font-size: var(--t-base); font-weight: 500; line-height: 1.25; color: var(--ink); }
+.pnextitem .psub {
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+  margin-top: 3px;
+  font-size: var(--t-xs); line-height: 1.35; color: var(--ink-dim);
+}
+.pnextarrow { flex: none; width: 14px; height: 14px; margin-top: 4px; color: var(--ink-faint); transition: color .15s; }
+.pnextitem:hover .pnextarrow { color: var(--ink); }
+
+.fg-panelfoot { flex: 0 0 auto; border-top: 1px solid var(--line); padding: 10px 12px; }
+.pfoot {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%;
+  font-family: inherit; font-size: var(--t-base); font-weight: 500;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px;
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.pfoot:hover { color: var(--ink); border-color: var(--line-strong); }
+.pfoot.on { color: var(--ink); border-color: color-mix(in srgb, var(--accent) 45%, var(--line-strong)); }
+.pfoot.on .pmdot { background: var(--accent); border-color: var(--accent); }
+.fg-panelbody h3 {
+  font-size: var(--t-2xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 20px 0 8px;
+}
+.fg-panelbody .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.fg-panelbody .pchip {
+  font-family: inherit; font-size: var(--t-sm); font-weight: 400;
+  color: var(--ink-mid);
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 5px 9px;
+  cursor: pointer;
+}
+.fg-panelbody .pchip:hover { color: var(--ink); background: var(--chip-hover); }
+.fg-panelbody .pchip.static { cursor: default; }
+.fg-panelbody .cmd {
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11.5px;
+  color: var(--ink-mid);
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 7px 8px 7px 11px;
+  margin-bottom: 5px;
+}
+.fg-panelbody .cmd span { flex: 1; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+.fg-panelbody .cmd button {
+  font-family: inherit; font-size: 10px; font-weight: 700;
+  color: var(--ink-dim);
+  background: var(--chip);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+.fg-panelbody .cmd button:hover { color: var(--ink); }
+.fg-panelbody .caution {
+  font-size: 12px; line-height: 1.5;
+  color: color-mix(in srgb, var(--mark) 60%, var(--ink));
+  background: color-mix(in srgb, var(--mark) 9%, var(--panel));
+  border: 1px solid color-mix(in srgb, var(--mark) 35%, var(--line));
+  border-radius: 8px;
+  padding: 9px 11px;
+  margin-top: 12px;
+}
+.fg-panelbody .refs a { display: block; font-size: var(--t-sm); color: var(--ink-dim); text-decoration: none; padding: 3px 0; }
+.fg-panelbody .refs a:hover { color: var(--ink); }
+.fg-panelbody .refs a:hover { text-decoration: underline; }
+.fg-panelbody textarea {
+  width: 100%;
+  font-family: inherit; font-size: 12px; line-height: 1.45;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px;
+  resize: vertical;
+  min-height: 54px;
+  outline: none;
+}
+.fg-panelbody textarea:focus { border-color: var(--line-strong); }
+.fg-panelbody .prow { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+.fg-panelbody .prow button {
+  font-family: inherit; font-size: 11px; font-weight: 600;
+  color: var(--ink-mid);
+  background: var(--chip);
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 5px 11px;
+  cursor: pointer;
+}
+.fg-panelbody .prow button:hover { color: var(--ink); background: var(--chip-hover); }
+.fg-panelbody .prow button.on { color: var(--mark); border-color: color-mix(in srgb, var(--mark) 45%, var(--line-strong)); }
+.fg-panelbody .nextstep {
+  display: flex; align-items: baseline; gap: 8px;
+  width: 100%; text-align: left;
+  font-family: inherit; font-size: 12px;
+  color: var(--ink-mid);
+  background: none; border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 7px 2px;
+  cursor: pointer;
+}
+.fg-panelbody .nextstep:last-child { border-bottom: none; }
+.fg-panelbody .nextstep:hover { color: var(--ink); }
+.fg-panelbody .nextstep .rg { margin-left: auto; font-size: 10px; color: var(--ink-faint); white-space: nowrap; }
+/* Narrow: the panel is a bottom sheet. `.peek` is its resting state — a single line
+   naming what you tapped, so the card itself is still on screen. */
+.fg.narrow .fg-panel {
+  top: 58px; left: 10px; right: 10px; bottom: 10px;
+  width: auto;
+  max-height: none;
+  /* top carries the snap, transform carries the drag; transitioning both together lets
+     the sheet continue from wherever the finger let go instead of jumping */
+  transition: top .26s cubic-bezier(.22, 1, .36, 1), transform .26s cubic-bezier(.22, 1, .36, 1);
+}
+.fg.narrow .fg-panel.dragging { transition: none; }
+/* the resting state: a single line naming what you tapped. Selecting a node always
+   returns here, so a tap on the graph never buries the graph. */
+.fg.narrow .fg-panel.peek { top: calc(100% - 67px); }
+.fg.narrow .fg-panel.peek .fg-panelbody,
+.fg.narrow .fg-panel.peek .fg-panelfoot,
+.fg.narrow .fg-panel.peek .pmarks { display: none; }
+.fg.narrow .fg-panel.peek .fg-panelhead {
+  align-items: center;
+  padding: 11px 10px 11px 14px;
+  border-bottom-color: transparent;
+  cursor: pointer;
+}
+.fg.narrow .fg-panel.peek .pcat { font-size: var(--t-xs); }
+.fg.narrow .fg-panel.peek h2 {
+  font-size: var(--t-lg); margin-top: 1px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.fg-peek { display: none; }
+.fg.narrow .fg-peek {
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  width: 26px; height: 26px; padding: 0;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: color .15s, background-color .15s;
+}
+.fg-peek svg { display: block; flex: none; }
+.fg-peek:hover { color: var(--ink); background: var(--chip); }
+.fg-peek .pk-min { display: none; }
+.fg.narrow .fg-panel:not(.peek) .fg-peek .pk-up { display: none; }
+.fg.narrow .fg-panel:not(.peek) .fg-peek .pk-min { display: block; }
+
+/* grab handle: only on an expanded sheet, where dragging it down puts it away */
+.fg-grab { display: none; }
+.fg.narrow .fg-panel:not(.peek) .fg-grab {
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  padding: 9px 0 3px;
+  cursor: grab;
+  touch-action: none;
+}
+.fg-grab:active { cursor: grabbing; }
+.fg-grab span { width: 36px; height: 4px; border-radius: 999px; background: var(--line-strong); }
+
+/* the sheet owns the bottom of the screen, so the filter button moves under the zoom
+   stack rather than sitting behind it */
+.fg.narrow .fg-filterdock { top: 178px; bottom: auto; }
+/* A narrow rail of chips is unusable on a phone: it inner-scrolls and clips mid-list. On
+   narrow the popover becomes its own sheet, full width, chips wrapping into rows. */
+.fg.narrow .fg-filters {
+  left: 10px; right: 10px; bottom: 10px; top: auto;
+  min-width: 0;
+  max-height: 64vh;
+  padding: 0 0 10px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+  z-index: 16;
+}
+.fg.narrow .fg-filtershead { display: flex; }
+/* chips wrap into rows instead of stacking one per line: a full-width sheet has the
+   room, and the flat head/chip sibling list breaks into groups on the headings */
+.fg.narrow .fg-filtersbody {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px;
+  padding: 6px 12px 0;
+}
+.fg.narrow .fg-filtersbody .fhead { flex: 0 0 100%; margin: 6px 2px 0; }
+.fg.narrow .fg-filtersbody .fchip { flex: 0 1 auto; }
+
+.fg-filtershead {
+  display: none;
+  align-items: center; justify-content: space-between; gap: 8px;
+  position: sticky; top: 0; z-index: 1;
+  padding: 12px 10px 10px 14px;
+  font-size: var(--t-2xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--ink-faint);
+  background: var(--bar);
+  border-bottom: 1px solid var(--line);
+  border-radius: 16px 16px 0 0;
+}
+.fg-filtersx {
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  width: 26px; height: 26px; padding: 0;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.fg-filtersx svg { display: block; flex: none; }
+.fg-filtersx:hover { color: var(--ink); background: var(--chip); }
+/* the dock is just a button now, so filters stay reachable on narrow screens */
+
+/* ---------- popovers & menus ---------- */
+
+.pop {
+  position: absolute;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  box-shadow: var(--shadow-pop);
+  z-index: 30;
+  font-size: 12.5px;
+}
+.fg-menu { min-width: 190px; padding: 5px; }
+.mi {
+  display: block; width: 100%; text-align: left;
+  font-family: inherit; font-size: 12.5px;
+  color: var(--ink-mid);
+  background: none; border: none;
+  padding: 7px 11px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.mi:hover { background: var(--chip-hover); color: var(--ink); }
+.fg-notepop { width: 280px; padding: 10px; }
+.fg-notetext {
+  width: 100%;
+  font-family: inherit; font-size: 12.5px; line-height: 1.4;
+  color: var(--ink);
+  background: var(--field);
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 8px;
+  resize: vertical;
+  outline: none;
+}
+.fg-notetext:focus { border-color: #4f9cf9; }
+.poprow { display: flex; gap: 6px; justify-content: flex-end; margin-top: 8px; }
+.poprow button {
+  font-family: inherit; font-size: 11.5px; font-weight: 600;
+  color: var(--ink-mid);
+  background: var(--chip);
+  border: 1px solid var(--line-strong);
+  border-radius: 7px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.poprow button:hover { background: var(--chip-hover); color: var(--ink); }
+
+/* ---------- hint ---------- */
+
+.fg.narrow .fg-crumbs { display: none; }
+
+.fg :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .fg * { animation: none !important; transition: none !important; }
+}
+
+.ver { font-size: 9.5px; font-weight: 700; color: var(--ink-faint); align-self: flex-start; }
+
+/* ---------- header icon buttons & settings menu ---------- */
+
+.fg-spacer { flex: 1 1 auto; }
+.fg-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; padding: 0;
+  color: var(--ink-dim);
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: border-color .15s, color .15s;
+}
+.fg-icon:hover { border-color: var(--line-strong); color: var(--ink); }
+/* flex would otherwise shrink the glyph to its min-content width (measured 4px) */
+.fg-icon svg { display: block; flex: none; width: 16px; height: 16px; }
+
+/* Lives outside .fg-bar on purpose: nested, the bar's own `button` rules would restyle
+   every switch row. `right` is set from the gear's box when the menu opens. */
+.fg-settings {
+  position: absolute; top: 48px; right: 12px;
+  width: 244px;
+  padding: 6px;
+  background: color-mix(in srgb, var(--panel) 95%, transparent);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: var(--shadow-pop);
+  z-index: 20;
+}
+.shead {
+  font-size: var(--t-2xs); font-weight: 600; letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  padding: 6px 8px 5px;
+}
+.srow {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%;
+  font-family: inherit; font-size: var(--t-base); font-weight: 500;
+  text-align: left;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+  transition: background-color .15s;
+}
+.srow:hover { background: color-mix(in srgb, var(--line) 60%, transparent); }
+/* the leading tile keeps the label column aligned whether or not a row has a hint */
+.sicon {
+  display: flex; align-items: center; justify-content: center;
+  flex: 0 0 auto;
+  width: 28px; height: 28px;
+  color: var(--ink-dim);
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.sicon svg { display: block; flex: none; width: 15px; height: 15px; }
+.stext { display: block; min-width: 0; flex: 1 1 auto; }
+.slabel { display: block; }
+.shint { display: block; font-size: var(--t-xs); font-weight: 400; line-height: 1.3; color: var(--ink-faint); }
+.sstamp {
+  margin-top: 4px;
+  border-top: 1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  padding: 8px 10px 4px;
+  font-size: var(--t-2xs);
+  color: var(--ink-faint);
+}
+.sstamp a, .sstamp .shash {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: inherit;
+  text-decoration: underline dotted;
+  text-underline-offset: 2px;
+  transition: color .15s;
+}
+.sstamp a:hover { color: var(--ink-dim); }
+
+/* the switch: accent when on, hairline track when off — no glow */
+.sswitch {
+  position: relative; flex: 0 0 auto;
+  width: 32px; height: 18px;
+  border-radius: 999px;
+  background: var(--line-strong);
+  transition: background-color .2s;
+}
+.sswitch i {
+  position: absolute; top: 2px; left: 0;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / .25);
+  transform: translateX(3px);
+  transition: transform .2s;
+}
+.srow.on .sswitch { background: var(--accent); }
+.srow.on .sswitch i { transform: translateX(15px); }
+
+/* ---------- glossary (host prose decoration) ----------
+   Fed by the `prose` hook: the term carries its definition in data-def and the tooltip is
+   pure CSS, so there is no listener per term and nothing to clean up when the panel
+   re-renders. Dotted underline rather than a colour, because colour on a panel means
+   state here, not "this word is special". */
+.fg .hg-gloss {
+  position: relative;
+  border-bottom: 1px dotted var(--ink-faint);
+  cursor: help;
+}
+.fg .hg-gloss::after {
+  content: attr(data-def);
+  position: absolute; left: 0; bottom: calc(100% + 6px);
+  z-index: 30;
+  width: max-content; max-width: 260px;
+  font-size: var(--t-xs); font-weight: 400; line-height: 1.4; letter-spacing: 0;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 7px 9px;
+  box-shadow: var(--shadow-pop);
+  opacity: 0; visibility: hidden;
+  transition: opacity .14s ease;
+  pointer-events: none;
+}
+.fg .hg-gloss:hover::after,
+.fg .hg-gloss:focus-visible::after { opacity: 1; visibility: visible; }
+
+/* the host filter controls: a select and the foothold chips */
+.fg .fselect {
+  font-family: inherit; font-size: var(--t-xs);
+  color: var(--ink);
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 6px;
+  outline: none;
+}
+.fg .fselect:focus { border-color: var(--line-strong); }

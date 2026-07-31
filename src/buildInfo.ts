@@ -1,4 +1,4 @@
-import { REPO_URL } from './state/repo';
+import { REPO_URL } from './repo';
 
 /**
  * Build stamp injected from git at build time (see vite.config.ts). Surfaced in the

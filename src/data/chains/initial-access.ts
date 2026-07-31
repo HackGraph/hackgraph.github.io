@@ -213,9 +213,9 @@ export const initialAccessNodes: TechniqueNodeDef[] = [
   },
   {
     id: 'smb-exec-foothold',
-    label: 'Relay to SMB → Exec',
+    label: 'Relay to SMB',
     phase: 'lateral-movement',
-    needs: 'local-admin',
+    needs: 'none',
     summary: 'Code execution on the relayed/owned host.',
     description:
       'With a relayed session or admin creds, execute commands over SMB (service creation, WMI, or task scheduler) to land an interactive foothold on a domain-joined host. These mechanisms map to different ATT&CK techniques, so tune detections accordingly: psexec/smbexec create a service (Service Execution, T1569.002) on top of the SMB admin-share session (T1021.002), while wmiexec does not touch SMB admin shares for the exec step at all, it runs Win32_Process.Create over DCOM/WMI under WmiPrvSE.exe (Windows Management Instrumentation, T1047).',

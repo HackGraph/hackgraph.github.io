@@ -548,7 +548,7 @@ SQL> xp_cmdshell whoami`,
   },
   {
     id: 'ntlmv1-downgrade',
-    label: 'NTLMv1 Downgrade → NT Hash',
+    label: 'NTLMv1 Downgrade',
     phase: 'credential-access',
     needs: 'domain-user',
     summary: 'Force NetNTLMv1, capture it with a chosen challenge, and crack it to the NT hash in minutes via DES / crack.sh.',
@@ -1081,7 +1081,7 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'domain-admin', target: 'goldengmsa', label: 'read KDS root key' },
   { source: 'goldengmsa', target: 'pass-the-hash', label: 'forged gMSA hash' },
   { source: 'ad-cat-quick-compromise', target: 'proxylogon' },
-  { source: 'proxylogon', target: 'local-admin-host', label: 'webshell -> SYSTEM' },
+  { source: 'proxylogon', target: 'local-admin-host', label: 'webshell → SYSTEM' },
   { source: 'cvegrp-exchange', target: 'proxynotshell' },
   { source: 'proxynotshell', target: 'local-admin-host', label: 'RCE on Exchange' },
 

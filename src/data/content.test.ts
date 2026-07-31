@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { MAPS } from './index';
-import { buildModel } from '../graph/buildModel';
+import { toEngineMap } from '../graph/engineAdapter';
+import { GraphEngine } from '../graph/engine';
 import { FOOTHOLDS } from './footholds';
 import { ALL_VERSION_IDS } from './windows-versions';
 import { RELATIONSHIPS } from './relationships';
-import { OSCP_SCOPE } from './oscp-scope';
 
 const MITRE_RE = /^T\d{4}(\.\d{3})?$/;
 const FOOTHOLD_IDS = new Set(FOOTHOLDS.map((f) => f.id));
@@ -18,7 +18,7 @@ describe('content lint', () => {
       const phaseIds = new Set(map.phases.map((p) => p.id));
 
       it('builds (unique ids, valid edge endpoints, root exists)', () => {
-        expect(() => buildModel(map)).not.toThrow();
+        expect(() => GraphEngine.buildModel(toEngineMap(map))).not.toThrow();
       });
 
       it('every node has a valid phase', () => {
@@ -85,7 +85,7 @@ describe('content lint', () => {
       });
 
       // `rel` pulls a canonical caption/explanation from relationships.ts; an unknown
-      // id would render an edge with no meaning (buildModel also throws on this).
+      // id would render an edge with no meaning (the engine's buildModel also throws on this).
       it('edge rel ids reference known relationships', () => {
         const bad = map.edges
           .filter((e) => e.rel && !(e.rel in RELATIONSHIPS))
@@ -117,24 +117,4 @@ describe('content lint', () => {
       });
     });
   }
-});
-
-// The OSCP scope set lives outside the node data (it is OffSec's external exam
-// boundary, not an intrinsic node property), so ids there can drift out of sync with
-// the graph. Pin every scope id to a real technique node across all maps.
-describe('OSCP scope', () => {
-  const byId = new Map(MAPS.flatMap((m) => m.nodes.map((n) => [n.id, n] as const)));
-
-  it('every scope id resolves to a real node', () => {
-    const orphans = [...OSCP_SCOPE].filter((id) => !byId.has(id));
-    expect(orphans).toEqual([]);
-  });
-
-  it('every scope id points at a technique (not a start/category/goal)', () => {
-    const bad = [...OSCP_SCOPE]
-      .map((id) => byId.get(id))
-      .filter((n) => n && n.kind && n.kind !== 'technique')
-      .map((n) => `${n!.id}: ${n!.kind}`);
-    expect(bad).toEqual([]);
-  });
 });

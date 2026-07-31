@@ -428,7 +428,7 @@ chown -R <user>:<user> /home/<user>/.ssh   # sshd StrictModes refuses group/worl
   },
   {
     id: 'lin-db-creds',
-    label: 'Database Credentials → UDF',
+    label: 'Database Credentials',
     phase: 'creds',
     summary: 'Read secrets from a local DB, or run OS commands via a DB running as root.',
     description:

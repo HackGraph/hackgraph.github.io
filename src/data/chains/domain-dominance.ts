@@ -99,7 +99,7 @@ export const domainDominanceNodes: TechniqueNodeDef[] = [
     id: 'dcsync',
     label: 'DCSync',
     phase: 'domain-dominance',
-    needs: 'domain-admin',
+    needs: 'domain-user',
     summary: 'Replicate secrets: pull any hash, incl. krbtgt.',
     description:
       'With replication rights (DS-Replication-Get-Changes) you can ask a DC to hand over password hashes for any principal (including krbtgt and Domain Admins) by impersonating a domain controller. No code runs on the DC.',

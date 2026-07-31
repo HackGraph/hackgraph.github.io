@@ -1,7 +1,7 @@
 /**
  * Beginner glossary: plain-English, one-line definitions for the security terms
  * and acronyms that pepper the technique prose. Surfaced as an on-demand hover /
- * tap tooltip in the detail panels (see components/GlossaryText.tsx), so the prose
+ * tap tooltip in the detail panels (see data/domain/engineProse.ts), so the prose
  * stays terse and professional for practitioners while a newcomer can decode a
  * term without leaving the page.
  *

@@ -14,7 +14,7 @@ Interactive attack-path explorer for offensive security.
 
 </div>
 
-Start at a foothold and expand the graph one technique at a time until you reach the goal: Domain Admin, SYSTEM, or root. Every node is a short cheat-sheet with what the technique does, the tools, copy-paste commands, its MITRE ATT&CK id, what it needs, and how it gets caught. It all runs in your browser, with no backend and nothing to install.
+Start at a foothold and expand the graph one technique at a time until you reach the goal: Domain Admin, SYSTEM, or root. Every node is a short cheat-sheet with what the technique does, the tools, copy-paste commands, its MITRE ATT&CK id, what it needs, and how it gets caught. It all runs in your browser, with no backend, no framework, and nothing to install.
 
 ## Maps
 

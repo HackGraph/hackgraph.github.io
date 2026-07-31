@@ -81,7 +81,9 @@
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <!-- fg-fill is the engine's full-window helper: .fg is position:relative with a
+         240px min-height, so an unsized host collapses to that instead of filling. -->
+    <div id="root" class="fg-fill"></div>
     <noscript>
       <div style="max-width: 680px; margin: 12vh auto; padding: 0 24px; font-family: system-ui, sans-serif; color: #f0eaec; background: #0c0a0b">
         <h1>HackGraph</h1>
@@ -98,6 +100,6 @@
         </p>
       </div>
     </noscript>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

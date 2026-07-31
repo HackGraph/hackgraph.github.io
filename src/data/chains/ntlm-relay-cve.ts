@@ -384,7 +384,7 @@ export const ntlmRelayCveEdges: AttackEdge[] = [
   { source: 'relay-signing-enforced', target: 'relay-to-wsus' },
   // WSUS relay has two paths: serve a malicious update (→ SYSTEM), OR relay the
   // client auth onward to LDAP like any other relay target.
-  { source: 'relay-to-wsus', target: 'local-admin-host', label: 'malicious update -> SYSTEM' },
+  { source: 'relay-to-wsus', target: 'local-admin-host', label: 'malicious update → SYSTEM' },
   { source: 'relay-to-wsus', target: 'relay-to-ldap', label: 'relay client auth' },
   { source: 'ntlm-relay', target: 'kerberos-relay', description: 'Indicators this path applies: NTLM is disabled or blocked (STATUS_NOT_SUPPORTED / STATUS_ACCOUNT_RESTRICTION, target in Protected Users); or the target authorizes Kerberos only and enforces EPA / channel binding on HTTP or AD CS so an NTLM relay is refused. Coerce Kerberos auth via the target SPN and relay the AP-REQ instead.' },
   { source: 'relay-unsigned', target: 'relay-to-ldap', label: 'LDAP signing + CBT off' },
@@ -414,7 +414,7 @@ export const ntlmRelayCveEdges: AttackEdge[] = [
   { source: 'ad-cat-quick-compromise', target: 'proxyshell' },
   // GROUP 2: downstream into existing nodes
   { source: 'eternalblue', target: 'local-admin-host', label: 'SYSTEM' },
-  { source: 'proxyshell', target: 'local-admin-host', label: 'webshell -> RCE' },
+  { source: 'proxyshell', target: 'local-admin-host', label: 'webshell → RCE' },
   // ProxyShell yields SYSTEM on Exchange (-> local-admin-host). The pre-2019 Exchange
   // Windows Permissions WriteDacl -> DCSync pivot lives in the proxyshell node prose; the
   // coercion-based PrivExchange is modeled separately (cvegrp-exchange -> privexchange).

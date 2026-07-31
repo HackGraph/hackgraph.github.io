@@ -1050,7 +1050,7 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
   {
     id: 'trust-sid-history',
     aliases: ['SpoofSIDHistory', 'ExtraSids'],
-    label: 'Trust / SID History (Child -> Forest)',
+    label: 'Trust / SID History (Child → Forest)',
     phase: 'domain-dominance',
     needs: 'domain-admin',
     summary: 'Forge a ticket with the Enterprise Admins SID via sidHistory.',
@@ -1427,7 +1427,7 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
   {
     id: 'adcs-esc13',
     aliases: ['ADCSESC13', 'OIDGroupLink'],
-    label: 'ADCS ESC13 (Issuance Policy -> Group)',
+    label: 'ADCS ESC13 (Issuance Policy → Group)',
     phase: 'priv-esc',
     needs: 'domain-user',
     summary: 'Enroll a template whose policy OID is linked to a privileged group.',
