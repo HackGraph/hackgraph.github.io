@@ -644,7 +644,10 @@ function assignCoords(cols, inN, outN) {
 
 /* ---------- search: tiered index built once per map ---------- */
 
-function buildSearchIndex(model) {
+// `extra(defId)` lets the caller fold in text the model does not own — the user's own
+// notes, most obviously. Scored below the summary: a note should surface a step you
+// annotated, not outrank the step whose name you actually typed.
+function buildSearchIndex(model, extra) {
   return [...model.defs.values()]
     .filter(d => d.kind !== 'start')
     .map(d => ({
@@ -652,6 +655,7 @@ function buildSearchIndex(model) {
       l: d.label.toLowerCase(),
       s: (d.summary || '').toLowerCase(),
       g: (d.group || '').toLowerCase(),
+      x: (typeof extra === 'function' ? extra(d.id) || '' : '').toLowerCase(),
     }));
 }
 
@@ -664,6 +668,7 @@ function scoreEntry(e, q) {
   let sc = bonus(e.l, e.l.indexOf(q), 55, 100, 80);        // label outranks…
   sc = Math.max(sc, bonus(e.s, e.s.indexOf(q), 12, 35, 25)); // …summary…
   sc = Math.max(sc, e.g.startsWith(q) ? 20 : 0);             // …group
+  sc = Math.max(sc, e.x ? bonus(e.x, e.x.indexOf(q), 8, 18, 14) : 0);  // …host extras (notes)
   return sc;
 }
 

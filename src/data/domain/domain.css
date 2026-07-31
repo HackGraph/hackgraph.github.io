@@ -1,0 +1,65 @@
+/* Presentation for the two things the domain layer adds to the engine's panel: glossary
+   terms in prose, and the controls for the Target / "I hold" filters.
+ *
+ * Deliberately NOT appended to the vendored engine stylesheet. That file is a byte-for-byte
+ * copy, so anything added to it is silently deleted the next time the engine is re-vendored
+ * — which is exactly what happened once. Domain presentation belongs with the domain layer.
+ *
+ * Everything is scoped under `.fg`, the engine's mounted root, and uses the engine's own
+ * tokens so it follows the light/dark switch for free. */
+
+/* ---------- glossary ----------
+   Fed by the `prose` hook: each term carries its definition in data-def and the tooltip is
+   pure CSS, so there is no listener per term and nothing to clean up when the panel
+   re-renders. A dotted underline rather than a colour, because colour in this panel means
+   state, not "this word is special". */
+.fg .hg-gloss {
+  position: relative;
+  border-bottom: 1px dotted var(--ink-faint);
+  cursor: help;
+}
+.fg .hg-gloss::after {
+  content: attr(data-def);
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 6px);
+  z-index: 30;
+  width: max-content;
+  /* never wider than the panel it sits in, so a term near the right edge cannot push the
+     sheet sideways when the tooltip opens */
+  max-width: min(260px, 62vw);
+  font-size: var(--t-xs);
+  font-weight: 400;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: 8px;
+  padding: 7px 9px;
+  box-shadow: var(--shadow-pop);
+  /* `display: none`, not `visibility: hidden`. A hidden-but-laid-out tooltip still counts
+     toward scrollWidth, which made the mobile detail sheet scroll sideways by the width of
+     whichever tooltip sat nearest the right edge. */
+  display: none;
+  pointer-events: none;
+}
+.fg .hg-gloss:hover::after,
+.fg .hg-gloss:focus-visible::after {
+  display: block;
+}
+
+/* ---------- host filter controls ---------- */
+.fg .fselect {
+  font-family: inherit;
+  font-size: var(--t-xs);
+  color: var(--ink);
+  background: var(--chip);
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  padding: 4px 6px;
+  outline: none;
+}
+.fg .fselect:focus {
+  border-color: var(--line-strong);
+}

@@ -17,6 +17,7 @@ import { MAPS } from './data';
 import { toEngineMap } from './graph/engineAdapter';
 import { ENGINE_FILTERS } from './data/domain/engineFilters';
 import { decorateProse } from './data/domain/engineProse';
+import './data/domain/domain.css';
 import { loadGraphView } from './graph/engine/loadView';
 import { BUILD_DATE_LABEL, BUILD_HASH } from './buildInfo';
 import { REPO_URL } from './repo';
@@ -86,6 +87,8 @@ async function boot() {
   GraphView.mount(host, {
     maps: MAPS.map(toEngineMap),
     title: 'HackGraph',
+    // open on the entry point alone; expanding it is the reader's first move
+    expandRoot: false,
     brandMark: logoMark(),
     repoUrl: REPO_URL,
     build: { date: BUILD_DATE_LABEL, hash: BUILD_HASH },

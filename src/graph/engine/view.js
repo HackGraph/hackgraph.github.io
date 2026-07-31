@@ -5,6 +5,7 @@
      const view = GraphView.mount(document.querySelector('#graph'), {
        maps: [myMap],            // required: one or more maps
        startMap: 'my-map',       // optional: which one opens
+       expandRoot: false,        // optional: open showing only the entry point
        theme: 'dark' | 'light',  // optional: default follows the OS
        chrome: { toolbar: true, filters: true, panel: true, crumbs: true, zoom: true },
        features: { search: true, focus: true, isolate: true, share: true,
@@ -243,7 +244,7 @@ function mount(container, options = {}) {
   function loadMap(mapId, st) {
     map = maps.find(m => m.id === mapId) || maps[0];
     model = buildModel(map);
-    searchIndex = buildSearchIndex(model);
+    searchIndex = buildSearchIndex(model, noteTextFor);
     // encoded so a crafted id cannot escape its namespace: a literal ':' would otherwise
     // let a map address another map's keys. Same id = same namespace is intentional — that
     // is how a map finds its own notes again next session.
@@ -277,7 +278,13 @@ function mount(container, options = {}) {
 
     // shape-check like `t` and `u` below: a link is attacker-controlled, and spreading a
     // non-iterable `o` throws out of boot and leaves the host with a blank graph
-    expandedKeys = new Set([model.rootId, ...asKeys(st && st.o)]);
+    // A restored link always brings its own open set. On a COLD start the host decides:
+    // `expandRoot: false` shows only the entry point, so opening it is the reader's first
+    // move rather than something already done for them.
+    const restored = asKeys(st && st.o);
+    expandedKeys = new Set(
+      restored.length ? [model.rootId, ...restored]
+        : (options.expandRoot === false ? [] : [model.rootId]));
     // a restored link carries the unroll decisions its keys were minted under
     seedUnroll = (st && Array.isArray(st.u)) ? asKeys(st.u) : null;
     buildFilters();
@@ -1217,10 +1224,21 @@ function mount(container, options = {}) {
   // notes are keyed by the rendered INSTANCE, so a note written on the #2 visit stays
   // there and does not appear on the original; editing re-measures that card and
   // relayouts around its new height
+  // Notes are keyed by rendered instance; search works on defs, so every note written on
+  // any instance of a step makes that step findable.
+  function noteTextFor(defId) {
+    let out = '';
+    for (const k of Object.keys(notes)) {
+      if (k === defId || k.endsWith('~' + defId)) out += ' ' + notes[k];
+    }
+    return out;
+  }
+
   function saveNoteFor(key, text, anchorKey) {
     if (text) notes[key] = text;
     else delete notes[key];
     persist('notes', notes);
+    searchIndex = buildSearchIndex(model, noteTextFor);   // the note is searchable now
     views.forEach(v => {
       if (v.key !== key) return;
       let noteEl = v.el.querySelector('.note');
@@ -1373,17 +1391,30 @@ function mount(container, options = {}) {
 
     if (def.summary) body.appendChild(prose('psum', def.summary));
     if (d.description) body.appendChild(prose('pdesc', d.description));
-    if (d.caution) body.appendChild(prose('caution', '⚠ ' + d.caution));
+    if (d.caution) {
+      const box = el('div', 'caution');
+      // the dataset names the box (this dataset calls it OPSEC); unnamed falls back to a
+      // plain warning, which is what a generic caution reads as
+      box.appendChild(el('div', 'caution-label', d.cautionLabel || 'Caution'));
+      box.appendChild(prose('caution-body', d.caution));
+      body.appendChild(box);
+    }
 
     if (d.prereqs && d.prereqs.length) {
       section(body, 'Prerequisites');
       const chips = el('div', 'chips');
-      d.prereqs.forEach(pid => {
-        const p = model.defs.get(pid);
-        if (!p) return;
-        const c = el('button', 'pchip', p.label);
-        c.addEventListener('click', () => revealDef(pid));
-        chips.appendChild(c);
+      // An entry is either another node's id — in which case the chip navigates — or a
+      // plain requirement in prose. Dropping the latter silently left datasets showing an
+      // empty "Prerequisites" heading with nothing under it.
+      d.prereqs.forEach(req => {
+        const target = typeof req === 'string' ? model.defs.get(req) : null;
+        if (target) {
+          const c = el('button', 'pchip', target.label);
+          c.addEventListener('click', () => revealDef(req));
+          chips.appendChild(c);
+        } else if (req) {
+          chips.appendChild(el('span', 'pchip static', String(req)));
+        }
       });
       body.appendChild(chips);
     }
@@ -1397,15 +1428,27 @@ function mount(container, options = {}) {
     if (d.tools && d.tools.length) {
       section(body, 'Tools');
       const chips = el('div', 'chips');
-      d.tools.forEach(t => chips.appendChild(el('span', 'pchip static', t)));
+      // a tool may be a bare name or {name, url}; a url makes the chip a link out
+      d.tools.forEach(t => {
+        const name = typeof t === 'string' ? t : (t && t.name);
+        if (!name) return;
+        const href = typeof t === 'string' ? null : safeUrl(t && t.url);
+        if (!href) { chips.appendChild(el('span', 'pchip static', name)); return; }
+        const a = el('a', 'pchip link', name);
+        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.appendChild(el('span', 'pchip-ext', '↗'));
+        chips.appendChild(a);
+      });
       body.appendChild(chips);
     }
     if (d.commands && d.commands.length) {
       section(body, 'Commands');
-      d.commands.forEach(raw => {
-        const cmdText = safeCommand(raw);
+      d.commands.forEach(entry => {
+        const label = entry && typeof entry === 'object' ? entry.label : null;
+        const cmdText = safeCommand(entry && typeof entry === 'object' ? entry.code : entry);
         const row = el('div', 'cmd');
-        row.appendChild(el('span', null, cmdText));
+        if (label) row.appendChild(el('div', 'cmd-label', label));
+        row.appendChild(el('code', 'cmd-code', cmdText));
         const btn = el('button', null, 'copy');
         btn.addEventListener('click', async () => {
           // copy exactly the text on screen — never a payload the row did not show
@@ -2077,6 +2120,14 @@ function mount(container, options = {}) {
   // Deliberately no outside-click close: filters are a mode you work under while you keep
   // clicking the graph, so only the button that opened it puts it away.
   $('filtersx').addEventListener('click', closeFilters);
+  // On a phone the sheet covers the graph, so a tap outside it means "put it away". On a
+  // desktop the panel sits beside the graph and staying open is the point, so it does not.
+  on(window, 'pointerdown', e => {
+    if (!root.classList.contains('narrow')) return;
+    if ($('filters').hidden) return;
+    if (e.target.closest('.fg-filters') || e.target.closest('[data-el="filterbtn"]')) return;
+    closeFilters();
+  });
   $('filterbtn').addEventListener('click', e => {
     e.stopPropagation();
     const box = $('filters');

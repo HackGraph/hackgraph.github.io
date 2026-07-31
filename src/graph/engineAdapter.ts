@@ -36,9 +36,10 @@ export interface EngineMap {
     details?: {
       description?: string;
       caution?: string;
+      cautionLabel?: string;
       prereqs?: string[];
-      tools?: string[];
-      commands?: string[];
+      tools?: { name: string; url?: string }[];
+      commands?: { label?: string; code: string }[];
       refs?: [string, string][];
     };
   }[];
@@ -56,8 +57,10 @@ export interface EngineMap {
 function detailsOf(node: GraphNode) {
   // the dataset's richer node type extends GraphNode; read the extra fields structurally
   const n = node as unknown as Record<string, unknown>;
-  const tools = (n.tools as { name: string; url?: string }[] | undefined)?.map((t) => t.name);
-  const commands = (n.commands as { label?: string; code: string }[] | undefined)?.map((c) => c.code);
+  // pass tools and commands through WHOLE. Flattening them to bare strings quietly threw
+  // away every tool's homepage and every command's caption.
+  const tools = n.tools as { name: string; url?: string }[] | undefined;
+  const commands = n.commands as { label?: string; code: string }[] | undefined;
   const refs: [string, string][] = [];
   const mitre = n.mitre as { id: string; url?: string } | undefined;
   if (mitre?.url) refs.push([`MITRE ATT&CK · ${mitre.id}`, mitre.url]);
@@ -67,6 +70,8 @@ function detailsOf(node: GraphNode) {
   const d = {
     description: n.description as string | undefined,
     caution: n.opsec as string | undefined,
+    // this dataset's caution box has a name of its own
+    cautionLabel: n.opsec ? 'OPSEC' : undefined,
     prereqs: n.requires as string[] | undefined,
     tools,
     commands,

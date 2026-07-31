@@ -52,6 +52,8 @@ export interface EdgeSelectPayload {
 export interface MountOptions {
   maps: unknown[];
   startMap?: string;
+  /** Cold start shows only the entry point rather than opening it. */
+  expandRoot?: boolean;
   title?: string;
   /** Replaces the toolbar's default brand dot. An element, so nothing is parsed. */
   brandMark?: Element;

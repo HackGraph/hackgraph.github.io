@@ -569,7 +569,7 @@
 }
 .fg-panelx svg { display: block; flex: none; }
 .fg-panelx:hover { color: var(--ink); background: var(--chip); }
-.fg-panelbody { flex: 1 1 auto; overflow-y: auto; padding: 15px 16px 18px; scrollbar-width: thin; }
+.fg-panelbody { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; padding: 15px 16px 18px; scrollbar-width: thin; }
 .fg-panelbody .pcrumb {
   display: flex; flex-wrap: wrap; align-items: center; gap: 3px;
   font-size: var(--t-xs); color: var(--ink-dim);
@@ -718,19 +718,41 @@
 }
 .fg-panelbody .pchip:hover { color: var(--ink); background: var(--chip-hover); }
 .fg-panelbody .pchip.static { cursor: default; }
+.fg-panelbody .pchip.link { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
+.fg-panelbody .pchip-ext { font-size: 9px; color: var(--ink-faint); }
+.fg-panelbody .pchip.link:hover .pchip-ext { color: var(--ink-dim); }
 .fg-panelbody .cmd {
-  display: flex; align-items: center; gap: 8px;
-  font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
-  font-size: 11.5px;
-  color: var(--ink-mid);
+  position: relative;
   background: var(--field);
   border: 1px solid var(--line);
   border-radius: 8px;
-  padding: 7px 8px 7px 11px;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
+  overflow: hidden;
 }
-.fg-panelbody .cmd span { flex: 1; overflow-x: auto; white-space: nowrap; scrollbar-width: none; }
+/* A caption strip over the code, the way a code block reads in documentation. The copy
+   button lives here rather than beside the text, so the command can use the full width. */
+.fg-panelbody .cmd-label {
+  font-size: var(--t-2xs); letter-spacing: .02em;
+  color: var(--ink-faint);
+  background: color-mix(in srgb, var(--line) 45%, transparent);
+  border-bottom: 1px solid var(--line);
+  padding: 5px 58px 5px 10px;
+}
+/* wraps rather than scrolls: a command running off the edge is a command you cannot read,
+   and on a narrow panel it also dragged the whole sheet sideways */
+.fg-panelbody .cmd-code {
+  display: block;
+  font-family: 'Geist Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 11.5px; line-height: 1.55;
+  color: var(--ink-mid);
+  padding: 8px 58px 9px 10px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+/* the leading token reads as the executable */
+.fg-panelbody .cmd-code::first-line { color: var(--ink); }
 .fg-panelbody .cmd button {
+  position: absolute; top: 6px; right: 7px;
   font-family: inherit; font-size: 10px; font-weight: 700;
   color: var(--ink-dim);
   background: var(--chip);
@@ -740,6 +762,11 @@
   cursor: pointer;
 }
 .fg-panelbody .cmd button:hover { color: var(--ink); }
+.fg-panelbody .caution-label {
+  font-size: var(--t-2xs); font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  color: color-mix(in srgb, var(--mark) 70%, var(--ink));
+  margin-bottom: 4px;
+}
 .fg-panelbody .caution {
   font-size: 12px; line-height: 1.5;
   color: color-mix(in srgb, var(--mark) 60%, var(--ink));
@@ -1055,44 +1082,3 @@
 }
 .srow.on .sswitch { background: var(--accent); }
 .srow.on .sswitch i { transform: translateX(15px); }
-
-/* ---------- glossary (host prose decoration) ----------
-   Fed by the `prose` hook: the term carries its definition in data-def and the tooltip is
-   pure CSS, so there is no listener per term and nothing to clean up when the panel
-   re-renders. Dotted underline rather than a colour, because colour on a panel means
-   state here, not "this word is special". */
-.fg .hg-gloss {
-  position: relative;
-  border-bottom: 1px dotted var(--ink-faint);
-  cursor: help;
-}
-.fg .hg-gloss::after {
-  content: attr(data-def);
-  position: absolute; left: 0; bottom: calc(100% + 6px);
-  z-index: 30;
-  width: max-content; max-width: 260px;
-  font-size: var(--t-xs); font-weight: 400; line-height: 1.4; letter-spacing: 0;
-  color: var(--ink);
-  background: var(--panel);
-  border: 1px solid var(--line-strong);
-  border-radius: 8px;
-  padding: 7px 9px;
-  box-shadow: var(--shadow-pop);
-  opacity: 0; visibility: hidden;
-  transition: opacity .14s ease;
-  pointer-events: none;
-}
-.fg .hg-gloss:hover::after,
-.fg .hg-gloss:focus-visible::after { opacity: 1; visibility: visible; }
-
-/* the host filter controls: a select and the foothold chips */
-.fg .fselect {
-  font-family: inherit; font-size: var(--t-xs);
-  color: var(--ink);
-  background: var(--chip);
-  border: 1px solid var(--line);
-  border-radius: 7px;
-  padding: 4px 6px;
-  outline: none;
-}
-.fg .fselect:focus { border-color: var(--line-strong); }
