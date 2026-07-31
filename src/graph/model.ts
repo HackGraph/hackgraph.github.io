@@ -46,6 +46,12 @@ export interface GraphNode {
 export interface GraphEdge {
   source: string;
   target: string;
+  /**
+   * Canonical relationship id (see data/relationships.ts). It supplies a reusable caption
+   * and explanation so same-meaning edges read the same everywhere; `label` and
+   * `description` below each override their half of it for one specific edge.
+   */
+  rel?: string;
   /** Caption + explanation surfaced when the edge is inspected. */
   label?: string;
   description?: string;

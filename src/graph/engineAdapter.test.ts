@@ -7,6 +7,7 @@
  */
 import { describe, expect, it } from 'vitest';
 import { MAPS } from '../data';
+import { RELATIONSHIPS } from '../data/relationships';
 import { toEngineMap } from './engineAdapter';
 import { GraphEngine } from './engine';
 
@@ -81,15 +82,68 @@ describe('adapter', () => {
     expect(engineMap.nodes.every((n) => labels.has(n.group))).toBe(true);
   });
 
-  it('folds edge captions into a shared relationship table', () => {
+  it('folds edge wording into a shared relationship table', () => {
     const map = MAPS[0];
     const engineMap = toEngineMap(map);
     const captioned = map.edges.filter((e) => e.label).length;
     expect(captioned).toBeGreaterThan(0);
-    // one entry per distinct caption, not one per edge
-    expect(Object.keys(engineMap.relationships).length).toBeLessThanOrEqual(captioned);
+    // shared: same-meaning edges reuse an entry rather than each getting one
+    expect(Object.keys(engineMap.relationships).length).toBeLessThan(engineMap.edges.length);
     for (const e of engineMap.edges) {
       if (e.rel) expect(engineMap.relationships[e.rel]).toBeDefined();
     }
+  });
+
+  /**
+   * The adapter once keyed the table on the caption and never read `rel` at all, which threw
+   * away the canonical explanation on every edge that relied on it — 172 of 765.
+   */
+  it('resolves every edge to the wording the data authored', () => {
+    for (const map of MAPS) {
+      const engineMap = toEngineMap(map);
+      engineMap.edges.forEach((out, i) => {
+        const src = map.edges[i];
+        const canon = src.rel ? RELATIONSHIPS[src.rel] : undefined;
+        const summary = src.description ?? canon?.description ?? '';
+        const label = src.label ?? canon?.label ?? (summary ? 'transition' : undefined);
+        if (!label) {
+          expect(out.rel).toBeUndefined();
+          return;
+        }
+        const rel = engineMap.relationships[out.rel!];
+        expect(rel.label).toBe(label);
+        expect(rel.summary).toBe(summary);
+        // only an EXPLICIT caption is drawn on the canvas
+        expect(rel.tag !== false).toBe(src.label !== undefined);
+      });
+    }
+  });
+
+  it('gives edges that disagree on wording separate entries', () => {
+    const map: Parameters<typeof toEngineMap>[0] = {
+      id: 'm',
+      name: 'M',
+      rootId: 'a',
+      phases: [{ id: 'p', label: 'P', color: '#fff' }],
+      nodes: [
+        { id: 'a', label: 'A', phase: 'p', summary: '' },
+        { id: 'b', label: 'B', phase: 'p', summary: '' },
+        { id: 'c', label: 'C', phase: 'p', summary: '' },
+      ],
+      edges: [
+        { source: 'a', target: 'b', label: 'same', description: 'one' },
+        { source: 'a', target: 'c', label: 'same', description: 'two' },
+      ],
+    };
+    const out = toEngineMap(map);
+    expect(out.edges[0].rel).not.toBe(out.edges[1].rel);
+    expect(out.relationships[out.edges[0].rel!].summary).toBe('one');
+    expect(out.relationships[out.edges[1].rel!].summary).toBe('two');
+  });
+
+  it('rejects an edge naming a relationship that does not exist', () => {
+    const map = structuredClone(MAPS[0]) as ReturnType<typeof structuredClone<typeof MAPS[0]>>;
+    map.edges[0] = { ...map.edges[0], rel: 'no-such-rel' };
+    expect(() => toEngineMap(map)).toThrow(/unknown rel/);
   });
 });

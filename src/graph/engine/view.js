@@ -635,7 +635,10 @@ function mount(container, options = {}) {
       gBase.appendChild(hit);
       rec = { id: e.id, rel: e.rel, pv, cv, ws: wsOf.get(e.id) || [], el, hit, back: backEdges.has(e.id) };
       const relDef = features.edgeTags ? model.rels[e.rel] : null;
-      if (relDef && relDef.label) {   // the relationship tag, riding the edge
+      // `tag: false` gives a relationship a name and an explanation for the panel without
+      // lettering the canvas — for steps whose meaning is already plain from the two nodes
+      // they join, where a caption on every one of them would be noise.
+      if (relDef && relDef.label && relDef.tag !== false) {   // the relationship tag, riding the edge
         const lab = document.createElement('div');
         lab.className = 'elabel';
         lab.textContent = relDef.label;

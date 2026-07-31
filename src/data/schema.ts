@@ -99,12 +99,14 @@ export interface TechniqueNodeDef extends GraphNode {
   aliases?: string[];
 }
 
-/** A directed edge: the generic edge plus a canonical relationship id. */
-export interface AttackEdge extends GraphEdge {
-  /** Canonical relationship id (see data/relationships.ts) that supplies a reusable
-   *  label + explanation so same-meaning edges stay consistent. */
-  rel?: string;
-}
+/**
+ * A directed edge in an attack map.
+ *
+ * Structurally identical to {@link GraphEdge}: the canonical `rel` id lives there, because
+ * the relationship vocabulary is part of the shared framework rather than the security data.
+ * The name stays because every chain file authors against it.
+ */
+export type AttackEdge = GraphEdge;
 
 /** A complete, registrable map (e.g. the AD attack methodology). */
 export interface MapDefinition extends GraphMap {
