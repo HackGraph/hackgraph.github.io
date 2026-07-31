@@ -380,13 +380,28 @@ export const ntlmRelayCveEdges: AttackEdge[] = [
   // (SMB -> LDAP) still lands. Its precondition is a target where signing is NOT enforced,
   // so it hangs off relay-unsigned; it does NOT defeat enforced LDAP signing / channel binding.
   { source: 'relay-unsigned', target: 'relay-drop-mic', label: 'strip MIC (CVE-2019-1040)' },
-  { source: 'relay-signing-enforced', target: 'relay-to-mssql', description: 'Indicators this path applies: TCP 1433 open (or non-default MSSQL port, e.g. 6520); MS SQL Server TDS pre-login banner; Valid domain/SQL/local credential pair recovered for a service or low-priv principal (e.g. svc_mssql, sqlsvc).' },
+  {
+    source: 'relay-signing-enforced', target: 'relay-to-mssql',
+    requires: [
+      'TCP 1433 open (or non-default MSSQL port, e.g. 6520)',
+      'MS SQL Server TDS pre-login banner',
+      'Valid domain/SQL/local credential pair recovered for a service or low-priv principal (e.g. svc_mssql, sqlsvc)',
+    ],
+  },
   { source: 'relay-signing-enforced', target: 'relay-to-wsus' },
   // WSUS relay has two paths: serve a malicious update (→ SYSTEM), OR relay the
   // client auth onward to LDAP like any other relay target.
   { source: 'relay-to-wsus', target: 'local-admin-host', label: 'malicious update → SYSTEM' },
   { source: 'relay-to-wsus', target: 'relay-to-ldap', label: 'relay client auth' },
-  { source: 'ntlm-relay', target: 'kerberos-relay', description: 'Indicators this path applies: NTLM is disabled or blocked (STATUS_NOT_SUPPORTED / STATUS_ACCOUNT_RESTRICTION, target in Protected Users); or the target authorizes Kerberos only and enforces EPA / channel binding on HTTP or AD CS so an NTLM relay is refused. Coerce Kerberos auth via the target SPN and relay the AP-REQ instead.' },
+  {
+    source: 'ntlm-relay', target: 'kerberos-relay',
+    description: 'Coerce Kerberos auth via the target SPN and relay the AP-REQ instead.',
+    // either condition is enough on its own
+    requires: [
+      'NTLM is disabled or blocked (STATUS_NOT_SUPPORTED / STATUS_ACCOUNT_RESTRICTION, target in Protected Users)',
+      'or the target authorizes Kerberos only and enforces EPA / channel binding on HTTP or AD CS so an NTLM relay is refused',
+    ],
+  },
   { source: 'relay-unsigned', target: 'relay-to-ldap', label: 'LDAP signing + CBT off' },
   // Relay captured/coerced NTLM to AD CS enrollment — the canonical ESC8 (HTTP web enrollment)
   // and ESC11 (ICertPassage RPC) relay targets (best with a machine/privileged auth source).
@@ -409,7 +424,14 @@ export const ntlmRelayCveEdges: AttackEdge[] = [
   // certifried, privexchange) moved to the 'Critical CVEs' category under
   // Privilege Escalation (see ad-categories.ts).
   { source: 'network-recon', target: 'ad-cat-quick-compromise' },
-  { source: 'ad-cat-quick-compromise', target: 'zerologon', description: 'Indicators this path applies: a DC reachable on TCP 135/445 with Netlogon (MS-NRPC) exposed; the DC is unpatched against CVE-2020-1472 (pre-August-2020, enforcement not applied); an all-zero ClientCredential is accepted by NetrServerAuthenticate3.' },
+  {
+    source: 'ad-cat-quick-compromise', target: 'zerologon',
+    requires: [
+      'a DC reachable on TCP 135/445 with Netlogon (MS-NRPC) exposed',
+      'the DC is unpatched against CVE-2020-1472 (pre-August-2020, enforcement not applied)',
+      'an all-zero ClientCredential is accepted by NetrServerAuthenticate3',
+    ],
+  },
   { source: 'ad-cat-quick-compromise', target: 'eternalblue' },
   { source: 'ad-cat-quick-compromise', target: 'proxyshell' },
   // GROUP 2: downstream into existing nodes

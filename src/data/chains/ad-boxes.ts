@@ -160,7 +160,14 @@ export const adBoxesEdges: AttackEdge[] = [
   { source: 'pass-the-hash', target: 'set-ntlm-hash', label: 'have the NT hash' },
   { source: 'set-ntlm-hash', target: 'lateral-movement-cme', label: 'password logon' },
   // Recycle bin → Enumeration; restored edges / archived secrets
-  { source: 'ad-cat-enum', target: 'ad-recycle-bin-reanimation', description: 'Indicators this path applies: Get-ADObject -includeDeletedObjects returns objects with isDeleted=$true; Get-ADOptionalFeature \'Recycle Bin Feature\' reports EnabledScopes is non-empty; unresolvable SID / RID (e.g. RID 1111) that does not map to a live principal on the host.' },
+  {
+    source: 'ad-cat-enum', target: 'ad-recycle-bin-reanimation',
+    requires: [
+      'Get-ADObject -includeDeletedObjects returns objects with isDeleted=$true',
+      'Get-ADOptionalFeature \'Recycle Bin Feature\' reports EnabledScopes is non-empty',
+      'unresolvable SID / RID (e.g. RID 1111) that does not map to a live principal on the host',
+    ],
+  },
   { source: 'ad-recycle-bin-reanimation', target: 'find-privesc-path', label: 'restored SID/edges' },
   { source: 'ad-recycle-bin-reanimation', target: 'valid-domain-creds', label: 'cleartext in attributes' },
 ];

@@ -78,12 +78,33 @@ export const adCategoryEdges: AttackEdge[] = [
   { source: 'network-recon', target: 'ad-cat-noauth' },
   { source: 'network-recon', target: 'ad-cat-poisoning' },
   { source: 'network-recon', target: 'ad-cat-services' },
-  { source: 'ad-cat-noauth', target: 'username-enum-kerbrute', description: 'Indicators this path applies: a KDC reachable on TCP/UDP 88; an AS-REQ for an invalid principal returns KDC_ERR_C_PRINCIPAL_UNKNOWN while a valid one returns KDC_ERR_PREAUTH_REQUIRED or an AS-REP; kerbrute prints VALID USERNAME lines.' },
+  {
+    source: 'ad-cat-noauth', target: 'username-enum-kerbrute',
+    requires: [
+      'a KDC reachable on TCP/UDP 88',
+      'an AS-REQ for an invalid principal returns KDC_ERR_C_PRINCIPAL_UNKNOWN while a valid one returns KDC_ERR_PREAUTH_REQUIRED or an AS-REP',
+      'kerbrute prints VALID USERNAME lines',
+    ],
+  },
   { source: 'ad-cat-noauth', target: 'rid-cycling' },
   { source: 'ad-cat-noauth', target: 'rpc-null-enum' },
   { source: 'ad-cat-noauth', target: 'smtp-user-enum' },
-  { source: 'ad-cat-noauth', target: 'anon-ldap-dump', description: 'Indicators this path applies: TCP 389/636/3268/3269 open on a Windows DC; RootDSE base-scope query returns namingContexts without a bind (anonymous bind permitted); ldapsearch -x (simple/anonymous) returns results instead of \'operationsError\' / \'inappropriateAuthentication\'.' },
-  { source: 'ad-cat-poisoning', target: 'llmnr-poisoning', description: 'Indicators this path applies: Responder prints [SMB] NTLMv2-SSP Hash : or an [HTTP] NTLMv2 client capture; the captured value is formatted user::DOMAIN:challenge:NTproof:blob (NetNTLMv2); a poisoned answer is logged for an LLMNR/NBT-NS/mDNS name query on the attacker interface.' },
+  {
+    source: 'ad-cat-noauth', target: 'anon-ldap-dump',
+    requires: [
+      'TCP 389/636/3268/3269 open on a Windows DC',
+      'RootDSE base-scope query returns namingContexts without a bind (anonymous bind permitted)',
+      'ldapsearch -x (simple/anonymous) returns results instead of \'operationsError\' / \'inappropriateAuthentication\'',
+    ],
+  },
+  {
+    source: 'ad-cat-poisoning', target: 'llmnr-poisoning',
+    requires: [
+      'Responder prints [SMB] NTLMv2-SSP Hash : or an [HTTP] NTLMv2 client capture',
+      'the captured value is formatted user::DOMAIN:challenge:NTproof:blob (NetNTLMv2)',
+      'a poisoned answer is logged for an LLMNR/NBT-NS/mDNS name query on the attacker interface',
+    ],
+  },
   { source: 'ad-cat-poisoning', target: 'mitm6-relay' },
   // (network-recon -> ad-cat-quick-compromise wired in ntlm-relay-cve.ts)
 
@@ -96,17 +117,52 @@ export const adCategoryEdges: AttackEdge[] = [
 
   // Enumeration (BloodHound is a leaf here: it informs, it doesn't gate)
   { source: 'ad-cat-enum', target: 'bloodhound-recon' },
-  { source: 'ad-cat-enum', target: 'domain-object-enum', description: 'Indicators this path applies: net group /domain output enumerating domain groups; net group \'<GroupName>\' /domain listing a single group\'s members; net user <user> /domain showing \'Global Group memberships\'/\'Local Group Memberships\'.' },
+  {
+    source: 'ad-cat-enum', target: 'domain-object-enum',
+    requires: [
+      'net group /domain output enumerating domain groups',
+      'net group \'<GroupName>\' /domain listing a single group\'s members',
+      'net user <user> /domain showing \'Global Group memberships\'/\'Local Group Memberships\'',
+    ],
+  },
   { source: 'domain-object-enum', target: 'find-privesc-path', label: 'found a path' },
 
   // Credential Access
   { source: 'ad-cat-credaccess', target: 'ad-cat-roasting' },
   { source: 'ad-cat-credaccess', target: 'gpp-cpassword' },
   { source: 'ad-cat-credaccess', target: 'ad-cat-managed-secrets' },
-  { source: 'ad-cat-roasting', target: 'kerberoasting', description: 'Indicators this path applies: a BloodHound GenericWrite/GenericAll/WriteSPN edge from a controlled principal to a target user; an empty servicePrincipalName on a writable user; a $krb5tgs$23$ TGS-REP returned for an account that does not normally run a service.' },
-  { source: 'ad-cat-roasting', target: 'asrep-roasting', description: 'Indicators this path applies: the DONT_REQ_PREAUTH flag set in userAccountControl on a user; the KDC issues an AS-REP with no PA-ENC-TIMESTAMP challenge; GetNPUsers or --asreproast returns a $krb5asrep$23$<user>@<REALM> hash.' },
-  { source: 'ad-cat-managed-secrets', target: 'laps-read', description: 'Indicators this path applies: the ms-Mcs-AdmPwd (or msLAPS-Password / msLAPS-EncryptedPassword) attribute is readable on a computer object; a ReadLAPSPassword or All-extended-rights / GenericAll edge over the computer in BloodHound; ms-Mcs-AdmPwdExpirationTime is populated.' },
-  { source: 'ad-cat-managed-secrets', target: 'gmsa-read', description: 'Indicators this path applies: the account class is msDS-GroupManagedServiceAccount with a name ending in $; a BloodHound ReadGMSAPassword edge from a controlled principal; the msDS-ManagedPassword attribute returns (is not access-denied) for the target.' },
+  {
+    source: 'ad-cat-roasting', target: 'kerberoasting',
+    requires: [
+      'a BloodHound GenericWrite/GenericAll/WriteSPN edge from a controlled principal to a target user',
+      'an empty servicePrincipalName on a writable user',
+      'a $krb5tgs$23$ TGS-REP returned for an account that does not normally run a service',
+    ],
+  },
+  {
+    source: 'ad-cat-roasting', target: 'asrep-roasting',
+    requires: [
+      'the DONT_REQ_PREAUTH flag set in userAccountControl on a user',
+      'the KDC issues an AS-REP with no PA-ENC-TIMESTAMP challenge',
+      'GetNPUsers or --asreproast returns a $krb5asrep$23$<user>@<REALM> hash',
+    ],
+  },
+  {
+    source: 'ad-cat-managed-secrets', target: 'laps-read',
+    requires: [
+      'the ms-Mcs-AdmPwd (or msLAPS-Password / msLAPS-EncryptedPassword) attribute is readable on a computer object',
+      'a ReadLAPSPassword or All-extended-rights / GenericAll edge over the computer in BloodHound',
+      'ms-Mcs-AdmPwdExpirationTime is populated',
+    ],
+  },
+  {
+    source: 'ad-cat-managed-secrets', target: 'gmsa-read',
+    requires: [
+      'the account class is msDS-GroupManagedServiceAccount with a name ending in $',
+      'a BloodHound ReadGMSAPassword edge from a controlled principal',
+      'the msDS-ManagedPassword attribute returns (is not access-denied) for the target',
+    ],
+  },
 
   // Coercion & Forced Auth: "make a victim authenticate to me" (then relay/capture)
   { source: 'ad-cat-coercion', target: 'coerced-auth' },
@@ -123,8 +179,22 @@ export const adCategoryEdges: AttackEdge[] = [
   { source: 'find-privesc-path', target: 'ad-cat-cve' },
   { source: 'find-privesc-path', target: 'ad-cat-account-abuse' },
   // Account / group manipulation primitives (MAQ is a generic enabler, not a delegation-only thing)
-  { source: 'ad-cat-account-abuse', target: 'machineaccountquota-abuse', description: 'Indicators this path applies: ms-DS-MachineAccountQuota greater than 0 on the domain head; a new objectClass=computer principal can be created (addcomputer / New-MachineAccount) with a sAMAccountName ending in $; ms-DS-CreatorSID on the new object equals a non-admin attacker SID.' },
-  { source: 'ad-cat-account-abuse', target: 'badsuccessor-dmsa', description: 'Indicators this path applies: CreateChild / write access over an OU or container that can hold dMSA (msDS-DelegatedManagedServiceAccount) objects; at least one Windows Server 2025 DC present (adds the dMSA class and the KDC successor codepath), no raised domain functional level required; Writable msDS-ManagedAccountPrecededByLink on a dMSA.' },
+  {
+    source: 'ad-cat-account-abuse', target: 'machineaccountquota-abuse',
+    requires: [
+      'ms-DS-MachineAccountQuota greater than 0 on the domain head',
+      'a new objectClass=computer principal can be created (addcomputer / New-MachineAccount) with a sAMAccountName ending in $',
+      'ms-DS-CreatorSID on the new object equals a non-admin attacker SID',
+    ],
+  },
+  {
+    source: 'ad-cat-account-abuse', target: 'badsuccessor-dmsa',
+    requires: [
+      'CreateChild / write access over an OU or container that can hold dMSA (msDS-DelegatedManagedServiceAccount) objects',
+      'at least one Windows Server 2025 DC present (adds the dMSA class and the KDC successor codepath), no raised domain functional level required',
+      'Writable msDS-ManagedAccountPrecededByLink on a dMSA',
+    ],
+  },
   { source: 'ad-cat-account-abuse', target: 'ad-cat-priv-groups' },
   // DACL / ACL abuse, object-first: the category triages to the object type you
   // hold a right over (or to the Control-Granting Rights sub-category if you know
@@ -137,7 +207,14 @@ export const adCategoryEdges: AttackEdge[] = [
   { source: 'ad-cat-dacl', target: 'acl-tgt-policy' },
   { source: 'acl-tgt-control', target: 'acl-genericall' },
   { source: 'acl-tgt-control', target: 'acl-genericwrite' },
-  { source: 'acl-tgt-control', target: 'acl-writeowner', description: 'Indicators this path applies: a BloodHound WriteOwner edge from an owned principal to a target object; the nTSecurityDescriptor owner SID is changeable by the controlled principal; owneredit reports a successful owner change.' },
+  {
+    source: 'acl-tgt-control', target: 'acl-writeowner',
+    requires: [
+      'a BloodHound WriteOwner edge from an owned principal to a target object',
+      'the nTSecurityDescriptor owner SID is changeable by the controlled principal',
+      'owneredit reports a successful owner change',
+    ],
+  },
   { source: 'acl-tgt-control', target: 'acl-writedacl' },
   { source: 'acl-genericall', target: 'acl-tgt-user' },
   { source: 'acl-genericall', target: 'acl-tgt-computer' },
@@ -150,24 +227,92 @@ export const adCategoryEdges: AttackEdge[] = [
   // AD CS: the discovery gate (adcs-enum, in ad-adcs-extra.ts) now sits between the
   // ad-cat-adcs category and the two abuse sub-categories (template-enrollment vs
   // CA/infra/relay/forging), so those edges live there as adcs-enum → sub-category.
-  { source: 'ad-cat-adcs-template', target: 'adcs-esc1', description: 'Indicators this path applies: certipy flags the template ESC1 / Enrollee Supplies Subject : True; msPKI-Certificate-Name-Flag has CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT (0x1); the template EKU allows Client Authentication or Smart Card Logon and a low-priv principal holds Enroll.' },
+  {
+    source: 'ad-cat-adcs-template', target: 'adcs-esc1',
+    requires: [
+      'certipy flags the template ESC1 / Enrollee Supplies Subject : True',
+      'msPKI-Certificate-Name-Flag has CT_FLAG_ENROLLEE_SUPPLIES_SUBJECT (0x1)',
+      'the template EKU allows Client Authentication or Smart Card Logon and a low-priv principal holds Enroll',
+    ],
+  },
   { source: 'ad-cat-adcs-template', target: 'adcs-esc2' },
-  { source: 'ad-cat-adcs-template', target: 'adcs-esc3', description: 'Indicators this path applies: Certificate Request Agent EKU 1.3.6.1.4.1.311.20.2.1 on an enrollable template; Certipy find flags a template ESC3 / \'Enrollment Agent\'; A second enabled client-authentication template the target principal can be enrolled for (e.g. User, SignedUser).' },
-  { source: 'ad-cat-adcs-template', target: 'adcs-esc4', description: 'Indicators this path applies: certipy flags ESC4 (a template whose ACL grants a controlled principal WriteDacl/WriteOwner/WriteProperty/GenericWrite/GenericAll); a BloodHound WriteDacl/Owns/GenericAll edge to a pKICertificateTemplate object; the template DACL is writable by a user, group, or machine account you control.' },
-  { source: 'ad-cat-adcs-template', target: 'adcs-esc9', description: 'Indicators this path applies: Template msPKI-Enrollment-Flag contains CT_FLAG_NO_SECURITY_EXTENSION (0x80000) so the issued cert omits the SID security extension (certipy \'ESC9\' flag); AND the KDC has StrongCertificateBindingEnforcement != 2 (set to 0 or 1), the weak Kerberos binding that lets a no-SID cert authenticate as a spoofed target; certipy find marks the template as [!] Vulnerable: ESC9.' },
-  { source: 'ad-cat-adcs-template', target: 'adcs-esc13', description: 'Indicators this path applies: a certificate template carries an issuance-policy OID that is msDS-OIDToGroupLink-mapped to a privileged AD group; enrolling that template yields a certificate whose authentication grants the linked group membership.' },
+  {
+    source: 'ad-cat-adcs-template', target: 'adcs-esc3',
+    requires: [
+      'Certificate Request Agent EKU 1.3.6.1.4.1.311.20.2.1 on an enrollable template',
+      'Certipy find flags a template ESC3 / \'Enrollment Agent\'',
+      'A second enabled client-authentication template the target principal can be enrolled for (e.g. User, SignedUser)',
+    ],
+  },
+  {
+    source: 'ad-cat-adcs-template', target: 'adcs-esc4',
+    requires: [
+      'certipy flags ESC4 (a template whose ACL grants a controlled principal WriteDacl/WriteOwner/WriteProperty/GenericWrite/GenericAll)',
+      'a BloodHound WriteDacl/Owns/GenericAll edge to a pKICertificateTemplate object',
+      'the template DACL is writable by a user, group, or machine account you control',
+    ],
+  },
+  {
+    source: 'ad-cat-adcs-template', target: 'adcs-esc9',
+    requires: [
+      'Template msPKI-Enrollment-Flag contains CT_FLAG_NO_SECURITY_EXTENSION (0x80000) so the issued cert omits the SID security extension (certipy \'ESC9\' flag)',
+      'AND the KDC has StrongCertificateBindingEnforcement != 2 (set to 0 or 1), the weak Kerberos binding that lets a no-SID cert authenticate as a spoofed target',
+      'certipy find marks the template as [!] Vulnerable: ESC9',
+    ],
+  },
+  {
+    source: 'ad-cat-adcs-template', target: 'adcs-esc13',
+    requires: [
+      'a certificate template carries an issuance-policy OID that is msDS-OIDToGroupLink-mapped to a privileged AD group',
+      'enrolling that template yields a certificate whose authentication grants the linked group membership',
+    ],
+  },
   { source: 'ad-cat-adcs-template', target: 'adcs-esc15' },
   { source: 'ad-cat-adcs-ca', target: 'adcs-esc5' },
   { source: 'ad-cat-adcs-ca', target: 'adcs-esc6' },
-  { source: 'ad-cat-adcs-ca', target: 'adcs-esc7', description: 'Indicators this path applies: Certipy \'find\' / certutil shows the principal listed in the CA\'s ManageCA (Officer) or ManageCertificates ACL; ESC7 reported by certipy find against the CA security descriptor; Ability to run \'certipy ca -add-officer\' / \'certipy ca -issue-request\' without access denied.' },
-  { source: 'ad-cat-adcs-ca', target: 'adcs-esc8', description: "Indicators this path applies: the AD CS Web Enrollment role is reachable over HTTP/HTTPS (/certsrv/, /certsrv/certfnsh.asp); the CA endpoint accepts NTLM or Negotiate auth with no EPA / channel binding; certipy find reports 'Web Enrollment: Enabled' and 'ADCS HTTP endpoint vulnerable' (ESC8)." },
+  {
+    source: 'ad-cat-adcs-ca', target: 'adcs-esc7',
+    requires: [
+      'Certipy \'find\' / certutil shows the principal listed in the CA\'s ManageCA (Officer) or ManageCertificates ACL',
+      'ESC7 reported by certipy find against the CA security descriptor',
+      'Ability to run \'certipy ca -add-officer\' / \'certipy ca -issue-request\' without access denied',
+    ],
+  },
+  {
+    source: 'ad-cat-adcs-ca', target: 'adcs-esc8',
+    requires: [
+      'the AD CS Web Enrollment role is reachable over HTTP/HTTPS (/certsrv/, /certsrv/certfnsh.asp)',
+      'the CA endpoint accepts NTLM or Negotiate auth with no EPA / channel binding',
+      'certipy find reports \'Web Enrollment: Enabled\' and \'ADCS HTTP endpoint vulnerable\' (ESC8)',
+    ],
+  },
   { source: 'ad-cat-adcs-ca', target: 'adcs-esc10' },
   { source: 'ad-cat-adcs-ca', target: 'adcs-esc11' },
   { source: 'ad-cat-adcs-ca', target: 'adcs-esc16' },
   { source: 'ad-cat-adcs-ca', target: 'golden-certificate' },
-  { source: 'ad-cat-delegation', target: 'unconstrained-delegation', description: 'Indicators this path applies: userAccountControl flag TRUSTED_FOR_DELEGATION (0x80000) on a computer object; BloodHound "Unconstrained Delegation" edge / unconstraineddelegation:true; PowerView Get-DomainComputer -Unconstrained returns the host.' },
-  { source: 'ad-cat-delegation', target: 'constrained-delegation', description: 'Indicators this path applies: msDS-AllowedToDelegateTo is populated on a user or computer; userAccountControl carries TRUSTED_TO_AUTH_FOR_DELEGATION (protocol transition), while Kerberos-only constrained delegation sets no UAC delegation bit; you control the delegating principal secret (NT hash, AES key, or cleartext).' },
-  { source: 'ad-cat-delegation', target: 'rbcd', description: 'Indicators this path applies: write access to a target computer msDS-AllowedToActOnBehalfOfOtherIdentity (GenericAll/GenericWrite/WriteDACL/AddAllowedToAct in BloodHound); you control a principal that has an SPN (a machine account, or one you create when ms-DS-MachineAccountQuota is greater than 0).' },
+  {
+    source: 'ad-cat-delegation', target: 'unconstrained-delegation',
+    requires: [
+      'userAccountControl flag TRUSTED_FOR_DELEGATION (0x80000) on a computer object',
+      'BloodHound "Unconstrained Delegation" edge / unconstraineddelegation:true',
+      'PowerView Get-DomainComputer -Unconstrained returns the host',
+    ],
+  },
+  {
+    source: 'ad-cat-delegation', target: 'constrained-delegation',
+    requires: [
+      'msDS-AllowedToDelegateTo is populated on a user or computer',
+      'userAccountControl carries TRUSTED_TO_AUTH_FOR_DELEGATION (protocol transition), while Kerberos-only constrained delegation sets no UAC delegation bit',
+      'you control the delegating principal secret (NT hash, AES key, or cleartext)',
+    ],
+  },
+  {
+    source: 'ad-cat-delegation', target: 'rbcd',
+    requires: [
+      'write access to a target computer msDS-AllowedToActOnBehalfOfOtherIdentity (GenericAll/GenericWrite/WriteDACL/AddAllowedToAct in BloodHound)',
+      'you control a principal that has an SPN (a machine account, or one you create when ms-DS-MachineAccountQuota is greater than 0)',
+    ],
+  },
   // Critical CVEs grouped by attack surface.
   { source: 'ad-cat-cve', target: 'cvegrp-kerberos' },
   { source: 'ad-cat-cve', target: 'cvegrp-exchange' },
@@ -175,20 +320,54 @@ export const adCategoryEdges: AttackEdge[] = [
   { source: 'cvegrp-kerberos', target: 'nopac' },
   { source: 'cvegrp-smbprint', target: 'printnightmare' },
   { source: 'cvegrp-kerberos', target: 'ms14-068' },
-  { source: 'cvegrp-kerberos', target: 'certifried', description: 'Indicators this path applies: an Enterprise CA reachable with a Machine/Computer enrollment template; ms-DS-MachineAccountQuota greater than 0 (or delegated CreateChild on an OU); the ability to write a machine dNSHostName matching a DC FQDN (CVE-2022-26923).' },
+  {
+    source: 'cvegrp-kerberos', target: 'certifried',
+    requires: [
+      'an Enterprise CA reachable with a Machine/Computer enrollment template',
+      'ms-DS-MachineAccountQuota greater than 0 (or delegated CreateChild on an OU)',
+      'the ability to write a machine dNSHostName matching a DC FQDN (CVE-2022-26923)',
+    ],
+  },
   { source: 'cvegrp-exchange', target: 'privexchange' },
 
   // Lateral Movement: credential reuse (its own sub-lane) + remote execution + service abuse
   { source: 'ad-cat-lateral', target: 'ad-cat-cred-reuse' },
-  { source: 'ad-cat-cred-reuse', target: 'pass-the-hash', description: 'Indicators this path applies: you hold the NT (RC4) hash and NTLM is available on the target; you want a direct NTLM network session (SMB / WMI / WinRM) as that account without cracking the hash.' },
-  { source: 'ad-cat-cred-reuse', target: 'overpass-the-hash', description: 'Indicators this path applies: have NT hash or AES128/256 key but no cleartext password; NTLM auth blocked: STATUS_NOT_SUPPORTED / NTLM disabled / \'NTLM authentication is not supported\'; need a TGT rather than a session for the next step (PtT, S4U, LDAP/SMB over Kerberos).' },
+  {
+    source: 'ad-cat-cred-reuse', target: 'pass-the-hash',
+    requires: [
+      'you hold the NT (RC4) hash and NTLM is available on the target',
+      'you want a direct NTLM network session (SMB / WMI / WinRM) as that account without cracking the hash',
+    ],
+  },
+  {
+    source: 'ad-cat-cred-reuse', target: 'overpass-the-hash',
+    requires: [
+      'have NT hash or AES128/256 key but no cleartext password',
+      'NTLM auth blocked: STATUS_NOT_SUPPORTED / NTLM disabled / \'NTLM authentication is not supported\'',
+      'need a TGT rather than a session for the next step (PtT, S4U, LDAP/SMB over Kerberos)',
+    ],
+  },
   { source: 'ad-cat-cred-reuse', target: 'pass-the-ticket' },
-  { source: 'ad-cat-lateral', target: 'lateral-movement-cme', description: 'Indicators this path applies: the principal is a local Administrator (or in Distributed COM Users) on the target, or BloodHound shows an ExecuteDCOM / local-admin edge to the host; SMB (445), WinRM (5985), or DCOM/MSRPC (135 plus the dynamic RPC range) reachable; nxc/crackmapexec returns (Pwn3d!) for the credential.' }, // "Remote Execution" -> WinRM/WMI/DCOM
+  {
+    source: 'ad-cat-lateral', target: 'lateral-movement-cme',
+    requires: [
+      'the principal is a local Administrator (or in Distributed COM Users) on the target, or BloodHound shows an ExecuteDCOM / local-admin edge to the host',
+      'SMB (445), WinRM (5985), or DCOM/MSRPC (135 plus the dynamic RPC range) reachable',
+      'nxc/crackmapexec returns (Pwn3d!) for the credential',
+    ],
+  }, // "Remote Execution" -> WinRM/WMI/DCOM
   { source: 'ad-cat-lateral', target: 'ad-cat-platform' },
   { source: 'ad-cat-platform', target: 'ad-cat-mssql' },
   { source: 'ad-cat-platform', target: 'ad-cat-sccm' },
   { source: 'ad-cat-platform', target: 'ad-cat-deploy-abuse' },
-  { source: 'ad-cat-mssql', target: 'mssql-linked-servers', description: 'Indicators this path applies: sys.servers / sp_linkedservers returns rows beyond the local instance; is_linked = 1 on a server entry; EXEC (\'SELECT SYSTEM_USER\') AT [LINK] returns an identity different from the local login.' },
+  {
+    source: 'ad-cat-mssql', target: 'mssql-linked-servers',
+    requires: [
+      'sys.servers / sp_linkedservers returns rows beyond the local instance',
+      'is_linked = 1 on a server entry',
+      'EXEC (\'SELECT SYSTEM_USER\') AT [LINK] returns an identity different from the local login',
+    ],
+  },
 
   // ── Domain Admin: persistence + trusts ──────────────────────────────────
   { source: 'domain-admin', target: 'ad-cat-trusts' },
@@ -219,5 +398,12 @@ export const adCategoryEdges: AttackEdge[] = [
   { source: 'ad-cat-user-secrets', target: 'rdp-session-hijack' },
   // DCSync holds the DC-side dumping (DA / replication rights required).
   { source: 'ad-cat-dc-dump', target: 'dcsync' },
-  { source: 'ad-cat-dc-dump', target: 'ntds-dump', description: 'Indicators this path applies: ntds.dit file present; SYSTEM registry hive present (and optionally SECURITY); secretsdump.py invoked with the LOCAL keyword.' },
+  {
+    source: 'ad-cat-dc-dump', target: 'ntds-dump',
+    requires: [
+      'ntds.dit file present',
+      'SYSTEM registry hive present (and optionally SECURITY)',
+      'secretsdump.py invoked with the LOCAL keyword',
+    ],
+  },
 ];

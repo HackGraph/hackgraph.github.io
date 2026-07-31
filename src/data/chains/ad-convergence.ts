@@ -285,7 +285,15 @@ export const adConvergenceEdges: AttackEdge[] = [
   { source: 'pgcat-service', target: 'pg-cert-publishers' },
   { source: 'pgcat-ops', target: 'pg-backup-operators' },
   { source: 'pgcat-ops', target: 'pg-server-operators' },
-  { source: 'pgcat-service', target: 'pg-dnsadmins', description: 'Indicators this path applies: whoami /groups or net user shows membership in DnsAdmins (a role-created domain-local group; its RID varies, so match by group name, not by a fixed SID); Target is a Domain Controller running the Microsoft DNS Server service (dns.exe); dnscmd.exe available or RSAT DNS tools / WMI remote DNS management reachable.' },
+  {
+    source: 'pgcat-service', target: 'pg-dnsadmins',
+    requires: [
+      'whoami /groups or net user shows membership in DnsAdmins (a role-created domain-local group',
+      'its RID varies, so match by group name, not by a fixed SID)',
+      'Target is a Domain Controller running the Microsoft DNS Server service (dns.exe)',
+      'dnscmd.exe available or RSAT DNS tools / WMI remote DNS management reachable',
+    ],
+  },
   { source: 'pgcat-service', target: 'pg-schema-admins' },
   { source: 'pgcat-ops', target: 'pg-account-operators' },
   { source: 'pgcat-deploy', target: 'pg-sccm-admins' },

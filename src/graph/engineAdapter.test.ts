@@ -104,19 +104,42 @@ describe('adapter', () => {
       engineMap.edges.forEach((out, i) => {
         const src = map.edges[i];
         const canon = src.rel ? RELATIONSHIPS[src.rel] : undefined;
-        const summary = src.description ?? canon?.description ?? '';
-        const label = src.label ?? canon?.label ?? (summary ? 'transition' : undefined);
-        if (!label) {
-          expect(out.rel).toBeUndefined();
+        const rel = out.rel ? engineMap.relationships[out.rel] : undefined;
+        // nothing authored, nothing to show
+        if (!src.label && !src.description && !src.requires && !canon) {
+          expect(rel).toBeUndefined();
           return;
         }
-        const rel = engineMap.relationships[out.rel!];
-        expect(rel.label).toBe(label);
-        expect(rel.summary).toBe(summary);
+        expect(rel).toBeDefined();
+        expect(rel!.summary).toBe(src.description ?? canon?.description ?? '');
+        if (src.label ?? canon?.label) expect(rel!.label).toBe(src.label ?? canon?.label);
+        else expect(rel!.label).toBeTruthy();          // an unnamed edge still gets a heading
         // only an EXPLICIT caption is drawn on the canvas
-        expect(rel.tag !== false).toBe(src.label !== undefined);
+        expect(rel!.tag !== false).toBe(src.label !== undefined);
       });
     }
+  });
+
+  it('carries an edge\'s conditions through as a list, not as prose', () => {
+    const withReqs = MAPS.flatMap((m) =>
+      m.edges.map((e) => [m, e] as const).filter(([, e]) => e.requires?.length),
+    );
+    expect(withReqs.length).toBeGreaterThan(50);
+    for (const [map, edge] of withReqs) {
+      const engineMap = toEngineMap(map);
+      const i = map.edges.indexOf(edge);
+      const rel = engineMap.relationships[engineMap.edges[i].rel!];
+      expect(rel.details?.prereqs).toEqual(edge.requires);
+      // an edge asks "is this my branch", so the list is headed for that question
+      expect(rel.details?.prereqsLabel).toBe('Applies when');
+    }
+  });
+
+  /** The prose these replaced was one semicolon-spliced sentence; none should be left. */
+  it('has no edge left describing its conditions in a prose blob', () => {
+    const leftover = MAPS.flatMap((m) => m.edges)
+      .filter((e) => /Indicators this path applies/.test(e.description ?? ''));
+    expect(leftover).toEqual([]);
   });
 
   it('gives edges that disagree on wording separate entries', () => {

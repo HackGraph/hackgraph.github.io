@@ -156,7 +156,14 @@ export const adTrustNodes: TechniqueNodeDef[] = [
 ];
 
 export const adTrustEdges: AttackEdge[] = [
-  { source: 'ad-cat-enum', target: 'trust-enum', description: 'Indicators this path applies: a trustedDomain object exists under CN=System (nltest /domain_trusts or Get-ADTrust -Filter * returns one or more trusts); the trustDirection and trustAttributes flags are readable (WITHIN_FOREST 0x20, FOREST_TRANSITIVE 0x8, QUARANTINED_DOMAIN / SID-filtering 0x4, TREAT_AS_EXTERNAL 0x40), which decide whether SID history and cross-trust abuse are viable; BloodHound renders a domain-trust edge from the current domain.' },
+  {
+    source: 'ad-cat-enum', target: 'trust-enum',
+    requires: [
+      'a trustedDomain object exists under CN=System (nltest /domain_trusts or Get-ADTrust -Filter * returns one or more trusts)',
+      'the trustDirection and trustAttributes flags are readable (WITHIN_FOREST 0x20, FOREST_TRANSITIVE 0x8, QUARANTINED_DOMAIN / SID-filtering 0x4, TREAT_AS_EXTERNAL 0x40), which decide whether SID history and cross-trust abuse are viable',
+      'BloodHound renders a domain-trust edge from the current domain',
+    ],
+  },
   { source: 'ad-cat-trusts', target: 'trust-sid-history' },
   { source: 'trust-enum', target: 'trust-ticket', label: 'after domain compromise', description: 'Executing it needs the inter-realm trust key, recovered by DCSyncing the TRUSTEDDOMAIN$ account (Domain Admin), so it runs only after domain compromise, not straight from enumeration.' },
   { source: 'trust-enum', target: 'trust-sid-history', label: 'after child-domain DA', description: 'Executing it needs child-domain Domain Admin (the krbtgt key) to forge the inter-realm ticket, so it runs only after a child-domain compromise, not straight from enumeration.' },

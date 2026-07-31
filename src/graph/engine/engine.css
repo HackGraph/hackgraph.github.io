@@ -754,6 +754,27 @@
 }
 .fg-panelbody .pchip:hover { color: var(--ink); background: var(--chip-hover); }
 .fg-panelbody .pchip.static { cursor: default; }
+/* A condition long enough to be a sentence is not a label: it takes the whole row, wraps,
+   and stays selectable so it can be copied into a console. */
+.fg-panelbody .pchip.long {
+  flex: 1 1 100%;
+  position: relative;
+  padding: 8px 11px 8px 25px;
+  line-height: 1.5;
+  color: var(--ink-dim);
+  cursor: text;
+  user-select: text;
+  -webkit-user-select: text;
+}
+.fg-panelbody .pchip.long::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 14px;
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--ink-faint);
+}
+.fg-panelbody .pchip.long:hover { background: var(--chip); }
 .fg-panelbody .pchip.link { display: inline-flex; align-items: center; gap: 5px; text-decoration: none; }
 .fg-panelbody .pchip-ext { font-size: 9px; color: var(--ink-faint); }
 .fg-panelbody .pchip.link:hover .pchip-ext { color: var(--ink-dim); }

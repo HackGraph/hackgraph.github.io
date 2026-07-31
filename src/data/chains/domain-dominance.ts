@@ -287,7 +287,14 @@ export const domainDominanceEdges: AttackEdge[] = [
   { source: 'dcsync', target: 'krbtgt-hash' },
   { source: 'dcsync', target: 'pass-the-hash', label: 'any account hash' },
   { source: 'dcsync', target: 'domain-admin', label: 'dump DA hash' },
-  { source: 'krbtgt-hash', target: 'golden-ticket', description: 'Indicators this path applies: the krbtgt account NT hash or aes256 key is in hand; the domain SID (S-1-5-21-...) is known for the forging domain; ticketer or Rubeus is invoked with the krbtgt key to forge a TGT.' },
+  {
+    source: 'krbtgt-hash', target: 'golden-ticket',
+    requires: [
+      'the krbtgt account NT hash or aes256 key is in hand',
+      'the domain SID (S-1-5-21-...) is known for the forging domain',
+      'ticketer or Rubeus is invoked with the krbtgt key to forge a TGT',
+    ],
+  },
   { source: 'bloodhound-recon', target: 'find-privesc-path', label: 'pick a path' },
   { source: 'golden-ticket', target: 'domain-admin' },
   // domain-admin -> adminsdholder/dsrm/dcshadow now route through the

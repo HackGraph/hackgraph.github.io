@@ -1046,17 +1046,38 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'wdigest-downgrade', target: 'dump-lsass', label: 'cleartext after logon' },
 
   // No-cred / poisoning additions
-  { source: 'ad-cat-noauth', target: 'timeroast', description: 'Indicators this path applies: a DC is reachable on UDP/123 (nmap -sU -p123 shows it open); recovered hashes are formatted $sntp-ms$<mac>$<salt> (hashcat mode 31300); output lines are keyed RID:hash for computer ($) and trust accounts.' },
+  {
+    source: 'ad-cat-noauth', target: 'timeroast',
+    requires: [
+      'a DC is reachable on UDP/123 (nmap -sU -p123 shows it open)',
+      'recovered hashes are formatted $sntp-ms$<mac>$<salt> (hashcat mode 31300)',
+      'output lines are keyed RID:hash for computer ($) and trust accounts',
+    ],
+  },
   { source: 'timeroast', target: 'crack-hash-offline', label: 'computer acct hash' },
   { source: 'ad-cat-poisoning', target: 'arp-poisoning' },
   { source: 'arp-poisoning', target: 'ntlm-relay' },
   { source: 'arp-poisoning', target: 'crack-netntlm' },
-  { source: 'ad-cat-coercion', target: 'adidns-spoofing', description: 'Indicators this path applies: AD-integrated DNS zone (ms-DNS-Node objects in CN=MicrosoftDNS,DC=DomainDnsZones); Authenticated Users / create child ACE on the dnsZone object (default); a hostname an automation/script/linked-server resolves but that has no static record yet.' },
+  {
+    source: 'ad-cat-coercion', target: 'adidns-spoofing',
+    requires: [
+      'AD-integrated DNS zone (ms-DNS-Node objects in CN=MicrosoftDNS,DC=DomainDnsZones)',
+      'Authenticated Users / create child ACE on the dnsZone object (default)',
+      'a hostname an automation/script/linked-server resolves but that has no static record yet',
+    ],
+  },
   { source: 'adidns-spoofing', target: 'ntlm-relay' },
   { source: 'adidns-spoofing', target: 'crack-netntlm' },
 
   // Credential access additions
-  { source: 'ad-cat-credaccess', target: 'unpac-the-hash', description: 'Indicators this path applies: a usable PFX or cert+key for a domain or machine account is in hand (often from ESC1/ESC8/Shadow-Credentials/Certifried); certipy auth or Rubeus asktgt /getcredentials returns a TGT plus the account NT hash; the DC supports PKINIT (holds a Domain Controller Authentication certificate).' },
+  {
+    source: 'ad-cat-credaccess', target: 'unpac-the-hash',
+    requires: [
+      'a usable PFX or cert+key for a domain or machine account is in hand (often from ESC1/ESC8/Shadow-Credentials/Certifried)',
+      'certipy auth or Rubeus asktgt /getcredentials returns a TGT plus the account NT hash',
+      'the DC supports PKINIT (holds a Domain Controller Authentication certificate)',
+    ],
+  },
   { source: 'pass-the-certificate', target: 'unpac-the-hash', label: 'PKINIT TGT' },
   { source: 'shadow-credentials', target: 'unpac-the-hash', label: 'PKINIT TGT' },
   { source: 'unpac-the-hash', target: 'pass-the-hash', label: 'recovered NT hash' },
@@ -1086,7 +1107,17 @@ export const adCoverageEdges: AttackEdge[] = [
   { source: 'proxynotshell', target: 'local-admin-host', label: 'RCE on Exchange' },
 
   // --- Coverage additions (2026-06): local cred hunting, browser creds, AS-REP, MSSQL exec, TGT harvest, NTLMv1
-  { source: 'local-admin-host', target: 'local-cred-hunt', description: 'Indicators this path applies: readable SAM/SECURITY/SYSTEM registry hives (local hashes, LSA secrets, cached domain creds); LSASS accessible for credential extraction; DPAPI masterkeys and Credential Manager vaults; browser credential stores; SSH private keys, Kerberos keytabs/ccaches; unattend.xml, app config files, and service-account passwords left on disk.' },
+  {
+    source: 'local-admin-host', target: 'local-cred-hunt',
+    requires: [
+      'readable SAM/SECURITY/SYSTEM registry hives (local hashes, LSA secrets, cached domain creds)',
+      'LSASS accessible for credential extraction',
+      'DPAPI masterkeys and Credential Manager vaults',
+      'browser credential stores',
+      'SSH private keys, Kerberos keytabs/ccaches',
+      'unattend.xml, app config files, and service-account passwords left on disk',
+    ],
+  },
   { source: 'local-cred-hunt', target: 'valid-domain-creds', label: 'found creds' },
   { source: 'local-admin-host', target: 'browser-creds' },
   { source: 'browser-creds', target: 'valid-domain-creds', label: 'saved logins' },
@@ -1106,7 +1137,13 @@ export const adCoverageEdges: AttackEdge[] = [
   // --- NTLM reflection / BitLocker / gMSA-membership-write
   { source: 'cvegrp-kerberos', target: 'ntlm-reflection' },
   { source: 'ntlm-reflection', target: 'local-admin-host', label: 'reflect → SYSTEM' },
-  { source: 'domain-object-enum', target: 'bitlocker-recovery', description: 'Indicators this path applies: enumeration surfaces msFVE-RecoveryInformation objects you can actually READ (a delegated or over-permissive ACL on the computer object or its BitLocker recovery info), not merely that BitLocker is deployed. Without that read right this is "identify delegated recovery-key readers", not extraction.' },
+  {
+    source: 'domain-object-enum', target: 'bitlocker-recovery',
+    description: 'Without that read right this is "identify delegated recovery-key readers", not extraction.',
+    requires: [
+      'enumeration surfaces msFVE-RecoveryInformation objects you can actually READ (a delegated or over-permissive ACL on the computer object or its BitLocker recovery info), not merely that BitLocker is deployed',
+    ],
+  },
   { source: 'bitlocker-recovery', target: 'ntds-dump', label: 'decrypt offline DC' },
 
   // --- AD long-tail (2026-06): Linux host secrets + machine-scoped DPAPI

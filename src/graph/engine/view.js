@@ -1393,14 +1393,115 @@ function mount(container, options = {}) {
   // Body prose goes through the host if it supplied `options.prose`, which receives the
   // element and the text and may replace the contents (to gloss terms, link things, …).
   // Default is plain text, so a host that supplies nothing gets exactly what it got before.
-  function prose(cls, text) {
-    const n = el('div', cls, text);
+  function prose(cls, text, tag) {
+    const n = el(tag || 'div', cls, text);
     if (typeof options.prose === 'function') options.prose(n, String(text == null ? '' : text));
     return n;
   }
 
   function section(body, title) {
     body.appendChild(el('h3', null, title));
+  }
+
+  /**
+   * Render a details block: the sections a node or an edge can both carry.
+   *
+   * Shared because an edge is a step too. What has to be true before you can take it, what
+   * it costs you in noise, and what to read about it are the same questions whether the
+   * step is a technique or the move between two of them, and answering them in one prose
+   * paragraph is what a caption does badly.
+   *
+   * `applies` is the one caller-specific slot — a node scopes itself by env and role, an
+   * edge has nothing to say there — and it keeps its place in the reading order.
+   */
+  function renderDetails(body, d, applies) {
+    if (d.caution) {
+      const box = el('div', 'caution');
+      // the dataset names the box (this dataset calls it OPSEC); unnamed falls back to a
+      // plain warning, which is what a generic caution reads as
+      box.appendChild(el('div', 'caution-label', d.cautionLabel || 'Caution'));
+      box.appendChild(prose('caution-body', d.caution));
+      body.appendChild(box);
+    }
+
+    if (d.prereqs && d.prereqs.length) {
+      // an edge asks a different question of the same list: not "what do I need" but
+      // "when is this the branch to take", so the heading is the dataset's to name
+      section(body, d.prereqsLabel || 'Prerequisites');
+      const chips = el('div', 'chips');
+      // A requirement is sometimes a phrase and sometimes a whole condition to check against
+      // a live host. Past a certain length it stops being a label, so the list is laid out as
+      // rows instead. Decided for the LIST, not per entry: one short condition among long
+      // ones reads as a stray chip rather than as the same kind of thing.
+      const rows = d.prereqs.some(r => typeof r === 'string' && !model.defs.has(r) && r.length > 56);
+      // An entry is either another node's id — in which case the chip navigates — or a
+      // plain requirement in prose. Dropping the latter silently left datasets showing an
+      // empty "Prerequisites" heading with nothing under it.
+      d.prereqs.forEach(req => {
+        const target = typeof req === 'string' ? model.defs.get(req) : null;
+        if (target) {
+          const c = el('button', 'pchip', target.label);
+          c.addEventListener('click', () => revealDef(req));
+          chips.appendChild(c);
+        } else if (req) {
+          chips.appendChild(prose('pchip static' + (rows ? ' long' : ''), String(req), 'span'));
+        }
+      });
+      body.appendChild(chips);
+    }
+    if (applies && applies.length) {
+      section(body, 'Applies');
+      const chips = el('div', 'chips');
+      applies.forEach(t => chips.appendChild(el('span', 'pchip static', t)));
+      body.appendChild(chips);
+    }
+    if (d.tools && d.tools.length) {
+      section(body, 'Tools');
+      const chips = el('div', 'chips');
+      // a tool may be a bare name or {name, url}; a url makes the chip a link out
+      d.tools.forEach(t => {
+        const name = typeof t === 'string' ? t : (t && t.name);
+        if (!name) return;
+        const href = typeof t === 'string' ? null : safeUrl(t && t.url);
+        if (!href) { chips.appendChild(el('span', 'pchip static', name)); return; }
+        const a = el('a', 'pchip link', name);
+        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+        a.appendChild(el('span', 'pchip-ext', '↗'));
+        chips.appendChild(a);
+      });
+      body.appendChild(chips);
+    }
+    if (d.commands && d.commands.length) {
+      section(body, 'Commands');
+      d.commands.forEach(entry => {
+        const label = entry && typeof entry === 'object' ? entry.label : null;
+        const cmdText = safeCommand(entry && typeof entry === 'object' ? entry.code : entry);
+        const row = el('div', 'cmd');
+        if (label) row.appendChild(el('div', 'cmd-label', label));
+        row.appendChild(el('code', 'cmd-code', cmdText));
+        const btn = el('button', null, 'copy');
+        btn.addEventListener('click', async () => {
+          // copy exactly the text on screen — never a payload the row did not show
+          try { await navigator.clipboard.writeText(cmdText); } catch { /* denied */ }
+          btn.textContent = 'copied';
+          setTimeout(() => { btn.textContent = 'copy'; }, 1200);
+        });
+        row.appendChild(btn);
+        body.appendChild(row);
+      });
+    }
+    if (d.refs && d.refs.length) {
+      section(body, 'References');
+      const refs = el('div', 'refs');
+      d.refs.forEach(([label, url]) => {
+        const href = safeUrl(url);
+        // an unusable protocol still shows its label, it just is not a link
+        const a = el(href ? 'a' : 'span', null, label + (href ? ' ↗' : ''));
+        if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+        refs.appendChild(a);
+      });
+      body.appendChild(refs);
+    }
   }
 
   function renderPanel(key, force) {
@@ -1458,87 +1559,7 @@ function mount(container, options = {}) {
 
     if (def.summary) body.appendChild(prose('psum', def.summary));
     if (d.description) body.appendChild(prose('pdesc', d.description));
-    if (d.caution) {
-      const box = el('div', 'caution');
-      // the dataset names the box (this dataset calls it OPSEC); unnamed falls back to a
-      // plain warning, which is what a generic caution reads as
-      box.appendChild(el('div', 'caution-label', d.cautionLabel || 'Caution'));
-      box.appendChild(prose('caution-body', d.caution));
-      body.appendChild(box);
-    }
-
-    if (d.prereqs && d.prereqs.length) {
-      section(body, 'Prerequisites');
-      const chips = el('div', 'chips');
-      // An entry is either another node's id — in which case the chip navigates — or a
-      // plain requirement in prose. Dropping the latter silently left datasets showing an
-      // empty "Prerequisites" heading with nothing under it.
-      d.prereqs.forEach(req => {
-        const target = typeof req === 'string' ? model.defs.get(req) : null;
-        if (target) {
-          const c = el('button', 'pchip', target.label);
-          c.addEventListener('click', () => revealDef(req));
-          chips.appendChild(c);
-        } else if (req) {
-          chips.appendChild(el('span', 'pchip static', String(req)));
-        }
-      });
-      body.appendChild(chips);
-    }
-    if (def.env || def.role) {
-      section(body, 'Applies');
-      const chips = el('div', 'chips');
-      if (def.env) chips.appendChild(el('span', 'pchip static', def.env));
-      if (def.role) chips.appendChild(el('span', 'pchip static', 'role: ' + def.role));
-      body.appendChild(chips);
-    }
-    if (d.tools && d.tools.length) {
-      section(body, 'Tools');
-      const chips = el('div', 'chips');
-      // a tool may be a bare name or {name, url}; a url makes the chip a link out
-      d.tools.forEach(t => {
-        const name = typeof t === 'string' ? t : (t && t.name);
-        if (!name) return;
-        const href = typeof t === 'string' ? null : safeUrl(t && t.url);
-        if (!href) { chips.appendChild(el('span', 'pchip static', name)); return; }
-        const a = el('a', 'pchip link', name);
-        a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
-        a.appendChild(el('span', 'pchip-ext', '↗'));
-        chips.appendChild(a);
-      });
-      body.appendChild(chips);
-    }
-    if (d.commands && d.commands.length) {
-      section(body, 'Commands');
-      d.commands.forEach(entry => {
-        const label = entry && typeof entry === 'object' ? entry.label : null;
-        const cmdText = safeCommand(entry && typeof entry === 'object' ? entry.code : entry);
-        const row = el('div', 'cmd');
-        if (label) row.appendChild(el('div', 'cmd-label', label));
-        row.appendChild(el('code', 'cmd-code', cmdText));
-        const btn = el('button', null, 'copy');
-        btn.addEventListener('click', async () => {
-          // copy exactly the text on screen — never a payload the row did not show
-          try { await navigator.clipboard.writeText(cmdText); } catch { /* denied */ }
-          btn.textContent = 'copied';
-          setTimeout(() => { btn.textContent = 'copy'; }, 1200);
-        });
-        row.appendChild(btn);
-        body.appendChild(row);
-      });
-    }
-    if (d.refs && d.refs.length) {
-      section(body, 'References');
-      const refs = el('div', 'refs');
-      d.refs.forEach(([label, url]) => {
-        const href = safeUrl(url);
-        // an unusable protocol still shows its label, it just is not a link
-        const a = el(href ? 'a' : 'span', null, label + (href ? ' ↗' : ''));
-        if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-        refs.appendChild(a);
-      });
-      body.appendChild(refs);
-    }
+    renderDetails(body, d, [def.env, def.role && 'role: ' + def.role].filter(Boolean));
 
     // Next steps is the panel's call to action: where can you go from here. Collapsed by
     // default so the reading content above it is not pushed off the first screen.
@@ -1654,7 +1675,10 @@ function mount(container, options = {}) {
     crumb.appendChild(el('b', null, dst.label));
     body.appendChild(crumb);
 
-    if (rel.summary) body.appendChild(el('div', 'psum', rel.summary));
+    if (rel.summary) body.appendChild(prose('psum', rel.summary));
+    // the same sections a node gets: an edge is a step, and what has to hold before you can
+    // take it deserves a list rather than a semicolon-spliced sentence in its caption
+    renderDetails(body, rel.details || {});
 
     section(body, 'Tags');
     const tags = el('div', 'chips');
@@ -1674,7 +1698,7 @@ function mount(container, options = {}) {
     });
     if (dst.summary) {
       section(body, 'Leads to');
-      body.appendChild(el('div', 'pdesc', dst.summary));
+      body.appendChild(prose('pdesc', dst.summary));
     }
     $('panelfoot').hidden = true;
     setPeek(false);

@@ -94,10 +94,24 @@ export const adAdcsExtraEdges: AttackEdge[] = [
   // Enumeration is the discovery gate for the whole ESC family: ad-cat-adcs flows into
   // it, and it branches to the two abuse sub-categories (these reroute the former direct
   // ad-cat-adcs → sub-category edges, which moved out of ad-categories.ts).
-  { source: 'ad-cat-adcs', target: 'adcs-enum', description: "Indicators this path applies: a pKIEnrollmentService object under CN=Enrollment Services,CN=Public Key Services (an Enterprise CA is published); the nxc/certipy adcs enumeration reports a CA and templates; Certipy output lists a 'Vulnerabilities' section tagged ESC1-ESC16." },
+  {
+    source: 'ad-cat-adcs', target: 'adcs-enum',
+    requires: [
+      'a pKIEnrollmentService object under CN=Enrollment Services,CN=Public Key Services (an Enterprise CA is published)',
+      'the nxc/certipy adcs enumeration reports a CA and templates',
+      'Certipy output lists a \'Vulnerabilities\' section tagged ESC1-ESC16',
+    ],
+  },
   { source: 'adcs-enum', target: 'ad-cat-adcs-template', label: 'template ESCs' },
   { source: 'adcs-enum', target: 'ad-cat-adcs-ca', label: 'CA / relay / forge' },
-  { source: 'ad-cat-user-secrets', target: 'adcs-cert-theft', description: 'Indicators this path applies: an existing client-authentication certificate and its private key are recoverable from the compromised host (the user or machine MY store, an exported .pfx, or a DPAPI-protected key); certutil -store, Mimikatz crypto::certificates /export, or Certipy reveals an exportable cert; the stolen cert can then PKINIT as its owner.' },
+  {
+    source: 'ad-cat-user-secrets', target: 'adcs-cert-theft',
+    requires: [
+      'an existing client-authentication certificate and its private key are recoverable from the compromised host (the user or machine MY store, an exported .pfx, or a DPAPI-protected key)',
+      'certutil -store, Mimikatz crypto::certificates /export, or Certipy reveals an exportable cert',
+      'the stolen cert can then PKINIT as its owner',
+    ],
+  },
   { source: 'adcs-cert-theft', target: 'pass-the-certificate', label: 'PKINIT as owner' },
   { source: 'persist-fed', target: 'adcs-cert-persist' },
   { source: 'adcs-cert-persist', target: 'pass-the-certificate', label: 'durable PKINIT' },

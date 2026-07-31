@@ -102,11 +102,26 @@ export interface TechniqueNodeDef extends GraphNode {
 /**
  * A directed edge in an attack map.
  *
- * Structurally identical to {@link GraphEdge}: the canonical `rel` id lives there, because
- * the relationship vocabulary is part of the shared framework rather than the security data.
- * The name stays because every chain file authors against it.
+ * The framework half ({@link GraphEdge}) is source, target and the canonical `rel` id — the
+ * relationship vocabulary belongs to the shared framework, not to the security data. The
+ * fields below are the same detail body a technique node carries, because an edge is a step
+ * too: taking a branch has conditions, costs noise, and has something worth reading behind
+ * it. Authoring those as fields rather than as one semicolon-spliced sentence in `description`
+ * is what lets the panel render an edge the way it renders a node.
  */
-export type AttackEdge = GraphEdge;
+export interface AttackEdge extends GraphEdge {
+  /**
+   * What has to hold for this branch to be the right one. One condition per entry: they are
+   * rendered as a list under "Applies when", so a reader can check them off.
+   */
+  requires?: string[];
+  /** Detection risk in taking this step, shown in the OPSEC box. */
+  opsec?: string;
+  tools?: Tool[];
+  commands?: Command[];
+  mitre?: MitreRef;
+  references?: Reference[];
+}
 
 /** A complete, registrable map (e.g. the AD attack methodology). */
 export interface MapDefinition extends GraphMap {

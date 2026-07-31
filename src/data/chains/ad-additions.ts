@@ -1754,7 +1754,14 @@ SharpWSUS.exe approve /updateid:<guid> /computername:dc.domain.local /groupname:
 // are routed through category nodes in ad-categories.ts. The edges below are the
 // cross-links and downstream chains between techniques.
 export const adAdditionEdges: AttackEdge[] = [
-  { source: 'username-enum-kerbrute', target: 'password-spraying', description: 'Indicators this path applies: A user/account list is in hand (LDAP/RPC/RID-cycling/Kerberos enum) plus one or a few candidate passwords; A single password was cracked, leaked in config/source, or reused on another service and you want to test reuse domain-wide; NetExec/CrackMapExec returns [+] DOMAIN\\\\user:pass on one principal while most return [-] STATUS_LOGON_FAILURE.' },
+  {
+    source: 'username-enum-kerbrute', target: 'password-spraying',
+    requires: [
+      'A user/account list is in hand (LDAP/RPC/RID-cycling/Kerberos enum) plus one or a few candidate passwords',
+      'A single password was cracked, leaked in config/source, or reused on another service and you want to test reuse domain-wide',
+      'NetExec/CrackMapExec returns [+] DOMAIN\\\\user:pass on one principal while most return [-] STATUS_LOGON_FAILURE',
+    ],
+  },
   { source: 'rid-cycling', target: 'password-spraying' },
   { source: 'anon-ldap-dump', target: 'password-spraying' },
   { source: 'rpc-null-enum', target: 'password-spraying' },
@@ -1779,27 +1786,70 @@ export const adAdditionEdges: AttackEdge[] = [
   // Object-first ACL abuse: each object category fans out to the abuses that apply to
   // that object type. GenericAll/GenericWrite reach these via the object cats (edges in
   // ad-categories.ts); the Control-Granting cat and ad-cat-dacl also feed the object cats.
-  { source: 'acl-tgt-user', target: 'shadow-credentials', description: 'Indicators this path applies: msDS-KeyCredentialLink is writable on the target principal; a GenericWrite/GenericAll/WriteOwner/WriteDACL ACE over the target user or computer (BloodHound); at least one Windows Server 2016+ domain controller holding a Domain Controller Authentication certificate (PKINIT-capable KDC).' },
+  {
+    source: 'acl-tgt-user', target: 'shadow-credentials',
+    requires: [
+      'msDS-KeyCredentialLink is writable on the target principal',
+      'a GenericWrite/GenericAll/WriteOwner/WriteDACL ACE over the target user or computer (BloodHound)',
+      'at least one Windows Server 2016+ domain controller holding a Domain Controller Authentication certificate (PKINIT-capable KDC)',
+    ],
+  },
   { source: 'acl-tgt-user', target: 'targeted-kerberoast', label: 'write SPN' },
   { source: 'acl-tgt-user', target: 'targeted-asrep', label: 'flip DONT_REQ_PREAUTH' },
   { source: 'acl-tgt-user', target: 'acl-forcechangepassword', label: 'reset password' },
-  { source: 'acl-tgt-user', target: 'logon-script-abuse', description: 'Indicators this path applies: WriteProperty/GenericWrite over a user\'s Script-Path attribute (PowerView Find-InterestingDomainAcl / BloodHound); writable file or directory under \\\\<domain>\\SYSVOL\\<domain>\\scripts (NETLOGON); existing logon script referenced by a user\'s scriptPath (login.vbs, *.bat, *.ps1).' },
-  { source: 'acl-tgt-user', target: 'account-state-edit', description: 'Indicators this path applies: a credential is confirmed valid by smbclient/nxc but logon is refused for a state reason (not STATUS_LOGON_FAILURE); STATUS_ACCOUNT_DISABLED or the ACCOUNTDISABLE (0x2) bit set in userAccountControl; an all-zero logonHours bitmask (denies every hour, STATUS_INVALID_LOGON_HOURS); STATUS_PASSWORD_MUST_CHANGE / STATUS_PASSWORD_EXPIRED on otherwise-valid creds.' },
+  {
+    source: 'acl-tgt-user', target: 'logon-script-abuse',
+    requires: [
+      'WriteProperty/GenericWrite over a user\'s Script-Path attribute (PowerView Find-InterestingDomainAcl / BloodHound)',
+      'writable file or directory under \\\\<domain>\\SYSVOL\\<domain>\\scripts (NETLOGON)',
+      'existing logon script referenced by a user\'s scriptPath (login.vbs, *.bat, *.ps1)',
+    ],
+  },
+  {
+    source: 'acl-tgt-user', target: 'account-state-edit',
+    requires: [
+      'a credential is confirmed valid by smbclient/nxc but logon is refused for a state reason (not STATUS_LOGON_FAILURE)',
+      'STATUS_ACCOUNT_DISABLED or the ACCOUNTDISABLE (0x2) bit set in userAccountControl',
+      'an all-zero logonHours bitmask (denies every hour, STATUS_INVALID_LOGON_HOURS)',
+      'STATUS_PASSWORD_MUST_CHANGE / STATUS_PASSWORD_EXPIRED on otherwise-valid creds',
+    ],
+  },
   { source: 'acl-tgt-user', target: 'sssd-upn-spoof', label: 'write victim UPN' },
   { source: 'acl-tgt-computer', target: 'acl-addallowedtoact' },
   { source: 'acl-tgt-computer', target: 'shadow-credentials' },
   { source: 'acl-tgt-computer', target: 'laps-read', label: 'read LAPS' },
   { source: 'acl-tgt-computer', target: 'gmsa-read', label: 'read gMSA' },
-  { source: 'acl-tgt-group', target: 'acl-addself-group', description: 'Indicators this path applies: BloodHound edge AddMember / GenericWrite / GenericAll / WriteDacl from owned principal to a group; group ACE granting WriteProperty on member / Self (Add/Remove self as member); membership of target group confers a further ACL (GenericWrite/WriteDacl) over downstream users or the domain.' },
+  {
+    source: 'acl-tgt-group', target: 'acl-addself-group',
+    requires: [
+      'BloodHound edge AddMember / GenericWrite / GenericAll / WriteDacl from owned principal to a group',
+      'group ACE granting WriteProperty on member / Self (Add/Remove self as member)',
+      'membership of target group confers a further ACL (GenericWrite/WriteDacl) over downstream users or the domain',
+    ],
+  },
   { source: 'acl-tgt-group', target: 'acl-group-delegated' },
   { source: 'acl-tgt-policy', target: 'gpo-abuse' },
   { source: 'acl-tgt-policy', target: 'acl-gplink-ou' },
   { source: 'acl-tgt-policy', target: 'acl-dcsync-rights' },
   { source: 'acl-addallowedtoact', target: 'rbcd' },
-  { source: 'acl-dcsync-rights', target: 'dcsync', label: 'replicate as non-DA', description: 'Indicators this path applies: the principal holds DS-Replication-Get-Changes and DS-Replication-Get-Changes-All on the domain object (a BloodHound DCSync edge); membership of Domain Admins, Administrators, or another group with replication rights; a DRSUAPI DRSGetNCChanges call to the DC succeeds over RPC.' },
+  {
+    source: 'acl-dcsync-rights', target: 'dcsync', label: 'replicate as non-DA',
+    requires: [
+      'the principal holds DS-Replication-Get-Changes and DS-Replication-Get-Changes-All on the domain object (a BloodHound DCSync edge)',
+      'membership of Domain Admins, Administrators, or another group with replication rights',
+      'a DRSUAPI DRSGetNCChanges call to the DC succeeds over RPC',
+    ],
+  },
   // Azure AD Connect: local admin on a directory-sync server → decrypt the connector
   // account, which (with PHS) holds DS-Replication rights → DCSync.
-  { source: 'ad-cat-host-dump', target: 'azure-adconnect-sync', description: 'Indicators this path applies: ADSync service / Microsoft Azure AD Sync installed; LocalDB instance.\\\\ADSync or SQL DB named ADSync present; C:\\\\Program Files\\\\Microsoft Azure AD Sync\\\\ directory and mcrypt.dll on disk.' },
+  {
+    source: 'ad-cat-host-dump', target: 'azure-adconnect-sync',
+    requires: [
+      'ADSync service / Microsoft Azure AD Sync installed',
+      'LocalDB instance.\\\\ADSync or SQL DB named ADSync present',
+      'C:\\\\Program Files\\\\Microsoft Azure AD Sync\\\\ directory and mcrypt.dll on disk',
+    ],
+  },
   { source: 'azure-adconnect-sync', target: 'dcsync', label: 'sync acct replication rights' },
   { source: 'azure-adconnect-sync', target: 'valid-domain-creds', label: 'Entra sync account' },
   { source: 'acl-writedacl', target: 'acl-dcsync-rights', label: 'grant yourself replication' },
@@ -1822,7 +1872,15 @@ export const adAdditionEdges: AttackEdge[] = [
   { source: 'sam-lsa-dump', target: 'mscache-crack', label: 'crack cached DCC2' },
   { source: 'pass-the-hash', target: 'overpass-the-hash' },
   { source: 'overpass-the-hash', target: 'pass-the-ticket' },
-  { source: 'service-account-creds', target: 'silver-ticket', description: 'Indicators this path applies: you possess a service or machine account NT/RC4 hash or AES key; the target service exposes a Kerberos SPN (MSSQLSvc/, cifs/, http/, host/); the domain SID and the target host FQDN are known; NTLM is restricted so pass-the-hash is blocked but Kerberos works.' },
+  {
+    source: 'service-account-creds', target: 'silver-ticket',
+    requires: [
+      'you possess a service or machine account NT/RC4 hash or AES key',
+      'the target service exposes a Kerberos SPN (MSSQLSvc/, cifs/, http/, host/)',
+      'the domain SID and the target host FQDN are known',
+      'NTLM is restricted so pass-the-hash is blocked but Kerberos works',
+    ],
+  },
   // (kerberoasting -> silver-ticket removed: must crack first. The path
   //  kerberoasting -> crack-hash-offline -> service-account-creds -> silver-ticket covers it.)
   { source: 'silver-ticket', target: 'local-admin-host', label: 'scoped service / host', rel: 'host-exec' },
@@ -1839,7 +1897,14 @@ export const adAdditionEdges: AttackEdge[] = [
   { source: 'lat-cat-smb', target: 'atexec' },
   { source: 'lat-cat-wmidcom', target: 'wmiexec' },
   { source: 'lat-cat-wmidcom', target: 'dcom-exec' },
-  { source: 'lat-cat-logon', target: 'winrm-evil', description: 'Indicators this path applies: TCP 5985 (HTTP) or 5986 (HTTPS) open / WSMan listener; nxc/crackmapexec winrm returns (Pwn3d!) for the principal; Target user is a member of Remote Management Users (or local Administrators).' },
+  {
+    source: 'lat-cat-logon', target: 'winrm-evil',
+    requires: [
+      'TCP 5985 (HTTP) or 5986 (HTTPS) open / WSMan listener',
+      'nxc/crackmapexec winrm returns (Pwn3d!) for the principal',
+      'Target user is a member of Remote Management Users (or local Administrators)',
+    ],
+  },
   { source: 'lat-cat-logon', target: 'rdp-lateral' },
   { source: 'lat-cat-logon', target: 'ssh-lateral' },
   { source: 'lat-cat-shell', target: 'reverse-shell' },
@@ -1894,7 +1959,14 @@ export const adAdditionEdges: AttackEdge[] = [
   { source: 'pgcat-deploy', target: 'pg-wsus-admins' },
   { source: 'pg-wsus-admins', target: 'local-admin-host', label: 'malicious update → SYSTEM' },
   // Golden SAML: steal the AD FS token-signing key → forge SAML tokens to federated apps.
-  { source: 'persist-fed', target: 'adfs-golden-saml', description: 'Indicators this path applies: ADFS service running (adfssrv); host is a federation server; Access as the ADFS service account (gMSA or domain service account) or DKM container read rights in AD.' },
+  {
+    source: 'persist-fed', target: 'adfs-golden-saml',
+    requires: [
+      'ADFS service running (adfssrv)',
+      'host is a federation server',
+      'Access as the ADFS service account (gMSA or domain service account) or DKM container read rights in AD',
+    ],
+  },
   { source: 'gmsa-read', target: 'adfs-golden-saml', label: 'AD FS svc acct → forge SAML' },
   // RemotePotato0: low-priv session coerces another logged-on user's NTLM → crack or relay.
   { source: 'user-foothold', target: 'remotepotato' },

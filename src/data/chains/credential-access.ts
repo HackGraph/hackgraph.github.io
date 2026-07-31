@@ -273,11 +273,30 @@ export const credentialAccessEdges: AttackEdge[] = [
   // 'Kerberos Roasting' category (see ad-categories.ts).
   // Kerberoasting forks on the encryption type the KDC hands back; both branches
   // converge on offline cracking, but the AES branch is PBKDF2-slow (see nodes).
-  { source: 'kerberoasting', target: 'kerberoast-rc4', label: 'RC4 allowed (etype 23)', description: 'Indicators this path applies: the returned TGS begins with $krb5tgs$23$ (RC4-HMAC); the account\'s msDS-SupportedEncryptionTypes is unset or includes RC4; the domain has not disabled RC4 via the Kerberos encryption-types GPO.' },
-  { source: 'kerberoasting', target: 'kerberoast-aes', label: 'RC4 disabled / AES-only', description: 'Indicators this path applies: the returned TGS begins with $krb5tgs$18$ (AES256) or $krb5tgs$17$ (AES128); RC4 is disabled domain-wide or the account is AES-only; an RC4 request is refused or logged as a downgrade.' },
+  {
+    source: 'kerberoasting', target: 'kerberoast-rc4', label: 'RC4 allowed (etype 23)',
+    requires: [
+      'the returned TGS begins with $krb5tgs$23$ (RC4-HMAC)',
+      'the account\'s msDS-SupportedEncryptionTypes is unset or includes RC4',
+      'the domain has not disabled RC4 via the Kerberos encryption-types GPO',
+    ],
+  },
+  {
+    source: 'kerberoasting', target: 'kerberoast-aes', label: 'RC4 disabled / AES-only',
+    requires: [
+      'the returned TGS begins with $krb5tgs$18$ (AES256) or $krb5tgs$17$ (AES128)',
+      'RC4 is disabled domain-wide or the account is AES-only',
+      'an RC4 request is refused or logged as a downgrade',
+    ],
+  },
   { source: 'kerberoast-rc4', target: 'crack-hash-offline', label: '$krb5tgs$23$ · hashcat 13100' },
   { source: 'kerberoast-aes', target: 'crack-hash-offline', label: '$krb5tgs$18/17$ · hashcat 19700/19600' },
-  { source: 'asrep-roasting', target: 'crack-hash-offline', description: 'Indicators this path applies: AS-REP material beginning with $krb5asrep$23$ (RC4, hashcat 18200) cracks at NT-hash speed; if RC4 is disabled the AS-REP comes back AES, which stock hashcat cannot crack (no AES AS-REP mode); use John (--format=krb5asrep) and expect PBKDF2-slow speeds.' },
+  // Not a list of conditions but a description of what you get: the etype decides which
+  // cracker can touch the material at all. Captioned like its Kerberoasting siblings above.
+  {
+    source: 'asrep-roasting', target: 'crack-hash-offline', label: '$krb5asrep$23$ · hashcat 18200',
+    description: 'AS-REP material beginning with $krb5asrep$23$ (RC4, hashcat 18200) cracks at NT-hash speed. If RC4 is disabled the AS-REP comes back AES, which stock hashcat cannot crack (no AES AS-REP mode); use John (--format=krb5asrep) and expect PBKDF2-slow speeds.',
+  },
   { source: 'crack-hash-offline', target: 'service-account-creds', label: 'service / SPN account' },
   { source: 'crack-hash-offline', target: 'valid-domain-creds', label: 'domain user account' },
   // A looted, password-protected file cracks offline into creds (or decrypts to more secrets).
