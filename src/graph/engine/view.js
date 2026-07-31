@@ -1093,6 +1093,14 @@ function mount(container, options = {}) {
       b.addEventListener('click', () => trailClick(k));
       bar.appendChild(b);
     });
+    // The step you just took is the LAST crumb, and a long trail overflows this bar.
+    // Rebuilding resets scrollLeft to 0, which parks it on the oldest steps and hides the
+    // one you are actually on — you had to drag to find yourself. End at the end instead.
+    // Twice: the bar's width animates when the panel opens beside it, and a position set
+    // against the old width is no longer the end once the new one lands.
+    const toEnd = () => { bar.scrollLeft = bar.scrollWidth; };
+    toEnd();
+    requestAnimationFrame(toEnd);
   }
 
   /* ---------- isolate: the lit path only, laid out straight ---------- */
@@ -1731,6 +1739,14 @@ function mount(container, options = {}) {
       closePanel();
     }
   });
+
+  // The bar narrows when the panel opens beside it, so the end of the trail moves after
+  // the render that put it there. Follow it when that animation lands.
+  if (chrome.crumbs) {
+    $('crumbs').addEventListener('transitionend', e => {
+      if (e.target === e.currentTarget) e.currentTarget.scrollLeft = e.currentTarget.scrollWidth;
+    });
+  }
 
   /* ---------- pluggable filters: dim, never hide ---------- */
 
