@@ -263,7 +263,7 @@ function mount(container, options = {}) {
     fadingEdges.forEach(r => { r.el.remove(); if (r.hit) r.hit.remove(); }); fadingEdges.clear();
     $('elabels').innerHTML = '';
     ways.clear();
-    litEls.length = 0; hlEls.length = 0; hlKey = null; edgeSel = null; isoSnap = null;
+    litEls.length = 0; hlEls.length = 0; hlKey = null; edgeSel = null; walkedPath = null;
     // Array.isArray guards the container; the ELEMENTS are still attacker-controlled, and
     // one that resists string coercion ({"toString":null}) throws where a key is built.
     // Render keys are strings by construction, so anything else is not a key.
@@ -505,7 +505,6 @@ function mount(container, options = {}) {
   /* ---------- reconcile: diff the visible graph after any topology change ---------- */
 
   function reconcile(anchorKey) {
-    if (isolateOn) isoSnap = null;    // a fresh layout supersedes the isolate snapshot
     // protect the lit route's edges: a cycle must never break (and unroll) on an
     // edge the user's path is standing on — the #n instance lands on the far side
     const protect = new Set();
@@ -514,13 +513,17 @@ function mount(container, options = {}) {
     // way the visible layout already did, so expanding a node cannot re-parent it
     current = resolveVisible(model, expandedKeys, protect, seedUnroll);
     seedUnroll = [...current.unroll];   // carry the decision forward, never re-derive it
-    // FOCUS: reduce the graph to the lit route + the selection's next steps, so
-    // ancestors read as a straight line with their siblings gone. Deselecting
-    // freezes the last slice (the remembered trail) instead of exploding open.
+    // Focus and isolate are ONE reduction: keep the walked path plus the choices on offer
+    // from it and drop the rest, so ancestors read as a straight line with their siblings
+    // gone. Deselecting freezes the last slice (the remembered trail) instead of exploding
+    // back open. Isolate differs only in how the result is laid out, below.
     const focusTrail = trail.length ? trail : trailMemory;
-    if (focusOn && focusTrail.length) {
+    if ((focusOn || isolateOn) && focusTrail.length) {
       const fullRoute = activeRoute(current.vg, model.rootId, focusTrail, current.backEdges);
-      if (fullRoute.length) current = focusSlice(current, model.rootId, fullRoute, protect);
+      if (fullRoute.length) {
+        if (walkedPath) fullRoute.forEach(k => walkedPath.add(k));
+        current = focusSlice(current, model.rootId, fullRoute, protect, walkedPath);
+      }
     }
     const { vg, rank, parents, backEdges } = current;
     const anchor = views.get(anchorKey) || views.get(model.rootId);
@@ -1000,27 +1003,7 @@ function mount(container, options = {}) {
         rec.cv.el.classList.add('keep');
         litEls.push(rec.el, rec.cv.el);
       });
-      // Under isolate the captured path stays on screen wherever the selection sits. The
-      // route alone would shrink to the click, hiding everything past it and leaving no way
-      // forward — the reader would have to leave isolate to get their path back.
-      if (isolateOn && isoPath) {
-        route.forEach(k => isoPath.add(k));           // going further extends the path
-        isoPath.forEach(k => {
-          const v = views.get(k);
-          if (v) { v.el.classList.add('keep'); litEls.push(v.el); }
-        });
-        const ordered = [...isoPath];
-        for (let i = 0; i < ordered.length - 1; i++) {
-          for (let j = i + 1; j < ordered.length; j++) {
-            const rec = edgeRecs.get(ordered[i] + '|' + ordered[j]);
-            if (!rec) continue;
-            rec.el.classList.add('keep');
-            rec.hit.classList.add('keep');
-            if (rec.label) rec.label.classList.add('keep');
-            litEls.push(rec.el, rec.hit);
-          }
-        }
-      }
+      if (walkedPath) route.forEach(k => walkedPath.add(k));
       if (chrome.panel) renderPanel(selKey);
       emit('onSelect', { key: selKey, defId: defIdOf(selKey), node: model.defs.get(defIdOf(selKey)), route: route.slice() });
     } else {
@@ -1031,16 +1014,17 @@ function mount(container, options = {}) {
     syncUrl();
     emit('onRouteChange', { route: route.slice(), trail: trail.slice() });
 
+    // Isolate IS focus, laid out straight. The slice has already removed everything off the
+    // path, so this only has to put what remains on one line.
     if (isolateOn && route.length > 1) {
-      const shown = isoPath ? [...isoPath] : route;
-      const base = views.get(shown[0]) || views.get(route[0]);
-      shown.forEach(k => { const v = views.get(k); if (v) v.targetCy = base.targetCy; });
+      const base = views.get(route[0]);
+      if (base) views.forEach(v => { v.targetCy = base.targetCy; });
       if (!inReconcile) {
         startAnim();
-        frameBounds(bboxOf(shown.map(k => views.get(k)).filter(Boolean)));
+        frameBounds(bboxOf([...views.values()]));
       }
-    } else if (isolateOn) {
-      exitIsolate(inReconcile);       // the route dissolved underneath isolate
+    } else if (isolateOn && !route.length) {
+      setIsolate(false);              // the route dissolved underneath isolate
     }
   }
 
@@ -1068,54 +1052,39 @@ function mount(container, options = {}) {
 
   /* ---------- isolate: the lit path only, laid out straight ---------- */
 
-  let isoSnap = null;
-  // The path isolation was entered on. It only ever GROWS: stepping back to an earlier node
-  // must not delete the rest of the path from the screen, and going further extends it.
-  let isoPath = null;                 // positions + camera to restore on exit
+  // The path walked in the current reduced view. Focus and isolate are the SAME reduction
+  // — isolate only lays the result out differently — so they share this. It only ever
+  // grows, so stepping back never deletes what lies ahead.
+  let walkedPath = null;                 // positions + camera to restore on exit
 
   function setIsolate(on) {
-    if (on && !isolateOn && route.length > 1) {
-      isoSnap = { cam: { ...view }, pos: new Map() };
-      [...views.values(), ...ways.values()].forEach(it => isoSnap.pos.set(it, it.targetCy));
-      isolateOn = true;
-      isoPath = new Set(route);
-      root.classList.add('iso');
-      $('isolate').classList.add('on');
-      syncIsolateUi();
-      refreshRoute(false);
-    } else if (!on && isolateOn) {
-      exitIsolate(false);
-    }
+    if (on === isolateOn) return;
+    if (on && route.length < 2) return;               // nothing to isolate yet
+    isolateOn = on;
+    // Both reduced modes walk the same path; entering either starts it and it lives until
+    // neither is on.
+    if (on) walkedPath = walkedPath || new Set(route);
+    else if (!focusOn) walkedPath = null;
+    root.classList.toggle('iso', on);
+    $('isolate').classList.toggle('on', on);
+    syncIsolateUi();
+    // A reduction is a topology change, so it goes through the normal reconcile. The old
+    // implementation stashed every card's position and the camera and put them back by
+    // hand, because it hid nodes with opacity rather than removing them — with a real
+    // slice there is nothing to restore.
+    reconcile(route[route.length - 1] || model.rootId);
   }
 
-  // put every card back exactly where it was (and the camera too) — leaving
-  // isolate must never strand nodes on the straightened line
-  // the panel's isolate control is rendered once but the mode can change from the toolbar,
-  // Escape or a reset — mirror the live flag onto it rather than trusting the render
+  // The panel's isolate control is rendered once but the mode can change from the toolbar,
+  // Escape or a reset — mirror the live flag onto it rather than trusting the render.
   function syncIsolateUi() {
     const b = $('panelfoot').querySelector('.pfoot');
     if (b) {
       b.classList.toggle('on', isolateOn);
       b.setAttribute('aria-checked', String(isolateOn));
     }
-    // here rather than in renderCrumbs: leaving isolate restores positions directly and
-    // never reconciles, so the crumb render that used to own this simply did not run
     $('isoexit').hidden = !isolateOn;
     if (chrome.crumbs) $('crumbs').hidden = isolateOn || route.length < 2;
-  }
-
-  function exitIsolate(inReconcile) {
-    isolateOn = false;
-    isoPath = null;
-    root.classList.remove('iso');
-    $('isolate').classList.remove('on');
-    syncIsolateUi();
-    if (inReconcile) { isoSnap = null; return; }   // a fresh layout supersedes it
-    if (!isoSnap) { reconcile(trail[trail.length - 1] || model.rootId); return; }
-    isoSnap.pos.forEach((y, it) => { it.targetCy = y; });
-    startAnim();
-    glideTo(isoSnap.cam.x, isoSnap.cam.y, isoSnap.cam.s);
-    isoSnap = null;
   }
 
   /* ---------- hover: one path, honouring the click order ---------- */
@@ -2014,6 +1983,8 @@ function mount(container, options = {}) {
   $('focus').addEventListener('click', () => {
     focusOn = !focusOn;
     $('focus').classList.toggle('on', focusOn);
+    if (focusOn) walkedPath = walkedPath || new Set(route);
+    else if (!isolateOn) walkedPath = null;
     const sel = trail[trail.length - 1] || trailMemory[trailMemory.length - 1];
     if (focusOn && sel) {                 // the slice needs the ancestry open
       keyLineageKeys(model, sel).forEach(k => expandedKeys.add(k));

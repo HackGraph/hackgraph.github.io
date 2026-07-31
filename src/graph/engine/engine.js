@@ -226,16 +226,32 @@ function resolveVisible(model, expanded, protect, seedUnroll) {
 }
 
 /* ---------- focus slice ----------
-   Keep ONLY the lit route plus the selection's next steps: every ancestor
-   collapses to the single node the path runs through, their siblings vanish
-   entirely, and the branching choices live at the head of the line. Pure —
-   it re-derives ranks, parents and back edges over the reduced graph so the
-   rest of the pipeline cannot tell the difference. */
+   Reduce the graph to the path being walked plus the selection's next steps: every
+   ancestor collapses to the single node the path runs through, their siblings vanish,
+   and the branching choices live at the head of the line.
 
-function focusSlice(resolved, rootId, route, protect) {
+   `walked` is the set of keys the reader has already been through. It only ever grows,
+   so stepping BACK along the path does not delete what lies ahead of you — without it
+   the slice is recomputed from the live route and everything past the click disappears,
+   leaving no way forward except to leave the mode entirely.
+
+   Pure: it re-derives ranks, parents and back edges over the reduced graph, so nothing
+   downstream can tell the difference between this and a smaller map. */
+
+function focusSlice(resolved, rootId, route, protect, walked) {
   const selKey = route[route.length - 1];
   const keep = new Set(route);
+  if (walked) for (const k of walked) if (resolved.vg.keySet.has(k)) keep.add(k);
+  // the selection's next steps are the choices on offer from where you stand
   resolved.vg.edges.forEach(e => { if (e.source === selKey) keep.add(e.target); });
+  // …and the next steps of anywhere else on the walked path, so the branches you have
+  // already seen do not vanish when you step back to look at them. Sourced from a FROZEN
+  // copy: testing the set while adding to it walks the graph transitively and keeps
+  // everything, which is a slice that slices nothing.
+  if (walked) {
+    const from = new Set(keep);
+    resolved.vg.edges.forEach(e => { if (from.has(e.source)) keep.add(e.target); });
+  }
   const nodeKeys = resolved.vg.nodeKeys.filter(k => keep.has(k));
   const keySet = new Set(nodeKeys);
   const edges = resolved.vg.edges.filter(e => keySet.has(e.source) && keySet.has(e.target));

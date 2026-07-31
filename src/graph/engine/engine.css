@@ -150,11 +150,11 @@
 }
 .edge.back { stroke-dasharray: 5 5; }
 .edge.lit, .edge.hl { stroke: var(--accent); stroke-width: 2; }
-/* focused/hover dims are scoped :not(.iso): under isolate they would otherwise
-   OUT-SPECIFY the opacity-0 rules below and re-reveal hidden cards */
-.fg.tracing:not(.iso) .edge:not(.hl):not(.lit) { opacity: .35; }
-.fg.focused:not(.iso) .edge:not(.lit):not(.hl):not(.keep) { opacity: .12; }
-.fg.iso .edge:not(.lit):not(.keep) { opacity: 0; }
+/* Isolate used to hide the rest of the graph with opacity, which is why these dims were
+   scoped :not(.iso) — they would out-specify it and reveal what was meant to be gone.
+   Isolate is a real slice now, so there is nothing hidden to fight over. */
+.fg.tracing .edge:not(.hl):not(.lit) { opacity: .35; }
+.fg.focused .edge:not(.lit):not(.hl):not(.keep) { opacity: .12; }
 .edge.fdim { opacity: .08; }
 .edgehit {
   fill: none;
@@ -163,7 +163,6 @@
   pointer-events: stroke;
   cursor: pointer;
 }
-.fg.iso .edgehit:not(.lit):not(.keep) { pointer-events: none; }
 
 /* relationship tags: pills riding the edge itself, in world space so they
    scale with zoom exactly like the cards do */
@@ -197,9 +196,8 @@
   background: var(--chip);
   z-index: 3;
 }
-.fg.tracing:not(.iso) .elabel:not(.hl):not(.lit) { opacity: .35; }
-.fg.focused:not(.iso) .elabel:not(.lit):not(.hl):not(.keep) { opacity: .12; }
-.fg.iso .elabel:not(.lit):not(.keep) { opacity: 0; pointer-events: none; }
+.fg.tracing .elabel:not(.hl):not(.lit) { opacity: .35; }
+.fg.focused .elabel:not(.lit):not(.hl):not(.keep) { opacity: .12; }
 .elabel.fdim { opacity: .1; }
 .fg.hidelabels .elabel { display: none; }
 
@@ -238,8 +236,7 @@
   box-shadow: 0 0 0 2px var(--accent), var(--shadow);
 }
 .card.lit, .card.sel { z-index: 2; }
-.fg.focused:not(.iso) .card:not(.lit):not(.sel):not(.keep):not(.exit) { opacity: .25; }
-.fg.iso .card:not(.lit):not(.keep):not(.exit) { opacity: 0; pointer-events: none; }
+.fg.focused .card:not(.lit):not(.sel):not(.keep):not(.exit) { opacity: .25; }
 .fg.hidenotes .note { display: none; }
 
 .cat {
