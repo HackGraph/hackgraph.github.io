@@ -263,7 +263,7 @@ function mount(container, options = {}) {
     fadingEdges.forEach(r => { r.el.remove(); if (r.hit) r.hit.remove(); }); fadingEdges.clear();
     $('elabels').innerHTML = '';
     ways.clear();
-    litEls.length = 0; hlEls.length = 0; hlKey = null; edgeSel = null; walkedPath = null;
+    litEls.length = 0; hlEls.length = 0; hlKey = null; edgeSel = null; isoPath = null;
     // Array.isArray guards the container; the ELEMENTS are still attacker-controlled, and
     // one that resists string coercion ({"toString":null}) throws where a key is built.
     // Render keys are strings by construction, so anything else is not a key.
@@ -521,8 +521,9 @@ function mount(container, options = {}) {
     if ((focusOn || isolateOn) && focusTrail.length) {
       const fullRoute = activeRoute(current.vg, model.rootId, focusTrail, current.backEdges);
       if (fullRoute.length) {
-        if (walkedPath) fullRoute.forEach(k => walkedPath.add(k));
-        current = focusSlice(current, model.rootId, fullRoute, protect, walkedPath);
+        if (isolateOn && isoPath) fullRoute.forEach(k => isoPath.add(k));
+        current = focusSlice(current, model.rootId, fullRoute, protect,
+          isolateOn ? isoPath : null);
       }
     }
     const { vg, rank, parents, backEdges } = current;
@@ -1003,7 +1004,7 @@ function mount(container, options = {}) {
         rec.cv.el.classList.add('keep');
         litEls.push(rec.el, rec.cv.el);
       });
-      if (walkedPath) route.forEach(k => walkedPath.add(k));
+      if (isolateOn && isoPath) route.forEach(k => isoPath.add(k));
       if (chrome.panel) renderPanel(selKey);
       emit('onSelect', { key: selKey, defId: defIdOf(selKey), node: model.defs.get(defIdOf(selKey)), route: route.slice() });
     } else {
@@ -1017,8 +1018,28 @@ function mount(container, options = {}) {
     // Isolate IS focus, laid out straight. The slice has already removed everything off the
     // path, so this only has to put what remains on one line.
     if (isolateOn && route.length > 1) {
+      // Straighten the live ROUTE — only the route is a line. Everything else the slice
+      // kept (the choices on offer, the branches already seen) then hangs in a band BELOW
+      // it, stacked per column. Straightening alone is not enough: it moves a card without
+      // telling the layout, so the route node lands on whichever sibling the packing had
+      // put at that height.
       const base = views.get(route[0]);
-      if (base) views.forEach(v => { v.targetCy = base.targetCy; });
+      if (base) {
+        const lineY = base.targetCy;
+        const onRoute = new Set(route);
+        route.forEach(k => { const v = views.get(k); if (v) v.targetCy = lineY; });
+        const byRank = new Map();
+        views.forEach(v => {
+          if (onRoute.has(v.key)) return;
+          if (!byRank.has(v.rank)) byRank.set(v.rank, []);
+          byRank.get(v.rank).push(v);
+        });
+        byRank.forEach(col => {
+          col.sort((a, b) => a.targetCy - b.targetCy);
+          let y = lineY + base.h / 2 + VGAP * 1.4;
+          col.forEach(v => { v.targetCy = y + v.h / 2; y += v.h + VGAP; });
+        });
+      }
       if (!inReconcile) {
         startAnim();
         frameBounds(bboxOf([...views.values()]));
@@ -1052,10 +1073,14 @@ function mount(container, options = {}) {
 
   /* ---------- isolate: the lit path only, laid out straight ---------- */
 
-  // The path walked in the current reduced view. Focus and isolate are the SAME reduction
-  // — isolate only lays the result out differently — so they share this. It only ever
-  // grows, so stepping back never deletes what lies ahead.
-  let walkedPath = null;                 // positions + camera to restore on exit
+  // The path ISOLATE was entered on. It only ever grows, so stepping back never deletes
+  // what lies ahead of you.
+  //
+  // Focus deliberately does NOT use it. The two modes share one reduction, but they want
+  // different sets: focus collapses to where you are RIGHT NOW — that live narrowing is
+  // the whole feature — while isolate pins a path you chose and holds it. Giving focus the
+  // sticky set made it accumulate until it barely reduced at all.
+  let isoPath = null;                 // positions + camera to restore on exit
 
   function setIsolate(on) {
     if (on === isolateOn) return;
@@ -1063,8 +1088,7 @@ function mount(container, options = {}) {
     isolateOn = on;
     // Both reduced modes walk the same path; entering either starts it and it lives until
     // neither is on.
-    if (on) walkedPath = walkedPath || new Set(route);
-    else if (!focusOn) walkedPath = null;
+    isoPath = on ? new Set(route) : null;
     root.classList.toggle('iso', on);
     $('isolate').classList.toggle('on', on);
     syncIsolateUi();
@@ -1983,8 +2007,6 @@ function mount(container, options = {}) {
   $('focus').addEventListener('click', () => {
     focusOn = !focusOn;
     $('focus').classList.toggle('on', focusOn);
-    if (focusOn) walkedPath = walkedPath || new Set(route);
-    else if (!isolateOn) walkedPath = null;
     const sel = trail[trail.length - 1] || trailMemory[trailMemory.length - 1];
     if (focusOn && sel) {                 // the slice needs the ancestry open
       keyLineageKeys(model, sel).forEach(k => expandedKeys.add(k));
