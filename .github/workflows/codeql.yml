@@ -1,6 +1,6 @@
 name: CodeQL
 
-# Static security analysis of the TS/React source (XSS, injection, unsafe DOM,
+# Static security analysis of the JavaScript source (XSS, injection, unsafe DOM,
 # taint flows). Runs on every push/PR to main and weekly so newly-added query
 # rules catch old code too. Results land in the repo's Security → Code scanning tab.
 on:

@@ -2,7 +2,7 @@
 <html lang="en" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0c0a0b" />
     <meta name="google-site-verification" content="Mig3N7VsWRpoeizKRhnflY8RkwdNVf-7cZx07smCMaU" />
@@ -35,9 +35,11 @@
     <meta name="twitter:image" content="https://hackgraph.github.io/og-image.png" />
     <!-- Self-hosted latin subsets (only the weights actually used); preloaded so
          first paint uses the real face. Mono loads on demand (command blocks). -->
-    <link rel="preload" href="/fonts/geist-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/geist-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="preload" href="/fonts/geist-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="engine/fonts/geist-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="engine/fonts/geist-sans-latin-500-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="engine/fonts/geist-sans-latin-600-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="stylesheet" href="engine/style.css" />
+    <link rel="stylesheet" href="src/data/domain/domain.css" />
     <title>HackGraph | Interactive Attack-path Explorer</title>
     <style>
       html { background: #0c0a0b; }
@@ -93,13 +95,13 @@
         </p>
         <p>
           Prefer text, or reading without JavaScript? The full
-          <a href="/reference.html">HackGraph reference</a> lists every technique, command, and source in plain HTML:
-          <a href="/reference/active-directory.html">Active Directory attack paths</a>,
-          <a href="/reference/windows-privilege-escalation.html">Windows privilege escalation</a>, and
-          <a href="/reference/linux-privilege-escalation.html">Linux privilege escalation</a>.
+          <a href="reference.html">HackGraph reference</a> lists every technique, command, and source in plain HTML:
+          <a href="reference/active-directory.html">Active Directory attack paths</a>,
+          <a href="reference/windows-privilege-escalation.html">Windows privilege escalation</a>, and
+          <a href="reference/linux-privilege-escalation.html">Linux privilege escalation</a>.
         </p>
       </div>
     </noscript>
-    <script type="module" src="/src/main.ts"></script>
+    <script type="module" src="src/main.js"></script>
   </body>
 </html>

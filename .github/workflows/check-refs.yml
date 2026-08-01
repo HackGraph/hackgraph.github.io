@@ -14,7 +14,6 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci
-      - run: npm run check:refs
+          node-version: 22
+      # no install: the repo has no dependencies
+      - run: node tools/check-refs.mjs

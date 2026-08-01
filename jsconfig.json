@@ -1,0 +1,14 @@
+{
+  "//": "For editors only. Nothing builds from this: the site is served straight from the repo. It makes an editor read the JSDoc @type annotations and schema.d.ts, so authoring content still gets completion and warnings without a toolchain.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "checkJs": true,
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": ["src", "engine", "tools"],
+  "exclude": ["node_modules"]
+}

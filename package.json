@@ -1,39 +1,7 @@
 {
+  "//": "Not a package. This file exists for exactly one line: \"type\": \"module\", which tells node the .js files here are ES modules. Without it node tries CommonJS first, reparses every file, and warns. There are no dependencies, no lockfile and nothing to install: `npm install` would do nothing. Do not add dependencies here without a very good reason - the site ships as plain files and that is the point.",
   "name": "hackgraph",
   "private": true,
-  "version": "0.1.0",
   "type": "module",
-  "license": "MIT",
-  "homepage": "https://hackgraph.github.io/",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build && tsx scripts/gen-reference.ts",
-    "gen:reference": "tsx scripts/gen-reference.ts",
-    "preview": "vite preview",
-    "test": "vitest run && npm run test:engine",
-    "test:engine": "node engine/layout-test.mjs && node engine/view-test.mjs",
-    "test:watch": "vitest",
-    "check:refs": "node scripts/check-refs.mjs",
-    "lint": "eslint ."
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "@eslint/js": "^10.0.1",
-    "@types/node": "^22.10.2",
-    "eslint": "^10.6.0",
-    "globals": "^17.7.0",
-    "jsdom": "^25.0.1",
-    "tsx": "^4.23.0",
-    "typescript": "^5.6.3",
-    "typescript-eslint": "^8.62.1",
-    "vite": "^6.0.3",
-    "vitest": "^3.2.6"
-  },
-  "overrides": {
-    "@tailwindcss/vite": {
-      "vite": "$vite"
-    },
-    "esbuild": "^0.25.0",
-    "form-data": "^4.0.6"
-  }
+  "license": "MIT"
 }

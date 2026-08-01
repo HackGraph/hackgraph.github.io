@@ -1,21 +1,11 @@
 version: 2
 updates:
-  # npm dependencies — weekly PRs; low-risk updates batched to cut noise,
-  # majors (e.g. the Vite upgrade) come as their own reviewable PRs.
-  - package-ecosystem: npm
-    directory: "/"
-    schedule:
-      interval: weekly
-    open-pull-requests-limit: 10
-    labels: ["dependencies"]
-    groups:
-      minor-and-patch:
-        patterns: ["*"]
-        update-types: ["minor", "patch"]
-
-  # The GitHub Actions used in our workflows — keep them current/patched too.
+  # The site itself has no dependencies — no package.json, no lockfile, nothing to update.
+  # GitHub Actions are the only third-party code in the repository, so they are all that
+  # is left to watch.
   - package-ecosystem: github-actions
-    directory: "/"
+    directory: /
     schedule:
       interval: weekly
-    labels: ["dependencies", "github-actions"]
+    commit-message:
+      prefix: 'Build(deps)'

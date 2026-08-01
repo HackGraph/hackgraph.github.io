@@ -25,15 +25,21 @@ Start from a foothold and expand one technique at a time toward Domain Admin, SY
 ## Run locally
 
 ```bash
-npm install
-npm run dev
+node tools/serve.mjs      # http://localhost:5173
 ```
 
-The app runs at http://localhost:5173. `npm run build` builds to `dist/` and `npm test` runs the tests.
+There is no build and nothing to install. The repository is the site: GitHub Pages serves
+these files as they are, so what you see locally is what ships.
+
+```bash
+node --test                    # content lint, adapter tests, engine tests
+node tools/gen-reference.mjs   # rebuild the static reference pages after a content change
+node tools/check-refs.mjs      # check every reference URL still resolves
+```
 
 ## Contributing
 
-The maps are plain data in `src/data/`, never the engine, so adding a technique or a whole new domain is just editing files. New maps appear in the header automatically.
+The maps are plain data in `src/data/`, never the engine, so adding a technique or a whole new domain is just editing files. New maps appear in the header automatically. Run `node --test` before opening a PR, and `node tools/gen-reference.mjs` if you changed content.
 
 ## Acknowledgements
 
