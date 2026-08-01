@@ -10,7 +10,8 @@
     "build": "tsc -b && vite build && tsx scripts/gen-reference.ts",
     "gen:reference": "tsx scripts/gen-reference.ts",
     "preview": "vite preview",
-    "test": "vitest run",
+    "test": "vitest run && npm run test:engine",
+    "test:engine": "node engine/layout-test.mjs && node engine/view-test.mjs",
     "test:watch": "vitest",
     "check:refs": "node scripts/check-refs.mjs",
     "lint": "eslint ."

@@ -32,7 +32,7 @@ if (!E) throw new Error("GraphView requires engine.js to be loaded first");
 const {
   CARD_W, COL_GAP, COL_PITCH, VGAP, KNOB, CORNER,
   buildModel, hasChildren, childCount, resolveVisible, focusSlice,
-  pathBetween, shortestBetween, instanceSeg, activeRoute, trailStep,
+  shortestBetween, activeRoute, trailStep,
   keyLineage, keyLineageKeys, syncWays, buildColumns, buildAdj, orderColumns,
   assignCoords, buildSearchIndex, searchMap, encodeToken, decodeToken,
 } = E;
@@ -171,7 +171,6 @@ function mount(container, options = {}) {
   const ANIM_MS = REDUCED ? 1
     : (Number.isFinite(animMs) && animMs > 0 ? Math.min(animMs, 10000) : 470);
   const SVGNS = 'http://www.w3.org/2000/svg';
-  const CHEV_R = '<svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M3.2 1.8 6.4 5 3.2 8.2" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   const CHEV_D = '<svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M1.8 3.6 5 6.8 8.2 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   // marks a card that groups other nodes rather than being a step of its own
   const FOLDER = '<svg width="13" height="13" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M1.6 4.2a1.1 1.1 0 0 1 1.1-1.1h2.2l1.3 1.6h4.2a1.1 1.1 0 0 1 1.1 1.1v4.5a1.1 1.1 0 0 1-1.1 1.1H2.7a1.1 1.1 0 0 1-1.1-1.1V4.2Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>';
@@ -952,7 +951,6 @@ function mount(container, options = {}) {
 
   const litEls = [];
 
-  const labelOf = k => model.defs.get(defIdOf(k)).label;
 
   function applyReveal(step) {
     if (step.action !== 'reveal') return false;

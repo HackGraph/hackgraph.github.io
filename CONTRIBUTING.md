@@ -5,7 +5,8 @@ HackGraph is split into two layers so you can add content without touching the e
 | Layer | Where | What |
 | --- | --- | --- |
 | **Content** | `src/data/` | The maps, nodes, edges, relationships: plain data you edit |
-| **Engine** | `src/graph/engine/` | The graph engine, vendored from its own repo. Domain-blind: it never references any specific node |
+| **Engine** | `engine/` | The graph engine, a self-contained project with its own tests, spec and demo. Domain-blind: it never references any specific node |
+| **Glue** | `src/graph/engine/` | The typed handle the app holds the engine by. No engine logic |
 | **Seam** | `src/graph/engineAdapter.ts`, `src/data/domain/` | The only code that knows both sides: map conversion, the two filters, the glossary |
 
 If you're adding techniques, you only ever edit files under **`src/data/`**.
@@ -120,18 +121,20 @@ its high-level overview); the chevron expands/collapses. Give every category a
 
 ## Dependencies
 
-HackGraph has **no runtime dependencies at all**. The interface is the vendored graph
-engine (`src/graph/engine/`), which is plain JavaScript with no framework, and the build
-is Vite plus TypeScript. Two rules keep it that way:
+HackGraph has **no runtime dependencies at all**. The interface is the graph engine in
+`engine/`, which is plain JavaScript with no framework, and the build is Vite plus
+TypeScript. Two rules keep it that way:
 
 - **Content needs zero dependencies.** Adding techniques, categories, or maps is pure
   data under `src/data/`: no packages, no build changes.
 - **New runtime dependencies are rare. Raise one in an issue first.** Prefer the
   platform and what's already here. Everything stays **fully client-side**: no backend,
   no network calls at runtime (only the static, public reference links a node points to).
-- **Never edit `src/graph/engine/`.** Those files are copied byte-for-byte from the
-  engine's own repository, and the copy is how the two stay in step. Fix it upstream and
-  re-vendor, or the next sync silently reverts you.
+- **Keep `engine/` domain-blind.** It is a generic graph engine that happens to live
+  here, not HackGraph code: nothing under it may mention a technique, a phase, or
+  security at all. Anything that needs to know both sides belongs in
+  `src/graph/engineAdapter.ts`. It has its own tests, which `npm test` runs — change the
+  engine and you are expected to keep them green.
 
 ## Before you open a PR
 

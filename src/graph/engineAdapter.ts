@@ -1,7 +1,7 @@
 /**
  * Adapter from this app's {@link GraphMap} to the standalone graph engine's map shape.
  *
- * The engine (`apps/graph/engine.js`) is domain-blind and DOM-free: it owns visibility,
+ * The engine (`engine/engine.js`) is domain-blind and DOM-free: it owns visibility,
  * loop unrolling, ranks, layout, path finding, search and the share codec. Its contract is
  * nearly identical to ours already; only two things differ:
  *

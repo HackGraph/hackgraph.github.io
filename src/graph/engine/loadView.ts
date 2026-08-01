@@ -1,5 +1,5 @@
 /**
- * Loader for the vendored view layer.
+ * Loader for the engine's view layer.
  *
  * `view.js` is a classic script: it resolves the engine from `globalThis.GraphEngine` at
  * evaluation time and publishes itself the same way. Static ESM imports are hoisted, so the
@@ -10,7 +10,7 @@
  * component reads as an ordinary effect.
  */
 import { GraphEngine } from './index';
-import './engine.css';
+import '../../../engine/style.css';
 
 /** Everything the host can do to a mounted view. Mirrors `api` in view.js. */
 export interface GraphViewApi {
@@ -89,7 +89,7 @@ export function loadGraphView(): Promise<GraphViewModule> {
   if (!pending) {
     // the view reads this on evaluation; it must exist first
     (globalThis as unknown as { GraphEngine: unknown }).GraphEngine = GraphEngine;
-    pending = import('./view.js').then(() => {
+    pending = import('../../../engine/view.js').then(() => {
       const view = (globalThis as unknown as { GraphView?: GraphViewModule }).GraphView;
       if (!view) throw new Error('graph view failed to publish itself on globalThis');
       return view;

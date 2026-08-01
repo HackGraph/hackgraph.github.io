@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fan-Out Graph</title>
+<link rel="stylesheet" href="style.css?v=19">
+<style>
+  html, body { height: 100%; margin: 0; background: #0c0d0f; }
+</style>
+</head>
+<body>
+
+<!-- the whole app is one mounted element; .fg-fill just makes it full-window -->
+<div id="graph" class="fg-fill"></div>
+
+<!-- engine: pure graph math, no DOM · data: the maps · view: the renderer -->
+<script src="engine.js?v=19"></script>
+<script src="data.js?v=19"></script>
+<script src="view.js?v=19"></script>
+<script>
+  window.demo = GraphView.mount('#graph', {
+    maps: MAPS,
+    startMap: window.__START_MAP,
+    title: 'Fan-Out Graph  v19',
+    repoUrl: 'https://github.com/hackgraph/graph',
+    // hash is optional: add it once this is built from a repo and it links to the commit
+    build: { date: 'Jul 29, 2026' },
+  });
+</script>
+</body>
+</html>
