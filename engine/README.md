@@ -67,14 +67,12 @@ relationship table into the tag drawn on the edge and the text in its panel:
 const MAPS = [myMap];   // the registry the view reads
 ```
 
-A relationship's `label` is its name in the detail panel and the caption drawn on the
-edge itself. Add `tag: false` to keep the name and the explanation but leave the canvas
-clean, for steps that need no caption to be understood.
+`label` is the caption drawn on the edge and its heading in the panel; `tag: false`
+keeps the heading and drops the caption.
 
-A relationship may also carry `details`, in the same shape a node's does — `prereqs`,
-`tools`, `commands`, `caution`, `refs` — and the edge panel renders them with the same
-sections. `prereqsLabel` renames that heading, which on an edge usually reads better as
-"Applies when" than "Prerequisites".
+A relationship may also carry `details` in the same shape a node's does, rendered with
+the same panel sections. `prereqsLabel` renames that heading — on an edge, usually to
+"Applies when".
 
 Cycles are allowed and encouraged — a feedback edge is unrolled into a forward
 instance badged `#2`, so every arrow still points right.
@@ -161,26 +159,12 @@ node build.mjs         # dist/index.html + one self-contained page per map
 node server.mjs        # dev server on :3001, no-cache
 ```
 
-Both test suites also run from the host repo's `npm test`, so a change here is checked
-by the same command that checks the app around it. `view-test.mjs` resolves jsdom from
-whatever `node_modules` is in scope and skips rather than fails when there is none, so a
-bare checkout of this directory still passes.
+Both suites also run from the host repo's `npm test`. `view-test.mjs` skips when jsdom
+is not installed.
 
-## Living here, releasable elsewhere
-
-This directory is a whole project — source, tests, spec, demo and licence — that happens
-to be checked into HackGraph, because HackGraph is the only thing using it so far. It sat
-in a directory of its own until July 2026, copied in file by file, and the copy lost
-edits in both directions often enough to end the arrangement.
-
-Keeping it liftable costs one rule: nothing under `engine/` may reference security,
-techniques or phases. The host converts its own data at the boundary
-(`src/graph/engineAdapter.ts`), so the engine never learns what the graph is about.
-
-Releasing it standalone is a packaging job rather than an untangling one. It needs a
-`package.json` with a name and entry points, and a decision about whether the demo
-(`index.html`, `data.js`, `server.mjs`, `build.mjs`) ships with the library or beside it.
-Nothing in the code reaches outside this directory except `node:` built-ins.
+The engine is checked into HackGraph because that is the only thing using it, and stays
+generic: nothing here references the host's subject matter. Publishing it separately
+needs a `package.json` and nothing else — it imports only `node:` built-ins.
 
 Two invariants the code protects deliberately — breaking either causes bugs that look
 like layout randomness:

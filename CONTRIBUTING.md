@@ -5,8 +5,7 @@ HackGraph is split into two layers so you can add content without touching the e
 | Layer | Where | What |
 | --- | --- | --- |
 | **Content** | `src/data/` | The maps, nodes, edges, relationships: plain data you edit |
-| **Engine** | `engine/` | The graph engine, a self-contained project with its own tests, spec and demo. Domain-blind: it never references any specific node |
-| **Glue** | `src/graph/engine/` | The typed handle the app holds the engine by. No engine logic |
+| **Engine** | `engine/` | The graph engine. Generic: it never references any specific node |
 | **Seam** | `src/graph/engineAdapter.ts`, `src/data/domain/` | The only code that knows both sides: map conversion, the two filters, the glossary |
 
 If you're adding techniques, you only ever edit files under **`src/data/`**.
@@ -130,11 +129,9 @@ TypeScript. Two rules keep it that way:
 - **New runtime dependencies are rare. Raise one in an issue first.** Prefer the
   platform and what's already here. Everything stays **fully client-side**: no backend,
   no network calls at runtime (only the static, public reference links a node points to).
-- **Keep `engine/` domain-blind.** It is a generic graph engine that happens to live in
-  this repo. Nothing under it may mention a technique, a phase, or security at all;
-  anything that has to know both sides belongs in `src/graph/engineAdapter.ts`. The
-  engine ships its own tests and `npm test` runs them, so a change there is expected to
-  keep them passing.
+- **Keep `engine/` domain-blind.** Nothing under it may mention a technique, a phase, or
+  security; anything that knows both sides belongs in `src/graph/engineAdapter.ts`. It
+  has its own tests, which `npm test` runs.
 
 ## Before you open a PR
 
