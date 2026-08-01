@@ -10,11 +10,11 @@ Interactive attack-path explorer for offensive security.
 
 ### [hackgraph.github.io](https://hackgraph.github.io/)
 
-<img src=".github/preview.png" alt="The Active Directory map with the DCSync technique panel open" width="900">
+<img src=".github/preview.png" alt="The Active Directory map: DCSync selected, its panel open, and the four techniques it leads to" width="900">
 
 </div>
 
-Start at a foothold and expand the graph one technique at a time until you reach the goal: Domain Admin, SYSTEM, or root. Every node is a short cheat-sheet with what the technique does, the tools, copy-paste commands, its MITRE ATT&CK id, what it needs, and how it gets caught. It all runs in your browser, with no backend, no framework, and nothing to install.
+Start from a foothold and expand one technique at a time toward Domain Admin, SYSTEM or root. Every node gives you what the technique does, the tools and copy-paste commands, its MITRE ATT&CK id, what it needs first, and how loud it is. Runs entirely in the browser.
 
 ## Maps
 
@@ -33,7 +33,7 @@ The app runs at http://localhost:5173. `npm run build` builds to `dist/` and `np
 
 ## Contributing
 
-The maps are plain data in `src/data/`, never the engine, so adding a technique or a whole new domain is just editing files. New maps appear in the header automatically. See [CONTRIBUTING.md](CONTRIBUTING.md).
+The maps are plain data in `src/data/`, never the engine, so adding a technique or a whole new domain is just editing files. New maps appear in the header automatically.
 
 ## Acknowledgements
 
