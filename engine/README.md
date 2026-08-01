@@ -168,18 +168,19 @@ bare checkout of this directory still passes.
 
 ## Living here, releasable elsewhere
 
-This directory is a whole project: source, tests, spec, demo and licence. It is checked
-into HackGraph because that is the only thing using it today, and a copy kept in step by
-hand had already lost edits in both directions. It is not HackGraph code.
+This directory is a whole project — source, tests, spec, demo and licence — that happens
+to be checked into HackGraph, because HackGraph is the only thing using it so far. It sat
+in a directory of its own until July 2026, copied in file by file, and the copy lost
+edits in both directions often enough to end the arrangement.
 
-Nothing under `engine/` may reference security, techniques or phases — the host converts
-its data at the boundary (`src/graph/engineAdapter.ts`) and the engine never learns what
-the graph is about. That rule is the whole reason this can be lifted out later.
+Keeping it liftable costs one rule: nothing under `engine/` may reference security,
+techniques or phases. The host converts its own data at the boundary
+(`src/graph/engineAdapter.ts`), so the engine never learns what the graph is about.
 
-To release it standalone, what is missing is packaging, not disentangling: a
+Releasing it standalone is a packaging job rather than an untangling one. It needs a
 `package.json` with a name and entry points, and a decision about whether the demo
 (`index.html`, `data.js`, `server.mjs`, `build.mjs`) ships with the library or beside it.
-The code itself already depends on nothing but the platform.
+Nothing in the code reaches outside this directory except `node:` built-ins.
 
 Two invariants the code protects deliberately — breaking either causes bugs that look
 like layout randomness:

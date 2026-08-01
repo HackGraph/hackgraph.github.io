@@ -130,11 +130,11 @@ TypeScript. Two rules keep it that way:
 - **New runtime dependencies are rare. Raise one in an issue first.** Prefer the
   platform and what's already here. Everything stays **fully client-side**: no backend,
   no network calls at runtime (only the static, public reference links a node points to).
-- **Keep `engine/` domain-blind.** It is a generic graph engine that happens to live
-  here, not HackGraph code: nothing under it may mention a technique, a phase, or
-  security at all. Anything that needs to know both sides belongs in
-  `src/graph/engineAdapter.ts`. It has its own tests, which `npm test` runs — change the
-  engine and you are expected to keep them green.
+- **Keep `engine/` domain-blind.** It is a generic graph engine that happens to live in
+  this repo. Nothing under it may mention a technique, a phase, or security at all;
+  anything that has to know both sides belongs in `src/graph/engineAdapter.ts`. The
+  engine ships its own tests and `npm test` runs them, so a change there is expected to
+  keep them passing.
 
 ## Before you open a PR
 
