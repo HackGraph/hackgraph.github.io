@@ -161,6 +161,26 @@ node build.mjs         # dist/index.html + one self-contained page per map
 node server.mjs        # dev server on :3001, no-cache
 ```
 
+Both test suites also run from the host repo's `npm test`, so a change here is checked
+by the same command that checks the app around it. `view-test.mjs` resolves jsdom from
+whatever `node_modules` is in scope and skips rather than fails when there is none, so a
+bare checkout of this directory still passes.
+
+## Living here, releasable elsewhere
+
+This directory is a whole project: source, tests, spec, demo and licence. It is checked
+into HackGraph because that is the only thing using it today, and a copy kept in step by
+hand had already lost edits in both directions. It is not HackGraph code.
+
+Nothing under `engine/` may reference security, techniques or phases — the host converts
+its data at the boundary (`src/graph/engineAdapter.ts`) and the engine never learns what
+the graph is about. That rule is the whole reason this can be lifted out later.
+
+To release it standalone, what is missing is packaging, not disentangling: a
+`package.json` with a name and entry points, and a decision about whether the demo
+(`index.html`, `data.js`, `server.mjs`, `build.mjs`) ships with the library or beside it.
+The code itself already depends on nothing but the platform.
+
 Two invariants the code protects deliberately — breaking either causes bugs that look
 like layout randomness:
 
