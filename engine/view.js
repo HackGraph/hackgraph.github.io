@@ -378,17 +378,27 @@ function mount(container, options = {}) {
   // is invisible in that row but makes the pasted text auto-execute at a shell prompt, and
   // bidi/zero-width marks let the visible order differ from the copied bytes. Strip both,
   // so what the row shows is exactly what the clipboard gets.
-  // EVERY line-terminator class, not just \n: a lone \r is Enter at a shell prompt, and
-  // U+0085 / U+2028 / U+2029 are line breaks to plenty of terminals and editors. Missing
-  // any one of them reopens exactly the auto-execute-on-paste hole this closes.
-  const LINE_BREAKS = /\r\n|[\n\r\u0085\u000B\u000C\u2028\u2029]/g;
+  // Line terminators are KEPT. The hole was never a newline as such: it was a newline the
+  // reader could not see, so the clipboard carried an Enter the row did not show. The block
+  // renders with `white-space: pre-wrap`, so a two-line command reads as two lines and
+  // pastes as two lines, which is what its author wrote. Flattening them to spaces broke
+  // 132 real multi-step commands into one line that does not run.
+  //
+  // Every exotic terminator is normalised to a plain \n rather than passed through: a lone
+  // \r or U+2028 is Enter to a terminal but renders as nothing, which is the invisible case.
+  // A TRAILING terminator is dropped, since that is the one that runs a command on paste.
+  const LINE_BREAKS = /\r\n|[\r\u0085\u000B\u000C\u2028\u2029]/g;
   // \p{Cf} is every Unicode FORMAT character — the bidi controls, U+061C, the word
   // joiner, the soft hyphen — rather than the handful I happened to think of. Picking
   // them by hand is how U+061C got through and reordered a command on screen.
   const HIDDEN_CHARS = /[\u0000-\u0008\u000E-\u001F\u007F\u200B\u2060]|\p{Cf}/gu;
   function safeCommand(text) {
-    return String(text == null ? '' : text).replace(LINE_BREAKS, ' ').replace(HIDDEN_CHARS, '');
+    return String(text == null ? '' : text)
+      .replace(LINE_BREAKS, '\n')
+      .replace(HIDDEN_CHARS, '')
+      .replace(/\n+$/, '');
   }
+
 
   // Dataset links open in a new tab; javascript: and data: URLs must never survive that.
   function safeUrl(u) {
@@ -1504,8 +1514,11 @@ function mount(container, options = {}) {
         const btn = el('button', null, 'copy');
         btn.addEventListener('click', async () => {
           // copy exactly the text on screen — never a payload the row did not show
-          try { await navigator.clipboard.writeText(cmdText); } catch { /* denied */ }
-          btn.textContent = 'copied';
+          let ok = true;
+          try { await navigator.clipboard.writeText(cmdText); } catch { ok = false; }
+          // say what happened: a button that reports "copied" after a denied clipboard
+          // sends the reader to a terminal to paste something that is not there
+          btn.textContent = ok ? 'copied' : 'blocked';
           setTimeout(() => { btn.textContent = 'copy'; }, 1200);
         });
         row.appendChild(btn);

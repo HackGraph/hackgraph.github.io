@@ -1,5 +1,5 @@
 {
-  "//": "For editors only. Nothing builds from this: the site is served straight from the repo. It makes an editor read the JSDoc @type annotations and schema.d.ts, so authoring content still gets completion and warnings without a toolchain.",
+  "//": "Editors only; nothing builds from this. It points an editor at the JSDoc @type annotations and the .d.ts files so authoring content gets completion and warnings with no toolchain installed. Scoped to src/: engine/ is deliberately plain untyped JavaScript and tools/ are node scripts. noImplicitAny is off because annotating every internal callback is a cost this codebase never paid; what is checked is that content matches schema.d.ts, which is the part that silently breaks. Tests are excluded: they import node:test and node:assert, which need @types/node, and this repo ships no dependencies.",
   "compilerOptions": {
     "target": "ES2022",
     "module": "ESNext",
@@ -7,8 +7,12 @@
     "checkJs": true,
     "strict": true,
     "noEmit": true,
-    "allowImportingTsExtensions": true
+    "noImplicitAny": false
   },
-  "include": ["src", "engine", "tools"],
-  "exclude": ["node_modules"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/*.test.js"
+  ]
 }

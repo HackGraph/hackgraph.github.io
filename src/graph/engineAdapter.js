@@ -26,7 +26,7 @@ import { RELATIONSHIPS } from '../data/relationships.js';
  *
  * Almost one-to-one — `opsec` is the engine's `caution`, `requires` its `prereqs`, and the
  * MITRE technique is just another reference. Nothing here needed inventing, which is the
- * reason the engine's own panel can show this dataset rather than a React one bridged to it.
+ * reason the engine's own panel can show this dataset directly.
  *
  * Nodes and edges both go through here. They author the same field names, and the engine
  * renders both with one set of sections, so an edge's requirements read as a list the way a

@@ -18,7 +18,8 @@ import { MAPS } from '../src/data/index.js';
 
 const SITE = 'https://hackgraph.github.io';
 const OUT = resolve(import.meta.dirname, '..');
-const TODAY = '2026-07-22';
+// stamped at generation, which is the last time the content actually moved
+const TODAY = new Date().toISOString().slice(0, 10);
 
 // Nice slug + title per map (better than the internal ids for URLs and headings).
 const META = {
@@ -68,9 +69,9 @@ const BRANCH_MARK =
 
 const CSS = `
 :root{--bg:#0c0a0b;--panel:#160f11;--ink:#f0eaec;--dim:#a59699;--faint:#8a7d80;--accent:#f04450;--border:rgba(214,168,172,.13)}
-@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
-@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
-@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/engine/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
 a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}

@@ -38,7 +38,7 @@ node tools/check-refs.mjs      # check every reference URL still resolves
 
 ## Contributing
 
-Maps are plain data in `src/data/`. Adding a technique, or a whole new map, means editing those files and nothing else; new maps appear in the header on their own.
+Maps are plain data in `src/data/`. Adding a technique means editing those files and nothing else. A whole new map also needs an entry in `META` in `tools/gen-reference.mjs`, so it gets a reference page; the app itself picks it up on its own.
 
 Before opening a PR run `node --test`, and `node tools/gen-reference.mjs` if you touched content.
 

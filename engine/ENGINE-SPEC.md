@@ -85,59 +85,24 @@ marks and preferences in local storage.
 
 ## Part 2 — What is missing
 
-Ordered by how much it costs to add later.
+This section used to list twelve gaps: no detail panel, no edge selection, one map, no
+focus mode, no light theme, no breadcrumbs, no static generation, and so on. All twelve
+were built. It stayed here describing an engine that no longer existed, which is worse
+than having no gap list at all, so here is the real one.
 
-### Blocking for a real dataset
+**Keyboard navigation.** Every affordance is pointer-driven. Arrow-key movement between
+siblings and along the route, and Enter to expand, would make the graph usable without a
+mouse. Deliberately deferred, not overlooked.
 
-**1. Node detail panel.** Not present. This is where most of a real dataset's value lives:
-description, prerequisite chips, tools, commands with copy buttons, references, external link,
-a caution/notes callout, the node's own notes field, a next-steps list and a breadcrumb. It is
-larger than everything else on this list combined.
+**Node ids may not contain `~`, `|` or `->`.** `buildModel` throws on them rather than
+escaping, because those characters separate the parts of a render key. Fine for every
+dataset so far; a dataset that needs them would need the key scheme to escape instead.
 
-**2. Edge selection and edge detail.** Not present. The `relationships{}` contract already
-exists in the core; edges just are not clickable and there is no panel to explain what
-`gate` or `promotes` means at that specific link.
+**View state lives in the URL or nowhere.** Notes and marks persist to localStorage, but
+camera, expansion and route only survive via a share link. There is no "resume where I
+was" on reload.
 
-**3. Multi-map support.** Single generated map today. Needs a registry, per-map phases, a
-switcher (segmented control on desktop, dropdown on narrow screens) and per-map filter
-applicability — an Environment filter must not appear on a map whose nodes declare no
-environments.
-
-**4. Mobile and touch.** One media query and minimal pointer handling. Needs long-press to
-open the context menu, the detail panel docking to the bottom rather than the side, the
-camera reserving that band so a centred node is not hidden behind it, and the collapsed
-switcher. **Retrofit cost is high** because the camera primitives need the reserve designed
-in rather than bolted on.
-
-### Significant, self-contained
-
-**5. Focus mode.** Not present. Drilling into a node collapses the view to that node plus its
-siblings and next steps; deselecting freezes the current slice instead of exploding back to
-the full graph; a body click and a chevron click want different camera framing.
-
-**6. Theming.** No light mode. This is a full colour-token layer, and note that edge stroke
-colours have to be resolved to literals in code — an animated SVG stroke cannot interpolate a
-CSS variable.
-
-**7. Reduced-cost mode for weak machines.** Reduced-motion is respected, but there is no
-measured degradation: sample frame intervals while animating and, when the machine cannot
-keep up, drop shadow blur, the background grid and entrance work.
-
-**8. Annotation breadth.** Notes and marks exist. Missing: a distinct "not applicable" state
-with its own ruled-out treatment, an inline-notes-on-card toggle, and keying annotations by
-*content* id so a mark follows a step across its unrolled `#2` instances.
-
-### Smaller
-
-**9. Breadcrumb UI** — ancestry is computed in the core but never rendered.
-**10. Trail in the share link** — confirm the ordered click-trail round-trips, not just the
-expanded set and selection, or a shared link replays a different lit route than the one shared.
-**11. Static page generation** — a per-map static build for linking and indexing.
-**12. Test coverage** — currently a layout invariant test. Worth adding: visibility and
-unrolling, path finding, search ranking, share-link round-trip, and a guard that the engine
-never imports dataset modules.
-
----
+**Export.** No way to take a slice out as an image or a document.
 
 ## Part 3 — Two properties worth protecting
 

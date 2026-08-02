@@ -2,33 +2,37 @@
 // Liveness check for every reference/tool URL in the technique data.
 // FAIL on dead links (404 / 5xx / unreachable); WARN on known bot-blocked
 // hosts that 403 automated requests but are valid in a browser.
-import { readdirSync, readFileSync, statSync } from 'node:fs';
-import { join } from 'node:path';
 
-const ROOT = 'src/data';
-const URL_RE = /url:\s*'(https?:\/\/[^']+)'/g;
 // Valid pages that reject automated requests (verified manually in-browser).
 const BOT_BLOCKED = ['medium.com', 'nvd.nist.gov', 'rapid7.com', 'secureworks.com', 'research.ifcr.dk'];
 const UA = 'Mozilla/5.0 (HackGraph link-check)';
 const TIMEOUT = 20000;
 const CONCURRENCY = 8;
 
-function walk(dir) {
-  const out = [];
-  for (const e of readdirSync(dir)) {
-    const p = join(dir, e);
-    if (statSync(p).isDirectory()) out.push(...walk(p));
-    else if (p.endsWith('.ts')) out.push(p);
-  }
-  return out;
-}
+// Read the DATA, not the files. Scraping source text for `url:` literals silently
+// checked nothing the moment the content stopped being TypeScript: the walker still
+// looked for `.ts`, found none, and reported "All 0 URLs reachable" every week.
+const { MAPS } = await import('../src/data/index.js');
 
 const urls = new Set();
-for (const f of walk(ROOT)) {
-  const t = readFileSync(f, 'utf8');
-  for (const m of t.matchAll(URL_RE)) urls.add(m[1]);
+const add = u => { if (typeof u === 'string' && /^https?:/.test(u)) urls.add(u); };
+for (const map of MAPS) {
+  for (const n of map.nodes) {
+    add(n.mitre?.url);
+    for (const r of n.references ?? []) add(r.url);
+    for (const t of n.tools ?? []) add(typeof t === 'string' ? null : t?.url);
+  }
+  for (const e of map.edges) {
+    add(e.mitre?.url);
+    for (const r of e.references ?? []) add(r.url);
+    for (const t of e.tools ?? []) add(typeof t === 'string' ? null : t?.url);
+  }
 }
 const list = [...urls].sort();
+if (!list.length) {
+  console.error('No URLs found — the data shape changed and this check is lying. Fix it.');
+  process.exit(1);
+}
 console.log(`Checking ${list.length} unique reference URLs…`);
 
 // One fetch with its own timeout, so a HEAD stall does not eat the GET's budget.

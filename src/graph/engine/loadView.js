@@ -9,8 +9,7 @@
  * engine has to be planted BEFORE the view module is evaluated — hence a dynamic import
  * behind a memoised promise rather than a plain top-level import.
  *
- * Kept separate from the React component so the awkwardness lives in one place and the
- * component reads as an ordinary effect.
+ * Kept in its own file so the awkwardness lives in one place.
  */
 import { GraphEngine } from './index.js';
 

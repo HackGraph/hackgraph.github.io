@@ -5,6 +5,10 @@
 
 /** MITRE ATT&CK reference builder: `mitre('T1558.003')` → `{ id, url }` with the
  *  canonical technique URL (sub-technique ids get the `/003/` path segment). */
+/**
+ * @param {string} id
+ * @returns {import('./schema.js').MitreRef}
+ */
 export const mitre = (id) => ({
   id,
   url: `https://attack.mitre.org/techniques/${id.replace('.', '/')}/`,
@@ -17,6 +21,15 @@ export const mitre = (id) => ({
  *  entry the children sit under, and an overview page worth reading before picking a
  *  branch. A category with nothing to read is a dead end for anyone who does not already
  *  know which child they want. */
+/**
+ * @param {string} id
+ * @param {string} label
+ * @param {string} phase
+ * @param {string} summary
+ * @param {string} description
+ * @param {{ mitre?: string, references?: import('./schema.js').Reference[] }} [sources]
+ * @returns {import('./schema.js').TechniqueNodeDef}
+ */
 export const cat = (
   id,
   label,

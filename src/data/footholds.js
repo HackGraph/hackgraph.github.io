@@ -18,6 +18,16 @@
  * left-to-right.
  */
 
+/**
+ * @typedef {object} Foothold
+ * @property {string} id
+ * @property {string} label   Short label for the toggle chip.
+ * @property {string} hint    One-liner describing what holding this means.
+ */
+
+/** @typedef {'none'|'shell'|'creds'|'domain-user'|'local-admin'|'domain-admin'} FootholdId */
+
+/** @type {Foothold[]} */
 export const FOOTHOLDS = [
   { id: 'none', label: 'Network only', hint: 'Network access only, no account' },
   { id: 'shell', label: 'Shell', hint: 'Code execution on a host (a shell), no credentials yet' },

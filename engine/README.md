@@ -142,13 +142,20 @@ whose nodes declare no environments.
 `engine.js` is pure and DOM-free, so it also runs in Node — for tests, static
 generation, or answering path questions server-side:
 
+It is a classic script, not a module: evaluating it publishes `GraphEngine` on the
+global. Import it for the side effect and read the global back.
+
 ```js
-const E = require('./engine.js');
+await import('./engine.js');
+const E = globalThis.GraphEngine;
 const model = E.buildModel(myMap);
 const { vg, backEdges } = E.resolveVisible(model, new Set(['root', 'build']));
 E.activeRoute(vg, 'root', ['build', 'deploy'], backEdges);   // the lit path
 E.searchMap(E.buildSearchIndex(model), 'deploy');
 ```
+
+`require('./engine.js')` returns an empty namespace under an ESM `package.json`, which
+is what this repo has.
 
 ## Development
 
