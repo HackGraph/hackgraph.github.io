@@ -28,9 +28,13 @@ jobs:
       - run: node --test
       # The reference pages are generated and committed, so they can drift from the
       # content. Regenerate and fail if anything moved.
-      - run: node tools/gen-reference.mjs
-      - run: git diff --exit-code -- reference.html reference sitemap.xml
-             || (echo "::error::reference pages are stale - run: node tools/gen-reference.mjs" && exit 1)
+      - name: Reference pages match the content
+        run: |
+          node tools/gen-reference.mjs
+          if ! git diff --exit-code -- reference.html reference sitemap.xml; then
+            echo "::error::reference pages are stale; regenerate them with tools/gen-reference.mjs"
+            exit 1
+          fi
 
   deploy:
     needs: test
