@@ -93,6 +93,8 @@ export const footholdFilter = {
 };
 
 export const ENGINE_FILTERS = [
-  versionFilter,
+  // "I hold" first: what you already have decides which techniques are even reachable,
+  // which is the question a reader arrives with. Target narrows within that.
   footholdFilter,
+  versionFilter,
 ];

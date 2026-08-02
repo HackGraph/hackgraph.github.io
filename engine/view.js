@@ -1761,7 +1761,7 @@ function mount(container, options = {}) {
   function makeFilterDefs() {
     return [
       {
-        id: 'phase', title: 'Phases', persistKey: 'f-phase',
+        id: 'phase', order: 50, title: 'Phases', persistKey: 'f-phase',
         appliesTo: m => m.phases.length > 1,
         initial: () => ({ off: [] }),
         isActive: s => s.off.length > 0,
@@ -1785,7 +1785,7 @@ function mount(container, options = {}) {
         },
       },
       {
-        id: 'env', title: 'Environment', persistKey: 'f-env',
+        id: 'env', order: 50, title: 'Environment', persistKey: 'f-env',
         appliesTo: m => m.nodes.some(n => n.env),      // absent on maps without environments
         initial: () => ({ off: [] }),
         isActive: s => s.off.length > 0,
@@ -1805,7 +1805,7 @@ function mount(container, options = {}) {
         },
       },
       {
-        id: 'role', title: 'Viewing as', persistKey: 'f-role',
+        id: 'role', order: 50, title: 'Viewing as', persistKey: 'f-role',
         appliesTo: m => m.nodes.some(n => n.role),
         initial: () => ({ as: 'admin' }),
         isActive: s => s.as !== 'admin',
@@ -1827,7 +1827,7 @@ function mount(container, options = {}) {
         },
       },
       {
-        id: 'marked', title: 'Overlays', persistKey: 'f-marked',
+        id: 'marked', order: 90, title: 'Overlays', persistKey: 'f-marked',
         appliesTo: () => true,
         initial: () => ({ on: false }),
         isActive: s => s.on,
@@ -1860,7 +1860,16 @@ function mount(container, options = {}) {
   function buildFilters() {
     const container = $('filtersbody');
     container.innerHTML = '';
-    activeFilterDefs = [...makeFilterDefs(), ...hostFilterDefs()].filter(f => f.appliesTo(map));
+    // Filters sort by `order`, low first, stable within a tie so an array's own order still
+    // decides between siblings. Host filters default to 0 and the built-ins sit behind them:
+    // a host adds a filter because its data needs one, which is usually a sharper question
+    // than a generic axis. Overlays trail everything, being a display toggle rather than a
+    // way of narrowing the graph.
+    activeFilterDefs = [...makeFilterDefs(), ...hostFilterDefs()]
+      .filter(f => f.appliesTo(map))
+      .map((f, i) => [f, i])
+      .sort(([a, ai], [b, bi]) => ((a.order || 0) - (b.order || 0)) || (ai - bi))
+      .map(([f]) => f);
     activeFilterDefs.forEach(f => {
       const initial = f.initial();
       const stored = f.persistKey ? store(f.persistKey, initial) : initial;
