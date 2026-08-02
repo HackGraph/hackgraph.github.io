@@ -28,8 +28,7 @@ Start from a foothold and expand one technique at a time toward Domain Admin, SY
 node tools/serve.mjs      # http://localhost:5173
 ```
 
-There is no build and nothing to install. The repository is the site: GitHub Pages serves
-these files as they are, so what you see locally is what ships.
+No build, nothing to install: GitHub Pages serves these files as they are.
 
 ```bash
 node --test                    # content lint, adapter tests, engine tests
@@ -39,11 +38,13 @@ node tools/check-refs.mjs      # check every reference URL still resolves
 
 ## Contributing
 
-The maps are plain data in `src/data/`, never the engine, so adding a technique or a whole new domain is just editing files. New maps appear in the header automatically. Run `node --test` before opening a PR, and `node tools/gen-reference.mjs` if you changed content.
+Maps are plain data in `src/data/`. Adding a technique, or a whole new map, means editing those files and nothing else; new maps appear in the header on their own.
+
+Before opening a PR run `node --test`, and `node tools/gen-reference.mjs` if you touched content.
 
 ## Acknowledgements
 
-HackGraph is built on the work of the offensive-security community. The mindmap-style format was inspired by the [Orange Cyberdefense mindmaps](https://github.com/Orange-Cyberdefense/ocd-mindmaps), and the techniques lean on these projects, which are cited throughout and worth following on their own:
+The mindmap format was inspired by the [Orange Cyberdefense mindmaps](https://github.com/Orange-Cyberdefense/ocd-mindmaps). The techniques lean on these projects, cited throughout:
 
 - [HackTricks](https://book.hacktricks.wiki/)
 - [The Hacker Recipes](https://www.thehacker.recipes/)
@@ -51,7 +52,7 @@ HackGraph is built on the work of the offensive-security community. The mindmap-
 - [BloodHound and SpecterOps research](https://bloodhound.specterops.io/)
 - [GTFOBins](https://gtfobins.github.io/) and [LOLBAS](https://lolbas-project.github.io/)
 
-Each technique also links its own primary sources and credits the tools it uses.
+Every technique also links its own primary sources and credits the tools it uses.
 
 ## License
 

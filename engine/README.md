@@ -159,7 +159,7 @@ node build.mjs         # dist/index.html + one self-contained page per map
 node server.mjs        # dev server on :3001, no-cache
 ```
 
-Both suites also run from the host repo's `npm test`. `view-test.mjs` skips when jsdom
+Both suites also run from the host repo's `node --test`. `view-test.mjs` skips when jsdom
 is not installed.
 
 The engine is checked into HackGraph because that is the only thing using it, and stays
