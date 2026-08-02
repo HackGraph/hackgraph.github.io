@@ -1020,7 +1020,12 @@ function mount(container, options = {}) {
       const prev = route[route.length - 2];
       edgeRecs.forEach(rec => {
         const peer = prev !== undefined && rec.pv.key === prev;
-        const next = selKeys.has(rec.pv.key);
+        // Next steps belong to the instance you are STANDING on, not to every instance of
+        // the same def. The ring is shared above so the card you expanded cannot dim; the
+        // fan-out is not, because a route that revisits a def — dcsync → pass-the-hash#2 →
+        // dcsync#2 — would otherwise light BOTH dcsync fan-outs, and the copy you are not
+        // looking at reads as undimmed for no reason.
+        const next = rec.pv.key === selKey;
         if (!peer && !next) return;
         rec.el.classList.add('keep');
         rec.cv.el.classList.add('keep');
