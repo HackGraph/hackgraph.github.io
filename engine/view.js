@@ -1003,19 +1003,12 @@ function mount(container, options = {}) {
           litEls.push(rec.el, rec.hit);
         }
       }
-      // selection is a CONTENT selection: an unroll may land the route's end on
-      // a #n instance while the user acted on the canonical card (expanding B
-      // remaps the route to B#2). Every rendered key of the selected def shares
-      // the ring, and ALL of their next steps stay bright — otherwise the card
-      // the user just expanded dims and its children look like they never came.
+      // The ring marks where you ARE, so exactly one card wears it. A def can be on screen
+      // several times once loops unroll — Valid Domain Credentials, #2 and #3 — and ringing
+      // every copy said you were standing in three places at once.
       const selKey = route[route.length - 1];
-      const selDef = defIdOf(selKey);
-      const selKeys = new Set([selKey]);
-      views.forEach(v => { if (v.defId === selDef) selKeys.add(v.key); });
-      selKeys.forEach(k => {
-        const v = views.get(k);
-        if (v) { v.el.classList.add('sel'); litEls.push(v.el); }
-      });
+      const selView = views.get(selKey);
+      if (selView) { selView.el.classList.add('sel'); litEls.push(selView.el); }
       // the selection's PEERS (siblings on its route step) also stay visible
       const prev = route[route.length - 2];
       edgeRecs.forEach(rec => {
