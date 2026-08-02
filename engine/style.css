@@ -155,7 +155,11 @@
 /* Isolate used to hide the rest of the graph with opacity, which is why these dims were
    scoped :not(.iso) — they would out-specify it and reveal what was meant to be gone.
    Isolate is a real slice now, so there is nothing hidden to fight over. */
-.fg.tracing .edge:not(.hl):not(.lit) { opacity: .35; }
+/* `keep` is the selection's own next steps. Hover dims what is not on the traced path,
+   but never those: the card you just expanded stays bright, so the edges reaching its
+   children have to as well, or the children look unconnected. Matches the .focused rule
+   below, which has always excluded them. */
+.fg.tracing .edge:not(.hl):not(.lit):not(.keep) { opacity: .35; }
 .fg.focused .edge:not(.lit):not(.hl):not(.keep) { opacity: .12; }
 .edge.fdim { opacity: .08; }
 .edgehit {
@@ -198,7 +202,7 @@
   background: var(--chip);
   z-index: 3;
 }
-.fg.tracing .elabel:not(.hl):not(.lit) { opacity: .35; }
+.fg.tracing .elabel:not(.hl):not(.lit):not(.keep) { opacity: .35; }
 .fg.focused .elabel:not(.lit):not(.hl):not(.keep) { opacity: .12; }
 .elabel.fdim { opacity: .1; }
 .fg.hidelabels .elabel { display: none; }
