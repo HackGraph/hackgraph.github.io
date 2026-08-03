@@ -14,25 +14,22 @@ Interactive attack-path explorer for offensive security.
 
 </div>
 
-Start from a foothold and expand one technique at a time toward Domain Admin, SYSTEM or root. Every node gives you what the technique does, the tools and copy-paste commands, its MITRE ATT&CK id, what it needs first, and how loud it is. Runs entirely in the browser.
-
-## Maps
-
-- **Active Directory:** from a foothold to Domain Admin and persistence.
-- **Windows Privilege Escalation:** from a user shell to NT AUTHORITY\SYSTEM.
-- **Linux Privilege Escalation:** from an unprivileged shell to root.
+Start from a foothold and expand one technique at a time toward Domain Admin, SYSTEM or root. It runs entirely in the browser.
 
 ## Run locally
 
+There is no build step and nothing to install. The repository is the site, so serve the
+directory with whatever you already have and open <http://localhost:5173>:
+
 ```bash
-node tools/serve.mjs      # http://localhost:5173
+python3 -m http.server 5173
 ```
 
-No build, nothing to install: GitHub Pages serves these files as they are.
+Node is only needed for the checks:
 
 ```bash
 node --test                    # content lint, adapter tests, engine tests
-node tools/gen-reference.mjs   # rebuild the static reference pages after a content change
+node tools/gen-reference.mjs   # rebuild the reference pages after a content change
 node tools/check-refs.mjs      # check every reference URL still resolves
 ```
 

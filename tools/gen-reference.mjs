@@ -15,11 +15,14 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { MAPS } from '../src/data/index.js';
+import { BUILD_DATE } from '../src/buildInfo.js';
 
 const SITE = 'https://hackgraph.github.io';
 const OUT = resolve(import.meta.dirname, '..');
-// stamped at generation, which is the last time the content actually moved
-const TODAY = new Date().toISOString().slice(0, 10);
+// The committed build stamp, NOT today's date. These pages are generated and committed,
+// and CI regenerates them to prove they match the content — so anything that changes on
+// every run makes that check fail on the first day nobody touched the repo.
+const TODAY = BUILD_DATE;
 
 // Nice slug + title per map (better than the internal ids for URLs and headings).
 const META = {
