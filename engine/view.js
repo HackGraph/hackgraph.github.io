@@ -23,6 +23,7 @@
    engine.js, which never touches the DOM; the data lives in your own file. */
 
 const GraphView = (() => {
+let instanceSerial = 0;
 
 // the engine is an explicit dependency, resolved from the global namespace
 // (classic <script>) or CommonJS — never from leaked lexical scope
@@ -49,17 +50,37 @@ const MARKUP = `
   <span class="brand"><span class="brand-dot"></span><span data-el="title">Fan-Out Graph</span></span>
   <span class="fg-maps" data-el="maps"></span>
   <select class="fg-mapsel" data-el="mapsel" aria-label="Map"></select>
+  <a class="fg-readinglink" data-el="readinglink" hidden>Read</a>
   <span class="fg-spacer"></span>
   <span class="fg-searchbox" data-el="searchbox">
     <span class="fg-searchicon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></span>
     <input class="fg-search" data-el="search" type="text" placeholder="Search…  ( / )" autocomplete="off" spellcheck="false">
     <div class="fg-results" data-el="results" hidden></div>
+    <div class="fg-results fg-empty-results" data-el="emptyresults" role="status" hidden>No matching topics. Try a name or another term.</div>
   </span>
   <button class="fg-icon fg-searchbtn" data-el="searchbtn" title="Search" aria-label="Search" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
   <a class="fg-icon" data-el="repo" title="Source repository" target="_blank" rel="noopener noreferrer" hidden><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
   <button class="fg-icon" data-el="gear" title="Settings" aria-haspopup="true" aria-expanded="false"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9c.14.36.43.64.79.79H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg></button>
   <button data-el="reset">Reset</button>
 </div>
+<div class="fg-welcome" data-el="welcome" hidden>
+  <p class="fg-welcome-kicker">A connected learning space</p>
+  <h1 data-el="welcometitle"></h1>
+  <p data-el="welcomebody"></p>
+  <span>Read a card. Expand a branch. Follow your curiosity.</span>
+</div>
+<div class="fg-viewactions" data-el="viewactions">
+  <button data-el="focusvisible" aria-pressed="false" title="Keep the selected topic and its context">Focus</button>
+  <button data-el="helpbtn" aria-expanded="false">Help</button>
+</div>
+<div class="fg-help pop" data-el="help" hidden>
+  <strong>Explore the graph</strong>
+  <p>Select a card to read. Its numbered button expands the branch. Scroll or drag to move; pinch or Ctrl + scroll to zoom.</p>
+  <p>Tab into the graph. Arrow keys move between topics. Enter opens details; Space expands or collapses. Escape returns to the graph.</p>
+  <p>The highlighted trail records your browsing history. A numbered repeat badge is another view of the same topic.</p>
+</div>
+<span class="fg-sr" data-el="graphinstructions">Use arrow keys to explore topics. Enter opens details. Space expands or collapses a branch.</span>
+<span class="fg-sr" data-el="announcement" aria-live="polite" role="status"></span>
 <div class="pop fg-settings" data-el="settings" hidden></div>
 <span class="fg-hidden-actions" hidden>
   <button data-el="focus"></button><button data-el="isolate"></button>
@@ -78,6 +99,13 @@ const MARKUP = `
   <div class="fg-filtersbody" data-el="filtersbody"></div>
 </div>
 <div class="fg-crumbs" data-el="crumbs" hidden></div>
+<div class="fg-overviewbar" data-el="overviewbar" hidden>
+  <span>Overview</span><button data-el="readview">Return to reading</button>
+</div>
+<div class="fg-choices" data-el="choices" hidden aria-label="Topics in this branch">
+  <div class="fg-choiceshead"><span data-el="choicestitle"></span><button data-el="choicesx" aria-label="Close topic list">×</button></div>
+  <div class="fg-choicesbody" data-el="choicesbody"></div>
+</div>
 <button class="fg-isoexit" data-el="isoexit" hidden><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>Back to the full graph</button>
 <aside class="fg-panel" data-el="panel" hidden>
   <div class="fg-grab" data-el="grab"><span></span></div>
@@ -116,12 +144,27 @@ function mount(container, options = {}) {
 
   root.classList.add('fg');
   root.innerHTML = MARKUP;
+  const instanceId = 'fg-' + (++instanceSerial);
 
-  // scoped lookup — ids would collide between instances, data-el never does
-  const $ = name => root.querySelector('[data-el="' + name + '"]');
+  // These shell anchors survive map changes and panel-content updates. Cache
+  // them per mount so card creation never searches the growing graph subtree.
+  const anchors = new Map([...root.querySelectorAll('[data-el]')].map(el => [el.dataset.el, el]));
+  const $ = name => anchors.get(name);
   const viewport = $('viewport'), world = $('world'), svg = $('edges');
+  viewport.setAttribute('role', 'region');
+  viewport.setAttribute('aria-label', 'Topic graph');
+  $('graphinstructions').id = instanceId + '-instructions';
+  $('results').id = instanceId + '-results';
+  $('results').setAttribute('role', 'listbox');
+  $('results').setAttribute('aria-label', 'Matching topics');
+  $('search').setAttribute('role', 'combobox');
+  $('search').setAttribute('aria-label', 'Search topics');
+  $('search').setAttribute('aria-autocomplete', 'list');
+  $('search').setAttribute('aria-controls', $('results').id);
+  $('search').setAttribute('aria-expanded', 'false');
   const vw = () => root.clientWidth || 1;
   const vh = () => root.clientHeight || 1;
+  const dimensions = { width: vw(), height: vh() };
 
   // every listener on a shared target is tracked so destroy() takes it back
   const bound = [];
@@ -131,9 +174,21 @@ function mount(container, options = {}) {
   };
 
   if (!chrome.toolbar) $('bar').hidden = true;
+  if (!chrome.toolbar) $('viewactions').hidden = true;
   if (!chrome.filters) $('filterdock').hidden = true;
   if (chrome.zoom === false) $('zoom').hidden = true;
   if (!features.search) $('searchbox').hidden = true;
+  if (!features.focus) $('focusvisible').hidden = true;
+  const readingUrl = safeUrl(options.readingUrl);
+  if (readingUrl) {
+    $('readinglink').href = readingUrl; $('readinglink').hidden = false;
+    const link = document.createElement('a'); link.href = readingUrl; link.textContent = 'Open the reading view';
+    $('help').appendChild(link);
+  }
+  if (options.intro) {
+    $('welcometitle').textContent = options.intro.title || 'Explore connected ideas';
+    $('welcomebody').textContent = options.intro.body || '';
+  }
   // The mode toggles and one-off actions live in the settings menu now; these anchors stay
   // in the DOM (hidden) so every existing handler and the public api keep working.
   if (maps.length < 2) { $('maps').hidden = true; $('mapsel').hidden = true; }
@@ -156,20 +211,36 @@ function mount(container, options = {}) {
 
   // narrow-container layout is a CONTAINER question, not a viewport one
   const ro = typeof ResizeObserver !== 'undefined'
-    ? new ResizeObserver(() => root.classList.toggle('narrow', root.clientWidth <= 920))
+    ? new ResizeObserver(() => {
+      dimensions.width = vw(); dimensions.height = vh();
+      root.classList.toggle('narrow', dimensions.width <= 920);
+      if (current) {
+        apply(); requestFrame();
+        if (!$('choices').hidden && views.has(choiceKey)) {
+          const next = positionChoices(views.get(choiceKey), view.x, view.y, view.s);
+          glideTo(next.x, next.y, view.s);
+        }
+      }
+    })
     : null;
   if (ro) ro.observe(root);
 
-  const REDUCED = !!(globalThis.matchMedia
-    && globalThis.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  const motionQuery = globalThis.matchMedia && globalThis.matchMedia('(prefers-reduced-motion: reduce)');
+  let REDUCED = !!motionQuery?.matches;
+  if (motionQuery?.addEventListener) on(motionQuery, 'change', event => {
+    REDUCED = event.matches;
+    if (REDUCED) {
+      root.getAnimations({ subtree: true }).forEach(a => { try { a.finish(); } catch { a.cancel(); } });
+      requestFrame();
+    }
+  });
   // A non-finite or absurd duration makes every frame's progress 0, so the tween never
   // reaches 1 and the rAF loop runs for the life of the tab. Clamp to something sane.
   // Number() itself throws on a Symbol or on {toString:null,valueOf:null}, so screen the
   // type before coercing rather than after
   const rawAnim = options.animationMs;
   const animMs = typeof rawAnim === 'number' ? rawAnim : NaN;
-  const ANIM_MS = REDUCED ? 1
-    : (Number.isFinite(animMs) && animMs > 0 ? Math.min(animMs, 10000) : 470);
+  const ANIM_MS = Number.isFinite(animMs) && animMs > 0 ? Math.min(animMs, 10000) : 360;
   const SVGNS = 'http://www.w3.org/2000/svg';
   const CHEV_D = '<svg width="11" height="11" viewBox="0 0 10 10" fill="none"><path d="M1.8 3.6 5 6.8 8.2 3.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   // marks a card that groups other nodes rather than being a step of its own
@@ -194,11 +265,13 @@ function mount(container, options = {}) {
           rec.label.classList.toggle(c, rec.el.classList.contains(c)));
       }
     });
+    requestFrame();
   }
 
   /* ---------- state & map loading ---------- */
 
   let map, model, searchIndex;
+  let focusKey = null;
   let notes = {}, marks = new Set(), na = new Set();
   let expandedKeys = new Set();
   const views = new Map();          // key -> view (live only)
@@ -238,18 +311,19 @@ function mount(container, options = {}) {
   };
 
   function fade(el, from, to, opts = {}) {
-    el.animate([{ opacity: from }, { opacity: to }], {
-      duration: REDUCED ? 0 : (opts.duration || 300),
-      delay: REDUCED ? 0 : (opts.delay || 0),
+    const animation = el.animate([{ opacity: from }, { opacity: to }], {
+      duration: REDUCED ? 0 : Math.min(opts.duration || 220, 240),
+      delay: REDUCED ? 0 : Math.min(opts.delay || 0, 100),
       easing: 'ease', fill: opts.fill || 'backwards',
     });
+    return animation;
   }
 
   // tear everything down and stand a map up, optionally restoring a share token
   function loadMap(mapId, st) {
     map = maps.find(m => m.id === mapId) || maps[0];
     model = buildModel(map);
-    searchIndex = buildSearchIndex(model, noteTextFor);
+    focusKey = model.rootId;
     // encoded so a crafted id cannot escape its namespace: a literal ':' would otherwise
     // let a map address another map's keys. Same id = same namespace is intentional — that
     // is how a map finds its own notes again next session.
@@ -257,10 +331,14 @@ function mount(container, options = {}) {
     notes = store('notes', {});
     // values are attacker-reachable too: a non-string reaches textContent and throws
     for (const k of Object.keys(notes)) if (typeof notes[k] !== 'string') delete notes[k];
+    searchIndex = buildSearchIndex(model, noteTextFor);
     marks = new Set(store('marks', []));
     na = new Set(store('na', []));
 
     cancelAnimationFrame(raf);
+    raf = 0; layoutMotion = null; cameraMotion = null;
+    root.classList.remove('animating', 'overview');
+    overview = false; $('overviewbar').hidden = true; $('choices').hidden = true;
     views.forEach(v => v.el.remove()); views.clear();
     exitPool.forEach(v => { if (v.el) v.el.remove(); }); exitPool.clear();
     edgeRecs.forEach(r => { r.el.remove(); if (r.hit) r.hit.remove(); }); edgeRecs.clear();
@@ -421,6 +499,11 @@ function mount(container, options = {}) {
     const el = document.createElement('div');
     el.className = 'card' + (folder ? ' folder' : '') + (na.has(defId) ? ' na' : '');
     el.dataset.key = key;
+    el.setAttribute('role', 'group');
+    el.setAttribute('aria-roledescription', 'graph topic');
+    el.setAttribute('aria-label', def.label);
+    el.setAttribute('aria-describedby', $('graphinstructions').id);
+    el.tabIndex = key === focusKey ? 0 : -1;
     el.style.setProperty('--c', safeColor(model.colorOf.get(def.group)));
     // Built as DOM, never as an HTML string: label/group/summary are DATASET values, and
     // string concatenation into innerHTML makes any map that carries `<img onerror=…>`
@@ -451,7 +534,7 @@ function mount(container, options = {}) {
     if (notes[key]) el.appendChild(mk('div', 'note', notes[key]));
     if (hasChildren(model, defId)) {
       const t = el.appendChild(mk('button', 'toggle'));
-      t.setAttribute('aria-label', 'Toggle children');
+      t.tabIndex = -1;
     }
     v.el = el;
     v.badgeEl = el.querySelector('.badge');
@@ -462,6 +545,8 @@ function mount(container, options = {}) {
   function setToggle(v) {
     const t = v.el && v.el.querySelector('.toggle');
     if (!t) return;
+    t.setAttribute('aria-label', (expandedKeys.has(v.key) ? 'Collapse ' : 'Expand ') + v.def.label);
+    t.setAttribute('aria-expanded', String(expandedKeys.has(v.key)));
     if (expandedKeys.has(v.key)) {
       t.classList.add('open');
       t.innerHTML = CHEV_D;
@@ -472,7 +557,10 @@ function mount(container, options = {}) {
   }
 
   function place(v) {
+    if (v.culled) return;
+    if (v._drawX === v.xDisp && v._drawY === v.cyDisp && v._drawH === v.h) return;
     v.el.style.transform = 'translate(' + v.xDisp + 'px, ' + (v.cyDisp - v.h / 2) + 'px)';
+    v._drawX = v.xDisp; v._drawY = v.cyDisp; v._drawH = v.h;
   }
 
   /* ---------- edge geometry ---------- */
@@ -517,19 +605,73 @@ function mount(container, options = {}) {
     return d + arrowD(ex, ey);
   }
 
+  function measureLabels() {
+    if (root.classList.contains('hidelabels')) return;
+    edgeRecs.forEach(rec => {
+      if (rec.label && !rec.labelW) {
+        rec.labelW = rec.label.offsetWidth; rec.labelH = rec.label.offsetHeight;
+      }
+    });
+  }
+
   function updateAllEdges() {
+    const labels = [], owners = new Map();
     const draw = rec => {
+      const points = [rec.pv, ...rec.ws, rec.cv];
+      const left = Math.min(...points.map(p => p.xDisp));
+      const right = Math.max(...points.map(p => p.xDisp)) + CARD_W + 80;
+      const top = Math.min(...points.map(p => p.cyDisp)) - 40;
+      const bottom = Math.max(...points.map(p => p.cyDisp)) + 40;
+      const culled = (rec.cv.entering && rec.cv.culled) || !inViewport(left, top, right, bottom);
+      if (rec.culled !== culled) {
+        rec.culled = culled;
+        [rec.el, rec.hit].filter(Boolean).forEach(el => { el.style.visibility = culled ? 'hidden' : ''; });
+      }
+      if (rec.entryDelay !== undefined) {
+        const delay = rec.entryDelay;
+        delete rec.entryDelay;
+        if (!culled) {
+          const timing = { duration: 300, delay };
+          fade(rec.el, 0, 1, timing);
+          if (rec.label) fade(rec.label, 0, 1, timing);
+        }
+      }
+      if (rec.label) owners.set(rec, rec.label);
+      if (culled) return;
       const d = edgeD(rec);
-      rec.el.setAttribute('d', d);
-      if (rec.hit) rec.hit.setAttribute('d', d);
-      if (rec.label) {                // ride the drawn path's midpoint
-        const pt = rec.el.getPointAtLength(rec.el.getTotalLength() * 0.5);
-        rec.label.style.transform =
-          'translate(' + pt.x + 'px, ' + pt.y + 'px) translate(-50%, -50%)';
+      if (rec._d !== d) {
+        rec._d = d;
+        rec.el.setAttribute('d', d);
+        if (rec.hit) rec.hit.setAttribute('d', d);
+      }
+      if (rec.label) {
+        // The first routing corridor is outside the cards. Its trunk and vertical
+        // midpoint are already known; querying SVG geometry would flush rendering
+        // on every edge of every animation frame.
+        const next = rec.ws[0] || rec.cv;
+        const pt = { x: rec.pv.txDisp ?? (rec.pv.xDisp + CARD_W + COL_GAP / 2),
+          y: (rec.pv.cyDisp + next.cyDisp) / 2 };
+        const left = rec.pv.xDisp + CARD_W + KNOB + 4 + rec.labelW / 2;
+        const right = next.xDisp - 6 - rec.labelW / 2;
+        if (left <= right) pt.x = Math.max(left, Math.min(right, pt.x));
+        if (rec.labelX !== pt.x || rec.labelY !== pt.y) {
+          rec.label.style.transform = 'translate(' + pt.x + 'px, ' + pt.y + 'px) translate(-50%, -50%)';
+          rec.labelX = pt.x; rec.labelY = pt.y;
+        }
+        const x = pt.x - rec.labelW / 2, y = pt.y - rec.labelH / 2;
+        if (inViewport(x, y, x + rec.labelW, y + rec.labelH)) labels.push({ id: rec, x, y, w: rec.labelW, h: rec.labelH,
+          priority: fadingEdges.has(rec) ? -1 : rec.el.classList.contains('hl') ? 3 : rec.el.classList.contains('lit') ? 2 : rec.el.classList.contains('keep') ? 1 : 0 });
       }
     };
     edgeRecs.forEach(draw);
     fadingEdges.forEach(draw);
+    const obstacles = [...views.values()].filter(v => !v.culled)
+      .map(v => ({ x: v.xDisp, y: v.cyDisp - v.h / 2, w: CARD_W + KNOB, h: v.h }));
+    const visible = E.visibleLabels(labels, obstacles);
+    owners.forEach((label, rec) => {
+      const hidden = !visible.has(rec);
+      if (rec.labelHidden !== hidden) { label.style.visibility = hidden ? 'hidden' : ''; rec.labelHidden = hidden; }
+    });
   }
 
   /* ---------- reconcile: diff the visible graph after any topology change ---------- */
@@ -561,10 +703,18 @@ function mount(container, options = {}) {
     trail = trail.filter(k => vg.keySet.has(k));
 
     // views leaving (no expanded parent reaches them any more)
+    let removed = false;
     views.forEach(v => {
       if (vg.keySet.has(v.key)) return;
+      removed = true;
       views.delete(v.key);
       expandedKeys.delete(v.key);
+      if (v.entryDelay !== undefined || v.culled) {
+        // Nothing visible needs to fade. In particular, a branch canceled
+        // before its first frame must not flash a stack of exit animations.
+        v.el.remove();
+        return;
+      }
       v.targetX = v.xDisp;             // freeze: fade out in place, no squashing
       v.targetCy = v.cyDisp;
       exitPool.add(v);
@@ -574,21 +724,21 @@ function mount(container, options = {}) {
 
     // Views entering + per-key layout inputs.
     //
-    // Heights are still measured SYNCHRONOUSLY before anything animates — that property is
-    // what keeps the first layout from being a guess. But reading offsetHeight right after
-    // each appendChild flushes layout once PER NODE over a DOM that is still growing, which
-    // is quadratic: a 3,000-wide fan-out spent most of ~29s here. Append the whole batch
-    // first, then measure it, so the same information costs one flush instead of N.
+    // Build cards and captions before reading either size. Both measurements
+    // use the same browser layout, and the solver still gets actual heights
+    // before the first animation frame.
     const fresh = [];
+    const cardBatch = document.createDocumentFragment();
     vg.nodeKeys.forEach(key => {
       let v = views.get(key);
+      if (v) { v.previousCy = v.cyDisp; v.previousRank = v.rank; }
       if (!v) {
         exitPool.forEach(x => {        // reclaim a mid-fade key
           if (x.key === key) { x.el.remove(); exitPool.delete(x); }
         });
         v = makeView(key);
         v.el.style.visibility = 'hidden';
-        world.appendChild(v.el);
+        cardBatch.appendChild(v.el);
         views.set(key, v);
         fresh.push([v, key]);
       }
@@ -596,17 +746,13 @@ function mount(container, options = {}) {
       v.targetX = v.rank * COL_PITCH;
       v.pks = parents.get(key) || [];
     });
-    fresh.forEach(([v]) => { v.h = v.el.offsetHeight; });   // one flush for the batch
-    fresh.forEach(([v, key], enterIdx) => {
+    world.appendChild(cardBatch);
+    fresh.forEach(([v, key]) => {
+      v.entering = true;
       const spawn = (parents.get(key) || []).map(k => views.get(k)).find(Boolean);
       v.cyDisp = spawn ? spawn.cyDisp : (anchor ? anchor.cyDisp : 0);
       v.rank = rank.get(key);
       v.xDisp = v.targetX = v.rank * COL_PITCH;
-      place(v);
-      v.el.style.visibility = '';
-      // the stagger is a flourish for a handful of cards; uncapped, 3,000 of them would
-      // queue nearly two minutes of entrance before the last one appeared
-      fade(v.el, 0, 1, { duration: 320, delay: Math.min(enterIdx, 20) * 35 });
     });
 
     // instance badges (#2, #3…) — counted over the full render order
@@ -620,6 +766,7 @@ function mount(container, options = {}) {
       const inst = vg.defOf.has(key);
       v.badgeEl.hidden = !inst;
       if (inst) v.badgeEl.textContent = '#' + n;
+      v.badgeEl.title = inst ? 'Another view of the same topic in this browsing context.' : '';
     });
 
     // edges leaving — before waypoint sync so their waypoints survive the fade
@@ -627,7 +774,13 @@ function mount(container, options = {}) {
     edgeRecs.forEach((rec, id) => {
       if (vg.keySet.has(rec.pv.key) && vg.keySet.has(rec.cv.key) &&
           liveEdgeIds.has(id)) return;
+      removed = true;
       edgeRecs.delete(id);
+      if (rec.entryDelay !== undefined || rec.culled) {
+        rec.el.remove(); if (rec.hit) rec.hit.remove(); if (rec.label) rec.label.remove();
+        return;
+      }
+      delete rec.entryDelay;
       fadingEdges.add(rec);
       if (rec.hit) { rec.hit.remove(); rec.hit = null; }
       rec.el.classList.remove('lit', 'hl');
@@ -643,6 +796,8 @@ function mount(container, options = {}) {
 
     // edges entering / refreshing
     let edgeIdx = 0;
+    const edgeBatch = document.createDocumentFragment();
+    const labelBatch = document.createDocumentFragment();
     vg.edges.forEach(e => {
       const pv = views.get(e.source), cv = views.get(e.target);
       let rec = edgeRecs.get(e.id);
@@ -658,8 +813,8 @@ function mount(container, options = {}) {
       const hit = document.createElementNS(SVGNS, 'path');
       hit.setAttribute('class', 'edgehit');
       hit.dataset.edge = e.id;
-      gBase.appendChild(el);
-      gBase.appendChild(hit);
+      edgeBatch.appendChild(el);
+      edgeBatch.appendChild(hit);
       rec = { id: e.id, rel: e.rel, pv, cv, ws: wsOf.get(e.id) || [], el, hit, back: backEdges.has(e.id) };
       const relDef = features.edgeTags ? model.rels[e.rel] : null;
       // `tag: false` gives a relationship a name and an explanation for the panel without
@@ -670,15 +825,25 @@ function mount(container, options = {}) {
         lab.className = 'elabel';
         lab.textContent = relDef.label;
         lab.dataset.edge = e.id;
-        $('elabels').appendChild(lab);
+        labelBatch.appendChild(lab);
         rec.label = lab;
-        fade(lab, 0, 1, { duration: 300, delay: 60 + edgeIdx * 35 });
       }
       el.setAttribute('d', edgeD(rec));
       hit.setAttribute('d', el.getAttribute('d'));
-      fade(el, 0, 1, { duration: 300, delay: 60 + edgeIdx * 35 });
+      rec.entryDelay = 60 + edgeIdx * 35;
       edgeRecs.set(e.id, rec);
       edgeIdx++;
+    });
+    gBase.appendChild(edgeBatch);
+    $('elabels').appendChild(labelBatch);
+    // No DOM writes between these size reads. Starting opacity animations
+    // earlier would also make the browser resolve their styles during sizing.
+    fresh.forEach(([v]) => { v.h = v.el.offsetHeight; });
+    measureLabels();
+    fresh.forEach(([v], index) => {
+      place(v);
+      v.el.style.visibility = '';
+      v.entryDelay = Math.min(index * 16, 96);
     });
 
     // layout: packed columns over views + waypoints, forward hops only
@@ -688,8 +853,9 @@ function mount(container, options = {}) {
     edgeRecs.forEach(rec => { if (!rec.back) chains.push([rec.pv, ...rec.ws, rec.cv]); });
     const cols = buildColumns(items);
     const adj = buildAdj(chains);
-    orderColumns(cols, adj.inN, adj.outN, model);
-    assignCoords(cols, adj.inN, adj.outN);
+    const adding = fresh.length > 0 || edgeIdx > 0;
+    orderColumns(cols, adj.inN, adj.outN, model, { incremental: true });
+    assignCoords(cols, adj.inN, adj.outN, { stability: removed && !adding ? 0 : 0.75, incremental: adding });
 
     if (anchor) {                      // the toggled card keeps its on-screen spot
       const delta = anchor.targetCy - anchor.cyDisp;
@@ -697,17 +863,25 @@ function mount(container, options = {}) {
     }
 
     // one shared out-trunk per expanded parent per column gap
+    const firstTargets = new Map();
+    chains.forEach(chain => {
+      const parent = chain[0];
+      if (!firstTargets.has(parent)) firstTargets.set(parent, []);
+      firstTargets.get(parent).push(chain[1].targetCy);
+    });
     for (let r = 0; r < cols.length - 1; r++) {
       const parentsCol = (cols[r] || []).filter(it => !it.isWay && expandedKeys.has(it.key));
       const m = parentsCol.length;
       const spacing = m > 1 ? Math.min(16, 90 / (m - 1)) : 0;
       const cx = (r + 1) * COL_PITCH - COL_GAP / 2;
-      parentsCol.forEach((p, i) => {
+      E.orderTrunks(parentsCol.map(p => ({ item: p, y: p.targetCy, targets: firstTargets.get(p) || [] }))).forEach(({ item: p }, i) => {
         p.trunkX = cx + (i - (m - 1) / 2) * spacing;
         if (p.txDisp === undefined) p.txDisp = p.trunkX;
       });
     }
 
+    if (!views.has(focusKey)) focusKey = anchor?.key || model.rootId;
+    setFocusKey(focusKey);
     refreshRoute(true);
     applyFilters();
     startAnim();
@@ -715,57 +889,96 @@ function mount(container, options = {}) {
 
   /* ---------- transition engine: one clock owns every moving thing ---------- */
 
-  let raf = 0;
+  let raf = 0, layoutMotion = null, cameraMotion = null;
   let perfFrames = 0, perfSlow = 0, perfLast = 0;
 
-  function startAnim() {
-    const moving = [...views.values(), ...exitPool, ...ways.values()];
-    moving.forEach(m => { m._s = m.cyDisp; m._sx = m.xDisp; m._st = m.txDisp; });
-    const t0 = performance.now();
-    perfLast = 0;
-    cancelAnimationFrame(raf);
-    const tick = now => {
-      // clamp BOTH ends: rAF hands us the frame's start time, which can precede
-      // the performance.now() above — unclamped, the ease evaluates below zero
-      // and kicks every animation one frame backwards
-      const k = Math.min(1, Math.max(0, (now - t0) / ANIM_MS));
-      const e = 1 - Math.pow(1 - k, 3);
-      moving.forEach(m => {
-        m.cyDisp = m._s + (m.targetCy - m._s) * e;
-        m.xDisp = m._sx + (m.targetX - m._sx) * e;
-        if (m._st !== undefined && m.trunkX !== undefined) {
-          m.txDisp = m._st + (m.trunkX - m._st) * e;
-        }
-        if (m.el) place(m);
+  function requestFrame() {
+    if (layoutMotion || cameraMotion) root.classList.add('animating');
+    if (!raf) raf = requestAnimationFrame(renderFrame);
+  }
+
+  function inViewport(left, top, right, bottom, camera = view) {
+    const pad = 64;
+    return right * camera.s + camera.x >= -pad && left * camera.s + camera.x <= dimensions.width + pad
+      && bottom * camera.s + camera.y >= -pad && top * camera.s + camera.y <= dimensions.height + pad;
+  }
+
+  function renderFrame(now) {
+    raf = 0;
+    let finished = false;
+    if (layoutMotion) {
+      const k = REDUCED ? 1 : Math.min(1, Math.max(0, (now - layoutMotion.start) / ANIM_MS));
+      const ease = 1 - Math.pow(1 - k, 3);
+      layoutMotion.moving.forEach(m => {
+        m.cyDisp = m._s + (m.targetCy - m._s) * ease;
+        m.xDisp = m._sx + (m.targetX - m._sx) * ease;
+        if (m._st !== undefined && m.trunkX !== undefined) m.txDisp = m._st + (m.trunkX - m._st) * ease;
       });
-      updateAllEdges();
-      if (perfLast) { perfFrames++; if (now - perfLast > 34) perfSlow++; }
-      perfLast = now;
-      if (k < 1) {
-        raf = requestAnimationFrame(tick);
-      } else {
-        exitPool.forEach(c => { if (c.el) { c.el.remove(); c.el = null; } });
-        exitPool.clear();
-        fadingEdges.forEach(rec => {
-          rec.el.remove();
-          if (rec.hit) rec.hit.remove();
-          if (rec.label) rec.label.remove();
-        });
-        fadingEdges.clear();
-        // measured degradation: a machine that cannot hold the frame budget
-        // gets flat ground and no soft shadows from here on
-        if (perfPref() === 'auto' && !root.classList.contains('lowfx')
-          && perfFrames >= 30 && perfSlow / perfFrames > 0.4) {
-          root.classList.add('lowfx');
-        }
+      if (k === 1) { layoutMotion = null; finished = true; }
+    }
+    if (cameraMotion) {
+      const k = REDUCED ? 1 : Math.min(1, Math.max(0, (now - cameraMotion.start) / Math.min(ANIM_MS, 360)));
+      const ease = 1 - Math.pow(1 - k, 3);
+      for (const key of ['x', 'y', 's']) view[key] = cameraMotion.from[key] + (cameraMotion.to[key] - cameraMotion.from[key]) * ease;
+      apply();
+      if (k === 1) cameraMotion = null;
+    }
+    views.forEach(v => {
+      if (!layoutMotion) v.entering = false;
+      // A wide branch otherwise paints every new card stacked at its parent
+      // before sending it offscreen. Animate only entrances into the reading area.
+      const landingHidden = v.entering && !inViewport(v.targetX, v.targetCy - v.h / 2,
+        v.targetX + CARD_W, v.targetCy + v.h / 2, cameraMotion?.to || view);
+      const culled = document.activeElement !== v.el && (landingHidden || !inViewport(v.xDisp, v.cyDisp - v.h / 2, v.xDisp + CARD_W, v.cyDisp + v.h / 2));
+      if (v.culled !== culled) {
+        v.culled = culled;
+        v.el.style.visibility = culled ? 'hidden' : '';
       }
-    };
-    raf = requestAnimationFrame(tick);
+      place(v);
+      // Decide entrance visibility after the final layout and camera target
+      // are known. Offscreen cards need no opacity animation to allocate or
+      // service; later panning reveals them normally.
+      if (v.entryDelay !== undefined) {
+        const delay = v.entryDelay;
+        delete v.entryDelay;
+        if (!culled) fade(v.el, 0, 1, { duration: 220, delay });
+      }
+    });
+    updateAllEdges();
+    if (finished) {
+      exitPool.forEach(v => { if (v.el) v.el.remove(); }); exitPool.clear();
+      fadingEdges.forEach(rec => {
+        rec.el.remove(); if (rec.hit) rec.hit.remove(); if (rec.label) rec.label.remove();
+      });
+      fadingEdges.clear();
+    }
+    if (layoutMotion || cameraMotion) {
+      if (perfLast) { perfFrames++; if (now - perfLast > 22) perfSlow++; }
+      perfLast = now;
+      requestFrame();
+    } else {
+      root.classList.remove('animating');
+      perfLast = 0;
+      if (perfPref() === 'auto' && perfFrames >= 30 && perfSlow / perfFrames > 0.2) root.classList.add('lowfx');
+    }
+  }
+
+  function startAnim() {
+    const moving = [...views.values(), ...ways.values()].filter(m =>
+      m.cyDisp !== m.targetCy || m.xDisp !== m.targetX || (Number.isFinite(m.trunkX) && m.txDisp !== m.trunkX));
+    moving.forEach(m => { m._s = m.cyDisp; m._sx = m.xDisp; m._st = m.txDisp; });
+    layoutMotion = moving.length || exitPool.size || fadingEdges.size ? { moving, start: performance.now() } : null;
+    requestFrame();
   }
 
   function toggleKey(key) {
     const v = views.get(key);
     if (!v || !hasChildren(model, v.defId)) return;
+    // Capture the container before changing the graph or details. The camera
+    // can use these dimensions without forcing layout of the newly built UI.
+    dimensions.width = vw(); dimensions.height = vh();
+    root.classList.toggle('narrow', dimensions.width <= 920);
+    setFocusKey(key);
     if (expandedKeys.has(key)) {
       expandedKeys.delete(key);
     } else {
@@ -783,46 +996,59 @@ function mount(container, options = {}) {
     setToggle(v);
     reconcile(key);
     if (expandedKeys.has(key)) followKids(key);
+    else $('choices').hidden = true;
+    $('announcement').textContent = expandedKeys.has(key)
+      ? childCount(model, v.defId) + ' topics expanded from ' + v.def.label : v.def.label + ' collapsed';
   }
 
   /* ---------- camera (panel-aware: the reserve is designed in) ---------- */
 
   const view = { x: 0, y: 0, s: 1 };
-  let glideTimer = 0;
+  const READ_SCALE = 0.9;
+  let overview = false, readingView = null;
+  let choiceKey = null;
+  const isMobile = () => root.classList.contains('narrow') || dimensions.width <= 920;
 
-  const isMobile = () => root.classList.contains('narrow') || vw() <= 920;
-
-  // The screen area the detail panel occludes; every camera move honours it. On a narrow
-  // screen the sheet is either a ~57px peek or a near-full-height panel, so measure it
-  // rather than assuming: a fixed guess either shoves the graph up for a peek that covers
-  // nothing, or leaves a centred node hidden behind an expanded sheet. Capped so that a
-  // full-height sheet still leaves a band to centre into.
   function reserve() {
     if ($('panel').hidden) return { rx: 0, ry: 0 };
-    if (!isMobile()) return { rx: 376, ry: 0 };
-    const h = $('panel').getBoundingClientRect().height;
-    return { rx: 0, ry: Math.min(h + 16, vh() * 0.6) };
+    if (!isMobile()) return { rx: 396, ry: 0 };
+    return { rx: 0, ry: peekExpanded ? Math.min(vh() * 0.6, $('panel').getBoundingClientRect().height + 16) : 83 };
   }
 
+  let drawnScale = null;
   function apply() {
     world.style.transform = 'translate(' + view.x + 'px, ' + view.y + 'px) scale(' + view.s + ')';
+    if (drawnScale !== view.s) {
+      drawnScale = view.s;
+      root.style.setProperty('--unzoom', String(1 / view.s));
+      root.style.setProperty('--graph-scale', String(view.s));
+    }
+  }
+
+  function stopCamera() {
+    cameraMotion = null; // view always holds the last displayed coordinates.
   }
 
   function glideTo(x, y, s) {
-    hoverArmed = false;               // sliding content under a still cursor is not a hover
-    world.classList.add('glide');
-    view.x = x; view.y = y; view.s = s;
-    apply();
-    clearTimeout(glideTimer);
-    glideTimer = setTimeout(() => world.classList.remove('glide'), 580);
+    if (![x, y, s].every(Number.isFinite)) return;
+    hoverArmed = false;
+    cameraMotion = { from: { ...view }, to: { x, y, s }, start: performance.now() };
+    requestFrame();
   }
 
-  function centerOn(wx, wy, s = Math.max(view.s, 0.85)) {
+  function leaveOverview(restore = false) {
+    overview = false; root.classList.remove('overview'); $('overviewbar').hidden = true;
+    if (restore && readingView) glideTo(readingView.x, readingView.y, Math.max(READ_SCALE, readingView.s));
+  }
+
+  function centerOn(wx, wy, s = Math.max(view.s, READ_SCALE)) {
+    leaveOverview();
     const { rx, ry } = reserve();
     glideTo((vw() - rx) / 2 - wx * s, (vh() - ry) / 2 - wy * s, s);
   }
 
   function centerOnNode(v) {
+    $('choices').hidden = true;
     centerOn(v.targetX + CARD_W / 2, v.targetCy);
   }
 
@@ -835,54 +1061,153 @@ function mount(container, options = {}) {
     };
   }
 
-  // expanding a node frames the children it revealed: fit them all, zooming out
-  // if the fan is taller than the viewport
+  function showChoices(parent, kids) {
+    choiceKey = parent.key;
+    const body = $('choicesbody'); body.replaceChildren();
+    $('choicestitle').textContent = kids.length + ' topics · ' + parent.def.label;
+    for (const child of kids) {
+      const button = mk('button', 'fg-choice', child.def.label);
+      button.addEventListener('click', () => { trailClick(child.key); focusCard(child.key); });
+      body.appendChild(button);
+    }
+    $('choices').hidden = false;
+  }
+
+  function positionChoices(parent, x, y, s) {
+    const choices = $('choices'), body = $('choicesbody');
+    choices.style.right = isMobile() ? '12px' : (reserve().rx + 24) + 'px';
+    body.style.maxHeight = '';
+    const width = dimensions.width - reserve().rx;
+    x = Math.min(Math.max(x, 24 - parent.targetX * s), width - 24 - (parent.targetX + CARD_W) * s);
+    let left = parent.targetX * s + x, right = left + CARD_W * s;
+    const viewportBox = viewport.getBoundingClientRect();
+    // Measure fixed chrome once per expansion/resize, never in the motion loop.
+    // Its actual height matters for wrapped labels and short landscape windows.
+    const controls = ['bar', 'zoom', 'viewactions'].filter(name => !$(name).hidden)
+      .map(name => $(name).getBoundingClientRect()).filter(box => box.width && box.height);
+    const topUnderControls = (l, r) => controls.reduce((top, box) =>
+      l < box.right - viewportBox.left && r > box.left - viewportBox.left
+        ? Math.max(top, box.bottom - viewportBox.top + 12) : top, 12);
+    let minTop = topUnderControls(left, right);
+    const box = choices.getBoundingClientRect(), bodyBox = body.getBoundingClientRect();
+    const focused = body.contains(document.activeElement) ? document.activeElement : null;
+    const rowBox = (focused || body.firstElementChild)?.getBoundingClientRect();
+    const minRowHeight = Math.max(44, rowBox?.height || 0);
+    const focusTop = focused ? rowBox.top - bodyBox.top + body.scrollTop : null;
+    const cardHeight = parent.h * s;
+    const frameHeight = box.height - bodyBox.height;
+    // After rotation, a formerly centered phone card can sit under the left
+    // controls. Use the wider clear corridor before reducing the list further.
+    if (box.bottom - viewportBox.top - minTop - cardHeight - 12 < frameHeight + minRowHeight) {
+      const centeredLeft = (width - CARD_W * s) / 2;
+      const centeredTop = topUnderControls(centeredLeft, centeredLeft + CARD_W * s);
+      if (centeredTop < minTop) {
+        left = centeredLeft; right = left + CARD_W * s;
+        x = left - parent.targetX * s; minTop = centeredTop;
+      }
+    }
+    const available = box.bottom - viewportBox.top - minTop - cardHeight - 12;
+    const bodyHeight = Math.min(bodyBox.height, Math.max(minRowHeight, available - frameHeight));
+    body.style.maxHeight = bodyHeight + 'px';
+    if (focused) {
+      if (focusTop < body.scrollTop) body.scrollTop = focusTop;
+      else if (focusTop + rowBox.height > body.scrollTop + bodyHeight) body.scrollTop = focusTop + rowBox.height - bodyHeight;
+    }
+    const listTop = box.bottom - viewportBox.top - frameHeight - bodyHeight;
+    let top = parent.targetCy * s + y - cardHeight / 2;
+    if (left < box.right - viewportBox.left && right > box.left - viewportBox.left)
+      top = Math.min(top, listTop - cardHeight - 12);
+    top = Math.max(minTop, top);
+    return { x, y: top + cardHeight / 2 - parent.targetCy * s };
+  }
+
   function followKids(key) {
-    const kids = [];
-    edgeRecs.forEach(rec => { if (rec.pv.key === key) kids.push(rec.cv); });
-    if (!kids.length) return;
-    frameBounds(bboxOf(kids), view.s);
+    leaveOverview();
+    const parent = views.get(key);
+    const kids = [...edgeRecs.values()].filter(rec => rec.pv.key === key).map(rec => rec.cv);
+    if (!parent || !kids.length) return;
+    const { rx, ry } = reserve();
+    const s = Math.max(READ_SCALE, Math.min(view.s, 1.3));
+    const b = bboxOf([parent, ...kids]);
+    const width = dimensions.width - rx, height = dimensions.height - ry;
+    const fits = (b.maxX - b.minX) * s <= width - 64 && (b.maxY - b.minY) * s <= height - 150;
+    let x = view.x, y = view.y;
+    // A scale adjustment is anchored on the expansion origin.
+    x += (parent.xDisp + CARD_W / 2) * (view.s - s);
+    y += parent.cyDisp * (view.s - s);
+    if (fits) {
+      $('choices').hidden = true;
+      const left = b.minX * s + x, right = b.maxX * s + x;
+      const top = b.minY * s + y, bottom = b.maxY * s + y;
+      if (left < 32) x += 32 - left;
+      else if (right > width - 32) x -= right - (width - 32);
+      if (top < 84) y += 84 - top;
+      else if (bottom > height - 52) y -= bottom - (height - 52);
+    } else {
+      showChoices(parent, kids);
+      // A screen-space list keeps wide/tall branches usable without shrinking
+      // the graph. Keep the origin above that list on narrow displays.
+      const left = parent.targetX * s + x, right = left + CARD_W * s;
+      if (left < 52) x += 52 - left;
+      else if (right > width - 32) x -= right - (width - 32);
+      const cy = parent.targetCy * s + y;
+      const wanted = isMobile() ? height * 0.32 : height * 0.44;
+      if (isMobile() || cy < 140 || cy > height - 330) y += wanted - cy;
+      ({ x, y } = positionChoices(parent, x, y, s));
+    }
+    glideTo(x, y, s);
   }
 
   function frameBounds(b, maxZoom = 1) {
     const { rx, ry } = reserve();
-    const m = 140;
     const aw = vw() - rx, ah = vh() - ry;
-    const s = Math.max(0.12, Math.min(maxZoom,
-      (aw - m) / (b.maxX - b.minX), (ah - m) / (b.maxY - b.minY)));
+    const s = Math.max(overview ? 0.03 : READ_SCALE, Math.min(maxZoom,
+      (aw - 96) / Math.max(1, b.maxX - b.minX), (ah - 160) / Math.max(1, b.maxY - b.minY)));
     glideTo((aw - (b.maxX - b.minX) * s) / 2 - b.minX * s,
-            (ah - (b.maxY - b.minY) * s) / 2 - b.minY * s, s);
+      64 + (ah - 128 - (b.maxY - b.minY) * s) / 2 - b.minY * s, s);
   }
 
-  // Frame what is ACTUALLY rendered rather than a fixed root-plus-one-column box. That
-  // box assumed the root was already fanned out, so a collapsed start put the single card
-  // half a column left of centre. Honours the panel reserve, so "centred" means centred in
-  // the space the graph actually has.
-  function initialView() {
-    const live = [...views.values()];
-    if (!live.length) return { x: vw() / 2, y: vh() / 2, s: 1 };
-    const b = bboxOf(live);
-    const { rx, ry } = reserve();
-    const m = 140;
-    const aw = vw() - rx, ah = vh() - ry;
-    const s = Math.max(0.5, Math.min(1,
-      (aw - m) / Math.max(1, b.maxX - b.minX), (ah - m) / Math.max(1, b.maxY - b.minY)));
-    return {
-      x: (aw - (b.maxX - b.minX) * s) / 2 - b.minX * s,
-      y: (ah - (b.maxY - b.minY) * s) / 2 - b.minY * s,
-      s,
-    };
+  function showOverview() {
+    if (!overview) readingView = { ...view, s: Math.max(READ_SCALE, view.s) };
+    overview = true; root.classList.add('overview'); $('overviewbar').hidden = false;
+    $('choices').hidden = true;
+    frameBounds(bboxOf([...views.values()]));
   }
+
+  function initialView() {
+    const v = views.get(model.rootId);
+    const { rx, ry } = reserve();
+    const s = Math.max(READ_SCALE, Math.min(1, (vw() - rx - 64) / CARD_W));
+    return { x: (vw() - rx - CARD_W * s) / 2 - v.targetX * s,
+      y: (vh() - ry) / 2 - v.targetCy * s, s };
+  }
+
+  $('readview').addEventListener('click', () => leaveOverview(true));
+  $('choicesx').addEventListener('click', () => { $('choices').hidden = true; focusCard(focusKey); });
 
   /* ---------- pan / zoom ---------- */
 
   let drag = null, dragMoved = false;
+  function pointerPoint(e) {
+    const r = viewport.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+
+  function manualZoomMode(scale) {
+    if (scale < 0.85 && !overview) {
+      readingView = { ...view, s: Math.max(READ_SCALE, view.s) };
+      overview = true; root.classList.add('overview'); $('overviewbar').hidden = false;
+      $('choices').hidden = true;
+    } else if (scale >= READ_SCALE && overview) leaveOverview();
+  }
+
   const pointers = new Map();       // active pointerId -> position (for pinch)
   let pinch = null;
 
   viewport.addEventListener('pointerdown', e => {
     if (e.pointerType === 'mouse' && e.button !== 0) return;
-    pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    stopCamera();
+    pointers.set(e.pointerId, pointerPoint(e));
     if (pointers.size === 2) {
       // second finger down: this gesture is a pinch, never a drag or a click
       const [a, b] = [...pointers.values()];
@@ -895,7 +1220,7 @@ function mount(container, options = {}) {
         mid0: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 },
         v0: { x: view.x, y: view.y },
       };
-      world.classList.remove('glide');
+      stopCamera();
       return;
     }
     drag = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
@@ -904,17 +1229,19 @@ function mount(container, options = {}) {
   });
   on(window, 'pointermove', e => {
     hoverArmed = true;
-    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pointers.has(e.pointerId)) pointers.set(e.pointerId, pointerPoint(e));
     if (pinch && pointers.size >= 2) {
       const [a, b] = [...pointers.values()];
       const d = Math.hypot(a.x - b.x, a.y - b.y);
       const mid = { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 };
-      const s2 = Math.min(2.2, Math.max(0.3, pinch.s0 * (d / Math.max(1, pinch.d0))));
+      const s2 = Math.min(2.2, Math.max(0.05, pinch.s0 * (d / Math.max(1, pinch.d0))));
+      manualZoomMode(s2);
       // the world point under the pinch midpoint stays anchored while zooming
       view.x = mid.x - (pinch.mid0.x - pinch.v0.x) * (s2 / pinch.s0);
       view.y = mid.y - (pinch.mid0.y - pinch.v0.y) * (s2 / pinch.s0);
       view.s = s2;
       apply();
+      requestFrame();
       return;
     }
     if (!drag) return;
@@ -923,19 +1250,27 @@ function mount(container, options = {}) {
       dragMoved = true;
       cancelLongPress();
       viewport.classList.add('panning');
-      world.classList.remove('glide');
+      stopCamera();
     }
     if (dragMoved) {
       view.x = drag.vx + dx;
       view.y = drag.vy + dy;
       apply();
+      requestFrame();
     }
   });
   const endDrag = e => {
     if (e) pointers.delete(e.pointerId);
     if (pointers.size < 2) pinch = null;
-    drag = null;
     cancelLongPress();
+    if (pointers.size === 1) {
+      // Lifting one finger after a pinch continues naturally as a one-finger pan.
+      const point = pointers.values().next().value, rect = viewport.getBoundingClientRect();
+      drag = { x: point.x + rect.left, y: point.y + rect.top, vx: view.x, vy: view.y };
+      dragMoved = true;
+      return;
+    }
+    drag = null;
     viewport.classList.remove('panning');
     setTimeout(() => { dragMoved = false; }, 0);
   };
@@ -944,17 +1279,21 @@ function mount(container, options = {}) {
 
   viewport.addEventListener('wheel', e => {
     e.preventDefault();
-    world.classList.remove('glide');
+    stopCamera();
+    const point = pointerPoint(e);
+    const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? dimensions.height : 1;
     if (e.ctrlKey || e.metaKey) {
-      const s2 = Math.min(2.2, Math.max(0.3, view.s * Math.exp(-e.deltaY * 0.0022)));
-      view.x = e.clientX - (e.clientX - view.x) * (s2 / view.s);
-      view.y = e.clientY - (e.clientY - view.y) * (s2 / view.s);
+      const s2 = Math.min(2.2, Math.max(0.05, view.s * Math.exp(-e.deltaY * unit * 0.0022)));
+      manualZoomMode(s2);
+      view.x = point.x - (point.x - view.x) * (s2 / view.s);
+      view.y = point.y - (point.y - view.y) * (s2 / view.s);
       view.s = s2;
     } else {
-      view.x -= e.deltaX;
-      view.y -= e.deltaY;
+      view.x -= e.deltaX * unit;
+      view.y -= e.deltaY * unit;
     }
     apply();
+    requestFrame();
   }, { passive: false });
 
   /* ---------- trail, selection, focus & the lit route ---------- */
@@ -971,6 +1310,7 @@ function mount(container, options = {}) {
   }
 
   function trailClick(key) {
+    setFocusKey(key);
     // the from-node for every click is the PREVIOUS CLICK (or its unrolled #n
     // instance) — trailStep is pure engine code, so this is tested, not hoped
     const step = trailStep(model, current.vg, current.backEdges, expandedKeys, trail, route, key, trailMemory);
@@ -997,6 +1337,8 @@ function mount(container, options = {}) {
     litEls.forEach(el => el.classList.remove('lit', 'sel', 'keep'));
     litEls.length = 0;
     route = trail.length ? activeRoute(current.vg, model.rootId, trail, current.backEdges) : [];
+    views.forEach(v => v.el.setAttribute('aria-current', String(v.key === route[route.length - 1])));
+    $('welcome').hidden = !options.intro || expandedKeys.size > 0 || route.length > 0;
     if (trail.length) trailMemory = [...trail];   // the record survives deselection
     root.classList.toggle('focused', route.length > 0);
 
@@ -1219,6 +1561,62 @@ function mount(container, options = {}) {
 
   /* ---------- clicks ---------- */
 
+  function setFocusKey(key) {
+    focusKey = key;
+    views.forEach(v => { v.el.tabIndex = v.key === key ? 0 : -1; });
+  }
+
+  function focusCard(key) {
+    const v = views.get(key);
+    if (!v) return;
+    setFocusKey(key);
+    v.culled = false; v.el.style.visibility = ''; place(v);
+    v.el.focus({ preventScroll: true });
+    centerOnNode(v);
+  }
+
+  viewport.addEventListener('focusin', e => {
+    if (!e.target.closest('.card')) return;
+    // Keyboard users returning to a card should get the same unobstructed
+    // graph as a pointer user clicking outside these transient popovers.
+    closeHelp();
+    closeSettings();
+    if (isMobile()) closeFilters();
+  });
+
+  viewport.addEventListener('keydown', e => {
+    if (!features.keyboard) return;
+    const card = e.target.closest('.card');
+    if (!card || e.target !== card) return;
+    const v = views.get(card.dataset.key);
+    if (!v) return;
+    if (e.key === 'Enter') {
+      e.preventDefault(); e.stopPropagation();
+      trailClick(v.key); setPeek(true);
+      $('panelhead').querySelector('h2')?.focus({ preventScroll: true });
+      return;
+    }
+    if (e.key === ' ') {
+      e.preventDefault(); e.stopPropagation();
+      if (hasChildren(model, v.defId)) toggleKey(v.key); else trailClick(v.key);
+      return;
+    }
+    if (!['ArrowRight', 'ArrowLeft', 'ArrowUp', 'ArrowDown', 'Home', 'End'].includes(e.key)) return;
+    e.preventDefault(); e.stopPropagation();
+    let next;
+    if (e.key === 'ArrowRight') {
+      if (!expandedKeys.has(v.key) && hasChildren(model, v.defId)) toggleKey(v.key);
+      next = current.vg.edges.find(edge => edge.source === v.key)?.target;
+    } else if (e.key === 'ArrowLeft') next = current.parents.get(v.key)?.[0];
+    else if (e.key === 'Home') next = model.rootId;
+    else {
+      const peers = [...views.values()].filter(peer => peer.rank === v.rank).sort((a, b) => a.targetCy - b.targetCy);
+      const i = peers.indexOf(v);
+      next = e.key === 'End' ? peers.at(-1)?.key : peers[i + (e.key === 'ArrowDown' ? 1 : -1)]?.key;
+    }
+    if (next) focusCard(next);
+  });
+
   viewport.addEventListener('click', e => {
     closePops();
     if (dragMoved) return;
@@ -1402,8 +1800,15 @@ function mount(container, options = {}) {
   /* ---------- detail panel: where the dataset's depth lives ---------- */
 
   let panelKey = null;                // 'node:<key>' | 'edge:<id>' | null
+  let panelSizeObserver = null;
+
+  function clearPanelSizeObserver() {
+    if (panelSizeObserver) panelSizeObserver.disconnect();
+    panelSizeObserver = null;
+  }
 
   function closePanel() {
+    clearPanelSizeObserver();
     $('panel').hidden = true;
     panelKey = null;
     if (edgeSel) { edgeSel.el.classList.remove('hl'); edgeSel = null; relayerEdges(); }
@@ -1422,6 +1827,17 @@ function mount(container, options = {}) {
     return n;
   }
 
+  function panelIcon(cls, path) {
+    const icon = document.createElementNS(SVGNS, 'svg');
+    for (const [name, value] of Object.entries({ class: cls, viewBox: '0 0 24 24', fill: 'none',
+      stroke: 'currentColor', 'stroke-width': '2', 'stroke-linecap': 'round',
+      'stroke-linejoin': 'round', 'aria-hidden': 'true' })) icon.setAttribute(name, value);
+    const line = document.createElementNS(SVGNS, 'path');
+    line.setAttribute('d', path);
+    icon.appendChild(line);
+    return icon;
+  }
+
   // Body prose goes through the host if it supplied `options.prose`, which receives the
   // element and the text and may replace the contents (to gloss terms, link things, …).
   // Default is plain text, so a host that supplies nothing gets exactly what it got before.
@@ -1438,15 +1854,67 @@ function mount(container, options = {}) {
   /**
    * Render a details block: the sections a node or an edge can both carry.
    *
-   * Shared because an edge is a step too. What has to be true before you can take it, what
-   * it costs you in noise, and what to read about it are the same questions whether the
-   * step is a technique or the move between two of them, and answering them in one prose
-   * paragraph is what a caption does badly.
+   * Nodes and connections may both carry descriptions and evidence. The engine
+   * renders that material without interpreting a connection as a causal step.
+   * Shared vocabulary definitions have their own evidence, separate from claims
+   * about an individual node or connection.
    *
    * `applies` is the one caller-specific slot — a node scopes itself by env and role, an
    * edge has nothing to say there — and it keeps its place in the reading order.
    */
   function renderDetails(body, d, applies) {
+    for (const definition of d.definitions || []) {
+      const box = el('section', 'shared-definition');
+      box.setAttribute('aria-label', 'Shared definition: ' + definition.label);
+      box.dataset.definition = definition.id || '';
+      box.appendChild(el('h3', null, 'Shared definition · ' + definition.label));
+      box.appendChild(prose('pdesc', definition.description));
+      const evidence = el('details', 'definition-evidence');
+      evidence.appendChild(el('summary', null, definition.review?.label || 'Definition sources'));
+      if (definition.review?.detail) evidence.appendChild(el('p', null, definition.review.detail));
+      if (definition.review?.scope) evidence.appendChild(el('p', null, definition.review.scope));
+      for (const note of definition.accessNotes || []) {
+        const observation = el('div', 'editorial');
+        observation.appendChild(el('strong', null, note.label));
+        observation.appendChild(el('p', null, note.text));
+        evidence.appendChild(observation);
+      }
+      appendReferences(evidence, definition.refs || []);
+      box.appendChild(evidence);
+      body.appendChild(box);
+    }
+    if (d.editorialTitle && d.editorial?.length) section(body, d.editorialTitle);
+    for (const note of d.editorial || []) {
+      const box = el('div', 'editorial');
+      box.appendChild(el('strong', null, note.label));
+      box.appendChild(el('p', null, note.text));
+      body.appendChild(box);
+    }
+    if (d.claims?.length) {
+      section(body, 'Reviewed claims');
+      const list = el('ul', 'claim-list');
+      const sourceLabels = new Map((d.refs || []).map(([label, url]) => [url, label]));
+      for (const claim of d.claims) {
+        const item = el('li');
+        item.appendChild(el('p', 'claim-text', claim.text));
+        item.appendChild(el('p', 'claim-section', claim.section));
+        const sources = el('div', 'claim-sources');
+        for (const url of claim.sources) {
+          const href = safeUrl(url);
+          if (!href) continue;
+          const a = el('a', null, sourceLabels.get(url) || href);
+          a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
+          sources.appendChild(a);
+        }
+        if (sources.childElementCount) item.appendChild(sources);
+        list.appendChild(item);
+      }
+      body.appendChild(list);
+    }
+    if (d.applicability) {
+      section(body, 'Applicability');
+      body.appendChild(prose('pdesc applicability', d.applicability));
+    }
     if (d.caution) {
       const box = el('div', 'caution');
       // the dataset names the box (this dataset calls it OPSEC); unnamed falls back to a
@@ -1527,20 +1995,27 @@ function mount(container, options = {}) {
     }
     if (d.refs && d.refs.length) {
       section(body, 'References');
-      const refs = el('div', 'refs');
-      d.refs.forEach(([label, url]) => {
-        const href = safeUrl(url);
-        // an unusable protocol still shows its label, it just is not a link
-        const a = el(href ? 'a' : 'span', null, label + (href ? ' ↗' : ''));
-        if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
-        refs.appendChild(a);
-      });
-      body.appendChild(refs);
+      appendReferences(body, d.refs);
     }
+  }
+
+  function appendReferences(body, sources) {
+    if (!sources.length) return;
+    const refs = el('div', 'refs');
+    for (const [label, url, kind, sourceSection] of sources) {
+      const href = safeUrl(url);
+      const a = el(href ? 'a' : 'span', null, label + (href ? ' ↗' : ''));
+      if (href) { a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; }
+      if (kind) a.appendChild(el('small', 'source-kind', kind === 'unclassified' ? 'Source type not classified' : kind + ' source'));
+      if (sourceSection) a.appendChild(el('small', 'source-section', sourceSection));
+      refs.appendChild(a);
+    }
+    body.appendChild(refs);
   }
 
   function renderPanel(key, force) {
     if (panelKey === 'node:' + key && !force) return;
+    clearPanelSizeObserver();
     if (edgeSel) { edgeSel.el.classList.remove('hl'); edgeSel = null; relayerEdges(); }
     panelKey = 'node:' + key;
     const defId = defIdOf(key);
@@ -1560,6 +2035,7 @@ function mount(container, options = {}) {
     head.appendChild(cat);
 
     const h = el('h2', null, def.label);
+    h.tabIndex = -1;
     const view0 = views.get(key);
     if (view0 && !view0.badgeEl.hidden) {
       const b = el('span', 'badge', view0.badgeEl.textContent);
@@ -1593,6 +2069,12 @@ function mount(container, options = {}) {
     body.appendChild(crumb);
 
     if (def.summary) body.appendChild(prose('psum', def.summary));
+    if (def.aliases && def.aliases.length) {
+      const aliases = el('div', 'chips paliases');
+      aliases.setAttribute('aria-label', 'Also known as');
+      def.aliases.forEach(a => aliases.appendChild(el('span', 'pchip static', a)));
+      body.appendChild(aliases);
+    }
     if (d.description) body.appendChild(prose('pdesc', d.description));
     renderDetails(body, d, [def.env, def.role && 'role: ' + def.role].filter(Boolean));
 
@@ -1605,49 +2087,90 @@ function mount(container, options = {}) {
       btn.type = 'button';
       btn.setAttribute('aria-expanded', 'false');
       const lead = el('span', 'pnextlead');
-      const caption = el('span', null, 'Pick your next step');
+      const caption = el('span', null, 'Explore connected topics');
       lead.appendChild(caption);
       lead.appendChild(el('span', 'pnextcount', String(kids.length)));
       btn.appendChild(lead);
-      btn.innerHTML += '<svg class="pnextchev" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-        + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-        + '<path d="m9 6 6 6-6 6"/></svg>';
+      btn.appendChild(panelIcon('pnextchev', 'm9 6 6 6-6 6'));
       wrap.appendChild(btn);
 
       const list = el('div', 'pnextlist');
       const inner = el('div', 'pnextinner');
-      kids.forEach(({ target }) => {
-        const t = model.defs.get(target);
-        const item = el('button', 'pnextitem');
-        item.type = 'button';
-        const dot = el('span', 'dot');
-        dot.style.background = safeColor(model.colorOf.get(t.group));
-        item.appendChild(dot);
-        const txt = el('span', 'ptext');
-        txt.appendChild(el('span', 'plabel', t.label));
-        if (t.summary) txt.appendChild(el('span', 'psub', t.summary));
-        item.appendChild(txt);
-        item.innerHTML += '<svg class="pnextarrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" '
-          + 'stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'
-          + '<path d="M5 12h14M13 6l6 6-6 6"/></svg>';
-        item.addEventListener('click', () => revealDef(target));
-        inner.appendChild(item);
-      });
+      inner.inert = true;
+      const canObserveSize = typeof ResizeObserver !== 'undefined';
+      // Keep the first opening at zero until its natural height is measured.
+      // Without ResizeObserver, auto height preserves responsive disclosure.
+      if (canObserveSize) list.style.setProperty('--topics-height', '0px');
+      // Most selections never open this section. Building its full second copy
+      // of a wide branch during graph expansion delays the first graph frame.
+      // Populate on disclosure, then retain the rows while this panel is current.
+      let populated = false;
+      const populate = () => {
+        if (populated) return;
+        const batch = document.createDocumentFragment();
+        const arrow = panelIcon('pnextarrow', 'M5 12h14M13 6l6 6-6 6');
+        kids.forEach(({ target }) => {
+          const t = model.defs.get(target);
+          const item = el('button', 'pnextitem');
+          item.type = 'button';
+          const dot = el('span', 'dot');
+          dot.style.background = safeColor(model.colorOf.get(t.group));
+          item.appendChild(dot);
+          const txt = el('span', 'ptext');
+          txt.appendChild(el('span', 'plabel', t.label));
+          if (t.summary) txt.appendChild(el('span', 'psub', t.summary));
+          item.appendChild(txt);
+          item.appendChild(arrow.cloneNode(true));
+          item.addEventListener('click', () => revealDef(target));
+          batch.appendChild(item);
+          const relationship = el('button', 'prelationship', 'About this connection');
+          relationship.type = 'button';
+          relationship.setAttribute('aria-label', 'Connection to ' + t.label);
+          relationship.addEventListener('click', () => {
+            if (!expandedKeys.has(key)) { expandedKeys.add(key); reconcile(key); }
+            const rec = [...edgeRecs.values()].find(r => r.pv.key === key && r.cv.defId === target);
+            if (rec) {
+              renderEdgePanel(rec);
+              const heading = $('panelhead').querySelector('h2'); heading.tabIndex = -1; heading.focus();
+              setPeek(true);
+            }
+          });
+          batch.appendChild(relationship);
+        });
+        inner.appendChild(batch);
+        populated = true;
+        if (canObserveSize) {
+          const setHeight = height => {
+            if (Number.isFinite(height)) list.style.setProperty('--topics-height', Math.ceil(height) + 'px');
+          };
+          // The inner list keeps its natural height while the outer box clips
+          // the reveal. It no longer resizes all rows on every animation frame.
+          setHeight(parseFloat(getComputedStyle(inner).height));
+          panelSizeObserver = new ResizeObserver(entries => {
+            if (!inner.isConnected) return;
+            const size = entries[0]?.borderBoxSize;
+            const box = Array.isArray(size) ? size[0] : size;
+            setHeight(box?.blockSize ?? parseFloat(getComputedStyle(inner).height));
+          });
+          panelSizeObserver.observe(inner);
+        }
+      };
       list.appendChild(inner);
       wrap.appendChild(list);
 
       btn.addEventListener('click', () => {
         const open = wrap.classList.toggle('open');
+        if (open) populate();
         btn.setAttribute('aria-expanded', String(open));
-        // querySelector, not the closure: innerHTML += above re-created the child nodes
-        btn.querySelector('.pnextlead span:first-child').textContent =
-          open ? 'Next steps' : 'Pick your next step';
+        inner.inert = !open;
+        caption.textContent = open ? 'Connected topics' : 'Explore connected topics';
       });
       body.appendChild(wrap);
     }
 
     section(body, 'Your note');
     const ta = el('textarea');
+    ta.setAttribute('aria-label', 'Your note for ' + def.label);
     ta.value = notes[key] || '';
     ta.placeholder = 'A note for this step, on this branch. Marks apply to every visit.';
     body.appendChild(ta);
@@ -1683,6 +2206,7 @@ function mount(container, options = {}) {
   function renderEdgePanel(rec) {
     emit('onEdgeSelect', { id: rec.id, rel: rec.rel, source: rec.pv.defId, target: rec.cv.defId });
     if (!chrome.panel) return;
+    clearPanelSizeObserver();
     if (edgeSel) edgeSel.el.classList.remove('hl');
     edgeSel = rec;
     rec.el.classList.add('hl');
@@ -1747,6 +2271,7 @@ function mount(container, options = {}) {
     } else {
       closePanel();
     }
+    focusCard(focusKey);
   });
 
   // The bar narrows when the panel opens beside it, so the end of the trail moves after
@@ -1931,6 +2456,7 @@ function mount(container, options = {}) {
     const on = !readPref('edge-labels');
     writePref('edge-labels', on);
     root.classList.toggle('hidelabels', !on);
+    measureLabels(); requestFrame();
   }
 
   // A host that supplies its own filter UI dims through this instead of the built-in dock:
@@ -1957,32 +2483,47 @@ function mount(container, options = {}) {
 
   let hot = 0, results = [];
 
+  function closeResults() {
+    $('results').hidden = true; $('emptyresults').hidden = true;
+    $('search').setAttribute('aria-expanded', 'false');
+    $('search').removeAttribute('aria-activedescendant');
+  }
+
   function renderResults() {
     const box = $('results');
     box.hidden = results.length === 0;
-    box.innerHTML = '';
+    $('emptyresults').hidden = results.length > 0 || !$('search').value.trim();
+    $('search').setAttribute('aria-expanded', String(results.length > 0));
+    box.replaceChildren();
     results.forEach((r, i) => {
       const row = el('div', 'result' + (i === hot ? ' hot' : ''));
+      row.id = instanceId + '-result-' + i;
+      row.setAttribute('role', 'option');
+      row.setAttribute('aria-selected', String(i === hot));
       row.appendChild(el('span', null, r.label));
-      // a hit on the user's own note is worth naming: otherwise the row looks unrelated
-      // to what they typed and reads as a bad result
-      if (r.via === 'note') row.appendChild(el('span', 'rvia', 'note'));
+      if (r.via === 'note' || r.via === 'alias') row.appendChild(el('span', 'rvia', r.via));
       row.appendChild(el('span', 'rg', r.group));
-      row.addEventListener('mousedown', e => { e.preventDefault(); pickResult(i); });
+      row.addEventListener('mousedown', e => e.preventDefault());
+      row.addEventListener('click', () => pickResult(i));
       box.appendChild(row);
     });
+    if (results.length) $('search').setAttribute('aria-activedescendant', instanceId + '-result-' + hot);
+    else $('search').removeAttribute('aria-activedescendant');
   }
 
   function pickResult(i) {
     const r = results[i];
     if (!r) return;
-    $('results').hidden = true;
+    closeResults();
     $('search').blur();
     revealDef(r.id);
+    closeSearch();
+    focusCard(r.id);
   }
 
   // expand the ancestry so the def's canonical key renders, select it, centre it
   function revealDef(defId) {
+    setFocusKey(defId);
     const lineage = keyLineage(model, defId);
     lineage.slice(0, -1).forEach(k => expandedKeys.add(k));
     views.forEach(setToggle);
@@ -2001,9 +2542,9 @@ function mount(container, options = {}) {
     if (e.key === 'ArrowDown') { hot = Math.min(hot + 1, results.length - 1); renderResults(); e.preventDefault(); }
     else if (e.key === 'ArrowUp') { hot = Math.max(hot - 1, 0); renderResults(); e.preventDefault(); }
     else if (e.key === 'Enter') pickResult(hot);
-    else if (e.key === 'Escape') { $('results').hidden = true; e.target.blur(); closeSearch(); }
+    else if (e.key === 'Escape') { closeResults(); e.target.blur(); closeSearch(); }
   });
-  $('search').addEventListener('blur', () => setTimeout(() => { $('results').hidden = true; }, 150));
+  $('search').addEventListener('blur', () => setTimeout(closeResults, 150));
 
   /* ---------- deep links: the address bar tracks the live state ---------- */
 
@@ -2078,9 +2619,10 @@ function mount(container, options = {}) {
   /* ---------- toolbar, theme & keyboard ---------- */
 
   function setTheme(t) {
+    t = t === 'light' ? 'light' : 'dark';
     root.dataset.theme = t;
     $('theme').textContent = t === 'light' ? '☀' : '☾';
-    if (prefix) { try { localStorage.setItem(prefix + 'theme', t); } catch { /* fine */ } }
+    if (prefix) { try { localStorage.setItem(prefix + 'theme', JSON.stringify(t)); } catch { /* private mode */ } }
   }
 
   $('theme').addEventListener('click', () => {
@@ -2088,6 +2630,7 @@ function mount(container, options = {}) {
   });
   $('focus').addEventListener('click', () => {
     focusOn = !focusOn;
+    $('focusvisible').setAttribute('aria-pressed', String(focusOn));
     $('focus').classList.toggle('on', focusOn);
     const sel = trail[trail.length - 1] || trailMemory[trailMemory.length - 1];
     if (focusOn && sel) {                 // the slice needs the ancestry open
@@ -2141,20 +2684,20 @@ function mount(container, options = {}) {
       'Notes on cards', 'Off: open a note from the card menu',
       !root.classList.contains('hidenotes'), () => toggleNotesOnCards(), 'notes'));
     if (features.edgeTags) box.appendChild(settingsRow(
-      'Edge labels', 'Name the relationship on each connector',
+      'Edge labels', 'Show captions where they fit; all explanations stay in connection details',
       !root.classList.contains('hidelabels'), () => toggleEdgeTags(), 'labels'));
     box.appendChild(settingsRow(
       'Performance mode', 'Drop shadows and the grid on slow machines',
       root.classList.contains('lowfx'), () => togglePerfMode(), 'perf'));
-    // Build stamp: how current the content is, and the exact commit, so a report filed
+    // Build identity: when the artifact was produced and its clean commit, so a report filed
     // from here is reproducible. Deliberately quiet.
     const build = options.build || {};
     if (build.date || build.hash) {
       const stamp = el('div', 'sstamp');
-      if (build.date) stamp.appendChild(document.createTextNode('updated ' + build.date));
+      if (build.date) stamp.appendChild(document.createTextNode('build ' + build.date));
       if (build.hash) {
         if (build.date) stamp.appendChild(document.createTextNode(' · '));
-        const commit = repoUrl && safeUrl(repoUrl.replace(/\/$/, '') + '/commit/' + build.hash);
+        const commit = repoUrl && build.commit && safeUrl(repoUrl.replace(/\/$/, '') + '/commit/' + build.commit);
         if (commit) {
           const a = el('a', null, build.hash);
           a.href = commit;
@@ -2243,15 +2786,12 @@ function mount(container, options = {}) {
   /* ---------- zoom controls ---------- */
 
   function zoomBy(mult) {
-    const r = viewport.getBoundingClientRect();
-    const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
-    const s2 = Math.min(2.2, Math.max(0.3, view.s * mult));
-    // keep whatever sits under the middle of the viewport pinned there
-    view.x = cx - (cx - view.x) * (s2 / view.s);
-    view.y = cy - (cy - view.y) * (s2 / view.s);
-    view.s = s2;
-    world.classList.add('glide');
-    apply();
+    stopCamera();
+    const { rx, ry } = reserve();
+    const cx = (vw() - rx) / 2, cy = (vh() - ry) / 2;
+    const s2 = Math.min(2.2, Math.max(0.05, view.s * mult));
+    manualZoomMode(s2);
+    glideTo(cx - (cx - view.x) * (s2 / view.s), cy - (cy - view.y) * (s2 / view.s), s2);
   }
   $('zoomin').addEventListener('click', () => zoomBy(1.25));
   $('zoomout').addEventListener('click', () => zoomBy(1 / 1.25));
@@ -2301,8 +2841,9 @@ function mount(container, options = {}) {
   $('isolate').addEventListener('click', () => setIsolate(!isolateOn));
   $('isoexit').addEventListener('click', () => setIsolate(false));
   $('share').addEventListener('click', copyLink);
-  $('fit').addEventListener('click', () => frameBounds(bboxOf([...views.values()])));
+  $('fit').addEventListener('click', showOverview);
   $('reset').addEventListener('click', () => {
+    leaveOverview(); $('choices').hidden = true;
     trail = [];
     trailMemory = [];
     if (isolateOn) setIsolate(false);
@@ -2336,37 +2877,68 @@ function mount(container, options = {}) {
   }
 
   if (features.keyboard) on(window, 'keydown', e => {
+    if (!root.contains(e.target) && !root.classList.contains('fg-fill')) return;
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
     if (e.key === '/') { e.preventDefault(); openSearch(); }
     else if (e.key === 'Escape') {
+      const fromPanel = $('panel').contains(e.target);
+      if (!$('help').hidden) { closeHelp(); $('helpbtn').focus(); return; }
+      if (overview) { leaveOverview(true); return; }
+      if (!$('choices').hidden) { $('choices').hidden = true; return; }
       if (root.classList.contains('searchopen')) closeSearch();
       else if (!$('menu').hidden || !$('notepop').hidden) closePops();
       else if (panelKey && panelKey.startsWith('edge:')) closePanel();
       else if (isolateOn) setIsolate(false);
       else if (trail.length) { trail = []; refreshRoute(false); }
       else if (!$('panel').hidden) closePanel();
+      if (fromPanel) focusCard(focusKey || model.rootId);
     }
   });
   on(window, 'pointerdown', e => {
     if (!e.target.closest('.pop') && !root.contains(e.target)) closePops();
   });
 
+  $('focusvisible').addEventListener('click', () => $('focus').click());
+  function closeHelp() {
+    $('help').hidden = true;
+    $('helpbtn').setAttribute('aria-expanded', 'false');
+  }
+  $('helpbtn').addEventListener('click', () => {
+    const open = $('help').hidden;
+    $('help').hidden = !open;
+    $('helpbtn').setAttribute('aria-expanded', String(open));
+  });
+  on(window, 'pointerdown', e => {
+    if (!e.target.closest('.fg-help') && e.target !== $('helpbtn')) {
+      closeHelp();
+    }
+  });
+
   /* ---------- boot ---------- */
 
   // deferred one microtask so `api` (declared below) exists by the time boot
   // finishes and hands it to onReady
+  let destroyed = false;
   Promise.resolve().then(async function boot() {
     // Dark is THE surface this is designed on; light is opt-in and only ever reached by an
     // explicit choice (the host passing `theme`, or the user having toggled it before).
     // Deliberately not following the OS: most machines report light, which would land the
     // majority on the secondary treatment.
-    setTheme(options.theme || store('theme', null) || 'dark');
+    let savedTheme = store('theme', null);
+    // Migrate the raw strings written by previous versions of the renderer.
+    if (!savedTheme && prefix) {
+      try { savedTheme = localStorage.getItem(prefix + 'theme'); } catch { /* private mode */ }
+    }
+    setTheme(options.theme || savedTheme || 'dark');
     buildSwitcher();
     // `#s=<token>` is what we write; a readable `#map=…&open=…` hash is accepted too, so
     // a hand-written or older link still restores instead of silently opening the default
     const hash = deepLink ? location.hash.replace(/^#/, '') : '';
     const token = hash.startsWith('s=') ? hash.slice(2) : hash;
     const st = token ? await decodeToken(token) : null;
+    // Measure card wrapping with the actual fonts, including a slow first visit.
+    if (document.fonts) await document.fonts.ready;
+    if (destroyed) return;
     loadMap((st && st.m) || options.startMap || maps[0].id, st);
     emit('onReady', api);
   }).catch(err => console.error('GraphView boot failed:', err));
@@ -2394,17 +2966,20 @@ function mount(container, options = {}) {
       applyFilters();
       return api;
     },
-    fit() { frameBounds(bboxOf([...views.values()])); return api; },
+    fit() { showOverview(); return api; },
     reset() { $('reset').click(); return api; },
     shareToken() { return encodeToken(stateForToken()); },
     destroy() {
+      destroyed = true;
+      clearPanelSizeObserver();
       cancelAnimationFrame(raf);
-      clearTimeout(urlTimer); clearTimeout(glideTimer); clearTimeout(longPressTimer);
+      raf = 0; layoutMotion = null; cameraMotion = null;
+      clearTimeout(urlTimer); clearTimeout(longPressTimer);
       if (ro) ro.disconnect();
       if (colorProbe) { colorProbe.remove(); colorProbe = null; }   // it lives on <body>
       bound.forEach(([t, type, fn, o]) => t.removeEventListener(type, fn, o));
       root.classList.remove('fg', 'narrow', 'focused', 'tracing', 'iso', 'lowfx',
-        'hidenotes', 'hidelabels');
+        'hidenotes', 'hidelabels', 'animating', 'overview');
       root.innerHTML = '';
     },
   };

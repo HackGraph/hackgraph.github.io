@@ -1,0 +1,336 @@
+{
+  "reviewedAt": "2026-09-07",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "scope": "Nine conceptual privilege explanations with eighteen selected comparisons. Existing commands, prerequisites, applicability, IDs, kinds, mappings and connections are preserved and unreviewed.",
+  "decisions": [
+    {
+      "map": "win-pe",
+      "id": "pe-sebackup-restore",
+      "previousSummary": "Read protected files (SAM/SYSTEM, NTDS) bypassing ACLs.",
+      "previousDescription": "SeBackupPrivilege grants read access to any file regardless of its ACL; SeRestorePrivilege grants write. On a workstation/server, copy out the SAM and SYSTEM hives for offline hash extraction. On a Domain Controller, use diskshadow (VSS) + robocopy /b to exfiltrate ntds.dit, and also pull the SYSTEM hive (reg save HKLM\\SYSTEM) because ntds.dit is encrypted with a key protected by the DC's boot key: without SYSTEM the hashes cannot be decrypted. Then parse both offline to dump every domain hash. This DC / ntds.dit path is MITRE T1003.003 (NTDS), distinct from the local SAM path (T1003.002).",
+      "summary": "Distinguish the Windows rights for backup and restoration.",
+      "description": "SeBackupPrivilege and SeRestorePrivilege are separate Windows user rights. Microsoft associates the first with system backup and the second with restoring backed-up files and directories. Their administrative purposes should be distinguished when describing a security configuration.",
+      "claims": [
+        {
+          "text": "SeBackupPrivilege is the Windows user right associated with backing up the system.",
+          "section": "Microsoft — Back up files and directories (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/back-up-files-and-directories"
+          ]
+        },
+        {
+          "text": "SeRestorePrivilege is the Windows user right associated with restoring backed-up files and directories.",
+          "section": "Microsoft — Restore files and directories (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/restore-files-and-directories"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Back up files and directories (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/back-up-files-and-directories",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Restore files and directories (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/restore-files-and-directories",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-sedebug-lsass",
+      "previousSummary": "Open LSASS / steal a SYSTEM token.",
+      "previousDescription": "SeDebugPrivilege lets you open a handle to processes owned by other users, including LSASS. Dump LSASS memory (procdump, comsvcs MiniDump, or mimikatz) to extract live logon secrets (NTLM hashes, Kerberos tickets/keys, and any cleartext), or open a SYSTEM process and duplicate its token directly. Effectively SYSTEM-equivalent.",
+      "summary": "Understand debugging privileges and process security context.",
+      "description": "SeDebugPrivilege corresponds to the Windows Debug programs user right. Microsoft describes it as relevant to debugging system components. A process's access token records its user identity, groups and privileges as distinct information. A debugging privilege and an account identity therefore need separate descriptions.",
+      "claims": [
+        {
+          "text": "Microsoft identifies Debug programs as the SeDebugPrivilege user right and describes its use when debugging system components.",
+          "section": "Microsoft — Debug programs (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/debug-programs"
+          ]
+        },
+        {
+          "text": "A Windows access token contains the user SID, group SIDs and a list of privileges.",
+          "section": "Microsoft — Access Tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Debug programs (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/debug-programs",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Access Tokens",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-setakeownership",
+      "previousSummary": "Take ownership of a SYSTEM binary, then replace it.",
+      "previousDescription": "SeTakeOwnershipPrivilege lets you become the owner of any object. Take ownership of a binary that auto-runs as SYSTEM (classic: C:\\Windows\\System32\\utilman.exe or sethc.exe), grant yourself write, and replace it. Trigger it from the logon screen (Ease of Access / Sticky Keys) to get a SYSTEM shell.",
+      "summary": "Understand object ownership and its security descriptor.",
+      "description": "SeTakeOwnershipPrivilege corresponds to the Windows user right for taking ownership of securable objects. A security descriptor can record an object's owner together with discretionary and system access-control lists. The owner field and the access-control lists are distinct parts of that security information.",
+      "claims": [
+        {
+          "text": "The Take ownership of files or other objects user right corresponds to SeTakeOwnershipPrivilege.",
+          "section": "Microsoft — Take ownership of files or other objects (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects"
+          ]
+        },
+        {
+          "text": "A Windows security descriptor can record owner and group SIDs, a discretionary access-control list and a system access-control list.",
+          "section": "Microsoft — Security Descriptors — Opening definition and security-information list",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Take ownership of files or other objects (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Security Descriptors",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-seloaddriver",
+      "previousSummary": "Load a vulnerable signed driver, exploit it for kernel code exec.",
+      "previousDescription": "SeLoadDriverPrivilege allows loading kernel-mode drivers. Use EoPLoadDriver to enable the privilege and register a service key under HKCU, then NtLoadDriver a known-vulnerable signed driver (e.g. Capcom.sys) and exploit its arbitrary-kernel-exec to elevate to SYSTEM (a bring-your-own-vulnerable-driver, or BYOVD, pattern).",
+      "summary": "Distinguish driver-loading permission from code-signing policy.",
+      "description": "SeLoadDriverPrivilege is associated with dynamically loading and unloading device drivers. Windows separately documents digital-signature requirements for kernel-mode drivers. The user right and the signature requirements describe different parts of driver security; a privilege name alone is not a description of the complete driver policy.",
+      "claims": [
+        {
+          "text": "SeLoadDriverPrivilege corresponds to the user right for dynamically loading and unloading device drivers.",
+          "section": "Microsoft — Load and unload device drivers (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/load-and-unload-device-drivers"
+          ]
+        },
+        {
+          "text": "Microsoft documents digital-signature requirements for kernel-mode drivers.",
+          "section": "Microsoft — Kernel-Mode Code Signing Requirements — Opening signing requirements and policy sections",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-hardware/drivers/install/kernel-mode-code-signing-requirements--windows-vista-and-later-"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Load and unload device drivers (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/load-and-unload-device-drivers",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Kernel-Mode Code Signing Requirements",
+          "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/install/kernel-mode-code-signing-requirements--windows-vista-and-later-",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-semanagevolume",
+      "previousSummary": "Abuse volume privilege to gain write on C:\\, then DLL hijack.",
+      "previousDescription": "SeManageVolumePrivilege can be abused (via the public SeManageVolumeExploit) to obtain full write access over the C:\\ drive, including C:\\Windows\\System32. With that, plant a malicious DLL that a SYSTEM process loads (e.g. tzres.dll triggered by systeminfo, or PrintConfig.dll via PrintNotify) to execute as SYSTEM.",
+      "summary": "Understand the user right for volume-maintenance tasks.",
+      "description": "SeManageVolumePrivilege corresponds to Perform volume maintenance tasks. The Microsoft policy reference describes volume and disk management, including volume creation or removal and defragmentation. Windows privileges are local to a computer; the same domain account can have different privilege assignments on different computers.",
+      "claims": [
+        {
+          "text": "The SeManageVolumePrivilege policy reference covers volume and disk maintenance, including creating or removing volumes and defragmentation.",
+          "section": "Microsoft — Perform volume maintenance tasks (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/perform-volume-maintenance-tasks"
+          ]
+        },
+        {
+          "text": "Windows privileges apply to the local computer, and a domain account can have different privileges on different computers.",
+          "section": "Microsoft — Privileges — Local account database and access token scope",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Perform volume maintenance tasks (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/perform-volume-maintenance-tasks",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Privileges",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-setrustedcredman",
+      "previousSummary": "Back up and decrypt every Credential Manager secret.",
+      "previousDescription": "SeTrustedCredManAccessPrivilege (\"Access Credential Manager as a trusted caller\") is held by Winlogon and LSASS by default. With it, enable the privilege, impersonate the Winlogon token, call CredBackupCredentials to export the user's Credential Manager store, then decrypt it with CryptUnprotectData, recovering saved passwords for escalation or lateral movement.",
+      "summary": "Understand Credential Manager's trusted-caller privilege.",
+      "description": "SeTrustedCredManAccessPrivilege is the user right named Access Credential Manager as a trusted caller. Microsoft's archived policy reference associates this setting with Credential Manager backup and restoration. That reference recommends leaving the policy at its default. These statements describe the documented purpose and recommendation, without asserting a current account assignment.",
+      "claims": [
+        {
+          "text": "The archived Microsoft policy reference associates SeTrustedCredManAccessPrivilege with Credential Manager backup and restoration.",
+          "section": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller"
+          ]
+        },
+        {
+          "text": "The archived Microsoft policy reference recommends leaving the trusted-caller policy at its default.",
+          "section": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference) — Best practices",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-secreatetoken",
+      "previousSummary": "Call NtCreateToken to forge a token with a privileged group SID.",
+      "previousDescription": "SeCreateTokenPrivilege lets you build a token by hand with NtCreateToken. You cannot simply mint a usable NT AUTHORITY\\SYSTEM token from nothing (naive attempts fail), but you can forge an impersonation token for your own user with a high-privilege group SID added, typically the local Administrators SID, subject to the rule that the forged token's integrity is at or below your process. Impersonate that token to act as a local administrator, then take any Admin to SYSTEM path. Rarely granted, but a direct win where it is.",
+      "summary": "Understand token creation as a Windows security operation.",
+      "description": "SeCreateTokenPrivilege corresponds to the Create a token object user right. An access token describes the security context of a process or thread, including identity and privileges. The privilege associated with token creation and the security information represented by a token are separate concepts.",
+      "claims": [
+        {
+          "text": "SeCreateTokenPrivilege corresponds to the Create a token object user right.",
+          "section": "Microsoft — Create a token object (archived policy reference) — Reference and constant name",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/create-a-token-object"
+          ]
+        },
+        {
+          "text": "An access token describes the security context of a Windows process or thread.",
+          "section": "Microsoft — Access Tokens — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Create a token object (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/create-a-token-object",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Access Tokens",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-setcb",
+      "previousSummary": "Act as part of the OS to craft a privileged token.",
+      "previousDescription": "SeTcbPrivilege lets a process act as part of the trusted computing base. Combined with the LSA logon APIs (LsaLogonUser), it can add arbitrary high-privilege SIDs to a token or obtain a SYSTEM-level token, escalating to full control.",
+      "summary": "Understand the right associated with trusted authentication services.",
+      "description": "SeTcbPrivilege corresponds to Act as part of the operating system. Microsoft's archived policy reference describes low-level authentication services as the typical users of this right. A Windows access token represents user identity, groups and privileges separately; a privilege assignment should not be used as an account name.",
+      "claims": [
+        {
+          "text": "The archived Microsoft policy reference identifies low-level authentication services as the typical users of SeTcbPrivilege.",
+          "section": "Microsoft — Act as part of the operating system (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system"
+          ]
+        },
+        {
+          "text": "A Windows access token records user identity, group membership and privileges as distinct information.",
+          "section": "Microsoft — Access Tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Act as part of the operating system (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Access Tokens",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-serelabel",
+      "previousSummary": "Own a higher-integrity (SYSTEM) object → SYSTEM.",
+      "previousDescription": "SeRelabelPrivilege can modify an object's mandatory integrity label, letting you take ownership of objects at a HIGHER integrity level than your own, including SYSTEM processes. From a High-integrity context, take ownership of a SYSTEM process, grant yourself full control over it, and inject/parent-spoof into it to execute as NT AUTHORITY\\SYSTEM. Stronger than SeTakeOwnership, but needs High integrity and is almost never granted to users.",
+      "summary": "Understand mandatory integrity labels and their modification.",
+      "description": "SeRelabelPrivilege concerns modification of an object's integrity label. Mandatory Integrity Control is a Windows access-control mechanism that operates in addition to discretionary access-control lists. An integrity label and an object's discretionary permissions are separate security properties.",
+      "claims": [
+        {
+          "text": "SeRelabelPrivilege corresponds to modifying an object's integrity label.",
+          "section": "Microsoft — Modify an object label (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/modify-an-object-label"
+          ]
+        },
+        {
+          "text": "Windows Mandatory Integrity Control provides access control in addition to discretionary access-control lists.",
+          "section": "Microsoft — Mandatory Integrity Control — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Modify an object label (archived policy reference)",
+          "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/modify-an-object-label",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Mandatory Integrity Control",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions."
+    }
+  ]
+}

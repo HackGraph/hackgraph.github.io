@@ -1,0 +1,22 @@
+{
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 111,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 96,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "sourceDigest": "22d83879052e0fd16f0e370b7dfe042dbc2a6a96d2f54fff303c76d455f8f481",
+  "logSha256": "f26e8c51ec123e617597df829b0be04cc1eb8660a6936d995b0c06daab7cf698",
+  "logPath": ".cache/completion-review/context-tests.log",
+  "scope": "Software checks after the eight start/goal overview corrections. Does not validate operational content."
+}

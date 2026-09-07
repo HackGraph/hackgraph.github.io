@@ -1,0 +1,381 @@
+{
+  "checkedAt": "2026-09-07T06:54:43.099Z",
+  "browser": "153.0.8010.12",
+  "observations": [
+    {
+      "id": "find-privesc-path",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-noauth",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-poisoning",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-services",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-enum",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-credaccess",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-coercion",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-roasting",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-managed-secrets",
+      "claims": 2,
+      "violations": [],
+      "mobile": {
+        "width": 390,
+        "overflow": false,
+        "violations": []
+      }
+    },
+    {
+      "id": "ad-cat-dacl",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-adcs",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-adcs-template",
+      "claims": 2,
+      "violations": [],
+      "mobile": {
+        "width": 390,
+        "overflow": false,
+        "violations": []
+      }
+    },
+    {
+      "id": "ad-cat-adcs-ca",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-delegation",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-cve",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-lateral",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-cred-reuse",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-mssql",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-sccm",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-deploy-abuse",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-platform",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lat-cat-smb",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lat-cat-wmidcom",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lat-cat-logon",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lat-cat-shell",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-account-abuse",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "acl-tgt-control",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "acl-tgt-user",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "acl-tgt-computer",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "acl-tgt-group",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "acl-tgt-policy",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "persist-forgery",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "persist-implant",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "persist-backdoor",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "persist-fed",
+      "claims": 3,
+      "violations": []
+    },
+    {
+      "id": "cvegrp-kerberos",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "cvegrp-exchange",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "cvegrp-smbprint",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pgcat-ops",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pgcat-service",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pgcat-deploy",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-cred-dump",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-host-dump",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-user-secrets",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-dc-dump",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-trusts",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-persistence",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-quick-compromise",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "ad-cat-priv-groups",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "win-cat-logon",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "win-cat-evasion",
+      "claims": 3,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-tokens",
+      "claims": 3,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-groups",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-uac",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-admin2sys",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-creds",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "creds-registry",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "creds-files",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "creds-vaults",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-services",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-dll",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-tasks",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-apps",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-cve",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lin-cat-sudo",
+      "claims": 2,
+      "violations": [],
+      "mobile": {
+        "width": 390,
+        "overflow": false,
+        "violations": []
+      }
+    },
+    {
+      "id": "lin-cat-suid",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lin-cat-jobs",
+      "claims": 3,
+      "violations": [],
+      "mobile": {
+        "width": 390,
+        "overflow": false,
+        "violations": []
+      }
+    },
+    {
+      "id": "lin-cat-creds",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lin-cat-files",
+      "claims": 2,
+      "violations": []
+    },
+    {
+      "id": "lin-cat-containers",
+      "claims": 3,
+      "violations": []
+    },
+    {
+      "id": "lin-cat-kernel",
+      "claims": 2,
+      "violations": []
+    }
+  ]
+}

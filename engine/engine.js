@@ -15,7 +15,7 @@ const VGAP = 56;         // vertical gap between sibling cards
 const GROUP_GAP = 88;    // vertical gap between unrelated groups in a column
 const WAY_GAP = 26;      // vertical clearance around an edge waypoint
 const WAY_H = 10;        // vertical footprint an edge crossing a column reserves
-const KNOB = 13;         // radius of the round toggle; edges start at its outer rim
+const KNOB = 16;         // radius of the round toggle; edges start at its outer rim
 const CORNER = 14;       // rounded-corner radius on edge bends
 const MAX_UNROLL = 8;    // cap on the unroll fixpoint
 
@@ -24,13 +24,34 @@ const MAX_UNROLL = 8;    // cap on the unroll fixpoint
 const RESERVED_IN_ID = /[~|]|->/;
 
 function buildModel(map) {
+  if (!map || !Array.isArray(map.nodes) || !Array.isArray(map.edges) || !Array.isArray(map.phases)) {
+    throw new Error('buildModel: nodes, edges and phases must be arrays');
+  }
+  const ids = new Set();
   // `~` separates an instance key from its parent, `|` joins an edge id and `->` an unroll
   // pair. An id carrying one of them resolves to a different def, and the view renders
   // nothing at all — fail loudly here instead, because a blank canvas says nothing.
   for (const n of map.nodes) {
-    if (typeof n.id !== 'string' || RESERVED_IN_ID.test(n.id)) {
-      throw new Error('buildModel: node id ' + JSON.stringify(n.id)
+    if (!n || typeof n.id !== 'string' || !n.id.trim() || RESERVED_IN_ID.test(n.id)) {
+      throw new Error('buildModel: node id ' + JSON.stringify(n?.id)
         + ' is unusable — ids may not contain "~", "|" or "->"');
+    }
+    if (ids.has(n.id)) throw new Error('buildModel: duplicate node id ' + n.id);
+    ids.add(n.id);
+  }
+  if (!ids.has(map.rootId)) throw new Error('buildModel: root does not exist: ' + map.rootId);
+  const pairs = new Set();
+  for (const edge of map.edges) {
+    if (!edge || !ids.has(edge.source) || !ids.has(edge.target)) {
+      throw new Error('buildModel: edge endpoint does not exist');
+    }
+    const pair = edge.source + '|' + edge.target;
+    // The visible-edge identity is the endpoint pair. Reject parallel edges until
+    // the renderer can represent them independently rather than silently merging.
+    if (pairs.has(pair)) throw new Error('buildModel: duplicate edge ' + pair);
+    pairs.add(pair);
+    if (edge.rel && !Object.hasOwn(map.relationships || {}, edge.rel)) {
+      throw new Error('buildModel: unknown relationship ' + edge.rel);
     }
   }
   const defs = new Map(map.nodes.map(n => [n.id, n]));
@@ -542,7 +563,7 @@ function childIndexOf(model) {
 // their edges are declared — the sweeps arrange GROUPS by barycenter but never
 // shuffle brothers. Multi-parent nodes (shared gates) and waypoints have no
 // single home group, so they float alone between the fixed runs.
-function orderColumns(cols, inN, outN, model) {
+function orderColumns(cols, inN, outN, model, options = {}) {
   const idx = model ? childIndexOf(model) : new Map();
   const pos = new Map();
   const setPos = col => col.forEach((it, i) => pos.set(it, i));
@@ -585,6 +606,74 @@ function orderColumns(cols, inN, outN, model) {
     }
   };
   sweep(true); sweep(false); sweep(true);
+  if (options.incremental) cols.forEach(col => {
+    if (col?.length > 1) preservePeerOrder(col, idx);
+  });
+}
+
+// Retain established peer order while inserting fresh items into the barycenter
+// order. Declared sibling order is also a constraint. Shared nodes may sit
+// between siblings; becoming shared must not itself move a familiar card out of
+// its old position. Conflicting constraints fall back to the ordinary ordering.
+function preservePeerOrder(col, childIndex) {
+  const index = new Map(col.map((it, i) => [it, i]));
+  const next = col.map(() => new Set()), indegree = col.map(() => 0);
+  const link = (a, b) => {
+    const from = index.get(a), to = index.get(b);
+    if (!next[from].has(to)) { next[from].add(to); indegree[to]++; }
+  };
+  const siblings = new Map(), retained = new Map();
+  col.forEach(it => {
+    if (!it.isWay && it.pks?.length === 1) {
+      const key = it.pks[0];
+      if (!siblings.has(key)) siblings.set(key, []);
+      siblings.get(key).push(it);
+    }
+    if (!it.isWay && Number.isFinite(it.previousCy)) {
+      const rank = it.previousRank ?? it.rank;
+      if (!retained.has(rank)) retained.set(rank, []);
+      retained.get(rank).push(it);
+    }
+  });
+  siblings.forEach((items, parent) => {
+    items.sort((a, b) => (childIndex.get(keyDef(parent) + '|' + keyDef(a.key)) ?? 0)
+      - (childIndex.get(keyDef(parent) + '|' + keyDef(b.key)) ?? 0));
+    items.slice(1).forEach((it, i) => link(items[i], it));
+  });
+  retained.forEach(items => {
+    items.sort((a, b) => a.previousCy - b.previousCy);
+    items.slice(1).forEach((it, i) => {
+      if (items[i].previousCy < it.previousCy) link(items[i], it);
+    });
+  });
+  // A min-heap keeps the unconstrained order and avoids repeatedly scanning a
+  // wide column for its next available item.
+  const heap = [], ordered = [];
+  const push = value => {
+    let i = heap.length; heap.push(value);
+    while (i) { const parent = (i - 1) >>> 1; if (heap[parent] <= value) break; heap[i] = heap[parent]; i = parent; }
+    heap[i] = value;
+  };
+  const pop = () => {
+    const result = heap[0], value = heap.pop();
+    if (heap.length) {
+      let i = 0;
+      while (2 * i + 1 < heap.length) {
+        let child = 2 * i + 1;
+        if (child + 1 < heap.length && heap[child + 1] < heap[child]) child++;
+        if (heap[child] >= value) break;
+        heap[i] = heap[child]; i = child;
+      }
+      heap[i] = value;
+    }
+    return result;
+  };
+  indegree.forEach((degree, i) => { if (!degree) push(i); });
+  while (heap.length) {
+    const i = pop(); ordered.push(col[i]);
+    next[i].forEach(j => { if (!--indegree[j]) push(j); });
+  }
+  if (ordered.length === col.length) col.splice(0, col.length, ...ordered);
 }
 
 function sharesParent(a, b) {
@@ -601,7 +690,7 @@ function gapsFor(arr) {
   });
 }
 
-function blockResolve(arr, desired) {
+function blockResolve(arr, desired, weights) {
   if (!arr.length) return;
   const gaps = gapsFor(arr);
   const n = arr.length;
@@ -616,19 +705,25 @@ function blockResolve(arr, desired) {
 
   const blocks = [];
   for (let i = 0; i < n; i++) {
-    let lo = i, top = desired[i] - arr[i].h / 2, weight = 1;
+    // Newly revealed items can have zero positional weight: they need space,
+    // but have no established position to preserve. All-new blocks use their
+    // ordinary mean until they meet an existing position constraint.
+    let lo = i, top = desired[i] - arr[i].h / 2, weight = weights?.[i] ?? 1, count = 1;
     while (blocks.length) {
       const p = blocks[blocks.length - 1];
       const gap = gaps[lo];
       const pHeight = heightOf(p.lo, p.hi);
       if (p.top + pHeight + gap <= top) break;
       const off = pHeight + gap;
-      top = (p.top * p.weight + (top - off) * weight) / (p.weight + weight);
+      top = p.weight + weight
+        ? (p.top * p.weight + (top - off) * weight) / (p.weight + weight)
+        : (p.top * p.count + (top - off) * count) / (p.count + count);
       weight = p.weight + weight;
+      count += p.count;
       lo = p.lo;
       blocks.pop();
     }
-    blocks.push({ lo, hi: i, top, weight });
+    blocks.push({ lo, hi: i, top, weight, count });
   }
   blocks.forEach(b => {
     for (let j = b.lo; j <= b.hi; j++) {
@@ -637,7 +732,9 @@ function blockResolve(arr, desired) {
   });
 }
 
-function assignCoords(cols, inN, outN) {
+function assignCoords(cols, inN, outN, options = {}) {
+  const stability = Math.max(0, Math.min(0.95, options.stability || 0));
+  const incremental = options.incremental && stability > 0;
   cols.forEach(col => col && col.forEach(it => { it.targetCy = it.cyDisp; }));
   const sweep = downward => {
     const start = downward ? 1 : cols.length - 2;
@@ -650,12 +747,82 @@ function assignCoords(cols, inN, outN) {
       const desired = col.map(it => {
         const ns = neigh.get(it);
         if (!ns || !ns.length) return it.targetCy;
-        return ns.reduce((a, x) => a + x.targetCy, 0) / ns.length;
+        const center = ns.reduce((a, x) => a + x.targetCy, 0) / ns.length;
+        if (incremental && Number.isFinite(it.previousCy)) {
+          // Propagate necessary displacement through the established diagram.
+          // A new fan-out has no earlier coordinates and cannot pull its parent
+          // toward the center of a potentially enormous new stack.
+          const retained = ns.filter(n => Number.isFinite(n.previousCy));
+          const delta = retained.length
+            ? retained.reduce((sum, n) => sum + n.targetCy - n.previousCy, 0) / retained.length : 0;
+          return it.previousCy + delta * (1 - stability);
+        }
+        return Number.isFinite(it.previousCy)
+          ? it.previousCy * stability + center * (1 - stability) : center;
       });
-      blockResolve(col, desired);
+      blockResolve(col, desired, incremental ? col.map(it => Number.isFinite(it.previousCy) ? 1 : 0) : undefined);
     }
   };
   sweep(true); sweep(false); sweep(true); sweep(false);
+}
+
+/* Choose left-to-right connector lanes within a column gap. Keeping cards
+   still can make several fans extend in the same direction; assigning lanes
+   only by parent order would then create avoidable crossings. This greedy
+   insertion minimizes the pairwise first-hop crossing score at each insertion,
+   keeps the input order on ties, and never scores worse than that input order.
+   Each fan is { y, targets: [first-hop y, ...] }; inputs are not mutated. */
+function orderTrunks(fans) {
+  if (fans.length < 2) return fans.slice();
+  const sorted = new Map(fans.map(f => [f, f.targets.slice().sort((a, b) => a - b)]));
+  const lower = (values, y) => {
+    let lo = 0, hi = values.length;
+    while (lo < hi) { const mid = (lo + hi) >>> 1; if (values[mid] < y) lo = mid + 1; else hi = mid; }
+    return lo;
+  };
+  const epsilon = 1e-7;
+  const across = (fan, y) => {
+    const targets = sorted.get(fan);
+    if (y < fan.y - epsilon) return lower(targets, y - epsilon);
+    if (y > fan.y + epsilon) return targets.length - lower(targets, y + epsilon);
+    return 0;
+  };
+  const leftCost = (a, b) => a.targets.reduce((sum, y) => sum + across(b, y), 0)
+    + b.targets.length * across(a, b.y);
+  const ordered = [];
+  for (const fan of fans) {
+    let delta = 0, best = 0, position = ordered.length;
+    for (let i = ordered.length - 1; i >= 0; i--) {
+      delta += leftCost(fan, ordered[i]) - leftCost(ordered[i], fan);
+      if (delta < best) { best = delta; position = i; }
+    }
+    ordered.splice(position, 0, fan);
+  }
+  return ordered;
+}
+
+/* Keep captions readable in crowded diagrams. Higher-priority labels get first
+   choice; authored order breaks ties. A spatial grid bounds overlap work without
+   reading browser geometry during motion. Rectangles use left/top coordinates. */
+function visibleLabels(labels, obstacles = [], gap = 4) {
+  const grid = new Map(), size = 160;
+  const cells = box => {
+    const keys = [];
+    for (let x = Math.floor((box.x - gap) / size); x <= Math.floor((box.x + box.w + gap) / size); x++) {
+      for (let y = Math.floor((box.y - gap) / size); y <= Math.floor((box.y + box.h + gap) / size); y++) keys.push(x + ':' + y);
+    }
+    return keys;
+  };
+  const valid = box => [box.x, box.y, box.w, box.h].every(Number.isFinite) && box.w > 0 && box.h > 0;
+  const add = box => { for (const key of cells(box)) { if (!grid.has(key)) grid.set(key, []); grid.get(key).push(box); } };
+  const overlaps = (a, b) => a.x < b.x + b.w + gap && a.x + a.w + gap > b.x && a.y < b.y + b.h + gap && a.y + a.h + gap > b.y;
+  obstacles.filter(valid).forEach(add);
+  const visible = new Set();
+  for (const label of labels.filter(valid).sort((a, b) => (b.priority || 0) - (a.priority || 0))) {
+    if (cells(label).some(key => (grid.get(key) || []).some(box => overlaps(label, box)))) continue;
+    visible.add(label.id); add(label);
+  }
+  return visible;
 }
 
 /* ---------- search: tiered index built once per map ---------- */
@@ -669,6 +836,7 @@ function buildSearchIndex(model, extra) {
     .map(d => ({
       id: d.id, label: d.label, group: d.group,
       l: d.label.toLowerCase(),
+      a: (d.aliases || []).filter(a => typeof a === 'string').map(a => a.toLowerCase()),
       s: (d.summary || '').toLowerCase(),
       g: (d.group || '').toLowerCase(),
       x: (typeof extra === 'function' ? extra(d.id) || '' : '').toLowerCase(),
@@ -684,6 +852,9 @@ function scoreEntry(e, q) {
   let sc = bonus(e.l, e.l.indexOf(q), 55, 100, 80);          // label outranks…
   let via = sc ? 'label' : null;
   const take = (v, name) => { if (v > sc) { sc = v; via = name; } };
+  for (const alias of e.a || []) {
+    take(alias === q ? 110 : bonus(alias, alias.indexOf(q), 60, 95, 80), 'alias');
+  }
   take(bonus(e.s, e.s.indexOf(q), 12, 35, 25), 'summary');   // …summary…
   take(e.g.startsWith(q) ? 20 : 0, 'group');                 // …group
   // Host extras are the user's OWN text (their notes). Weighted close to a label,
@@ -883,7 +1054,7 @@ const GraphEngine = {
   pathBetween, shortestBetween, instanceSeg, activeRoute, trailStep,
   keyLineage, keyLineageKeys,
   // layout pipeline
-  syncWays, buildColumns, buildAdj, orderColumns, assignCoords, blockResolve,
+  syncWays, buildColumns, buildAdj, orderColumns, assignCoords, blockResolve, orderTrunks, visibleLabels,
   // search and sharing
   buildSearchIndex, searchMap, encodeToken, decodeToken, serializeState, deserializeState,
 };

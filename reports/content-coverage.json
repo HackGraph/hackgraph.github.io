@@ -1,0 +1,69 @@
+{
+  "scope": "Content inventory and schema only. No operational procedure or route validation.",
+  "taxonomyCheckedAt": "2026-09-07",
+  "maps": [
+    {
+      "map": "ad",
+      "nodes": 250,
+      "techniques": 198,
+      "categories": 49,
+      "edges": 530,
+      "techniquesWithDedicatedReferences": 198,
+      "edgesWithDedicatedReferences": 0,
+      "documentedApplicability": 11,
+      "entriesWithReviewRecords": 60,
+      "claimsWithEvidence": 126,
+      "referencesClassifiedByProvenance": 525,
+      "unclassifiedReferences": 0,
+      "errors": []
+    },
+    {
+      "map": "win-pe",
+      "nodes": 93,
+      "techniques": 75,
+      "categories": 15,
+      "edges": 154,
+      "techniquesWithDedicatedReferences": 75,
+      "edgesWithDedicatedReferences": 0,
+      "documentedApplicability": 62,
+      "entriesWithReviewRecords": 44,
+      "claimsWithEvidence": 94,
+      "referencesClassifiedByProvenance": 103,
+      "unclassifiedReferences": 0,
+      "errors": []
+    },
+    {
+      "map": "linux-pe",
+      "nodes": 47,
+      "techniques": 38,
+      "categories": 7,
+      "edges": 81,
+      "techniquesWithDedicatedReferences": 38,
+      "edgesWithDedicatedReferences": 0,
+      "documentedApplicability": 1,
+      "entriesWithReviewRecords": 20,
+      "claimsWithEvidence": 44,
+      "referencesClassifiedByProvenance": 104,
+      "unclassifiedReferences": 0,
+      "errors": []
+    }
+  ],
+  "glossary": {
+    "scope": "Glossary definitions only; counted separately from graph entries.",
+    "terms": 91,
+    "termsWithSources": 91,
+    "aiCompared": 91,
+    "humanCompared": 0,
+    "pending": [],
+    "errors": []
+  },
+  "relationships": {
+    "scope": "Shared definitions only; these reviews never count toward connection claims.",
+    "definitions": 4,
+    "aiCompared": 3,
+    "humanCompared": 0,
+    "projectDefined": 1,
+    "pending": [],
+    "errors": []
+  }
+}

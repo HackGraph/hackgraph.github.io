@@ -1,8 +1,8 @@
 # HackGraph
 
-> Interactive attack-path explorer. Click to expand each step from a foothold to Domain Admin or root, with commands, tools, OPSEC and detection notes, and cited primary sources for every technique. It currently covers Active Directory, Windows, and Linux privilege escalation, with more maps planned.
+> A visual notebook of security study notes across Active Directory, Windows, and Linux. Explore connected topics or use the static reading view.
 
-HackGraph is an open-source, client-side web app and offensive-security study reference. Each map is a graph of techniques that converge on shared "you now have X" nodes, so it reads as an attack path rather than a flat checklist. It is built for penetration testing, red teaming, and CTFs, for certification study (OSCP, OSEP, CRTP, CRTE, PNPT), and as a detection reference for blue teams.
+HackGraph is an open-source browser application. Source links, source provenance, editorial review, and applicability are separate facts. Existing graph entries have no recorded claim-level review. The glossary separately records scoped AI source comparisons for selected definitions. A browsing trail does not establish a feasible sequence. See the reading guide for current coverage and interpretation.
 
 ## Maps
 
@@ -12,6 +12,8 @@ HackGraph is an open-source, client-side web app and offensive-security study re
 
 ## Reference (plain-text, crawlable)
 
+- [Reading guide and source coverage](https://hackgraph.github.io/about.html)
+- [Glossary and definition sources](https://hackgraph.github.io/glossary.html)
 - [All references](https://hackgraph.github.io/reference.html)
 - [Sitemap](https://hackgraph.github.io/sitemap.xml)
 

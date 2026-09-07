@@ -1,0 +1,107 @@
+{
+  "scope": "Targeted GET refresh for the additional six access-model sources; all superseded or removed observations retained.",
+  "previousReportAt": "2026-09-07T03:55:41.468Z",
+  "superseded": [],
+  "removed": [
+    {
+      "url": "https://github.com/subat0mik/Misconfiguration-Manager",
+      "code": 200,
+      "finalUrl": "https://github.com/subat0mik/Misconfiguration-Manager",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://github.com/subat0mik/Misconfiguration-Manager"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:25.833Z"
+    }
+  ],
+  "refreshed": [
+    {
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/authorization-basics",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/entra/identity-platform/authorization-basics",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/entra/identity-platform/authorization-basics"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/intune/fundamentals/role-based-access-control/overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/intune/fundamentals/role-based-access-control/overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/intune/fundamentals/role-based-access-control/overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/principals-database-engine?view=sql-server-ver17",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/principals-database-engine?view=sql-server-ver17",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/principals-database-engine?view=sql-server-ver17"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/security/securables?view=sql-server-ver17",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/securables?view=sql-server-ver17",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/securables?view=sql-server-ver17"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.039Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    }
+  ]
+}

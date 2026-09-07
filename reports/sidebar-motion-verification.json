@@ -1,0 +1,91 @@
+{
+  "checkedAt": "2026-09-07T08:49:22.804Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 117,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "f504de809a38a477b55c0e15236610845e7da12cdca5afb25f18837a57294c34",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "a207778ed88f6898baa563c508fecba08ad8e9cc66b229b61d7bdd8af26cf68a",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "engine/view.js",
+    "engine/style.css"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedPageHashes": {
+    "reference.html": "bc5094b957578eff7e32576e18a139224d1deeac1032faaee13365dd31b30a1d",
+    "reference/active-directory.html": "6568a50b0c3437f65e4834895f1e6679bd856e4de13769c1ba45caff924f348e",
+    "reference/windows-privilege-escalation.html": "5b36454ba31591c71887badd818644b1fdce15deea81281c1385b611bab66692",
+    "reference/linux-privilege-escalation.html": "ea764897ac49c55e92c2e8515970ca88375fd4685f4fe77f2c006def65cfdb7b",
+    "about.html": "c1c49dcd1d19799f2c2c23fe7be4ec5931be716032b51b376900df500b628607",
+    "glossary.html": "1a1ba67e55e1a7be94e399b72325a9933ec6247de3da7692c6ce04e813803363",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "dataParityCurrent": true,
+  "graphDataSha256": "8720007985b55c829dabcb0b8cc8b7ab95d5a3ab2165eb0c45e4da97ac9de25f",
+  "visualCheck": {
+    "states": 4,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true,
+    "videosCaptured": 2,
+    "videosHumanReviewed": false
+  },
+  "performance": {
+    "motion": "reports/sidebar-motion.json",
+    "reflow": "reports/sidebar-reflow.json",
+    "measuredUnprofiledObservations": 72,
+    "measuredIntervalsAbove34ms": 0,
+    "profileHashesVerified": true,
+    "reflowAggregationVerified": true,
+    "historicalOutliers": "reports/sidebar-disclosure-followup.json",
+    "historicalOutlierCauseEstablished": false,
+    "firstDisclosureMeasurementAddsUpfrontWork": true
+  },
+  "hashes": {
+    "engine/view.js": "7046b2904d90719095b1744ef5cd97a3e01bc11adaf708f3fec7abf08157e097",
+    "engine/style.css": "75b57f61626e046f4ff0005ecda42de1e2343197059dd8d1dd8bfe5d3b4136bf",
+    "browser/sidebar-motion.spec.mjs": "4a328f40a360dc9703fdb4c2520ac8e1f07e1dad5eca8363595a3e2d971b1878",
+    "browser/expansion-rendering.spec.mjs": "9bc7cb1fc80607fb3e3d36730a2358ceb420c07ee5490d60249d7d2a39abefc2",
+    "browser/learning.spec.mjs": "5071d913a0cfc95f88383f1931645cef674628f0cc87f83331d1fcc9be241d0b",
+    "tools/sidebar-lab.mjs": "eb380f742185b02eaf680fcb6ddbfca45ee5804952d29eff93ba2b9f7fc6d8d9",
+    ".cache/sidebar-motion/profile-pair-captured.mjs": "25114a7836aea012d7cd357e56ae3051e9ab30dceb1c16b23088dd3629f3f6b9",
+    ".cache/sidebar-motion/final-audit.mjs": "7886cd1fc4213ac55a583fae986387ca900c60d6e83a540f68dbfe89f62f2e95",
+    "reports/visuals/sidebar-motion-1440-dark-open.png": "07b55ddbb3d38d88c1521f9c33e0a989192897828c036622076b3c9cadd60443",
+    "reports/visuals/sidebar-motion-1440-light-open.png": "f692528ef6ce1e002a0cbd40bb59118f3972cb7e7d8da3d299c894493387005f",
+    "reports/visuals/sidebar-motion-390-dark-open.png": "607740451c91687d38416a7bfb73124289342be5afbd5c6eb1b20e1b6b56175f",
+    "reports/visuals/sidebar-motion-390-light-open.png": "d54b414f126115b6f9b5a307d9080d4bf6a8f78f6260603a0b85ac66dc3730ad",
+    "reports/visuals/sidebar-motion-1440.webm": "72a97bf6631e4392160521c611dc4bf82717e48805b3426f6cc5e8c9a0852ab8",
+    "reports/visuals/sidebar-motion-390.webm": "931b49063e65a7a38e75a5d659a7d0a880c42e7a0c507eabb3e9788d9e9c9865",
+    "reports/sidebar-motion.json": "36395d23f60a5aacc385326283f8f60a0292b8d37d85f976453b57ee2106f1f3",
+    "reports/sidebar-reflow.json": "073eadd2a79d74760afb54b86c0b4a2ab8a52306db6a9e6a7d0e0a54b36747c4",
+    "reports/sidebar-motion-panel-check.json": "1b0051ccd3316b043850d0269e34f6401345352234ded5c31f7aec430ab85f81",
+    "reports/sidebar-motion.patch": "de8f55ee9e4a0e60ec592fedf06bfca868d97a25068c5ecc0422798de48b0924"
+  },
+  "logPath": ".cache/sidebar-motion/full-tests.log",
+  "logSha256": "a9fc2de9c153d99d8587508fe8dfa3702ac19fdd3f63912f1944748c4175bcd0",
+  "scope": "Local software and artifact checks. Broader graph content review remains unfinished. No operational route or command validation, physical-device testing, hosted workflow execution, commit, push or deployment."
+}

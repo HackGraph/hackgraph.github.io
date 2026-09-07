@@ -1,0 +1,1147 @@
+{
+  "measuredAt": "2026-09-07T05:13:33.118Z",
+  "method": "Generic five-parent/eight-target teaching graph with 27 captions, fully expanded at reading scale. Narrow screens additionally pan to the caption corridor after closing the branch list. Only rendered captions count toward collisions; shown includes the renderer overscan area, insideViewport counts intersection with the browser area below the toolbar. Overlay occlusion is not measured. Hidden captions remain available in connection details. Three local headless browsers, two viewport widths, two themes; no physical-device guarantee.",
+  "rows": [
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "width": 1440,
+      "theme": "dark",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "width": 1440,
+      "theme": "light",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "width": 390,
+      "theme": "dark",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "width": 390,
+      "theme": "light",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "width": 1440,
+      "theme": "dark",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "width": 1440,
+      "theme": "light",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "width": 390,
+      "theme": "dark",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "width": 390,
+      "theme": "light",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "webkit",
+      "version": "26.6",
+      "width": 1440,
+      "theme": "dark",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "webkit",
+      "version": "26.6",
+      "width": 1440,
+      "theme": "light",
+      "state": "expanded at reading scale",
+      "total": 27,
+      "shown": 9,
+      "insideViewport": 7,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 620,
+          "top": -73.5,
+          "right": 740,
+          "bottom": -40.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 620,
+          "top": -2.5,
+          "right": 740,
+          "bottom": 30.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 620,
+          "top": 139.5,
+          "right": 740,
+          "bottom": 172.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 620,
+          "top": 210.5,
+          "right": 740,
+          "bottom": 243.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 620,
+          "top": 281.5,
+          "right": 740,
+          "bottom": 314.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 620,
+          "top": 68.5,
+          "right": 740,
+          "bottom": 101.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 620,
+          "top": 352.5,
+          "right": 740,
+          "bottom": 385.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 624,
+          "top": 423.5,
+          "right": 744,
+          "bottom": 456.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 624,
+          "top": 494.5,
+          "right": 744,
+          "bottom": 527.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "webkit",
+      "version": "26.6",
+      "width": 390,
+      "theme": "dark",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    },
+    {
+      "browser": "webkit",
+      "version": "26.6",
+      "width": 390,
+      "theme": "light",
+      "state": "panned to captions at reading scale",
+      "total": 27,
+      "shown": 11,
+      "insideViewport": 9,
+      "captionCollisions": 0,
+      "captionsCoveringCards": 0,
+      "visibleCaptions": [
+        {
+          "text": "Related course material",
+          "edge": "a0|b2",
+          "left": 135,
+          "top": -71.5,
+          "right": 255,
+          "bottom": -38.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b4",
+          "left": 135,
+          "top": -0.5,
+          "right": 255,
+          "bottom": 32.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b5",
+          "left": 135,
+          "top": 70.5,
+          "right": 255,
+          "bottom": 103.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a0|b7",
+          "left": 135,
+          "top": 141.5,
+          "right": 255,
+          "bottom": 174.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b0",
+          "left": 135,
+          "top": 283.5,
+          "right": 255,
+          "bottom": 316.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b3",
+          "left": 135,
+          "top": 354.5,
+          "right": 255,
+          "bottom": 387.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b6",
+          "left": 135,
+          "top": 425.5,
+          "right": 255,
+          "bottom": 458.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a1|b7",
+          "left": 135,
+          "top": 212.5,
+          "right": 255,
+          "bottom": 245.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a2|b6",
+          "left": 135,
+          "top": 496.5,
+          "right": 255,
+          "bottom": 529.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b3",
+          "left": 139,
+          "top": 567.5,
+          "right": 259,
+          "bottom": 600.5
+        },
+        {
+          "text": "Related course material",
+          "edge": "a4|b6",
+          "left": 139,
+          "top": 638.5,
+          "right": 259,
+          "bottom": 671.5
+        }
+      ],
+      "horizontalDocumentOverflow": false
+    }
+  ],
+  "errors": []
+}

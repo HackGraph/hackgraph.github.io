@@ -1,0 +1,229 @@
+{
+  "checkedAt": "2026-09-07T12:49:00.290Z",
+  "browser": "153.0.8010.12",
+  "scope": "Nine actual panels at desktop/dark and mobile/light widths; two JavaScript-disabled reading states. Selected text, source links, keyboard focus and overflow; axe on eighteen graph states only. No operational or human review.",
+  "observations": [
+    {
+      "surface": "graph-panel",
+      "id": "pe-sebackup-restore",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/windows-privilege-pe-sebackup-restore-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-sedebug-lsass",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setakeownership",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-seloaddriver",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-semanagevolume",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setrustedcredman",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-secreatetoken",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/windows-privilege-pe-secreatetoken-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setcb",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-serelabel",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-sebackup-restore",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-sedebug-lsass",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/windows-privilege-pe-sedebug-lsass-390.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setakeownership",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-seloaddriver",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-semanagevolume",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setrustedcredman",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-secreatetoken",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-setcb",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pe-serelabel",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/windows-privilege-pe-serelabel-390.png"
+    },
+    {
+      "surface": "reading-page",
+      "id": "pe-serelabel",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "claims": 2,
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "pe-serelabel",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "claims": 2,
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/windows-privilege-reading-mobile.png"
+    }
+  ],
+  "runtimeErrors": []
+}

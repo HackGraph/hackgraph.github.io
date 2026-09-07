@@ -1,0 +1,52 @@
+{
+  "checkedAt": "2026-09-07T08:02:13.008Z",
+  "rendererSha256": "3565f1437fbb26e03b9d7024da243920c3175e28c0233e574677a95063dc3052",
+  "scope": "Chromium, 250-topic generic course, open sidebar at desktop and 390px widths in both themes. Automated accessibility, element counts and horizontal overflow; screenshots support separate visual inspection.",
+  "rows": [
+    {
+      "width": 1440,
+      "theme": "dark",
+      "screenshot": "reports/visuals/sidebar-1440-dark-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "screenshot": "reports/visuals/sidebar-1440-light-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "screenshot": "reports/visuals/sidebar-390-dark-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "screenshot": "reports/visuals/sidebar-390-light-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    }
+  ],
+  "errors": []
+}

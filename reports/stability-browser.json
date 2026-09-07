@@ -1,0 +1,25 @@
+{
+  "measuredAt": "2026-09-07T06:09:16.102Z",
+  "browser": "Chromium",
+  "version": "153.0.8010.12",
+  "method": "Generic course diagram, four existing child topics followed by a 100-child neighboring expansion through its actual toggle. Positions measured in graph coordinates relative to the expanded card. Screenshots record before/after reading states; the desktop video is a capture for human motion review, not an automated quality rating.",
+  "rows": [
+    {
+      "width": 1440,
+      "existingCards": 8,
+      "expandedCards": 108,
+      "maximumRelativeMovement": 0,
+      "meanRelativeMovement": 0,
+      "branchChoices": 100
+    },
+    {
+      "width": 390,
+      "existingCards": 8,
+      "expandedCards": 108,
+      "maximumRelativeMovement": 0.00000762939453125,
+      "meanRelativeMovement": 0.0000057220458984375,
+      "branchChoices": 100
+    }
+  ],
+  "errors": []
+}

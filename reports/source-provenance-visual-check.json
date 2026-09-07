@@ -1,0 +1,122 @@
+{
+  "checkedAt": "2026-09-07T10:41:58.667Z",
+  "browser": "153.0.8010.12",
+  "scope": "Source-type presentation, preserved selected claims, keyboard source-link focus, overflow and WCAG-tagged axe checks in four actual category-panel states and two reading-guide states. Two JavaScript-disabled reading-page states have overflow and source-type checks only; no axe. No content or operational review.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "surface": "actual-category-panel",
+      "id": "ad-cat-noauth",
+      "width": 1440,
+      "theme": "dark",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "claims": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/source-provenance-panel-1440.png"
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "ad-cat-noauth",
+      "width": 1440,
+      "theme": "light",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "claims": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "ad-cat-noauth",
+      "width": 390,
+      "theme": "dark",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "claims": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "ad-cat-noauth",
+      "width": 390,
+      "theme": "light",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "claims": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/source-provenance-panel-390.png"
+    },
+    {
+      "surface": "reading-page",
+      "id": "ad-cat-noauth",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "ad-cat-noauth",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "sourceKinds": [
+        "taxonomy",
+        "primary",
+        "primary",
+        "community"
+      ],
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/source-provenance-reading-mobile.png"
+    },
+    {
+      "surface": "reading-guide",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "reading-guide",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/source-provenance-guide-mobile.png"
+    }
+  ]
+}

@@ -1,0 +1,2163 @@
+{
+  "measuredAt": "2026-09-07T08:33:45.742Z",
+  "method": "Firefox built-in profiler, one isolated browser at a time. Exact renderer and stylesheet pairs; 250-topic generic course at 1440×1000, reduced motion disabled. Open and settle the list, then six close/reopen cycles with 450ms observation windows. Cycle zero is retained as warmup and excluded from groups. UserTiming marks delimit each scene in the same GeckoMain thread. Reflow start/end markers are paired by name and innerWindowID; reported time is the union of their intervals within each scene, avoiding nested double-counting. These are elapsed marker durations with profiling overhead, not physical presentation measurements or independent CPU accounting.",
+  "profilerDocumentation": "https://firefox-source-docs.mozilla.org/tools/profiler/code-overview.html",
+  "scriptSha256": "25114a7836aea012d7cd357e56ae3051e9ab30dceb1c16b23088dd3629f3f6b9",
+  "groups": [
+    {
+      "variant": "before",
+      "action": "close",
+      "reflowMs": {
+        "min": 108.16631800000141,
+        "median": 123.95977099999891,
+        "max": 127.04700899999943
+      }
+    },
+    {
+      "variant": "before",
+      "action": "reopen",
+      "reflowMs": {
+        "min": 105.88232100000005,
+        "median": 129.76063000000113,
+        "max": 133.93392900000072
+      }
+    },
+    {
+      "variant": "after",
+      "action": "close",
+      "reflowMs": {
+        "min": 3.7166900000011083,
+        "median": 4.101203999999143,
+        "max": 8.082300999997642
+      }
+    },
+    {
+      "variant": "after",
+      "action": "reopen",
+      "reflowMs": {
+        "min": 4.681887999999162,
+        "median": 4.813226999997823,
+        "max": 5.292140000001382
+      }
+    }
+  ],
+  "captures": [
+    {
+      "variant": "before",
+      "rendererSha256": "3565f1437fbb26e03b9d7024da243920c3175e28c0233e574677a95063dc3052",
+      "stylesheetSha256": "12da2a6ab63612d81b8930db85824eefed002c829bf99e3c55f92a55b9c3edf9",
+      "profilePath": "/home/user/Desktop/projects/cyber/hackgraph.github.io/.cache/sidebar-motion/reflow-before.json",
+      "profileSha256": "39b271dce630809ab11d5aab08234b7b322b6dd7e55034ec38b07f0388b26976",
+      "profilerVersion": 36,
+      "browserVersion": "155.0",
+      "thread": {
+        "name": "GeckoMain",
+        "processName": "Web Content",
+        "pid": 2707468
+      },
+      "scenes": [
+        {
+          "repeat": 0,
+          "action": "close",
+          "windowMs": 492.93910099999994,
+          "reflowUnionMs": 145.23649299999897,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 11.464934999999969,
+              "end": 17.53352300000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 24.16259600000012,
+              "end": 29.587850999999773
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 40.399851000000126,
+              "end": 53.20974399999977
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 57.76785299999983,
+              "end": 71.3879579999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 74.58742200000006,
+              "end": 80.04436299999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 93.57983000000013,
+              "end": 103.95495099999971
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 107.04725699999972,
+              "end": 119.34883799999989
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 126.31938200000013,
+              "end": 137.29964199999995
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 140.23750399999972,
+              "end": 145.28483199999982
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 159.69788999999992,
+              "end": 169.97678399999995
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 174.2688949999997,
+              "end": 188.63808999999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 192.20688999999993,
+              "end": 202.90454599999975
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 209.93729799999983,
+              "end": 217.72667599999977
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 223.87339900000006,
+              "end": 234.772559
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 240.9504149999998,
+              "end": 250.06755299999986
+            }
+          ]
+        },
+        {
+          "repeat": 0,
+          "action": "reopen",
+          "windowMs": 450.74303599999985,
+          "reflowUnionMs": 140.538141,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.184052999999949,
+              "end": 17.656155000000126
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 20.738322000000153,
+              "end": 26.113041000000067
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.79469599999993,
+              "end": 40.11076700000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.26597500000025,
+              "end": 66.97032600000011
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 69.58324700000003,
+              "end": 76.23276600000008
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 86.62855600000012,
+              "end": 92.19764900000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.32279299999982,
+              "end": 112.23959599999989
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.49181700000008,
+              "end": 125.76198599999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.59444200000007,
+              "end": 145.37149499999987
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 152.02863100000013,
+              "end": 159.02658400000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 168.16456000000017,
+              "end": 177.96214199999986
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.09364099999993,
+              "end": 197.35765700000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.20383500000025,
+              "end": 209.74256400000013
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.45435300000008,
+              "end": 224.3410560000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.99375800000007,
+              "end": 248.9970360000002
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "action": "close",
+          "windowMs": 450.64173100000016,
+          "reflowUnionMs": 119.81130900000062,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.86443300000019,
+              "end": 10.040040000000317
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 12.388527999999951,
+              "end": 17.463314999999966
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 19.44243000000006,
+              "end": 24.505589000000327
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 37.10138000000006,
+              "end": 42.60213599999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.535319999999956,
+              "end": 59.21268000000009
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.56106900000032,
+              "end": 75.41927200000009
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.59841400000005,
+              "end": 90.55139300000019
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.09321,
+              "end": 107.8265120000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 118.21842800000013,
+              "end": 123.96721600000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.36003000000028,
+              "end": 148.1906530000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.658907,
+              "end": 161.94701900000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 169.40477499999997,
+              "end": 183.14223500000026
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 185.2726190000003,
+              "end": 191.42260699999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 204.79572000000007,
+              "end": 210.73320400000011
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.77681299999995,
+              "end": 226.52125100000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 235.01087499999994,
+              "end": 241.34913800000004
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "action": "reopen",
+          "windowMs": 450.8485410000003,
+          "reflowUnionMs": 129.76063000000113,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.737361999999848,
+              "end": 17.755969000000277
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 19.817634999999882,
+              "end": 24.667570999999953
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.85223099999985,
+              "end": 48.809432000000015
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 52.60208899999998,
+              "end": 58.25071900000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 71.02415999999994,
+              "end": 78.84316900000022
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.79801099999986,
+              "end": 91.25097800000003
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.86904099999992,
+              "end": 115.15225599999985
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 119.24279800000022,
+              "end": 126.025576
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 137.013148,
+              "end": 147.87931900000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.10832000000028,
+              "end": 156.65041999999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 171.09805800000004,
+              "end": 176.0002010000003
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.99206099999992,
+              "end": 195.150169
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.34658100000024,
+              "end": 207.34979900000008
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 218.06697399999985,
+              "end": 224.63607200000024
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.84823700000015,
+              "end": 247.75568599999997
+            }
+          ]
+        },
+        {
+          "repeat": 2,
+          "action": "close",
+          "windowMs": 450.7062229999997,
+          "reflowUnionMs": 127.04700899999943,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.1110969999999725,
+              "end": 9.095440999999937
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 15.102002999999968,
+              "end": 22.153043000000253
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 31.25625600000012,
+              "end": 46.9498050000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.36662200000001,
+              "end": 57.80465099999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.11910799999987,
+              "end": 77.50673899999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 82.01729800000021,
+              "end": 95.73061300000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 99.85975999999982,
+              "end": 109.62159400000019
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.1642969999998,
+              "end": 122.3460500000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 131.08167000000003,
+              "end": 136.11695999999984
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 148.42152600000009,
+              "end": 155.9235490000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 164.57368399999996,
+              "end": 170.6029410000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 181.40475100000003,
+              "end": 187.92901299999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 197.59834100000035,
+              "end": 203.3429289999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 214.92284100000006,
+              "end": 221.98781699999972
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 231.92103400000042,
+              "end": 247.85615199999984
+            }
+          ]
+        },
+        {
+          "repeat": 2,
+          "action": "reopen",
+          "windowMs": 450.60254899999927,
+          "reflowUnionMs": 129.02490299999954,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.206351999999242,
+              "end": 9.224872999999207
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 12.636195000000043,
+              "end": 24.777102000000014
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 28.777846999999383,
+              "end": 38.2235699999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 45.962265999999545,
+              "end": 57.260378999999375
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 62.119345999999496,
+              "end": 69.79379100000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 79.34550099999979,
+              "end": 90.62402799999927
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 96.23617899999954,
+              "end": 103.62236099999973
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 112.26630599999953,
+              "end": 120.50304400000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 129.32778599999983,
+              "end": 138.8573549999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 145.49446799999987,
+              "end": 150.7969719999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 162.65544799999952,
+              "end": 171.5481719999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 179.07305799999995,
+              "end": 186.08846300000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 195.2506629999998,
+              "end": 203.91418599999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 212.49847299999965,
+              "end": 222.48573099999976
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 229.10799599999973,
+              "end": 236.26275999999962
+            }
+          ]
+        },
+        {
+          "repeat": 3,
+          "action": "close",
+          "windowMs": 451.0588000000007,
+          "reflowUnionMs": 123.95977099999891,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.054501999999957,
+              "end": 16.49011000000064
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 18.989222000000154,
+              "end": 24.101286000000073
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 35.71823800000038,
+              "end": 42.31958100000065
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.65714100000059,
+              "end": 58.578834000000825
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.02310600000055,
+              "end": 75.33235000000059
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 85.390402,
+              "end": 93.93986300000051
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.5950270000003,
+              "end": 107.90046400000028
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.65735400000085,
+              "end": 132.5652140000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 135.39805800000067,
+              "end": 141.13877100000082
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 153.47543300000052,
+              "end": 158.76974400000017
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 168.95920100000058,
+              "end": 175.32771400000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.6162920000006,
+              "end": 192.3863280000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.92670400000043,
+              "end": 214.1131150000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 218.40320800000063,
+              "end": 225.30453699999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.6020010000002,
+              "end": 245.15774899999997
+            }
+          ]
+        },
+        {
+          "repeat": 3,
+          "action": "reopen",
+          "windowMs": 450.6339789999993,
+          "reflowUnionMs": 133.93392900000072,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.080030999999508,
+              "end": 14.958525000000009
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.332439999999224,
+              "end": 22.53421199999957
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 24.591772999999193,
+              "end": 29.67066899999918
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 37.581232999999884,
+              "end": 48.27874399999928
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.09894499999973,
+              "end": 56.7736789999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 71.11614099999952,
+              "end": 77.39251399999921
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.60401599999932,
+              "end": 100.13749499999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 104.6167149999992,
+              "end": 110.94737599999917
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 120.41924399999971,
+              "end": 131.5060199999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 135.35304499999984,
+              "end": 143.3472529999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 154.1138809999993,
+              "end": 164.53096599999935
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.38493899999958,
+              "end": 175.4741209999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 187.2369319999998,
+              "end": 196.20541499999945
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.66347999999925,
+              "end": 209.07245499999954
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 218.29393600000003,
+              "end": 225.32399199999963
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.2427949999992,
+              "end": 241.51003899999978
+            }
+          ]
+        },
+        {
+          "repeat": 4,
+          "action": "close",
+          "windowMs": 450.7203609999997,
+          "reflowUnionMs": 123.96723600000041,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.162547999999333,
+              "end": 10.385488999999325
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 13.249557999999524,
+              "end": 19.175246999999217
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 21.99632399999973,
+              "end": 28.444258999999875
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 37.882707999999184,
+              "end": 44.728963999999905
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.0016399999995,
+              "end": 59.46466599999985
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.02291299999979,
+              "end": 84.11593499999981
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 89.07921899999928,
+              "end": 102.5628029999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 106.17094699999961,
+              "end": 111.78362299999935
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 120.2346609999995,
+              "end": 127.88951899999938
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.9572619999999,
+              "end": 141.55686199999946
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.10800199999994,
+              "end": 158.97156599999926
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 168.3438159999996,
+              "end": 173.6471249999995
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.24260699999923,
+              "end": 193.84653999999955
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.67865899999924,
+              "end": 207.44693299999926
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.7955669999992,
+              "end": 223.04689699999926
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 235.27326999999968,
+              "end": 242.10050899999987
+            }
+          ]
+        },
+        {
+          "repeat": 4,
+          "action": "reopen",
+          "windowMs": 450.6843689999996,
+          "reflowUnionMs": 105.88232100000005,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.2367199999998775,
+              "end": 12.724150000000009
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 15.369410999999673,
+              "end": 21.598016999999345
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 23.71720699999969,
+              "end": 28.795991999999387
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 39.13852599999973,
+              "end": 44.94580099999985
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.67923399999927,
+              "end": 58.59750899999926
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.14021899999989,
+              "end": 75.65487899999971
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.19660199999998,
+              "end": 92.8513269999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.48057699999936,
+              "end": 108.72235899999941
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.4016959999999,
+              "end": 124.20780800000011
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.3393470000001,
+              "end": 139.81232699999964
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 150.5553919999993,
+              "end": 157.80038799999966
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.68445900000006,
+              "end": 174.321551
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 185.12888899999962,
+              "end": 191.474373
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.02838599999995,
+              "end": 206.7550739999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.81637499999943,
+              "end": 223.18158399999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.31473599999936,
+              "end": 240.6669579999998
+            }
+          ]
+        },
+        {
+          "repeat": 5,
+          "action": "close",
+          "windowMs": 450.46797100000003,
+          "reflowUnionMs": 108.16631800000141,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.413778000000093,
+              "end": 9.167247000000316
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 11.720492999999806,
+              "end": 16.80207799999971
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 18.977112999999918,
+              "end": 24.16856900000039
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 37.31921799999964,
+              "end": 43.118375000000015
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.66230499999983,
+              "end": 56.575536000000284
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.08293299999968,
+              "end": 76.12780899999962
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 83.92918699999973,
+              "end": 90.94043799999963
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.9574560000001,
+              "end": 106.73694700000033
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.1753490000001,
+              "end": 122.77143100000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.06793800000014,
+              "end": 142.28453600000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 150.06968599999982,
+              "end": 158.5708199999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.277376,
+              "end": 174.70383000000038
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.6401880000003,
+              "end": 189.95843799999966
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.77070600000025,
+              "end": 210.72981199999958
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 216.8371299999999,
+              "end": 222.53915200000029
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.39563999999973,
+              "end": 243.2677960000001
+            }
+          ]
+        },
+        {
+          "repeat": 5,
+          "action": "reopen",
+          "windowMs": 450.6920110000001,
+          "reflowUnionMs": 131.78684800000156,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.94662100000005,
+              "end": 11.738139000000047
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 13.949129999999968,
+              "end": 19.034279999999853
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 20.847345000000132,
+              "end": 25.838134999999966
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 37.100414000000455,
+              "end": 43.049598999999944
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.69909499999994,
+              "end": 55.6851400000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.97231100000045,
+              "end": 74.85063700000046
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.150936,
+              "end": 96.3367360000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.33551200000056,
+              "end": 112.9063670000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.62686500000018,
+              "end": 131.97419600000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.24227100000007,
+              "end": 139.3894880000007
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 153.29402500000015,
+              "end": 166.94078900000022
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 170.90640799999983,
+              "end": 176.1878080000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 185.9417970000004,
+              "end": 192.29065400000036
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.3182880000004,
+              "end": 209.2225440000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.48050000000057,
+              "end": 222.69945700000062
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 233.98579599999994,
+              "end": 249.44019300000036
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "browserProduct": "Firefox",
+      "browserBuildId": "20260902122356"
+    },
+    {
+      "variant": "after",
+      "rendererSha256": "7046b2904d90719095b1744ef5cd97a3e01bc11adaf708f3fec7abf08157e097",
+      "stylesheetSha256": "75b57f61626e046f4ff0005ecda42de1e2343197059dd8d1dd8bfe5d3b4136bf",
+      "profilePath": "/home/user/Desktop/projects/cyber/hackgraph.github.io/.cache/sidebar-motion/reflow-after.json",
+      "profileSha256": "fe75c0d88c40b7c550b1991cbd1773b0e9e16d4efc8ebf3d37c5d7e47e860600",
+      "profilerVersion": 36,
+      "browserVersion": "155.0",
+      "thread": {
+        "name": "GeckoMain",
+        "processName": "Web Content",
+        "pid": 2708136
+      },
+      "scenes": [
+        {
+          "repeat": 0,
+          "action": "close",
+          "windowMs": 482.668318,
+          "reflowUnionMs": 8.312621999999465,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 16.5938900000001,
+              "end": 23.83975499999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 28.400599000000057,
+              "end": 28.47408899999982
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 44.40118200000006,
+              "end": 44.48138599999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 61.82915000000003,
+              "end": 61.902254000000084
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 78.28060800000003,
+              "end": 78.36678200000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 95.42160899999999,
+              "end": 95.48596599999973
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 111.63204799999994,
+              "end": 111.69978399999991
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 128.7599970000001,
+              "end": 128.81879900000013
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 145.28410899999972,
+              "end": 145.34007699999984
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 162.44438499999978,
+              "end": 162.56250599999976
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 178.44608199999993,
+              "end": 178.547415
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 195.23598700000002,
+              "end": 195.31662899999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 211.22272999999996,
+              "end": 211.31024200000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 228.51392399999986,
+              "end": 228.57839999999987
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 244.44144400000005,
+              "end": 244.49628200000006
+            }
+          ]
+        },
+        {
+          "repeat": 0,
+          "action": "reopen",
+          "windowMs": 450.8277969999999,
+          "reflowUnionMs": 4.264872999998261,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.330641999999898,
+              "end": 6.025131999999758
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 8.229717000000164,
+              "end": 8.298307999999906
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.01506500000005,
+              "end": 17.085591000000022
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.367925000000014,
+              "end": 34.46578999999974
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.64971999999989,
+              "end": 50.714653
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.60177599999997,
+              "end": 67.66131200000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 83.67392100000006,
+              "end": 83.72919000000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.93281500000012,
+              "end": 100.9912089999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.81835599999977,
+              "end": 117.8828739999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 133.9352640000002,
+              "end": 133.99541599999975
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.10130900000013,
+              "end": 151.4217239999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 166.78778699999975,
+              "end": 166.8750759999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 183.93793300000016,
+              "end": 184.0039099999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.95300499999985,
+              "end": 201.02413500000011
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.02231500000016,
+              "end": 217.1175629999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.12186100000008,
+              "end": 234.452401
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "action": "close",
+          "windowMs": 450.8918060000001,
+          "reflowUnionMs": 4.041465999998309,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.5713800000003175,
+              "end": 6.5385330000003705
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 9.356302000000142,
+              "end": 9.416236000000026
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.378575000000183,
+              "end": 17.488126000000193
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.74304000000029,
+              "end": 34.846281999999974
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.59658800000034,
+              "end": 50.67311500000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.74624300000005,
+              "end": 67.80758500000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.81491300000016,
+              "end": 84.88828000000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.97493500000019,
+              "end": 101.04199300000028
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.9837690000004,
+              "end": 118.04444600000033
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.0228460000003,
+              "end": 134.07640100000026
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.16212200000018,
+              "end": 151.23003400000016
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 166.95505500000036,
+              "end": 167.01072700000032
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 183.84215100000029,
+              "end": 183.9008960000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.1689290000004,
+              "end": 201.22306900000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.7895470000003,
+              "end": 217.87213100000008
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.8614620000003,
+              "end": 234.9514690000001
+            }
+          ]
+        },
+        {
+          "repeat": 1,
+          "action": "reopen",
+          "windowMs": 451.132286,
+          "reflowUnionMs": 4.691583999999693,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.8114839999998367,
+              "end": 6.629636000000119
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 8.765586999999869,
+              "end": 8.81626499999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.84013899999991,
+              "end": 17.898119999999835
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.732836000000134,
+              "end": 34.81748100000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.83338499999991,
+              "end": 50.89433700000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.37117500000022,
+              "end": 68.44881600000008
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.44723699999986,
+              "end": 84.50476299999991
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.99030300000004,
+              "end": 101.30443999999989
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 118.28243999999995,
+              "end": 118.33237400000007
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.3706699999998,
+              "end": 134.42108199999984
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.80441500000006,
+              "end": 151.88002499999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.96642100000008,
+              "end": 168.305969
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.854648,
+              "end": 184.9186319999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.9501519999999,
+              "end": 201.22841299999982
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.9848310000002,
+              "end": 218.17374599999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.08151399999997,
+              "end": 234.20472199999995
+            }
+          ]
+        },
+        {
+          "repeat": 2,
+          "action": "close",
+          "windowMs": 450.610146,
+          "reflowUnionMs": 4.101203999999143,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.744133000000147,
+              "end": 6.700757000000067
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 8.814710999999988,
+              "end": 8.865342000000055
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.34980200000018,
+              "end": 17.443481000000247
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.85674400000016,
+              "end": 34.91896799999995
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.674875000000156,
+              "end": 50.76873400000022
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.83822700000019,
+              "end": 67.9179610000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.74075399999992,
+              "end": 84.80280200000016
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.82751400000006,
+              "end": 101.88580899999988
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.77868699999999,
+              "end": 117.92135800000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 133.8245350000002,
+              "end": 133.9045799999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.11260600000014,
+              "end": 151.1745020000003
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.00318400000015,
+              "end": 167.07511699999986
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.07640300000003,
+              "end": 184.13821800000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.37632699999995,
+              "end": 200.46598799999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.56901000000016,
+              "end": 217.63478000000032
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.43848700000035,
+              "end": 234.50880599999982
+            }
+          ]
+        },
+        {
+          "repeat": 2,
+          "action": "reopen",
+          "windowMs": 450.7809790000001,
+          "reflowUnionMs": 5.087917999999263,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.846943000000465,
+              "end": 7.015475000000151
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 9.029715000000579,
+              "end": 9.075191000000814
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.62030700000014,
+              "end": 17.67844100000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.81854999999996,
+              "end": 34.88176100000055
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.69181800000024,
+              "end": 50.76815700000043
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.65769799999998,
+              "end": 67.73906800000077
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.7018620000008,
+              "end": 84.79154500000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.91961300000003,
+              "end": 100.97590400000081
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.97993000000042,
+              "end": 118.03983100000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.04206700000032,
+              "end": 134.12792700000045
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.35095300000012,
+              "end": 151.66707700000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.2387860000008,
+              "end": 167.59241199999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.675029,
+              "end": 184.75358099999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.5338180000008,
+              "end": 200.61545000000024
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.6521190000003,
+              "end": 217.79569400000037
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.4403340000008,
+              "end": 234.76994600000035
+            }
+          ]
+        },
+        {
+          "repeat": 3,
+          "action": "close",
+          "windowMs": 450.83798899999965,
+          "reflowUnionMs": 7.619515999999749,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.945612999999867,
+              "end": 12.261470000000372
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 14.839120999999977,
+              "end": 14.897931000000426
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 20.43724800000018,
+              "end": 20.498317000000498
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.290273999999954,
+              "end": 34.39210000000003
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.46647800000028,
+              "end": 50.55386699999963
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.53496199999972,
+              "end": 67.62067099999967
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.02653499999997,
+              "end": 84.08510699999988
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.96795699999984,
+              "end": 101.03552099999979
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 116.98446700000022,
+              "end": 117.0552630000002
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 133.87035100000048,
+              "end": 133.92497999999978
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.1391620000004,
+              "end": 151.19878299999982
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.13243899999998,
+              "end": 167.206279
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.1616039999999,
+              "end": 184.48591699999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.4986200000003,
+              "end": 200.5653659999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.75708899999972,
+              "end": 217.82168900000033
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 233.7730389999997,
+              "end": 233.84121400000004
+            }
+          ]
+        },
+        {
+          "repeat": 3,
+          "action": "reopen",
+          "windowMs": 451.0531950000004,
+          "reflowUnionMs": 5.292140000001382,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.204287999999906,
+              "end": 7.511841000000459
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 10.171674000000166,
+              "end": 10.221886000000268
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.77810000000045,
+              "end": 17.99399799999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.870944000000236,
+              "end": 35.21655499999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.36207000000013,
+              "end": 51.462728999999854
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 68.56387600000016,
+              "end": 68.63179300000047
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.86731099999997,
+              "end": 85.2068390000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.92014999999992,
+              "end": 100.97772200000054
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 118.1729519999999,
+              "end": 118.24356200000057
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.1529190000001,
+              "end": 134.213342
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.2975780000006,
+              "end": 151.36934999999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.2673709999999,
+              "end": 167.3245480000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.28322300000036,
+              "end": 184.3636750000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.63806600000044,
+              "end": 201.71629500000017
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.68469499999992,
+              "end": 217.7532170000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.77332800000022,
+              "end": 235.0933329999998
+            }
+          ]
+        },
+        {
+          "repeat": 4,
+          "action": "close",
+          "windowMs": 450.7781379999997,
+          "reflowUnionMs": 8.082300999997642,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 5.749456999999893,
+              "end": 12.797085999999581
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 16.307596999999987,
+              "end": 16.36781499999961
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 24.30098099999941,
+              "end": 24.39843699999983
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 36.09639900000002,
+              "end": 36.181752999999844
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.3928249999999,
+              "end": 50.45889399999942
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.85010299999976,
+              "end": 67.91065299999991
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.92615099999966,
+              "end": 85.0101339999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.839876,
+              "end": 100.91519999999946
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.79697499999929,
+              "end": 117.86039399999936
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 133.96136099999967,
+              "end": 134.0332789999993
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 150.91113099999984,
+              "end": 150.99294799999916
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 166.7850609999996,
+              "end": 166.84143999999924
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.04824199999985,
+              "end": 184.10755900000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.03621999999996,
+              "end": 201.0910789999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 216.88644499999918,
+              "end": 216.94481899999937
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.19054199999937,
+              "end": 234.2501769999999
+            }
+          ]
+        },
+        {
+          "repeat": 4,
+          "action": "reopen",
+          "windowMs": 451.2263320000002,
+          "reflowUnionMs": 4.681887999999162,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.284335000000283,
+              "end": 8.059299000000465
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 10.367581999999857,
+              "end": 10.432897000000594
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 18.09441700000025,
+              "end": 18.15574000000015
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.145832000000155,
+              "end": 34.208662000000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 51.457430000000386,
+              "end": 51.51465300000018
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.78934200000003,
+              "end": 67.85091199999988
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.9636900000005,
+              "end": 85.02316700000029
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 100.98853300000064,
+              "end": 101.05856700000004
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 118.0844219999999,
+              "end": 118.13815100000011
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.20805400000063,
+              "end": 134.25842100000045
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.15311999999994,
+              "end": 151.22022900000047
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.1109780000006,
+              "end": 167.16971000000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.55405299999984,
+              "end": 184.61016500000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.67845300000045,
+              "end": 201.73964400000023
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.77001000000018,
+              "end": 217.822545
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.79099700000006,
+              "end": 234.86037399999987
+            }
+          ]
+        },
+        {
+          "repeat": 5,
+          "action": "close",
+          "windowMs": 450.82809799999995,
+          "reflowUnionMs": 3.7166900000011083,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 3.5375459999995655,
+              "end": 6.241506999999729
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 8.732620999999199,
+              "end": 8.791791999999987
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.4752069999995,
+              "end": 17.54446199999984
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.68329300000005,
+              "end": 34.7393749999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.765644999999495,
+              "end": 50.82578899999953
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.97676799999954,
+              "end": 68.02951699999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.37273699999969,
+              "end": 84.46779100000003
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.4857979999997,
+              "end": 101.5448409999999
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 117.30017999999927,
+              "end": 117.35488699999951
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.58416699999998,
+              "end": 134.6548989999992
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 150.6769089999998,
+              "end": 150.73727599999984
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 168.46878500000003,
+              "end": 168.5366239999994
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.08244099999956,
+              "end": 184.17397699999947
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 201.68323799999962,
+              "end": 201.7589369999996
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.45454399999926,
+              "end": 217.53119199999946
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.92888999999923,
+              "end": 234.99259299999994
+            }
+          ]
+        },
+        {
+          "repeat": 5,
+          "action": "reopen",
+          "windowMs": 450.65169200000037,
+          "reflowUnionMs": 4.813226999997823,
+          "intervals": [
+            {
+              "name": "Reflow (sync)",
+              "start": 4.013147000000572,
+              "end": 6.591099000000213
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 8.790549000000283,
+              "end": 8.855021000000306
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 17.39269299999978,
+              "end": 17.472307
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 34.31226200000037,
+              "end": 34.41563099999985
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 50.47219500000028,
+              "end": 50.589184999999816
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 67.54823800000031,
+              "end": 67.6628580000006
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 84.56583599999976,
+              "end": 84.94224099999974
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 101.14725400000043,
+              "end": 101.24956199999997
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 118.12904500000059,
+              "end": 118.2341120000001
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 134.04413000000022,
+              "end": 134.15602200000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 151.51015900000039,
+              "end": 151.61777900000016
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 167.3000179999999,
+              "end": 167.4166350000005
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 184.3358960000005,
+              "end": 184.43885899999987
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 200.2284410000002,
+              "end": 200.3736399999998
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 217.29991900000005,
+              "end": 217.45204000000012
+            },
+            {
+              "name": "Reflow (sync)",
+              "start": 234.58682399999998,
+              "end": 235.0228420000003
+            }
+          ]
+        }
+      ],
+      "errors": [],
+      "browserProduct": "Firefox",
+      "browserBuildId": "20260902122356"
+    }
+  ],
+  "captureScriptPath": ".cache/sidebar-motion/profile-pair-captured.mjs",
+  "metadataNote": "Browser version and build identifiers were extracted from the retained raw profile metadata after capture; measured intervals are unchanged."
+}

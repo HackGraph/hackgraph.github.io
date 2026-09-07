@@ -1,0 +1,120 @@
+{
+  "scope": "Earlier live request diagnostics, retained alongside the later full HTTP audit. Responses and failures do not establish claim support.",
+  "diagnosis": [
+    {
+      "url": "https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6",
+      "checkedAt": "2026-09-07T02:17:50.974Z",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 403,
+          "finalUrl": "https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6",
+          "contentType": "text/html; charset=UTF-8"
+        },
+        {
+          "method": "GET",
+          "code": 403,
+          "finalUrl": "https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6",
+          "contentType": "text/html; charset=UTF-8",
+          "title": "Just a moment...",
+          "bytes": 5917,
+          "sha256": "04623ef5615452f02b5ec2eca0628a492ca1b42274fb87ab49e240ffb0c42898"
+        }
+      ]
+    },
+    {
+      "url": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+      "checkedAt": "2026-09-07T02:17:50.859Z",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 403,
+          "finalUrl": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+          "contentType": "text/html; charset=UTF-8"
+        },
+        {
+          "method": "GET",
+          "code": 403,
+          "finalUrl": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+          "contentType": "text/html; charset=UTF-8",
+          "title": "Just a moment...",
+          "bytes": 5914,
+          "sha256": "6ca634be3e794a445fd8de8ac631c46d2cc74ba2e76b19f9055062eabeb1f16f"
+        }
+      ]
+    },
+    {
+      "url": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "checkedAt": "2026-09-07T02:17:51.130Z",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+          "contentType": "text/html"
+        },
+        {
+          "method": "GET",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+          "contentType": "text/html",
+          "title": "Access Denied",
+          "bytes": 488,
+          "sha256": "3e4e6ff3542089cc9411aa292b135907dec224625096349820507d982c74e340"
+        }
+      ]
+    },
+    {
+      "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "checkedAt": "2026-09-07T02:17:51.269Z",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": "fetch failed",
+          "cause": "CERT_HAS_EXPIRED"
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": "fetch failed",
+          "cause": "CERT_HAS_EXPIRED"
+        }
+      ]
+    },
+    {
+      "url": "https://www.secureworks.com/research/skeleton-key-malware-analysis",
+      "checkedAt": "2026-09-07T02:18:29.853Z",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": "The operation was aborted due to timeout",
+          "cause": "TimeoutError"
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": "The operation was aborted due to timeout",
+          "cause": "TimeoutError"
+        }
+      ]
+    }
+  ],
+  "canonical": [
+    {
+      "url": "https://n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "checkedAt": "2026-09-07T02:19:04.452Z",
+      "code": 0,
+      "error": "fetch failed",
+      "cause": "CERT_HAS_EXPIRED"
+    },
+    {
+      "url": "https://www.sophos.com/en-us/research/skeleton-key-malware-analysis",
+      "checkedAt": "2026-09-07T02:19:24.124Z",
+      "code": 0,
+      "error": "The operation was aborted due to timeout",
+      "cause": "TimeoutError"
+    }
+  ]
+}

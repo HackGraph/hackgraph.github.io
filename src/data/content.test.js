@@ -18,9 +18,9 @@ const MITRE_RE = /^T\d{4}(\.\d{3})?$/;
  */
 const NODE_KEYS = new Set(['id', 'label', 'phase', 'kind', 'summary', 'description', 'tools',
   'commands', 'mitre', 'references', 'requires', 'opsec', 'needs', 'versions', 'affects',
-  'aliases', 'hub', 'repeatable']);
+  'aliases', 'hub', 'repeatable', 'review']);
 const EDGE_KEYS = new Set(['source', 'target', 'label', 'description', 'rel', 'requires',
-  'opsec', 'tools', 'commands', 'mitre', 'references']);
+  'opsec', 'tools', 'commands', 'mitre', 'references', 'review']);
 const FOOTHOLD_IDS = new Set(FOOTHOLDS.map((f) => f.id));
 const VERSION_IDS = new Set(ALL_VERSION_IDS);
 // References must be PUBLIC URLs, never the author's local notes.

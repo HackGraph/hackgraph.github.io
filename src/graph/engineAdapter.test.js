@@ -76,6 +76,16 @@ for (const map of MAPS) describe(`engine drives the ${map.id} map`, () => {
 });
 
 describe('adapter', () => {
+  it('preserves every authored applicability note and alternate name', () => {
+    for (const map of MAPS) {
+      const adapted = toEngineMap(map);
+      for (let i = 0; i < map.nodes.length; i++) {
+        if (map.nodes[i].affects) expect(adapted.nodes[i].details?.applicability).toBe(map.nodes[i].affects);
+        expect(adapted.nodes[i].aliases).toEqual(map.nodes[i].aliases);
+      }
+    }
+  });
+
   it('maps phase ids to the labels the engine colours by', () => {
     const map = MAPS[0];
     const engineMap = toEngineMap(map);
@@ -106,13 +116,17 @@ describe('adapter', () => {
         const src = map.edges[i];
         const canon = src.rel ? RELATIONSHIPS[src.rel] : undefined;
         const rel = out.rel ? engineMap.relationships[out.rel] : undefined;
-        // nothing authored, nothing to show
+        // An unannotated connection now exposes its missing editorial review.
         if (!src.label && !src.description && !src.requires && !canon) {
-          expect(rel).toBeUndefined();
+          expect(rel.summary).toBe('');
+          expect(rel.details.editorial[0].label).toBe('Review not recorded');
+          expect(rel.tag).toBe(false);
           return;
         }
         expect(rel).toBeDefined();
-        expect(rel .summary).toBe(src.description ?? canon?.description ??'' );
+        expect(rel.summary).toBe(src.description ?? '');
+        if (canon) expect(rel.details.definitions[0].description).toBe(canon.description);
+        else expect(rel.details.definitions).toBeUndefined();
         if (src.label ?? canon?.label) expect(rel .label).toBe(src.label ?? canon?.label);
         else expect(rel .label).toBeTruthy(); // an unnamed edge still gets a heading
         // only an EXPLICIT caption is drawn on the canvas
@@ -132,7 +146,7 @@ describe('adapter', () => {
       const rel = engineMap.relationships[engineMap.edges[i].rel ];
       expect(rel.details?.prereqs).toEqual(edge.requires);
       // an edge asks "is this my branch", so the list is headed for that question
-      expect(rel.details?.prereqsLabel).toBe('Applies when');
+      expect(rel.details?.prereqsLabel).toBe('Authored conditions');
     }
   });
 

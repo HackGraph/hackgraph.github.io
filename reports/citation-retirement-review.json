@@ -1,0 +1,198 @@
+{
+  "reviewedAt": "2026-09-07",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "scope": "Five entries receive reference-only corrections. No claim comparison, procedure review, applicability assessment or graph-routing change. Historical source observations remain recorded separately.",
+  "decisions": [
+    {
+      "map": "ad",
+      "id": "adfs-golden-saml",
+      "previousReferences": [
+        {
+          "label": "CyberArk, Golden SAML (original research)",
+          "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+        }
+      ],
+      "references": [
+        {
+          "label": "MITRE ATT&CK T1606.002 — SAML Tokens (taxonomy overview)",
+          "url": "https://attack.mitre.org/techniques/T1606/002/",
+          "kind": "taxonomy"
+        }
+      ],
+      "reason": "The purported original-research link opens a product page. Replace it with an explicitly labeled taxonomy overview; the original article has not been recovered and no procedure review is implied.",
+      "reviewStatusUnchanged": true,
+      "selectedClaimsUnchanged": true,
+      "supplementalReferenceSnapshotUpdated": false
+    },
+    {
+      "map": "ad",
+      "id": "persist-fed",
+      "previousReferences": [
+        {
+          "label": "Microsoft, Active Directory Federation Services overview",
+          "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview",
+          "kind": "primary",
+          "section": "Introduction"
+        },
+        {
+          "label": "Microsoft, Certificate requirements for federation servers",
+          "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/design/certificate-requirements-for-federation-servers",
+          "kind": "primary",
+          "section": "Certificate types: Token-signing certificate"
+        },
+        {
+          "label": "Microsoft, CryptProtectData function",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+          "section": "Introduction; Remarks",
+          "kind": "primary"
+        },
+        {
+          "label": "CyberArk, Golden SAML (original research)",
+          "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+        }
+      ],
+      "references": [
+        {
+          "label": "Microsoft, Active Directory Federation Services overview",
+          "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview",
+          "kind": "primary",
+          "section": "Introduction"
+        },
+        {
+          "label": "Microsoft, Certificate requirements for federation servers",
+          "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/design/certificate-requirements-for-federation-servers",
+          "kind": "primary",
+          "section": "Certificate types: Token-signing certificate"
+        },
+        {
+          "label": "Microsoft, CryptProtectData function",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+          "section": "Introduction; Remarks",
+          "kind": "primary"
+        }
+      ],
+      "reason": "Remove an unusable supplemental citation. The three selected claims cite separate Microsoft documents and are unchanged.",
+      "reviewStatusUnchanged": true,
+      "selectedClaimsUnchanged": true,
+      "supplementalReferenceSnapshotUpdated": true
+    },
+    {
+      "map": "ad",
+      "id": "trust-modification",
+      "previousReferences": [
+        {
+          "label": "MITRE ATT&CK T1484.002, Trust Modification",
+          "url": "https://attack.mitre.org/techniques/T1484/002/"
+        },
+        {
+          "label": "The Hacker Recipes, Domain trusts",
+          "url": "https://www.thehacker.recipes/ad/movement/trusts/"
+        },
+        {
+          "label": "CyberArk, Golden SAML: Newly Discovered Attack Technique Forges Authentication to Cloud Apps",
+          "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+        }
+      ],
+      "references": [
+        {
+          "label": "MITRE ATT&CK T1484.002, Trust Modification",
+          "url": "https://attack.mitre.org/techniques/T1484/002/"
+        },
+        {
+          "label": "The Hacker Recipes, Domain trusts",
+          "url": "https://www.thehacker.recipes/ad/movement/trusts/"
+        }
+      ],
+      "reason": "Remove the unrelated destination; retain the existing taxonomy and community references without changing their review status.",
+      "reviewStatusUnchanged": true,
+      "selectedClaimsUnchanged": true,
+      "supplementalReferenceSnapshotUpdated": false
+    },
+    {
+      "map": "ad",
+      "id": "expired-password-reset",
+      "previousReferences": [
+        {
+          "label": "The Hacker Recipes, Password spraying",
+          "url": "https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/spraying"
+        },
+        {
+          "label": "n00py, Resetting an Expired Password Remotely",
+          "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/"
+        }
+      ],
+      "references": [
+        {
+          "label": "The Hacker Recipes, Password spraying",
+          "url": "https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/spraying"
+        }
+      ],
+      "reason": "Retire the unlocated publication after the recorded search, archive and TLS failures. The remaining reference has not received a claim comparison.",
+      "reviewStatusUnchanged": true,
+      "selectedClaimsUnchanged": true,
+      "supplementalReferenceSnapshotUpdated": false
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-kernel-recent",
+      "previousReferences": [
+        {
+          "label": "NVD, CVE-2026-31431 (Copy Fail)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-31431"
+        },
+        {
+          "label": "CERT/CC VU#260001 (Copy Fail)",
+          "url": "https://kb.cert.org/vuls/id/260001"
+        },
+        {
+          "label": "CERT/CC VU#980487 (Dirty Frag)",
+          "url": "https://kb.cert.org/vuls/id/980487"
+        },
+        {
+          "label": "Qualys, CVE-2026-46333 (kernel ptrace LPE)",
+          "url": "https://blog.qualys.com/vulnerabilities-threat-research/2026/05/20/cve-2026-46333-local-root-privilege-escalation-and-credential-disclosure-in-the-linux-kernel-ptrace-path"
+        },
+        {
+          "label": "Exodus Intelligence, Off By ! (CVE-2026-23111, nf_tables)",
+          "url": "https://blog.exodusintel.com"
+        },
+        {
+          "label": "NVD, CVE-2026-23111 (nf_tables use-after-free)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-23111"
+        }
+      ],
+      "references": [
+        {
+          "label": "NVD, CVE-2026-31431 (Copy Fail)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-31431"
+        },
+        {
+          "label": "CERT/CC VU#260001 (Copy Fail)",
+          "url": "https://kb.cert.org/vuls/id/260001"
+        },
+        {
+          "label": "CERT/CC VU#980487 (Dirty Frag)",
+          "url": "https://kb.cert.org/vuls/id/980487"
+        },
+        {
+          "label": "Qualys, CVE-2026-46333 (kernel ptrace LPE)",
+          "url": "https://blog.qualys.com/vulnerabilities-threat-research/2026/05/20/cve-2026-46333-local-root-privilege-escalation-and-credential-disclosure-in-the-linux-kernel-ptrace-path"
+        },
+        {
+          "label": "NVD, CVE-2026-23111 (nf_tables use-after-free)",
+          "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-23111"
+        }
+      ],
+      "reason": "Remove a blog index mislabeled as a particular research article. Retain the existing CVE, CERT/CC and other publication references; no vulnerability applicability or procedure is assessed.",
+      "reviewStatusUnchanged": true,
+      "selectedClaimsUnchanged": true,
+      "supplementalReferenceSnapshotUpdated": false
+    }
+  ],
+  "attributionDisposition": {
+    "url": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+    "decision": "The project citation names Vectra, not an individual author. Retain the citation and the recorded publisher metadata conflict; no individual attribution is asserted or corrected by this pass.",
+    "evidence": "reports/KERBEROS_ACCOUNT_REVIEW.md"
+  }
+}

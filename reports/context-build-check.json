@@ -1,0 +1,20 @@
+{
+  "checkedAt": "2026-09-07T07:09:42.057Z",
+  "generatedPages": [
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/windows-privilege-escalation.html",
+    "reference/linux-privilege-escalation.html",
+    "about.html",
+    "glossary.html",
+    "sitemap.xml"
+  ],
+  "repeatable": true,
+  "stagedFiles": 68,
+  "sourceDigest": "22d83879052e0fd16f0e370b7dfe042dbc2a6a96d2f54fff303c76d455f8f481",
+  "stagedInputParity": true,
+  "buildMetadataException": "src/buildInfo.js is injected; digest recomputation uses its source input.",
+  "dataParity": true,
+  "changedNodes": 81,
+  "changedEdges": 1
+}

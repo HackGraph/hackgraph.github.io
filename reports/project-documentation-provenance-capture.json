@@ -1,0 +1,896 @@
+{
+  "scope": "Publication identity and source type only. No claim, command, applicability or route validation.",
+  "results": [
+    {
+      "id": "doc-00",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/adcs-esc13",
+      "checkedAt": "2026-09-07T11:04:53.880Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/adcs-esc13",
+      "file": ".cache/repository-provenance-review/captures/doc-00.html",
+      "sha256": "9626377c4924ce72cb601bb2c27a5a32f3153e68a7dc52a35b894eb0d08858e8",
+      "title": "ADCSESC13 - SpecterOps",
+      "heading": "ADCSESC13",
+      "author": null,
+      "description": "The ADCSESC13 edge indicates that the principal has the privileges to perform the ADCS ESC13 abuse against the target AD group. The principal has enrollment rights on a certificate template configured with an issuance policy extension.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/adcs-esc13",
+      "identityLinks": [
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-01",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/add-allowed-to-act",
+      "checkedAt": "2026-09-07T11:04:53.893Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/add-allowed-to-act",
+      "file": ".cache/repository-provenance-review/captures/doc-01.html",
+      "sha256": "57438065e1ff8c2ac36cbf88a61761bc6abb9179f434ea4a02251dc5757573d3",
+      "title": "AddAllowedToAct - SpecterOps",
+      "heading": "AddAllowedToAct",
+      "author": null,
+      "description": "This edge means it's possible to modify the msDS-AllowedToActOnBehalfOfOtherIdentity property of a target.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/add-allowed-to-act",
+      "identityLinks": [
+        "https://github.com/GhostPack/Rubeus#s4u",
+        "https://github.com/Kevin-Robertson/Powermad#new-machineaccount",
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-02",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/add-self",
+      "checkedAt": "2026-09-07T11:04:53.894Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/add-self",
+      "file": ".cache/repository-provenance-review/captures/doc-02.html",
+      "sha256": "33cb7d77936799974e820e3cb2ad57969e059b3fe799517a9f85368977b91b4d",
+      "title": "AddSelf - SpecterOps",
+      "heading": "AddSelf",
+      "author": null,
+      "description": "This edge indicates the principal has the ability to add itself to the target security group. Because of security group delegation, the members of a security group have the same privileges as that group.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/add-self",
+      "identityLinks": [
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-03",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/dc-sync",
+      "checkedAt": "2026-09-07T11:04:54.630Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/dc-sync",
+      "file": ".cache/repository-provenance-review/captures/doc-03.html",
+      "sha256": "9c66da4a30c21623996cea5b970afc455522ca28ffa2cf1bd6e99d23b6848611",
+      "title": "DCSync - SpecterOps",
+      "heading": "DCSync",
+      "author": null,
+      "description": "This edge represents the combination of GetChanges and GetChangesAll. The combination of both these privileges grants a principal the ability to perform the DCSync attack.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/dc-sync",
+      "identityLinks": [
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-04",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/force-change-password",
+      "checkedAt": "2026-09-07T11:04:54.740Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/force-change-password",
+      "file": ".cache/repository-provenance-review/captures/doc-04.html",
+      "sha256": "3dcb6e5a540ce5ca8529070234a56783cdc9881c83648ddb066180ffaee9ae7b",
+      "title": "ForceChangePassword - SpecterOps",
+      "heading": "ForceChangePassword",
+      "author": null,
+      "description": "This edge indicates that the principal can reset the password of the target user without knowing the current password of that user.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/force-change-password",
+      "identityLinks": [
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-05",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/generic-all",
+      "checkedAt": "2026-09-07T11:04:54.832Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/generic-all",
+      "file": ".cache/repository-provenance-review/captures/doc-05.html",
+      "sha256": "e64857fa26d475474f36ae1e98bd948f4a3e80d27e65a24253798e2287356e97",
+      "title": "GenericAll - SpecterOps",
+      "heading": "GenericAll",
+      "author": null,
+      "description": "This is also known as full control. This privilege allows the trustee to manipulate the target object however they wish.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/generic-all",
+      "identityLinks": [
+        "https://github.com/FSecureLABS/SharpGPOAbuse",
+        "https://github.com/Hackndo/pyGPOAbuse",
+        "https://github.com/GhostPack/Rubeus#s4u",
+        "https://github.com/Kevin-Robertson/Powermad#new-machineaccount",
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-06",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/generic-write",
+      "checkedAt": "2026-09-07T11:04:54.910Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/generic-write",
+      "file": ".cache/repository-provenance-review/captures/doc-06.html",
+      "sha256": "82c6d721aea50eda73c441bde9af4f99f2f9ba324f70f6b52e5e3e615d4e0850",
+      "title": "GenericWrite - SpecterOps",
+      "heading": "GenericWrite",
+      "author": null,
+      "description": "Generic Write access grants you the ability to write to any non-protected attribute on the target object, including \"members\" for a group, and \"servicePrincipalNames\" for a user.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/generic-write",
+      "identityLinks": [
+        "https://github.com/FSecureLABS/SharpGPOAbuse",
+        "https://github.com/Hackndo/pyGPOAbuse",
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-07",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/write-dacl",
+      "checkedAt": "2026-09-07T11:04:55.002Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/write-dacl",
+      "file": ".cache/repository-provenance-review/captures/doc-07.html",
+      "sha256": "c8dd7cef64fd2dc1cd8877bd020744d64d2877e5f7c580c1acaefd04c8a37933",
+      "title": "WriteDacl - SpecterOps",
+      "heading": "WriteDacl",
+      "author": null,
+      "description": "With write access to the target object’s DACL, you can grant yourself any privilege you want on the object.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/write-dacl",
+      "identityLinks": [
+        "https://github.com/GhostPack/Rubeus#s4u",
+        "https://github.com/Kevin-Robertson/Powermad#new-machineaccount",
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-08",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/write-gp-link",
+      "checkedAt": "2026-09-07T11:04:55.120Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/write-gp-link",
+      "file": ".cache/repository-provenance-review/captures/doc-08.html",
+      "sha256": "80bd6d96f4e2b2339aafed3e1ff83e8015d714f700b90c3928b145cdbd2731fc",
+      "title": "WriteGPLink - SpecterOps",
+      "heading": "WriteGPLink",
+      "author": null,
+      "description": "The WriteGPLink edge indicates that the principal has the permissions to modify the gPLink attribute of the targeted OU/domain node.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/write-gp-link",
+      "identityLinks": [
+        "https://github.com/FSecureLABS/SharpGPOAbuse",
+        "https://github.com/Hackndo/pyGPOAbuse",
+        "https://github.com/synacktiv/OUned",
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-09",
+      "type": "citation-page",
+      "url": "https://bloodhound.specterops.io/resources/edges/write-owner",
+      "checkedAt": "2026-09-07T11:04:55.206Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/resources/edges/write-owner",
+      "file": ".cache/repository-provenance-review/captures/doc-09.html",
+      "sha256": "79aef0ce3543d2183be1e700d1437f3cc08f5a6c33dc6430232774f375dc5071",
+      "title": "WriteOwner - SpecterOps",
+      "heading": "WriteOwner",
+      "author": null,
+      "description": "Object owners retain the ability to modify object security descriptors, regardless of permissions on the object’s DACL.",
+      "canonical": "https://bloodhound.specterops.io/resources/edges/write-owner",
+      "identityLinks": [
+        "https://github.com/SpecterOps/BloodHound"
+      ]
+    },
+    {
+      "id": "doc-10",
+      "type": "citation-page",
+      "url": "https://cravaterouge.com/articles/ad-bin/",
+      "checkedAt": "2026-09-07T11:04:55.282Z",
+      "status": 200,
+      "finalUrl": "https://cravaterouge.com/articles/ad-bin/",
+      "file": ".cache/repository-provenance-review/captures/doc-10.html",
+      "sha256": "a28b1496427491b66b27ccee55a62bb023ec28fc3ae65859e7ddb77dee92068c",
+      "title": "Have You Looked in the Trash? Unearthing Privilege Escalations from the Active Directory Recycle Bin | CravateRouge Ltd",
+      "heading": "Have You Looked in the Trash? Unearthing Privilege Escalations from the Active Directory Recycle Bin",
+      "author": "Baptiste Crépin",
+      "description": "How overlooked objects in AD's Recycle Bin can become a goldmine for attackers—and what defenders need to know",
+      "canonical": "https://cravaterouge.com/articles/ad-bin/",
+      "identityLinks": [],
+      "introduction": [
+        "“Have You Looked in the Trash?”",
+        "It’s a phrase many of us heard growing up—usually after failing to find something that was right under our noses. In the world of cybersecurity, this advice rings truer than ever, especially when it comes to Active Directory."
+      ]
+    },
+    {
+      "id": "doc-11",
+      "type": "citation-page",
+      "url": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc11-ntlm-relay-to-ad-cs-rpc-interfaces",
+      "checkedAt": "2026-09-07T11:04:55.364Z",
+      "status": 200,
+      "finalUrl": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc11-ntlm-relay-to-ad-cs-rpc-interfaces",
+      "file": ".cache/repository-provenance-review/captures/doc-11.html",
+      "sha256": "7108ed462de2d4964da480f984263814185ff2b4f9a7efe18837e9d858bd74ee",
+      "title": "ESC11 - NTLM Relay to AD CS RPC Interfaces - SpecterOps Open Source",
+      "heading": "ESC11 - NTLM Relay to AD CS RPC Interfaces",
+      "author": null,
+      "description": "Exploit unprotected certificate authority RPC interfaces by relaying NTLM authentication to the ICertPassage interface",
+      "canonical": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc11-ntlm-relay-to-ad-cs-rpc-interfaces",
+      "identityLinks": []
+    },
+    {
+      "id": "doc-12",
+      "type": "citation-page",
+      "url": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc15-ekuwu-application-policy-injection",
+      "checkedAt": "2026-09-07T11:04:55.445Z",
+      "status": 200,
+      "finalUrl": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc15-ekuwu-application-policy-injection",
+      "file": ".cache/repository-provenance-review/captures/doc-12.html",
+      "sha256": "7a43f532d390b9a9141bf28105f42a94434494bc0d7c8a751d92d35f821adce3",
+      "title": "ESC15 - EKUwu (Application Policy Injection) - SpecterOps Open Source",
+      "heading": "ESC15 - EKUwu (Application Policy Injection)",
+      "author": null,
+      "description": "Exploit schema version 1 certificate templates to inject arbitrary application policies and bypass EKU restrictions",
+      "canonical": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc15-ekuwu-application-policy-injection",
+      "identityLinks": [
+        "https://github.com/AlmondOffSec/PassTheCert/"
+      ]
+    },
+    {
+      "id": "doc-13",
+      "type": "citation-page",
+      "url": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc16-security-extension-disabled-on-certificate-authority",
+      "checkedAt": "2026-09-07T11:04:55.612Z",
+      "status": 200,
+      "finalUrl": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc16-security-extension-disabled-on-certificate-authority",
+      "file": ".cache/repository-provenance-review/captures/doc-13.html",
+      "sha256": "d1ddcce6d18b8fb08a8fb7245ec6dde10495aa41a5d9f24053c9c2c2f48c6555",
+      "title": "ESC16 - Security Extension Disabled on Certificate Authority - SpecterOps Open Source",
+      "heading": "ESC16 - Security Extension Disabled on Certificate Authority",
+      "author": null,
+      "description": "Exploit certificate authorities with disabled SID security extensions affecting all issued certificates",
+      "canonical": "https://docs.specterops.io/ghostpack-docs/Certify.wik-mdx/esc16-security-extension-disabled-on-certificate-authority",
+      "identityLinks": []
+    },
+    {
+      "id": "doc-14",
+      "type": "citation-page",
+      "url": "https://docs.specterops.io/sharpsccm-docs",
+      "checkedAt": "2026-09-07T11:04:56.220Z",
+      "status": 200,
+      "finalUrl": "https://docs.specterops.io/sharpsccm-docs/overview",
+      "file": ".cache/repository-provenance-review/captures/doc-14.html",
+      "sha256": "630a96cb91c176cdd0aab1cc66de7a69841842d387d8b09fc398b979a5a9481b",
+      "title": "SharpSCCM Documentation - SpecterOps Open Source",
+      "heading": "SharpSCCM Documentation",
+      "author": null,
+      "description": "Comprehensive guide to using SharpSCCM for SCCM security assessment and penetration testing",
+      "canonical": "https://docs.specterops.io/sharpsccm-docs/overview",
+      "identityLinks": [
+        "https://github.com/Mayyhem/SharpSCCM",
+        "https://github.com/garrettfoster13/sccmhunter",
+        "https://github.com/PowerShellMafia/PowerSCCM",
+        "https://github.com/1njected/CMLoot",
+        "https://github.com/MWR-CyberSec/PXEThief",
+        "https://github.com/nettitude/MalSCCM"
+      ]
+    },
+    {
+      "id": "doc-15",
+      "type": "citation-page",
+      "url": "https://ohpe.it/juicy-potato/",
+      "checkedAt": "2026-09-07T11:04:56.276Z",
+      "status": 200,
+      "finalUrl": "https://ohpe.it/juicy-potato/",
+      "file": ".cache/repository-provenance-review/captures/doc-15.html",
+      "sha256": "01ec0cbfccb8b12fde11c59ef1d4e4faec33737c3e136a3c6f3889ff340b6576",
+      "title": "Juicy Potato (abusing the golden privileges) | juicy-potato",
+      "heading": "juicy-potato",
+      "author": null,
+      "description": "A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM.",
+      "canonical": "https://ohpe.it/juicy-potato/",
+      "identityLinks": [
+        "https://github.com/ohpe/juicy-potato",
+        "https://github.com/breenmachine/RottenPotatoNG",
+        "https://github.com/decoder-it/lonelypotato"
+      ],
+      "introduction": [
+        "A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM",
+        "RottenPotatoNG and its variants leverages the privilege escalation chain based on BITS service having the MiTM listener on 127.0.0.1:6666 and when you have SeImpersonate or SeAssignPrimaryToken privileges. During a Windows build review we found a setup where BITS was intentionally disabled and port 6666 was taken."
+      ]
+    },
+    {
+      "id": "doc-16",
+      "type": "citation-page",
+      "url": "https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/",
+      "checkedAt": "2026-09-07T11:04:56.324Z",
+      "status": 200,
+      "finalUrl": "https://powersploit.readthedocs.io/en/latest/Recon/Get-DomainForeignGroupMember/",
+      "file": ".cache/repository-provenance-review/captures/doc-16.html",
+      "sha256": "ccf004d19f253aaec0df5664bbd4dd95365d935020574475515d92a562809a64",
+      "title": "Get-DomainForeignGroupMember - PowerSploit",
+      "heading": "Get-DomainForeignGroupMember",
+      "author": null,
+      "description": null,
+      "canonical": null,
+      "identityLinks": [
+        "https://github.com/PowerShellMafia/PowerSploit/",
+        "https://github.com/snide/sphinx_rtd_theme"
+      ]
+    },
+    {
+      "id": "doc-17",
+      "type": "citation-page",
+      "url": "https://tools.thehacker.recipes/mimikatz/modules/lsadump/changentlm",
+      "checkedAt": "2026-09-07T11:04:56.676Z",
+      "status": 200,
+      "finalUrl": "https://tools.thehacker.recipes/mimikatz/modules/lsadump/changentlm",
+      "file": ".cache/repository-provenance-review/captures/doc-17.html",
+      "sha256": "80f3d8669a4fb76037848e74609dd062bd966ba20b62ddbf032c4d3df8a6b8ab",
+      "title": "changentlm | The Hacker Tools",
+      "heading": "changentlm",
+      "author": null,
+      "description": null,
+      "canonical": "https://tools.thehacker.recipes/mimikatz/modules/lsadump/changentlm",
+      "identityLinks": [
+        "https://github.com/GhostPack/Rubeus"
+      ],
+      "introduction": [
+        "lsadump::changentlm can be used to change the password of a user (cf. ZeroLogon). It accepts either a clear-text password or an NT hash. According to Benjamin this option avoids the \"setpassword\" event but it requires to know the previous password or NT hash. It has the following command line arguments:",
+        "/newpassword: The new clear text password for the target user"
+      ]
+    },
+    {
+      "id": "doc-18",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/ldap-protocol/dump-gmsa",
+      "checkedAt": "2026-09-07T11:04:56.784Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/ldap-protocol/dump-gmsa",
+      "file": ".cache/repository-provenance-review/captures/doc-18.html",
+      "sha256": "6d80ddf0dbc2a6ad60122d64fb9be298501e39ffd8527eff6c757bafcc5c00e1",
+      "title": "Dump gMSA | NetExec",
+      "heading": "Dump gMSA",
+      "author": null,
+      "description": "Extract gmsa credentials accounts",
+      "canonical": "https://www.netexec.wiki/ldap-protocol/dump-gmsa",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-19",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/ldap-protocol/pre2k",
+      "checkedAt": "2026-09-07T11:04:56.799Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/ldap-protocol/pre2k",
+      "file": ".cache/repository-provenance-review/captures/doc-19.html",
+      "sha256": "89dcc65bc4732bd361986c1fab4a96b9608286024585d42b37a03d4b1ed13083",
+      "title": "Pre2k Computer Account Abuse | NetExec",
+      "heading": "Pre2k Computer Account Abuse",
+      "author": null,
+      "description": null,
+      "canonical": "https://www.netexec.wiki/ldap-protocol/pre2k",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-20",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/mssql-protocol/mssql-privesc",
+      "checkedAt": "2026-09-07T11:04:57.301Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/mssql-protocol/mssql-privesc",
+      "file": ".cache/repository-provenance-review/captures/doc-20.html",
+      "sha256": "b4a5a5f9a0649949bb5f1a1688d88a7fed1afc39a03bd96fc046760baef43a24",
+      "title": "MSSQL PrivEsc | NetExec",
+      "heading": "MSSQL PrivEsc",
+      "author": null,
+      "description": "Module to privesc from standard user to DBA",
+      "canonical": "https://www.netexec.wiki/mssql-protocol/mssql-privesc",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-21",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/authentication",
+      "checkedAt": "2026-09-07T11:04:57.362Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/authentication",
+      "file": ".cache/repository-provenance-review/captures/doc-21.html",
+      "sha256": "c7ad808dc35fdd623e4caa63aa909e0eac8d80cc395efeb2f006f79a215ac6b9",
+      "title": "Authentication | NetExec",
+      "heading": "Authentication",
+      "author": null,
+      "description": "Authentication on NetExec",
+      "canonical": "https://www.netexec.wiki/smb-protocol/authentication",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-22",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/defeating-laps",
+      "checkedAt": "2026-09-07T11:04:57.422Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/defeating-laps",
+      "file": ".cache/repository-provenance-review/captures/doc-22.html",
+      "sha256": "0460430b6cc33dae42865390fc6aefe04034a35ddef9dfe81f80e5952817dcb8",
+      "title": "Defeating LAPS | NetExec",
+      "heading": "Defeating LAPS",
+      "author": null,
+      "description": "NetExec vs LAPS",
+      "canonical": "https://www.netexec.wiki/smb-protocol/defeating-laps",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-23",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/enumeration/enumerate-shares-and-access",
+      "checkedAt": "2026-09-07T11:04:57.620Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/enumeration/enumerate-shares-and-access",
+      "file": ".cache/repository-provenance-review/captures/doc-23.html",
+      "sha256": "48be1dadfb83aebe54a91f4c5f1c65f969091adb4e47476ac6386a9ee354be19",
+      "title": "Enumerate Shares and Access | NetExec",
+      "heading": "Enumerate Shares and Access",
+      "author": null,
+      "description": null,
+      "canonical": "https://www.netexec.wiki/smb-protocol/enumeration/enumerate-shares-and-access",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-24",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-mremoteng",
+      "checkedAt": "2026-09-07T11:04:57.683Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-mremoteng",
+      "file": ".cache/repository-provenance-review/captures/doc-24.html",
+      "sha256": "f90908d58c08d3645a51b0080d494dd0c0001b6b457d5444eda2300358bf6a73",
+      "title": "Dump mRemoteNG | NetExec",
+      "heading": "🆕Dump mRemoteNG",
+      "author": null,
+      "description": "Dump mRemoteNG stored credentials",
+      "canonical": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-mremoteng",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-25",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-veeam",
+      "checkedAt": "2026-09-07T11:04:57.787Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-veeam",
+      "file": ".cache/repository-provenance-review/captures/doc-25.html",
+      "sha256": "4891d3a79c2cd205aa78363632d71eb6b26de033f1cf2a032383f71a800d34c0",
+      "title": "Dump Veeam | NetExec",
+      "heading": "Dump Veeam",
+      "author": null,
+      "description": "Dump passwords used by Veeam for backup jobs",
+      "canonical": "https://www.netexec.wiki/smb-protocol/obtaining-credentials/dump-veeam",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-26",
+      "type": "citation-page",
+      "url": "https://www.netexec.wiki/smb-protocol/spidering-shares",
+      "checkedAt": "2026-09-07T11:04:57.900Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/smb-protocol/spidering-shares",
+      "file": ".cache/repository-provenance-review/captures/doc-26.html",
+      "sha256": "b715c0b19a2cf41ee73e934e0396e9f6014c2227f0bcb5a57502b6600ae62fd7",
+      "title": "Spidering Shares | NetExec",
+      "heading": "Spidering Shares",
+      "author": null,
+      "description": "Spidering shares with NetExec",
+      "canonical": "https://www.netexec.wiki/smb-protocol/spidering-shares",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec"
+      ]
+    },
+    {
+      "id": "doc-27",
+      "type": "citation-page",
+      "url": "https://www.samba.org/samba/security/CVE-2017-7494.html",
+      "checkedAt": "2026-09-07T11:04:57.997Z",
+      "status": 200,
+      "finalUrl": "https://www.samba.org/samba/security/CVE-2017-7494.html",
+      "file": ".cache/repository-provenance-review/captures/doc-27.html",
+      "sha256": "a03d16e9c0cbdfc960728da73bb86458cafe6ce43d803d50d01d2812c991e342",
+      "title": "Samba - Security Announcement Archive",
+      "heading": null,
+      "author": null,
+      "description": null,
+      "canonical": null,
+      "identityLinks": []
+    },
+    {
+      "id": "doc-28",
+      "type": "citation-page",
+      "url": "https://www.sudo.ws/security/advisories/chroot_bug/",
+      "checkedAt": "2026-09-07T11:04:58.192Z",
+      "status": 200,
+      "finalUrl": "https://www.sudo.ws/security/advisories/chroot_bug/",
+      "file": ".cache/repository-provenance-review/captures/doc-28.html",
+      "sha256": "0dc895a4f1bdac674a9bcd07f52d7f6d686a281e7a811305fe69d5dbb1ec8603",
+      "title": "Local Privilege Escalation via chroot option | Sudo",
+      "heading": "Local Privilege Escalation via chroot option",
+      "author": null,
+      "description": "An attacker can leverage sudo’s -R (--chroot) option to run arbitrary commands as root, even if they are not listed in the sudoers file.\nSudo versions affected: Sudo versions 1.9.14 to 1.9.17 inclusive are affected.\nCVE ID: This vulnerability has been assigned CVE-2025-32463 in the Common Vulnerabilities and Exposures database.",
+      "canonical": "https://www.sudo.ws/security/advisories/chroot_bug/",
+      "identityLinks": [
+        "https://github.com/sudo-project/sudo"
+      ]
+    },
+    {
+      "id": "doc-29",
+      "type": "citation-page",
+      "url": "https://www.sudo.ws/security/advisories/minus_1_uid/",
+      "checkedAt": "2026-09-07T11:04:58.264Z",
+      "status": 200,
+      "finalUrl": "https://www.sudo.ws/security/advisories/minus_1_uid/",
+      "file": ".cache/repository-provenance-review/captures/doc-29.html",
+      "sha256": "ecff934fabbcf84a44836c516895ae8b3a2050e35e240d3f98f1fe56bbdda286",
+      "title": "Potential bypass of Runas user restrictions | Sudo",
+      "heading": "Potential bypass of Runas user restrictions",
+      "author": null,
+      "description": "When sudo is configured to allow a user to run commands as an arbitrary user via the ALL keyword in a Runas specification, it is possible to run commands as root by specifying the user ID -1 or 4294967295.\nThis can be used by a user with sufficient sudo privileges to run commands as root even if the Runas specification explicitly disallows root access as long as the ALL keyword is listed first in the Runas specification.",
+      "canonical": "https://www.sudo.ws/security/advisories/minus_1_uid/",
+      "identityLinks": [
+        "https://github.com/sudo-project/sudo"
+      ]
+    },
+    {
+      "id": "doc-30",
+      "type": "citation-page",
+      "url": "https://www.sudo.ws/security/advisories/sudoedit_any/",
+      "checkedAt": "2026-09-07T11:04:58.543Z",
+      "status": 200,
+      "finalUrl": "https://www.sudo.ws/security/advisories/sudoedit_any/",
+      "file": ".cache/repository-provenance-review/captures/doc-30.html",
+      "sha256": "2c7ec050281cab9c32aaa665ee7f6e5a9837bd91c3fc10b3e10618fa25992c0d",
+      "title": "Sudoedit can edit arbitrary files | Sudo",
+      "heading": "Sudoedit can edit arbitrary files",
+      "author": null,
+      "description": "A flaw in exists in sudo’s -e option (aka sudoedit) that allows a malicious user with sudoedit privileges to edit arbitrary files.\nSudo versions affected: Sudo versions 1.8.0 through 1.9.12p1 inclusive are affected. Versions of sudo prior to 1.8.0 construct the argument vector differently and are not affected.\nCVE ID: This vulnerability has been assigned CVE-2023-22809 in the Common Vulnerabilities and Exposures database.",
+      "canonical": "https://www.sudo.ws/security/advisories/sudoedit_any/",
+      "identityLinks": [
+        "https://github.com/sudo-project/sudo"
+      ]
+    },
+    {
+      "id": "identity-00",
+      "type": "publisher-identity",
+      "url": "https://bloodhound.specterops.io/home",
+      "checkedAt": "2026-09-07T11:04:58.935Z",
+      "status": 200,
+      "finalUrl": "https://bloodhound.specterops.io/home",
+      "file": ".cache/repository-provenance-review/captures/identity-00.html",
+      "sha256": "32bf9a98307082dcea2bf3f7e041d8627853751b4fe15a9937e717199a2acab1",
+      "title": "Home - SpecterOps",
+      "heading": null,
+      "author": null,
+      "description": null,
+      "canonical": "https://bloodhound.specterops.io/home",
+      "identityLinks": [],
+      "introduction": [
+        "(b:BloodHoundUsers) - [h:Think_In] -> (e:Graphs)"
+      ]
+    },
+    {
+      "id": "identity-01",
+      "type": "publisher-identity",
+      "url": "https://docs.specterops.io/home",
+      "checkedAt": "2026-09-07T11:04:58.960Z",
+      "status": 404,
+      "finalUrl": "https://docs.specterops.io/home",
+      "file": ".cache/repository-provenance-review/captures/identity-01.html",
+      "sha256": "9093146329a34de2eb49aa2bb2905bd08b9e78a615c465b67f2c3fc861ca7f63",
+      "title": "",
+      "heading": null,
+      "author": null,
+      "description": null,
+      "canonical": null,
+      "identityLinks": [],
+      "introduction": []
+    },
+    {
+      "id": "identity-02",
+      "type": "publisher-identity",
+      "url": "https://www.netexec.wiki/",
+      "checkedAt": "2026-09-07T11:04:58.983Z",
+      "status": 200,
+      "finalUrl": "https://www.netexec.wiki/",
+      "file": ".cache/repository-provenance-review/captures/identity-02.html",
+      "sha256": "555ea2d658acc38ebb69d6a976873c13f3efdf67fe2cb4827c10a009c1a4b868",
+      "title": "Welcome | NetExec",
+      "heading": "Welcome",
+      "author": null,
+      "description": null,
+      "canonical": "https://www.netexec.wiki/",
+      "identityLinks": [
+        "https://github.com/Pennyw0rth/NetExec",
+        "https://github.com/Pennyw0rth/NetExec-Lab"
+      ],
+      "introduction": [
+        "NetExec (a.k.a nxc) is a network service exploitation tool that helps automate assessing the security of large networks.",
+        ""
+      ]
+    },
+    {
+      "id": "identity-03",
+      "type": "publisher-identity",
+      "url": "https://github.com/PowerShellMafia/PowerSploit",
+      "checkedAt": "2026-09-07T11:04:59.066Z",
+      "status": 200,
+      "finalUrl": "https://github.com/PowerShellMafia/PowerSploit",
+      "file": ".cache/repository-provenance-review/captures/identity-03.html",
+      "sha256": "06508969bd8d360116e5fcad18eb55b71f84bddbd5d4c5ab8a1647b55797cbad",
+      "title": "GitHub - PowerShellMafia/PowerSploit: PowerSploit - A PowerShell Post-Exploitation Framework · GitHub",
+      "heading": null,
+      "author": null,
+      "description": "PowerSploit - A PowerShell Post-Exploitation Framework - PowerShellMafia/PowerSploit",
+      "canonical": null,
+      "identityLinks": [
+        "https://github.com/PowerShellMafia/PowerSploit#start-of-content",
+        "https://github.com/features/copilot",
+        "https://github.com/features/actions",
+        "https://github.com/features/codespaces",
+        "https://github.com/features/issues",
+        "https://github.com/features/code-review",
+        "https://github.com/features/code-quality",
+        "https://github.com/security/advanced-security",
+        "https://github.com/enterprise/startups",
+        "https://github.com/solutions/use-case",
+        "https://github.com/solutions/industry",
+        "https://github.com/resources/articles?topic=ai",
+        "https://github.com/resources/articles?topic=software-development",
+        "https://github.com/resources/articles?topic=devops",
+        "https://github.com/resources/articles?topic=security",
+        "https://github.com/resources/articles",
+        "https://github.com/resources/events",
+        "https://github.com/resources/whitepapers",
+        "https://github.com/solutions/executive-insights",
+        "https://github.com/open-source/sponsors"
+      ],
+      "introduction": [
+        "Execute code on a target machine.",
+        "Injects a Dll into the process ID of your choosing."
+      ]
+    },
+    {
+      "id": "identity-04",
+      "type": "publisher-identity",
+      "url": "https://github.com/ohpe/juicy-potato",
+      "checkedAt": "2026-09-07T11:04:59.131Z",
+      "status": 200,
+      "finalUrl": "https://github.com/ohpe/juicy-potato",
+      "file": ".cache/repository-provenance-review/captures/identity-04.html",
+      "sha256": "4647449b8912a358921e4a1caed68da729a2ed046d745c1fe43aaa68e6060d07",
+      "title": "GitHub - ohpe/juicy-potato: A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM. · GitHub",
+      "heading": "Juicy Potato (abusing the golden privileges)",
+      "author": null,
+      "description": "A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM.  - GitHub - ohpe/juicy-potato: A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM.",
+      "canonical": null,
+      "identityLinks": [
+        "https://github.com/ohpe/juicy-potato#start-of-content",
+        "https://github.com/features/copilot",
+        "https://github.com/features/actions",
+        "https://github.com/features/codespaces",
+        "https://github.com/features/issues",
+        "https://github.com/features/code-review",
+        "https://github.com/features/code-quality",
+        "https://github.com/security/advanced-security",
+        "https://github.com/enterprise/startups",
+        "https://github.com/solutions/use-case",
+        "https://github.com/solutions/industry",
+        "https://github.com/resources/articles?topic=ai",
+        "https://github.com/resources/articles?topic=software-development",
+        "https://github.com/resources/articles?topic=devops",
+        "https://github.com/resources/articles?topic=security",
+        "https://github.com/resources/articles",
+        "https://github.com/resources/events",
+        "https://github.com/resources/whitepapers",
+        "https://github.com/solutions/executive-insights",
+        "https://github.com/open-source/sponsors"
+      ],
+      "introduction": [
+        "A sugared version of RottenPotatoNG, with a bit of juice, i.e. another Local Privilege Escalation tool, from a Windows Service Accounts to NT AUTHORITY\\SYSTEM",
+        "RottenPotatoNG and its variants leverages the privilege escalation chain based on BITS service having the MiTM listener on 127.0.0.1:6666 and when you have SeImpersonate or SeAssignPrimaryToken privileges. During a Windows build review we found a setup where BITS was intentionally disabled and port 6666 was taken."
+      ]
+    },
+    {
+      "id": "identity-05",
+      "type": "publisher-identity",
+      "url": "https://github.com/subat0mik/Misconfiguration-Manager",
+      "checkedAt": "2026-09-07T11:04:59.709Z",
+      "status": 200,
+      "finalUrl": "https://github.com/subat0mik/Misconfiguration-Manager",
+      "file": ".cache/repository-provenance-review/captures/identity-05.html",
+      "sha256": "06eb08765e4480cd8ee7fa5bfc96cd1b2a57473967ebffe2d296820bda4cfeb0",
+      "title": "GitHub - subat0mik/Misconfiguration-Manager: Misconfiguration Manager is a central knowledge base for all known Microsoft Configuration Manager tradecraft and associated defensive and hardening guidance. · GitHub",
+      "heading": "Misconfiguration Manager",
+      "author": null,
+      "description": "Misconfiguration Manager is a central knowledge base for all known Microsoft Configuration Manager tradecraft and associated defensive and hardening guidance. - subat0mik/Misconfiguration-Manager",
+      "canonical": null,
+      "identityLinks": [
+        "https://github.com/subat0mik/Misconfiguration-Manager#start-of-content",
+        "https://github.com/features/copilot",
+        "https://github.com/features/actions",
+        "https://github.com/features/codespaces",
+        "https://github.com/features/issues",
+        "https://github.com/features/code-review",
+        "https://github.com/features/code-quality",
+        "https://github.com/security/advanced-security",
+        "https://github.com/enterprise/startups",
+        "https://github.com/solutions/use-case",
+        "https://github.com/solutions/industry",
+        "https://github.com/resources/articles?topic=ai",
+        "https://github.com/resources/articles?topic=software-development",
+        "https://github.com/resources/articles?topic=devops",
+        "https://github.com/resources/articles?topic=security",
+        "https://github.com/resources/articles",
+        "https://github.com/resources/events",
+        "https://github.com/resources/whitepapers",
+        "https://github.com/solutions/executive-insights",
+        "https://github.com/open-source/sponsors"
+      ],
+      "introduction": [
+        "",
+        ""
+      ]
+    },
+    {
+      "id": "identity-06",
+      "type": "publisher-identity",
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings",
+      "checkedAt": "2026-09-07T11:04:59.905Z",
+      "status": 200,
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings",
+      "file": ".cache/repository-provenance-review/captures/identity-06.html",
+      "sha256": "27246fd6026917007defe8f20f8959a5e36cf0087deb52e84172a147bb619168",
+      "title": "GitHub - swisskyrepo/PayloadsAllTheThings: A list of useful payloads and bypass for Web Application Security and Pentest/CTF · GitHub",
+      "heading": "Payloads All The Things",
+      "author": null,
+      "description": "A list of useful payloads and bypass for Web Application Security and Pentest/CTF - swisskyrepo/PayloadsAllTheThings",
+      "canonical": null,
+      "identityLinks": [
+        "https://github.com/swisskyrepo/PayloadsAllTheThings#start-of-content",
+        "https://github.com/features/copilot",
+        "https://github.com/features/actions",
+        "https://github.com/features/codespaces",
+        "https://github.com/features/issues",
+        "https://github.com/features/code-review",
+        "https://github.com/features/code-quality",
+        "https://github.com/security/advanced-security",
+        "https://github.com/enterprise/startups",
+        "https://github.com/solutions/use-case",
+        "https://github.com/solutions/industry",
+        "https://github.com/resources/articles?topic=ai",
+        "https://github.com/resources/articles?topic=software-development",
+        "https://github.com/resources/articles?topic=devops",
+        "https://github.com/resources/articles?topic=security",
+        "https://github.com/resources/articles",
+        "https://github.com/resources/events",
+        "https://github.com/resources/whitepapers",
+        "https://github.com/solutions/executive-insights",
+        "https://github.com/open-source/sponsors"
+      ],
+      "introduction": [
+        "A list of useful payloads and bypasses for Web Application Security. Feel free to improve with your payloads and techniques!",
+        "You can also contribute with a 🍻 IRL, or using the sponsor button."
+      ]
+    },
+    {
+      "id": "identity-07",
+      "type": "publisher-identity",
+      "url": "https://tools.thehacker.recipes/",
+      "checkedAt": "2026-09-07T11:04:59.966Z",
+      "status": 200,
+      "finalUrl": "https://tools.thehacker.recipes/",
+      "file": ".cache/repository-provenance-review/captures/identity-07.html",
+      "sha256": "1a0310ef48e03fab642ffb2fa61cbbbc9c21648e6716fe768b3249272b22adc6",
+      "title": "Introduction | The Hacker Tools",
+      "heading": "Introduction",
+      "author": null,
+      "description": null,
+      "canonical": "https://tools.thehacker.recipes/",
+      "identityLinks": [
+        "https://github.com/GhostPack/Rubeus",
+        "https://github.com/ShutdownRepo/Exegol"
+      ],
+      "introduction": [
+        "This project is part of The Hacker Recipes and is a work in progress. I started it in 2021 and have absolutely no idea when this could be finished (will it ever be?).",
+        "The Hacker Tools is focused on documenting and giving tips & tricks on common infosec tools"
+      ]
+    },
+    {
+      "id": "identity-08",
+      "type": "publisher-identity",
+      "url": "https://cravaterouge.com/",
+      "checkedAt": "2026-09-07T11:05:00.211Z",
+      "status": 200,
+      "finalUrl": "https://cravaterouge.com/",
+      "file": ".cache/repository-provenance-review/captures/identity-08.html",
+      "sha256": "0a2c9ad3b5b40aa9fb862ee908f05f8acbec2335366058c9f45d6e3561d0c634",
+      "title": "Home | CravateRouge Ltd",
+      "heading": "Baptiste Crépin",
+      "author": "Baptiste Crépin",
+      "description": "Keep it tight with your security. At CravateRouge Ltd we provide cybersecurity services tailored to your needs.",
+      "canonical": "https://cravaterouge.com/",
+      "identityLinks": [],
+      "introduction": [
+        "Searching...",
+        ""
+      ]
+    },
+    {
+      "id": "identity-09",
+      "type": "publisher-identity",
+      "url": "https://www.sudo.ws/about/intro/",
+      "checkedAt": "2026-09-07T11:05:00.339Z",
+      "status": 200,
+      "finalUrl": "https://www.sudo.ws/about/intro/",
+      "file": ".cache/repository-provenance-review/captures/identity-09.html",
+      "sha256": "6fe0ca8760310799b66b9bcb8217af38ae7f2e6577a5f385c18ee0c44607e6c8",
+      "title": "A Short Introduction | Sudo",
+      "heading": "A Short Introduction",
+      "author": null,
+      "description": "Sudo (su “do”) allows a system administrator to delegate authority to give certain users (or groups of users) the ability to run some (or all) commands as root or another user while providing an audit trail of the commands and their arguments. Sudo operates on a per-command basis, it is not a replacement for the shell. Its features include:\nThe ability to restrict the commands a user may run on a per-host basis.",
+      "canonical": "https://www.sudo.ws/about/intro/",
+      "identityLinks": [
+        "https://github.com/sudo-project/sudo"
+      ],
+      "introduction": [
+        "Sudo (su “do”) allows a system administrator to delegate authority to give certain users (or groups of users) the ability to run some (or all) commands as root or another user while providing an audit trail of the commands and their arguments. Sudo operates on a per-command basis, it is not a replacement for the shell. Its features include:",
+        "The ability to restrict the commands a user may run on a per-host basis."
+      ]
+    },
+    {
+      "id": "identity-10",
+      "type": "publisher-identity",
+      "url": "https://www.samba.org/",
+      "checkedAt": "2026-09-07T11:05:00.471Z",
+      "status": 200,
+      "finalUrl": "https://www.samba.org/",
+      "file": ".cache/repository-provenance-review/captures/identity-10.html",
+      "sha256": "9edf145da6b8eab0e91d5f52d429878e1d393d6562ececcc5b3dcb27feaad34b",
+      "title": "Samba - opening windows to a wider world",
+      "heading": null,
+      "author": null,
+      "description": "Home of Samba, the SMB file server",
+      "canonical": null,
+      "identityLinks": [],
+      "introduction": [
+        "On August 22, 2026, the Samba team lost a member and dear friend, Steve French.",
+        "Steve devoted so much of his life to the SMB community, and his friendliness and respect for others guided and encouraged countless people."
+      ]
+    }
+  ]
+}

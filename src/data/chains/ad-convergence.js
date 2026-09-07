@@ -11,7 +11,89 @@ const htGroupsRef = { label: 'HackTricks, Privileged Groups & Token Privileges',
  */
 /** @type {import('../schema.js').TechniqueNodeDef[]} */
 export const adConvergenceNodes = [
-  { id: 'ad-cat-priv-groups', label: 'Privileged Groups & Roles', phase: 'priv-esc', kind: 'category', summary: 'Each privileged group or admin role opens a route to DA.', description: "Each privileged group or admin role carries a distinct escalation: built-in AD groups like Account Operators, Backup Operators, Server Operators, and DnsAdmins, plus application-admin roles such as SCCM Full Administrator. Membership in any of these is often a direct route to Domain Admin or to SYSTEM on a domain controller. Cert Publishers is the exception: membership alone is not a route to DA, it only grants write over the userCertificate attribute and is dangerous only when paired with an AD CS misconfiguration such as write access to NTAuthCertificates.", references: [ { label: 'HackTricks, Privileged Groups & Token Privileges', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html' }, { label: 'The Hacker Recipes, Built-in security groups', url: 'https://www.thehacker.recipes/ad/movement/builtins/security-groups' }, ], },
+  {
+    "id": "ad-cat-priv-groups",
+    "label": "Privileged Groups & Roles",
+    "phase": "priv-esc",
+    "kind": "category",
+    "summary": "Understand administrative roles by their permissions and scope.",
+    "description": "AD security groups receive user rights and permissions for resources. Endpoint-management systems have their own role models: Configuration Manager combines roles with security scopes and collections. Membership or an administrative title should therefore be interpreted in its own security model. The various groups and product roles in this category do not share one identical permission set.",
+    "references": [
+      {
+        "label": "Microsoft, Active Directory security groups",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+        "kind": "primary",
+        "section": "Introduction; Group types; Group scope"
+      },
+      {
+        "label": "Microsoft, Configuration Manager role-based administration",
+        "url": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration",
+        "kind": "primary",
+        "section": "Introduction; Security roles; Collections; Security scopes"
+      },
+      {
+        "label": "HackTricks, Privileged Groups & Token Privileges",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html"
+      },
+      {
+        "label": "The Hacker Recipes, Built-in security groups",
+        "url": "https://www.thehacker.recipes/ad/movement/builtins/security-groups"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category summary and description only. Does not cover existing commands or tools, linked techniques, connection outcomes, operational applicability, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "AD security groups receive user rights and permissions for resources. Endpoint-management systems have their own role models: Configuration Manager combines roles with security scopes and collections. Membership or an administrative title should therefore be interpreted in its own security model. The various groups and product roles in this category do not share one identical permission set.",
+        "id": "ad-cat-priv-groups",
+        "kind": "category",
+        "label": "Privileged Groups & Roles",
+        "phase": "priv-esc",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Active Directory security groups",
+            "section": "Introduction; Group types; Group scope",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Configuration Manager role-based administration",
+            "section": "Introduction; Security roles; Collections; Security scopes",
+            "url": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration"
+          },
+          {
+            "label": "HackTricks, Privileged Groups & Token Privileges",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html"
+          },
+          {
+            "label": "The Hacker Recipes, Built-in security groups",
+            "url": "https://www.thehacker.recipes/ad/movement/builtins/security-groups"
+          }
+        ],
+        "summary": "Understand administrative roles by their permissions and scope."
+      },
+      "claims": [
+        {
+          "text": "AD security groups can receive user rights and resource permissions, which are different forms of authority.",
+          "section": "Microsoft, Active Directory security groups — Security groups",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          ]
+        },
+        {
+          "text": "Configuration Manager defines administrative access through the combination of security roles, security scopes, and collections.",
+          "section": "Microsoft, Configuration Manager role-based administration — Introduction; Security roles; Collections; Security scopes",
+          "sources": [
+            "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration"
+          ]
+        }
+      ]
+    }
+  },
 
   {
     id: 'pg-sccm-admins',

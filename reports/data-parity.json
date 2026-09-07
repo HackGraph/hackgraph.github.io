@@ -1,0 +1,1476 @@
+{
+  "baseline": "4e4901f",
+  "scope": "Entire imported map data. Changes include the earlier citation/taxonomy corrections and the summaries, descriptions, citations, and scoped review records of seventy-one category overviews, eight start/goal overviews, seven identity/permissions explanations, six account/authentication explanations, six execution-context explanations, one KDC account explanation, nine Windows privilege explanations, eight Linux configuration explanations, and eight previously uncited conceptual explanations. One connection caption now reads security controls instead of managed host?.",
+  "before": "ff53df9e46d5389884242d567806ddb38ec9beac5b1c942cf146d60968e357c5",
+  "after": "838721344ef1caaff92b154dccb3569747aa06cb2969ce9276b860c4866dfdb8",
+  "equal": false,
+  "changes": [
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "start",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "relay-unsigned",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "crack-netntlm",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "local-admin-host",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "valid-domain-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "valid-local-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "crack-hash-offline",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "service-account-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "lateral-movement-cme",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "find-privesc-path",
+      "fields": [
+        "references",
+        "summary",
+        "description",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "krbtgt-hash",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "domain-admin",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "reverse-shell",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "skeleton-key",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "pass-the-certificate",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "expired-password-reset",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "adfs-golden-saml",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-noauth",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-poisoning",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-services",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-enum",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-credaccess",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-coercion",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-roasting",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-managed-secrets",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-dacl",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-adcs",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-adcs-template",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-adcs-ca",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-delegation",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-cve",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-lateral",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-cred-reuse",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-mssql",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-sccm",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-deploy-abuse",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-platform",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "lat-cat-smb",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "lat-cat-wmidcom",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "lat-cat-logon",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "lat-cat-shell",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-account-abuse",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "acl-tgt-control",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "acl-tgt-user",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "acl-tgt-computer",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "acl-tgt-group",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "acl-tgt-policy",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "persist-forgery",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "persist-implant",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "persist-backdoor",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "persist-fed",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "cvegrp-kerberos",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "cvegrp-exchange",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "cvegrp-smbprint",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "pgcat-ops",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "pgcat-service",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "pgcat-deploy",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-cred-dump",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-host-dump",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-user-secrets",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-dc-dump",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-trusts",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-persistence",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-quick-compromise",
+      "fields": [
+        "references",
+        "summary",
+        "description",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "trust-modification",
+      "fields": [
+        "references"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "enterprise-admin",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "ad",
+      "type": "nodes",
+      "id": "ad-cat-priv-groups",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-start",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "nt-system",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-foothold-start",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-cat-logon",
+      "fields": [
+        "references",
+        "summary",
+        "description",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-logon-password",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-logon-kerberos",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-cat-evasion",
+      "fields": [
+        "mitre",
+        "references",
+        "summary",
+        "description",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "win-evade-amsi-av",
+      "fields": [
+        "mitre",
+        "references"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-priv",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-admin",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-enum",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-svc-account",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-tokens",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-groups",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-uac",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-admin2sys",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "creds-registry",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "creds-files",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "creds-vaults",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-services",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-dll",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-tasks",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-apps",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-cat-cve",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-sebackup-restore",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-sedebug-lsass",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-setakeownership",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-seloaddriver",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-semanagevolume",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-setrustedcredman",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-secreatetoken",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-setcb",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-serelabel",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-admins-filtered",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-admin-schtask-system",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-unquoted-service-path",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-weak-service-perms",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-insecure-service-binary",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-weak-registry-service",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-service-dll-hijack",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-autorun-writable",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-scheduled-task-abuse",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-prim-kernel-exec",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "nodes",
+      "id": "pe-recovered-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "win-pe",
+      "type": "edges",
+      "id": "pe-start → win-cat-evasion",
+      "fields": [
+        "label"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-start",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-root",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-identity",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-hostcontrols",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-sudo",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-suid",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-jobs",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-files",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-containers",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cat-kernel",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-caps",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-cron-writable",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-systemd",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-ssh-keys",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-passwd",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-shadow",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-nfs",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-docker",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-lxd",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ]
+    },
+    {
+      "map": "linux-pe",
+      "type": "nodes",
+      "id": "lin-kernel-recent",
+      "fields": [
+        "references"
+      ]
+    }
+  ],
+  "excludingCitationMetadata": {
+    "scope": "Omit node/edge mitre and references fields only. Seventy-one category overviews, eight start/goal overviews, seven identity/permissions explanations, six account/authentication explanations, six execution-context explanations, one KDC account explanation, nine Windows privilege explanations, eight Linux configuration explanations, and eight previously uncited conceptual explanations with their review records now differ.",
+    "before": "7c2ee18bfe0e14db282e1e9965520663ea91f85d60bcf0b7bf04577bdab8abb7",
+    "after": "c6185cb996ccc131d8be69e96d5ccbfdec2ff556ad1a230c206e406522c7931b",
+    "equal": false
+  },
+  "sharedRelationshipDefinitions": {
+    "scope": "Shared presentation vocabulary, separate from imported map entries.",
+    "before": "fc67be745067f0e6cd7fc0fba79e4c4a259d5278c02f9ffd7b9f68c409422313",
+    "after": "24b55cfd1dcde7e8c4e5a2af8b65fedf701ebeed5dc76e278effe9d88a6113df",
+    "equal": false,
+    "beforeCount": 12,
+    "afterCount": 4,
+    "changes": "Four used definitions rewritten with scoped evidence or project convention; eight unused definitions removed. See RELATIONSHIP_REVIEW.md."
+  },
+  "excludingDocumentedChanges": {
+    "scope": "Apply only citation/taxonomy metadata changes and the seventy-one category, eight start/goal, seven identity/permissions, six account/authentication, six execution-context, one KDC account, nine Windows privilege eight Linux configuration and eight previously uncited conceptual summary/description/review corrections plus the documented neutral connection caption to baseline. Every other field, node ID, edge endpoint, command, and applicability value must match.",
+    "expected": "838721344ef1caaff92b154dccb3569747aa06cb2969ce9276b860c4866dfdb8",
+    "actual": "838721344ef1caaff92b154dccb3569747aa06cb2969ce9276b860c4866dfdb8",
+    "equal": true
+  }
+}

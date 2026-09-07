@@ -1,44 +1,216 @@
 import { peTechniqueNodes, peTechniqueEdges } from '../chains/pe-techniques.js';
 import { winFootholdNodes, winFootholdEdges } from '../chains/win-foothold.js';
 
-const r = String.raw;
-
 /** Fixed anchors: the local-foothold milestone and the goal. The map's root is the
  *  hand-curated front-end's "Get a Foothold" node (win-foothold-start, in win-foothold),
  *  which fans into the Credentialed Logon and Execution & Evasion lanes. */
 /** @type {import('../schema.js').TechniqueNodeDef[]} */
 const anchorNodes = [
   {
-    id: 'pe-start',
-    label: 'Local Foothold',
-    phase: 'triage',
-    kind: 'start',
-    summary: 'A low-privilege shell. Triage the account first.',
-    description:
-      'You have command execution as a low-privilege (or service) account on a domain-joined or standalone Windows machine; the goal is NT AUTHORITY\\SYSTEM (or local admin). Before any tooling, establish the security context. whoami names the account, so a service identity (LOCAL/NETWORK SERVICE, an application pool, MSSQL) is its own path; whoami /priv and whoami /groups decide the rest: a privileged token or group, an administrator restricted by UAC, or an unprivileged user who must enumerate the host for a misconfiguration.',
-    tools: [
-      { name: 'winPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
-      { name: 'Seatbelt', url: 'https://github.com/GhostPack/Seatbelt' },
-      { name: 'PrivescCheck', url: 'https://github.com/itm4n/PrivescCheck' },
+    "id": "pe-start",
+    "label": "Local Foothold",
+    "phase": "triage",
+    "kind": "start",
+    "summary": "Understand the account and token behind a Windows process.",
+    "description": "A Windows process or thread has a security context represented by an access token. The token includes account identity, group information, and privileges. A service runs with the token of its configured service account. Having a command session therefore needs to be understood through that account context; service identities and interactive user accounts should not be treated as a single uniform permission set.",
+    "tools": [
+      {
+        "name": "winPEAS",
+        "url": "https://github.com/peass-ng/PEASS-ng"
+      },
+      {
+        "name": "Seatbelt",
+        "url": "https://github.com/GhostPack/Seatbelt"
+      },
+      {
+        "name": "PrivescCheck",
+        "url": "https://github.com/itm4n/PrivescCheck"
+      }
     ],
-    commands: [
-      { label: 'Check your own privileges/groups', code: r`whoami /priv & whoami /groups`, lang: 'cmd' },
-      { label: 'winPEAS (fast checks)', code: r`winpeasany.exe quiet fast`, lang: 'cmd' },
-      { label: 'PrivescCheck (PowerShell)', code: r`powershell -ep bypass -c ". .\PrivescCheck.ps1; Invoke-PrivescCheck"`, lang: 'powershell' },
+    "commands": [
+      {
+        "label": "Check your own privileges/groups",
+        "code": "whoami /priv & whoami /groups",
+        "lang": "cmd"
+      },
+      {
+        "label": "winPEAS (fast checks)",
+        "code": "winpeasany.exe quiet fast",
+        "lang": "cmd"
+      },
+      {
+        "label": "PrivescCheck (PowerShell)",
+        "code": "powershell -ep bypass -c \". .\\PrivescCheck.ps1; Invoke-PrivescCheck\"",
+        "lang": "powershell"
+      }
     ],
-    requires: ['A low-privilege shell on the host'],
-    references: [{ label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }],
-    opsec: 'winPEAS/Seatbelt are noisy on disk and signatured by EDR. Consider running in-memory or using the built-in whoami/accesschk checks on monitored hosts.',
+    "requires": [
+      "A low-privilege shell on the host"
+    ],
+    "references": [
+      {
+        "label": "Microsoft, Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Service User Accounts",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Windows Local Privilege Escalation",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+      }
+    ],
+    "opsec": "winPEAS/Seatbelt are noisy on disk and signatured by EDR. Consider running in-memory or using the built-in whoami/accesschk checks on monitored hosts.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected identity and authorization claims in this overview. Excludes commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings. Navigation labels are project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "whoami /priv & whoami /groups",
+            "label": "Check your own privileges/groups",
+            "lang": "cmd"
+          },
+          {
+            "code": "winpeasany.exe quiet fast",
+            "label": "winPEAS (fast checks)",
+            "lang": "cmd"
+          },
+          {
+            "code": "powershell -ep bypass -c \". .\\PrivescCheck.ps1; Invoke-PrivescCheck\"",
+            "label": "PrivescCheck (PowerShell)",
+            "lang": "powershell"
+          }
+        ],
+        "description": "A Windows process or thread has a security context represented by an access token. The token includes account identity, group information, and privileges. A service runs with the token of its configured service account. Having a command session therefore needs to be understood through that account context; service identities and interactive user accounts should not be treated as a single uniform permission set.",
+        "id": "pe-start",
+        "kind": "start",
+        "label": "Local Foothold",
+        "opsec": "winPEAS/Seatbelt are noisy on disk and signatured by EDR. Consider running in-memory or using the built-in whoami/accesschk checks on monitored hosts.",
+        "phase": "triage",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access Tokens",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Service User Accounts",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          },
+          {
+            "label": "HackTricks, Windows Local Privilege Escalation",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+          }
+        ],
+        "requires": [
+          "A low-privilege shell on the host"
+        ],
+        "summary": "Understand the account and token behind a Windows process.",
+        "tools": [
+          {
+            "name": "winPEAS",
+            "url": "https://github.com/peass-ng/PEASS-ng"
+          },
+          {
+            "name": "Seatbelt",
+            "url": "https://github.com/GhostPack/Seatbelt"
+          },
+          {
+            "name": "PrivescCheck",
+            "url": "https://github.com/itm4n/PrivescCheck"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows access tokens describe process or thread security context, including account identity, groups, and privileges.",
+          "section": "Microsoft, Access Tokens — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        },
+        {
+          "text": "A Windows service executes in the security context of its configured account and receives an access token for that account.",
+          "section": "Microsoft, Service User Accounts — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'nt-system',
-    label: 'NT AUTHORITY\\SYSTEM',
-    phase: 'system',
-    kind: 'goal',
-    summary: '👑 Full local SYSTEM privileges.',
-    description:
-      'You hold SYSTEM (or local administrator) on the host, with full control of the machine, its services, and any credentials in memory or on disk. From here, dump credentials and pivot. On a domain-joined host the next move is the Active Directory map, but it is not always AD: a dumped local-admin hash reused across a workgroup, or a recovered service-account credential, moves you host-to-host with no domain involved (see the Local Lateral Movement branch).',
-    requires: ['Any one successful local escalation vector'],
+    "id": "nt-system",
+    "label": "NT AUTHORITY\\SYSTEM",
+    "phase": "system",
+    "kind": "goal",
+    "summary": "Understand LocalSystem as a distinct Windows account identity.",
+    "description": "LocalSystem is a predefined account used by the service control manager. It has extensive privileges on the local computer and acts as the computer on the network. It is not associated with a logged-on user account. A LocalSystem process and an interactive administrator process therefore have distinct account identities; this label should not be used as a synonym for every kind of local administrative access.",
+    "requires": [
+      "Any one successful local escalation vector"
+    ],
+    "references": [
+      {
+        "label": "Microsoft, LocalSystem Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected identity and authorization claims in this overview. Excludes commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings. Navigation labels are project conventions.",
+      "reviewedContent": {
+        "description": "LocalSystem is a predefined account used by the service control manager. It has extensive privileges on the local computer and acts as the computer on the network. It is not associated with a logged-on user account. A LocalSystem process and an interactive administrator process therefore have distinct account identities; this label should not be used as a synonym for every kind of local administrative access.",
+        "id": "nt-system",
+        "kind": "goal",
+        "label": "NT AUTHORITY\\SYSTEM",
+        "phase": "system",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalSystem Account",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          }
+        ],
+        "requires": [
+          "Any one successful local escalation vector"
+        ],
+        "summary": "Understand LocalSystem as a distinct Windows account identity."
+      },
+      "claims": [
+        {
+          "text": "LocalSystem is a predefined service-control-manager account with extensive local privileges and acts as the computer on the network.",
+          "section": "Microsoft, LocalSystem Account — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        },
+        {
+          "text": "LocalSystem is not associated with a logged-on user account.",
+          "section": "Microsoft, LocalSystem Account — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        }
+      ]
+    }
   },
 ];
 

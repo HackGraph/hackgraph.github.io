@@ -1,0 +1,19 @@
+{
+  "scope": "Bibliographic recovery attempt only. The Wayback availability API returned HTTP 429 for both the current and legacy CyberArk publication URLs. No archive location or publication body was obtained, no access restriction was bypassed, and no citation or review status changed.",
+  "results": [
+    {
+      "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "endpoint": "https://archive.org/wayback/available?url=https%3A%2F%2Fwww.cyberark.com%2Fresources%2Fthreat-research-blog%2Fgolden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps&timestamp=20250101",
+      "checkedAt": "2026-09-07T14:03:17.382Z",
+      "status": 429,
+      "body": "<html><body><h1>429 Too Many Requests</h1>\nYou have sent too many requests in a given amount of time.\n</body></html>\n"
+    },
+    {
+      "url": "https://www.cyberark.com/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps/",
+      "endpoint": "https://archive.org/wayback/available?url=https%3A%2F%2Fwww.cyberark.com%2Fthreat-research-blog%2Fgolden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps%2F&timestamp=20250101",
+      "checkedAt": "2026-09-07T14:03:17.423Z",
+      "status": 429,
+      "body": "<html><body><h1>429 Too Many Requests</h1>\nYou have sent too many requests in a given amount of time.\n</body></html>\n"
+    }
+  ]
+}

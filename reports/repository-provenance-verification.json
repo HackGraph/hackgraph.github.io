@@ -1,0 +1,106 @@
+{
+  "checkedAt": "2026-09-07T11:13:17.447Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 140,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 126,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "e8791899e8e5359d52bf2d99950303d8528ce92a9426f428bf18a9316d293ca2",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "e712abba89351ad090c4033799271a53f4593b1e80d77fff7a7ab65aebdd9d51",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/source-provenance.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "5c8c74b14f7495c8ff650fabb0d7f80b61ef59c5b797b6d6814e3a8fe4cb9e90",
+  "graphDataUnchanged": true,
+  "claimReviewRecordsUnchanged": true,
+  "reviewedEntries": 98,
+  "selectedClaims": 209,
+  "provenance": {
+    "groups": 63,
+    "urls": 300,
+    "groupsAdded": 51,
+    "urlsAdded": 84,
+    "additionalOccurrencesClassified": 95,
+    "totalOccurrencesClassifiedByRegistry": 503,
+    "remainingUnclassified": 234,
+    "affectedEntries": 82,
+    "affectedComparedEntries": 4,
+    "byKindAdded": {
+      "primary": {
+        "urls": 68,
+        "occurrences": 76
+      },
+      "research": {
+        "urls": 1,
+        "occurrences": 1
+      },
+      "community": {
+        "urls": 15,
+        "occurrences": 18
+      }
+    }
+  },
+  "captures": {
+    "repositoryMetadata": 40,
+    "repositoryCitations": 53,
+    "documentationCitations": 31,
+    "supportingIdentityPages": 11,
+    "responded": 134,
+    "unusedIdentityProbe404": 1
+  },
+  "citationFindings": {
+    "findings": 3,
+    "affectedOccurrences": 4,
+    "requestedChapterRedirectsToHome": 1,
+    "relocationNotices": 2
+  },
+  "generatedPagesRepeatable": true,
+  "inventoryCsvUnchanged": true,
+  "hashes": {
+    "reference/active-directory.html": "731f774861cf28ff1039ef58a52418f6dc29840f1bec8e0909bf1f65e3f0eb99",
+    "reference/linux-privilege-escalation.html": "1e14137223f29a1e889b12873b89d7da66aafe799211804f0a7b437cdfd2a7ed",
+    "reference/windows-privilege-escalation.html": "21b3e5ecc4be55b51567d7854143b36299a1b69b68432f6ad0cb242e4791a5f0",
+    "src/data/source-provenance.js": "84004813a7b5ecde29b6896235d97b7678d6b3c1b7b197914200e1e047ea7bd5",
+    "reports/source-provenance.json": "2d611cf82c3b427d3089848ff25628f7e2b0a65271b0e00bfe6f5815deca5d12",
+    "reports/repository-provenance-capture.json": "b654937a854b8a0788d66037947ed95d07da22688b2a8b40cbc9d214e07655d0",
+    "reports/project-documentation-provenance-capture.json": "c6145c892c0a1df8694d8504ae2768d63c8671717d1749357abc99be6e207fd5",
+    "reports/repository-citation-findings.json": "5f6be1ab04b787aa9adda85be19492aebbc294268343cf7fdd23e5d45e0280ae",
+    "reports/content-coverage.json": "bddfc9d110fe73ca14be655180367b7cd5b6dd868dc3bc7af824d6b6ea0bb267",
+    "reports/review-inventory.json": "10645fe886a86c97ede7a2c7756ca43136eb99f53177df2ba273810f11faca62",
+    "reports/review-inventory.csv": "ff21591f8968d7a54ba09b5b199a671dee3315db20a31e34de7539f77f6ae9b2",
+    "reports/REPOSITORY_PROVENANCE_REVIEW.md": "fa5972146a74bcec87943e132eea46faaa5ba50f313f76f164577577c926f535",
+    "reports/HUMAN_REVIEW.md": "4ccb4fa2434355668ff6506f58ad70c63bacccb74938868b1db91fc13cd55878",
+    "reports/VERIFICATION.md": "f4d63055788d6dc7a131bbcdfb426c94360747127ac96eb7d0ac80b0821dad14",
+    "README.md": "c0f39a5d630653024b3137142b1cecc63cd705ad07e64fe43bf6e18d60a9bd2d",
+    "RELEASE_NOTES.md": "03df538cc697fc14fd2a3e860fc08bad9520f20eeddff08dfa0fb1dcbde3342b",
+    "IMPLEMENTATION_PLAN.md": "40c8f48bfc3990cddf12939b54dc6ce16c17215c4765dd72dca8e1a116c069ec"
+  },
+  "logPath": ".cache/repository-provenance-review/full-tests.log",
+  "logSha256": "fbee372409de64986f4a2fa2e288be83f079c6788483249ebc412f4348faf13b",
+  "scope": "Publication identity/type classification and citation-destination observations. Every authored graph field and claim-review record is unchanged. The full suite verifies the existing source-label presentation; no rendering logic or style change, additional manual visual pass, complete URL sweep, human review, operational validation, motion benchmark, hosted workflow run or deployment is claimed."
+}

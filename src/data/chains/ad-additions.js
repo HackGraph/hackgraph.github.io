@@ -896,7 +896,7 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
     mitre: mitre('T1059'),
     opsec: 'An outbound connection to an attacker IP/port and a shell-spawning parent (w3wp/sqlservr → powershell) are prime EDR signals. Use common ports (443), encrypt where you can, and avoid stock one-liners that signatures already know.',
     references: [
-      { label: 'PayloadsAllTheThings, Reverse Shell Cheatsheet', url: 'https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md' },
+      { label: 'Internal All The Things, Reverse Shell Cheat Sheet', url: 'https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/' },
       { label: 'HackTricks, Windows Reverse Shells', url: 'https://book.hacktricks.wiki/en/generic-hacking/reverse-shells/windows.html' },
     ],
   },
@@ -1116,7 +1116,8 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
     references: [
       {
         label: 'Secureworks CTU, Skeleton Key Malware Analysis (original discovery)',
-        url: 'https://www.secureworks.com/research/skeleton-key-malware-analysis',
+        url: 'https://www.sophos.com/en-us/research/skeleton-key-malware-analysis',
+        kind: 'research',
       },
       { label: 'The Hacker Recipes, Skeleton key', url: 'https://www.thehacker.recipes/ad/persistence/skeleton-key/' },
     ],
@@ -1165,7 +1166,7 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
     mitre: mitre('T1649'),
     references: [
       { label: 'HackTricks, AD CS Account Persistence', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/ad-certificates/account-persistence.html' },
-      { label: 'Certipy wiki, Authentication (Pass the Certificate / PKINIT)', url: 'https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication' },
+      { label: 'Certipy wiki, Usage (sub-command overview)', url: 'https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage' },
       { label: 'The Hacker Recipes, UnPAC the hash', url: 'https://www.thehacker.recipes/ad/movement/kerberos/unpac-the-hash' },
       { label: 'dirkjanm, PKINITtools (getnthash.py)', url: 'https://github.com/dirkjanm/PKINITtools' },
     ],
@@ -1554,28 +1555,48 @@ changepasswd.py 'domain.local/user@10.0.0.1' -newhashes :<ORIGINAL_HASH>   # res
     opsec: 'Reading the ADSync database and DPAPI keyset is quieter than touching LSASS, but the recovered connector account then performing a DCSync raises DS-Replication (4662) events on the DC. Hosts that run directory sync are high-value and frequently better monitored.',
   },
   {
-    id: 'expired-password-reset',
-    label: 'Reset Expired / Must-Change Password',
-    phase: 'credential-access',
-    needs: 'none',
-    summary: 'A spray hit flagged STATUS_PASSWORD_MUST_CHANGE is reset over SAMR into working creds.',
-    description:
-      "Password spraying (or a default / blank password) sometimes returns STATUS_PASSWORD_MUST_CHANGE rather than a clean success: the account is valid but its password is expired or flagged to change at next logon, so it cannot be used yet. A SAMR password change turns the dead hit into a usable domain credential. For an expired / must-change account you supply the KNOWN expired password; the change succeeds because SAMR ChangePasswordUser2 is permitted over a null-session IPC$ connection even though interactive logon is blocked. (A genuinely blank-password account is the separate case where the old value is empty.) This differs from ForceChangePassword (an extended right held over a DIFFERENT principal) and from setting a password by NT hash (which needs the current hash).",
-    tools: [
-      { name: 'NetExec (change-password)', url: 'https://github.com/Pennyw0rth/NetExec' },
-      { name: 'impacket changepasswd.py', url: 'https://github.com/fortra/impacket' },
+    "id": "expired-password-reset",
+    "label": "Reset Expired / Must-Change Password",
+    "phase": "credential-access",
+    "needs": "none",
+    "summary": "A spray hit flagged STATUS_PASSWORD_MUST_CHANGE is reset over SAMR into working creds.",
+    "description": "Password spraying (or a default / blank password) sometimes returns STATUS_PASSWORD_MUST_CHANGE rather than a clean success: the account is valid but its password is expired or flagged to change at next logon, so it cannot be used yet. A SAMR password change turns the dead hit into a usable domain credential. For an expired / must-change account you supply the KNOWN expired password; the change succeeds because SAMR ChangePasswordUser2 is permitted over a null-session IPC$ connection even though interactive logon is blocked. (A genuinely blank-password account is the separate case where the old value is empty.) This differs from ForceChangePassword (an extended right held over a DIFFERENT principal) and from setting a password by NT hash (which needs the current hash).",
+    "tools": [
+      {
+        "name": "NetExec (change-password)",
+        "url": "https://github.com/Pennyw0rth/NetExec"
+      },
+      {
+        "name": "impacket changepasswd.py",
+        "url": "https://github.com/fortra/impacket"
+      }
     ],
-    commands: [
-      { label: 'Reset a must-change account (NetExec)', code: r`nxc smb 10.0.0.1 -u user -p OldExpiredPw -M change-password -o NEWPASS='NewPass123!'`, lang: 'bash' },
-      { label: 'Reset over SMB-SAMR (impacket)', code: r`changepasswd.py 'domain.local/user:OldExpiredPw@10.0.0.1' -newpass 'NewPass123!'`, lang: 'bash' },
+    "commands": [
+      {
+        "label": "Reset a must-change account (NetExec)",
+        "code": "nxc smb 10.0.0.1 -u user -p OldExpiredPw -M change-password -o NEWPASS='NewPass123!'",
+        "lang": "bash"
+      },
+      {
+        "label": "Reset over SMB-SAMR (impacket)",
+        "code": "changepasswd.py 'domain.local/user:OldExpiredPw@10.0.0.1' -newpass 'NewPass123!'",
+        "lang": "bash"
+      }
     ],
-    mitre: mitre('T1098'),
-    references: [
-      { label: 'The Hacker Recipes, Password spraying', url: 'https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/spraying' },
-      { label: 'n00py, Resetting an Expired Password Remotely', url: 'https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/' },
+    "mitre": {
+      "id": "T1098",
+      "url": "https://attack.mitre.org/techniques/T1098/"
+    },
+    "references": [
+      {
+        "label": "The Hacker Recipes, Password spraying",
+        "url": "https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/spraying"
+      }
     ],
-    requires: ['A spray hit returning STATUS_PASSWORD_MUST_CHANGE / password expired'],
-    opsec: 'A password change writes pwdLastSet and raises Event ID 4723 (a self-service change of the account\'s own password); 4724 is the ForceChangePassword/admin-reset case (see that node), not this one. Changing a real user password is disruptive and is usually noticed by the owner.',
+    "requires": [
+      "A spray hit returning STATUS_PASSWORD_MUST_CHANGE / password expired"
+    ],
+    "opsec": "A password change writes pwdLastSet and raises Event ID 4723 (a self-service change of the account's own password); 4724 is the ForceChangePassword/admin-reset case (see that node), not this one. Changing a real user password is disruptive and is usually noticed by the owner."
   },
   {
     id: 'account-state-edit',
@@ -1655,27 +1676,49 @@ SharpWSUS.exe approve /updateid:<guid> /computername:dc.domain.local /groupname:
     opsec: 'Update creation/approval is recorded by WSUS and the payload runs as SYSTEM via wuauclt; defenders watching WSUS content or unexpected approvals will catch it.',
   },
   {
-    id: 'adfs-golden-saml',
-    label: 'Golden SAML (ADFS Token Forgery)',
-    phase: 'persistence',
-    needs: 'local-admin',
-    summary: "Steal the AD FS token-signing key, then forge SAML tokens as any user to any federated app.",
-    description:
-      "Where the domain federates to cloud / SaaS via AD FS, the token-signing certificate plus the DKM master key (held in AD and unwrapped by the AD FS service account) sign every SAML assertion. With control of an AD FS server or its service account, ADFSDump reads the config DB and the DKM key and ADFSpoof forges a signed SAMLResponse for an arbitrary user with arbitrary claims. Like a Golden Ticket but for federation: it authenticates to any SAML SP (Microsoft 365, AWS, vSphere, etc.), bypasses MFA, and survives the impersonated user's password reset. Federation/hybrid-identity reach, beyond the on-prem domain.",
-    tools: [
-      { name: 'ADFSDump', url: 'https://github.com/mandiant/ADFSDump' },
-      { name: 'ADFSpoof', url: 'https://github.com/mandiant/ADFSpoof' },
+    "id": "adfs-golden-saml",
+    "label": "Golden SAML (ADFS Token Forgery)",
+    "phase": "persistence",
+    "needs": "local-admin",
+    "summary": "Steal the AD FS token-signing key, then forge SAML tokens as any user to any federated app.",
+    "description": "Where the domain federates to cloud / SaaS via AD FS, the token-signing certificate plus the DKM master key (held in AD and unwrapped by the AD FS service account) sign every SAML assertion. With control of an AD FS server or its service account, ADFSDump reads the config DB and the DKM key and ADFSpoof forges a signed SAMLResponse for an arbitrary user with arbitrary claims. Like a Golden Ticket but for federation: it authenticates to any SAML SP (Microsoft 365, AWS, vSphere, etc.), bypasses MFA, and survives the impersonated user's password reset. Federation/hybrid-identity reach, beyond the on-prem domain.",
+    "tools": [
+      {
+        "name": "ADFSDump",
+        "url": "https://github.com/mandiant/ADFSDump"
+      },
+      {
+        "name": "ADFSpoof",
+        "url": "https://github.com/mandiant/ADFSpoof"
+      }
     ],
-    commands: [
-      { label: 'Dump AD FS signing material (on the AD FS host)', code: r`ADFSDump.exe`, lang: 'cmd' },
-      { label: 'Forge a SAML token as a target user', code: r`python ADFSpoof.py -b EncryptedPfx.bin DKM.bin -s sts.corp.com saml2 --endpoint https://sp/saml --nameid admin@corp.com --rpidentifier urn:sp ...`, lang: 'bash' },
+    "commands": [
+      {
+        "label": "Dump AD FS signing material (on the AD FS host)",
+        "code": "ADFSDump.exe",
+        "lang": "cmd"
+      },
+      {
+        "label": "Forge a SAML token as a target user",
+        "code": "python ADFSpoof.py -b EncryptedPfx.bin DKM.bin -s sts.corp.com saml2 --endpoint https://sp/saml --nameid admin@corp.com --rpidentifier urn:sp ...",
+        "lang": "bash"
+      }
     ],
-    mitre: mitre('T1606.002'),
-    references: [
-      { label: 'CyberArk, Golden SAML (original research)', url: 'https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps' },
+    "mitre": {
+      "id": "T1606.002",
+      "url": "https://attack.mitre.org/techniques/T1606/002/"
+    },
+    "references": [
+      {
+        "label": "MITRE ATT&CK T1606.002 — SAML Tokens (taxonomy overview)",
+        "url": "https://attack.mitre.org/techniques/T1606/002/",
+        "kind": "taxonomy"
+      }
     ],
-    requires: ['Control of an AD FS server or its service account (token-signing cert + DKM key)'],
-    opsec: 'Forging happens offline, so the DC sees nothing; detection is SP-side (impossible/again-issued tokens, logins without a corresponding AD FS sign-in event). Rotating the token-signing certificate twice is what actually evicts it.',
+    "requires": [
+      "Control of an AD FS server or its service account (token-signing cert + DKM key)"
+    ],
+    "opsec": "Forging happens offline, so the DC sees nothing; detection is SP-side (impossible/again-issued tokens, logins without a corresponding AD FS sign-in event). Rotating the token-signing certificate twice is what actually evicts it."
   },
   {
     id: 'remotepotato',

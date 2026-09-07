@@ -182,17 +182,87 @@ export const ntlmRelayCveNodes = [
 
   // ── GROUP 2: quick-compromise CVEs (parent = ad-cat-quick-compromise) ────
   {
-    id: 'ad-cat-quick-compromise',
-    mitre: mitre('T1068'),
-    references: [
-      { label: 'Secura, Zerologon whitepaper (Tom Tervoort)', url: 'https://www.secura.com/uploads/whitepapers/Zerologon.pdf' },
+    "id": "ad-cat-quick-compromise",
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "references": [
+      {
+        "label": "CVE Program, CVE Record Lifecycle",
+        "url": "https://www.cve.org/about/Process",
+        "section": "CVE Records",
+        "kind": "primary"
+      },
+      {
+        "label": "CISA, Known Exploited Vulnerabilities Catalog",
+        "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+        "kind": "primary",
+        "section": "Introduction"
+      },
+      {
+        "label": "Secura, Zerologon whitepaper (Tom Tervoort)",
+        "url": "https://www.secura.com/uploads/whitepapers/Zerologon.pdf"
+      }
     ],
-    label: 'Quick Compromise',
-    phase: 'initial-access',
-    kind: 'category',
-    summary: 'Pre-auth, high-impact exploits: unauthenticated RCE to SYSTEM (EternalBlue, ProxyLogon/ProxyShell, SMBGhost) or an auth-bypass to Domain Admin (ZeroLogon).',
-    description:
-      'Pre-auth, high-impact exploits against exposed services that can hand you SYSTEM on a host or Domain Admin outright when a target is unpatched: EternalBlue, the Exchange ProxyLogon/ProxyShell chains, SMBGhost, and ZeroLogon against a DC.',
+    "label": "Quick Compromise",
+    "phase": "initial-access",
+    "kind": "category",
+    "summary": "Read vulnerability evidence without assuming a guaranteed outcome.",
+    "description": "A CVE Record describes a particular vulnerability and its affected products and versions. CISA's Known Exploited Vulnerabilities catalog records issues observed in real-world exploitation and supports remediation prioritization. Neither inclusion in a category nor inclusion in that catalog demonstrates that a particular installation is affected or that compromise is immediate.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category summary and description only. Does not cover existing commands or tools, linked techniques, connection outcomes, operational applicability, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "A CVE Record describes a particular vulnerability and its affected products and versions. CISA's Known Exploited Vulnerabilities catalog records issues observed in real-world exploitation and supports remediation prioritization. Neither inclusion in a category nor inclusion in that catalog demonstrates that a particular installation is affected or that compromise is immediate.",
+        "id": "ad-cat-quick-compromise",
+        "kind": "category",
+        "label": "Quick Compromise",
+        "mitre": {
+          "id": "T1068",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        "phase": "initial-access",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "CVE Program, CVE Record Lifecycle",
+            "section": "CVE Records",
+            "url": "https://www.cve.org/about/Process"
+          },
+          {
+            "kind": "primary",
+            "label": "CISA, Known Exploited Vulnerabilities Catalog",
+            "section": "Introduction",
+            "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+          },
+          {
+            "label": "Secura, Zerologon whitepaper (Tom Tervoort)",
+            "url": "https://www.secura.com/uploads/whitepapers/Zerologon.pdf"
+          }
+        ],
+        "summary": "Read vulnerability evidence without assuming a guaranteed outcome."
+      },
+      "claims": [
+        {
+          "text": "CVE Records include vulnerability descriptions, affected products and versions, and references.",
+          "section": "CVE Program, CVE Record Lifecycle — CVE Records",
+          "sources": [
+            "https://www.cve.org/about/Process"
+          ]
+        },
+        {
+          "text": "CISA describes KEV as a catalog of vulnerabilities exploited in the wild and an input to vulnerability-management prioritization.",
+          "section": "CISA, Known Exploited Vulnerabilities Catalog — Introduction",
+          "sources": [
+            "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'eternalblue',

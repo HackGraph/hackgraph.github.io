@@ -1,0 +1,159 @@
+{
+  "scope": "Retrieval provenance for sixteen conceptual claim comparisons in six category overviews. Claims and exact authored snapshots are recorded in each node review.",
+  "results": [
+    {
+      "label": "Docker, Linux post-installation steps",
+      "url": "https://docs.docker.com/engine/install/linux-postinstall/",
+      "kind": "primary",
+      "section": "Manage Docker as a non-root user: docker group warning",
+      "checkedAt": "2026-09-07T03:53:35.074Z",
+      "finalUrl": "https://docs.docker.com/engine/install/linux-postinstall/",
+      "code": 200,
+      "title": "Linux post-installation steps for Docker Engine | Docker Docs",
+      "sha256": "7904c3e55c4976f0a84d353387d06398b3f3a1dcae844326439170e78c41a3b2"
+    },
+    {
+      "label": "Docker, Rootless mode",
+      "url": "https://docs.docker.com/engine/security/rootless/",
+      "kind": "primary",
+      "section": "Introduction; How it works",
+      "checkedAt": "2026-09-07T03:53:35.235Z",
+      "finalUrl": "https://docs.docker.com/engine/security/rootless/",
+      "code": 200,
+      "title": "Rootless mode | Docker Docs",
+      "sha256": "322ead533818fb9ae306441a35fc0e2e920f8257d1f5df6f1af0543b805d7a9c"
+    },
+    {
+      "label": "Microsoft, Defender Antivirus in Windows",
+      "url": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows",
+      "kind": "primary",
+      "section": "Introduction; Comparing active mode, passive mode, and disabled mode",
+      "checkedAt": "2026-09-07T03:53:33.213Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows",
+      "code": 200,
+      "title": "Microsoft Defender Antivirus in Windows Overview - Microsoft Defender for Endpoint | Microsoft Learn",
+      "sha256": "6481c66676f047ece86e23479f6a436f1c70562ec4520fb4e08476ae456d8868"
+    },
+    {
+      "label": "Microsoft, Antimalware Scan Interface",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "kind": "primary",
+      "section": "Purpose; Windows components that integrate with AMSI",
+      "checkedAt": "2026-09-07T03:53:33.241Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "code": 200,
+      "title": "Antimalware Scan Interface (AMSI) - Win32 apps | Microsoft Learn",
+      "sha256": "84752d8925ac060db32b45ee411ae277cfb2cc9a09eac52c1c8d56f396131612"
+    },
+    {
+      "label": "Microsoft, Access tokens",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "kind": "primary",
+      "section": "Introduction; Access token contents",
+      "checkedAt": "2026-09-07T03:53:33.243Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "title": "Access Tokens - Win32 apps | Microsoft Learn",
+      "sha256": "26d3d47790df0e0d906e9659acd6c60d79032f521e57d758e6350b09b14776ca"
+    },
+    {
+      "label": "Microsoft, How AccessCheck Works",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+      "kind": "primary",
+      "section": "DACLs",
+      "checkedAt": "2026-09-07T03:53:34.194Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+      "code": 200,
+      "title": "How AccessCheck Works - Win32 apps | Microsoft Learn",
+      "sha256": "2151a8470cd6cf6a35e325edeafb51d731110b59b3bd13720dbbd491987b455e"
+    },
+    {
+      "label": "Microsoft, Privileges",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "kind": "primary",
+      "section": "Introduction: privileges versus access rights; privilege assignment and checks",
+      "checkedAt": "2026-09-07T03:53:33.246Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "code": 200,
+      "title": "Privileges - Win32 apps | Microsoft Learn",
+      "sha256": "fdc6966a2b43e19653f0e626ddc2766bc7a8100059d74dbdb44fd33c38041289"
+    },
+    {
+      "label": "Microsoft, SID Attributes in an Access Token",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "kind": "primary",
+      "section": "Attribute table: SE_GROUP_ENABLED and SE_GROUP_USE_FOR_DENY_ONLY",
+      "checkedAt": "2026-09-07T03:53:34.198Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "code": 200,
+      "title": "SID Attributes in an Access Token - Win32 apps | Microsoft Learn",
+      "sha256": "4dff0a4f0e364b76004697eaf425c526382b5e3dc5f8bf6721b01124b0811198"
+    },
+    {
+      "label": "Linux man-pages, execve(2)",
+      "url": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: set-user-ID and set-group-ID behavior and restrictions",
+      "checkedAt": "2026-09-07T03:53:34.202Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "code": 200,
+      "title": "execve(2) - Linux manual page",
+      "sha256": "e6a2179d60de372376b6ab62e9b03a3daf37e334668d7e916c0e5d2d499449a8"
+    },
+    {
+      "label": "Cronie, crontab(5)",
+      "url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "kind": "primary",
+      "section": "DESCRIPTION; Jobs in /etc/cron.d/",
+      "checkedAt": "2026-09-07T03:53:34.470Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "code": 200,
+      "title": "crontab(5) - Linux manual page",
+      "sha256": "bddb8bbf11ee19fca2097cb6b27719f3991934610784d9f5590704003b668c98"
+    },
+    {
+      "label": "systemd, systemd.exec(5)",
+      "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+      "kind": "primary",
+      "section": "USER/GROUP IDENTITY: User=, Group=",
+      "checkedAt": "2026-09-07T03:53:35.024Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+      "code": 200,
+      "title": "systemd.exec(5) - Linux manual page",
+      "sha256": "36b59bd08d94cbebe419496a0be65420c05510ccd59dd0ada2cf8120a1750f62"
+    },
+    {
+      "label": "systemd, systemd.timer(5)",
+      "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: the unit activated by a timer",
+      "checkedAt": "2026-09-07T03:53:34.476Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+      "code": 200,
+      "title": "systemd.timer(5) - Linux manual page",
+      "sha256": "64e99fbc8d0f8b74a00eda4a9e504d97067f2ca0f3a8c6bf886a330d75b034ce"
+    },
+    {
+      "label": "Linux man-pages, capabilities(7)",
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: independently enabled capabilities; File capabilities",
+      "checkedAt": "2026-09-07T03:53:34.209Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "title": "capabilities(7) - Linux manual page",
+      "sha256": "4536153b1135369d157142328000b6d35c315e29f99a4a9f20e15c3d4ab73262"
+    },
+    {
+      "label": "Linux man-pages, user_namespaces(7)",
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: identities inside and outside a user namespace",
+      "checkedAt": "2026-09-07T03:53:35.243Z",
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "title": "user_namespaces(7) - Linux manual page",
+      "sha256": "661ea3ffeea210a9e6c0880fceb92c5336e611d6a10cfe6a5571a7aa975f0893"
+    }
+  ]
+}

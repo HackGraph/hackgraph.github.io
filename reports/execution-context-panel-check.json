@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-09-07T09:44:01.495Z",
+  "browser": "153.0.8010.12",
+  "scope": "Rendering, selected-claim visibility, panel overflow, and WCAG-tagged axe checks for all six changed execution-context panels at desktop and phone widths. Does not validate operational content.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "id": "local-admin-host",
+      "width": 1440,
+      "height": 1000,
+      "claims": 4,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-local-admin-host-desktop.png"
+    },
+    {
+      "id": "local-admin-host",
+      "width": 390,
+      "height": 844,
+      "claims": 4,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-local-admin-host-mobile.png"
+    },
+    {
+      "id": "service-account-creds",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "service-account-creds",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-prim-kernel-exec",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-pe-prim-kernel-exec-desktop.png"
+    },
+    {
+      "id": "pe-prim-kernel-exec",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-pe-prim-kernel-exec-mobile.png"
+    },
+    {
+      "id": "pe-admin-schtask-system",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-admin-schtask-system",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-scheduled-task-abuse",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-pe-scheduled-task-abuse-desktop.png"
+    },
+    {
+      "id": "pe-scheduled-task-abuse",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/execution-context-pe-scheduled-task-abuse-mobile.png"
+    },
+    {
+      "id": "pe-autorun-writable",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-autorun-writable",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    }
+  ]
+}

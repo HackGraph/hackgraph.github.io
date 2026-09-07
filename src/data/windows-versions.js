@@ -2,7 +2,7 @@
  * Canonical Windows version axis for the version filter.
  *
  * A technique node may carry `versions?: string[]` listing the version ids it applies
- * to (feature-update granularity). Omitting the field means "all versions"; only the
+ * to (feature-update granularity). Omitting the field means "not documented"; only the
  * version-SPECIFIC vectors (UAC bypasses patched in a given build, build-locked CVEs,
  * etc.) enumerate a restricted set. The filter dims any node whose `versions` is
  * defined and does NOT include the selected target version.
@@ -31,6 +31,8 @@ export const WINDOWS_VERSIONS = [
   { id: 'win11-22h2', label: 'Windows 11 22H2', family: 'client' },
   { id: 'win11-23h2', label: 'Windows 11 23H2', family: 'client' },
   { id: 'win11-24h2', label: 'Windows 11 24H2', family: 'client' },
+  { id: 'win11-25h2', label: 'Windows 11 25H2', family: 'client', catalogOnly: true },
+  { id: 'win11-26h1', label: 'Windows 11 26H1 (new devices)', family: 'client', catalogOnly: true },
   { id: 'srv2008', label: 'Server 2008 / R2', family: 'server' },
   { id: 'srv2012', label: 'Server 2012 / R2', family: 'server' },
   { id: 'srv2016', label: 'Server 2016', family: 'server' },
@@ -39,9 +41,24 @@ export const WINDOWS_VERSIONS = [
   { id: 'srv2025', label: 'Server 2025', family: 'server' },
 ];
 
-const ORDER = WINDOWS_VERSIONS.map((v) => v.id);
+// Preserve authored ranges when the catalog grows. New releases do not inherit
+// applicability from old open-ended ranges without an explicit content update.
+const ORDER = WINDOWS_VERSIONS.filter(v => !v.catalogOnly).map((v) => v.id);
 
-export const ALL_VERSION_IDS = [...ORDER];
+export const VERSION_CATALOG_SOURCE = {
+  url: 'https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information',
+  checkedAt: '2026-09-06',
+  note: '25H2 and 26H1 are catalog entries only. 26H1 targets new devices and is not an in-place feature update for existing 24H2 or 25H2 devices.',
+};
+
+export function versionCoverage(node, id) {
+  if (!id) return 'unfiltered';
+  if (!node.versions) return 'unknown';
+  if (node.versions.includes(id)) return 'authored';
+  return WINDOWS_VERSIONS.find(v => v.id === id)?.catalogOnly ? 'unknown' : 'outside-authored-range';
+}
+
+export const ALL_VERSION_IDS = WINDOWS_VERSIONS.map(v => v.id);
 export const CLIENT_IDS = WINDOWS_VERSIONS.filter((v) => v.family === 'client').map((v) => v.id);
 export const SERVER_IDS = WINDOWS_VERSIONS.filter((v) => v.family === 'server').map((v) => v.id);
 

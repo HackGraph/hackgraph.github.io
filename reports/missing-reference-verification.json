@@ -1,0 +1,174 @@
+{
+  "checkedAt": "2026-09-07T13:51:58.959Z",
+  "verificationCompleted": true,
+  "commands": [
+    {
+      "command": "npm run test:unit",
+      "exitCode": 0,
+      "passed": 144,
+      "logPath": ".cache/missing-reference-review/unit-tests.log",
+      "logSha256": "ad50642296ffaaaa300b6198aaddd496d66f3c05fa340ee849380d45a7815606"
+    },
+    {
+      "command": "npx playwright test --project=chromium",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/missing-reference-review/chromium-tests.log",
+      "logSha256": "dad92c0ccf5a48e26d99e06ac536e9cfc33b9b2088eef7f5d738ab50b78862a7"
+    },
+    {
+      "command": "npx playwright test --project=firefox",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/missing-reference-review/firefox-tests.log",
+      "logSha256": "f193ed2f9ace2ea1a9fa4e8d9727ec05093dd857f3b96769b1b3f65954e7910a"
+    },
+    {
+      "command": "npx playwright test --project=webkit",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/missing-reference-review/webkit-tests.log",
+      "logSha256": "5a9e9cf9747ff6e21affbb7efece9253da944ef1d3418aaca519d062e9543577"
+    },
+    {
+      "command": "npm run verify:build",
+      "exitCode": 0,
+      "logPath": ".cache/missing-reference-review/build-verification.log",
+      "logSha256": "c9400a50f0cd487f7c2a3fdc46ba444bfd564463149abb8b444674095f050ce5"
+    }
+  ],
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 144,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "allExpectedCasesPassed": true
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "b24a68f523ed22942faf4496bf4be6d4a1c39d5032b2453ba61c0929f587a639",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "5022316c8bc7e8a0361e2ce0966eb4e7bd0e40ad58f624ed20a4acd1dd8cbab1",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/credential-access.js",
+    "src/data/chains/initial-access.js",
+    "src/data/chains/pe-techniques.js",
+    "src/data/source-availability.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "ac257891dba9b36d61c8e0a4a1d38870f16bfdcfe5760311a394a59117409310",
+    "reference/windows-privilege-escalation.html": "4e2e7fc368c06aa44f829ecaf94dbbe7d7748ae6a027949c66ffe180dffa98be",
+    "reference/linux-privilege-escalation.html": "f9ce037bdde29b2c09670265be22d431544b33de9a18f9e266a31f8f8390b877",
+    "about.html": "213120b0218cc90c3cd05c7e95887ba14f152a348291db57964f07c20b89eab1",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "5fbebcdf69c71e3ea35013d915110579bda885a582e22e7a8922cccf7bb0f099",
+  "previousGraphDataSha256": "f8142a4271128b212b15de2af9a6d7db8003845b186c77b6bbcfb24638b59e37",
+  "conceptualEntries": [
+    "crack-netntlm",
+    "crack-hash-offline",
+    "lateral-movement-cme",
+    "pe-unquoted-service-path",
+    "pe-weak-service-perms",
+    "pe-insecure-service-binary",
+    "pe-weak-registry-service",
+    "pe-service-dll-hijack"
+  ],
+  "additionalClaims": 17,
+  "reviewedEntries": 124,
+  "selectedClaims": 264,
+  "unchangedEarlierReviews": 116,
+  "allOtherGraphFieldsUnchanged": true,
+  "sources": {
+    "retrieved": 14,
+    "addedReferenceOccurrences": 16
+  },
+  "provenance": {
+    "groups": 228,
+    "urls": 486,
+    "classifiedOccurrences": 736,
+    "inlineClassifiedOccurrences": 228,
+    "unclassifiedOccurrences": 1
+  },
+  "availability": {
+    "urls": 877,
+    "counts": {
+      "responded": 871,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedCurrentUrls": 14,
+    "otherObservationsUnchanged": true
+  },
+  "visual": {
+    "states": 20,
+    "axeStates": 16,
+    "violations": 0,
+    "overflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 6,
+    "screenshotsVisuallyInspected": true,
+    "integratedApplication": true
+  },
+  "hashes": {
+    "about.html": "213120b0218cc90c3cd05c7e95887ba14f152a348291db57964f07c20b89eab1",
+    "reference/active-directory.html": "ac257891dba9b36d61c8e0a4a1d38870f16bfdcfe5760311a394a59117409310",
+    "reference/windows-privilege-escalation.html": "4e2e7fc368c06aa44f829ecaf94dbbe7d7748ae6a027949c66ffe180dffa98be",
+    "src/data/chains/credential-access.js": "a08a17a36068633e716257013269bc94949b7245968cb458366c3e3711160030",
+    "src/data/chains/initial-access.js": "577f0e8264598bfbb5bb75e7047b85899ed2b8c50f7faba9e29c1fa36ffea733",
+    "src/data/chains/pe-techniques.js": "c21c34e67698b7d45e37550cf7111047b1e4f80dd66ac5ce23afbe2d7b5f8739",
+    "src/data/source-availability.js": "c77ec63ba749041bfb59bf2bded2a4c772b06c070bcc4903a63db07c1a82b41c",
+    "reports/visuals/missing-reference-lateral-movement-cme-1440.png": "05e98dc50586e9097083ed660f75cce8dbe5946ac1c6f0b4c4f81b97242fe7dd",
+    "reports/visuals/missing-reference-pe-weak-service-perms-1440.png": "527dcb4bae312a047fbf0609d6ed37678b8e270c539b4ab41720d061ed5660c6",
+    "reports/visuals/missing-reference-crack-netntlm-390.png": "6fe2f4242b52a3220375dc79762636517c43fc8799e344a7ebb628377be429d8",
+    "reports/visuals/missing-reference-pe-service-dll-hijack-390.png": "a284295c81e7813ec59148ae57586d9085cac2be784fa9109a919b121181f11c",
+    "reports/visuals/missing-reference-reading-ad-mobile.png": "f46fe0cbed1650b725315e65f5fe8a77725a8b175857763ef692bca13213deba",
+    "reports/visuals/missing-reference-reading-win-pe-mobile.png": "b3cedc525d01f473e80fb2e99d6c52ce081b8612927a173c48760d8180700b1e",
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/linux-privilege-escalation.html": "f9ce037bdde29b2c09670265be22d431544b33de9a18f9e266a31f8f8390b877",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca",
+    "reports/missing-reference-source-capture.json": "a687b81d2d3447db67feef6cde33061185b37e90ec3e6d528c1922531cd4c554",
+    "reports/missing-reference-review.json": "5740076286e42926146d467d1db51fa35baf0dfd2a785e2a0a60f13d3802defe",
+    "reports/missing-reference-visual-check.json": "d451f97f324ad0749f1772bcd5021e3875a682e802ffd2abcfbf924a80ed7935",
+    "reports/MISSING_REFERENCE_REVIEW.md": "26d0f657f0c2b77e9c06cfd9f4df9462e44cc3bc00a036ab26af605b80519581",
+    "reports/COMPLETION_STATUS.md": "4742ce343188cab206ef58679ef44afd8992bb815726ac7289e18cac54a81ed8",
+    "reports/HUMAN_REVIEW.md": "cbf835a29f6921fe945fa124a9bd2ae900558bec60e63ef69c4da26d0dce11df",
+    "reports/VERIFICATION.md": "f241da47a2dc006bf1a07a4019ea312f6bcfc8d812d8f8d51a1792928ef84b58",
+    "reports/reference-availability.json": "a0eb5fa1c274161b5fb71a90134e0bf3f10141c97705a6796067f466870b9138",
+    "reports/reference-missing-reference-refresh.json": "e69a7dd176aeae254932c560658a978036583c64e6c7f649d669617ac044b8ae",
+    "reports/review-inventory.json": "b459bf552bce0462b74a90050a4f0a8f693246d1a4f1a47487f49fb7d1bea43f",
+    "reports/review-inventory.csv": "3b7d324cb06eb4805fe873e583975a88d7a60a2fd9a0b0db1623164d5089bdb8",
+    "reports/content-coverage.json": "999808ca7214f7f097980312bd0ad6ee965ab5da0730bb4bfa4bc6154db86acf",
+    "reports/data-parity.json": "9d76fbd4e6bbd29666759598a4e5f43927b8a1307fe4a7eea70d89a723ac0a48",
+    "README.md": "0e03e7744ad452a6e8cdcecee8f8ab3532bcf2eed205439fcdca325ccaecb31a",
+    "RELEASE_NOTES.md": "a14e2c46c091835a102afc8f153e22f420c10712f9d87948baadb8d1d9224a2e",
+    "IMPLEMENTATION_PLAN.md": "dd2cb3966e1a8f2ad01d67888b3ca3ea12af1ec324e17f18db26444c5cddd25e",
+    ".cache/missing-reference-review/visual-check.mjs": "3a173a533e007e59e520a3e56364ad63a77844f8f2637b0434a588a8b022a1d9",
+    ".cache/missing-reference-review/visual-check.log": "f48bb01e4d71904c97773e45ef49bc9d2661e76ea8a938b3303ec91183da198f",
+    ".cache/missing-reference-review/browser-test-list.json": "228332822244fb0d10600a218c971bdf12c651c22efbebb32aa1edeb523d3d36"
+  },
+  "scope": "Eight previously uncited entries with selected conceptual authentication, management and Windows object explanations. All earlier review records and all commands, tools, prerequisites, applicability, IDs, kinds, mappings and connections are unchanged. No operational validation, new motion benchmark, human review, hosted workflow run or deployment."
+}

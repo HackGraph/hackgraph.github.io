@@ -1,0 +1,808 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Security glossary and definition sources | HackGraph</title>
+<meta name="description" content="Beginner security definitions with source sections and explicit AI or human comparison records."/>
+<meta name="keywords" content="cybersecurity, offensive security, penetration testing, red team, OSCP notes, OSEP, CRTP, PNPT, CTF, privilege escalation, Active Directory, Windows privilege escalation, Linux privilege escalation, Kerberoasting, NTLM relay, AD CS ESC1, pass-the-hash, DCSync, ethical hacking, attack path, pentest cheat sheet"/>
+<link rel="canonical" href="https://hackgraph.github.io/glossary.html"/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta name="theme-color" content="#0c0a0b"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="HackGraph"/>
+<meta property="og:title" content="Security glossary and definition sources | HackGraph"/>
+<meta property="og:description" content="Beginner security definitions with source sections and explicit AI or human comparison records."/>
+<meta property="og:url" content="https://hackgraph.github.io/glossary.html"/>
+<meta property="og:image" content="https://hackgraph.github.io/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hackgraph.github.io/og-image.png"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"DefinedTermSet","name":"HackGraph security glossary","url":"https://hackgraph.github.io/glossary.html","hasDefinedTerm":[{"@type":"DefinedTerm","name":"Kerberos","description":"A ticket-based network authentication protocol used by Active Directory and many other systems.","url":"https://hackgraph.github.io/glossary.html#term-kerberos"},{"@type":"DefinedTerm","name":"KDC","description":"Key Distribution Center: a trusted Kerberos service that issues tickets and session keys.","url":"https://hackgraph.github.io/glossary.html#term-kdc"},{"@type":"DefinedTerm","name":"TGT","description":"Ticket-granting ticket: a Kerberos ticket used to request further tickets from the ticket-granting service.","url":"https://hackgraph.github.io/glossary.html#term-tgt"},{"@type":"DefinedTerm","name":"TGS","description":"Ticket-granting service: the part of a Kerberos KDC that issues tickets for services.","url":"https://hackgraph.github.io/glossary.html#term-tgs"},{"@type":"DefinedTerm","name":"AS-REP","description":"The Kerberos authentication service reply message, carrying a ticket and an encrypted reply for the client.","url":"https://hackgraph.github.io/glossary.html#term-as-rep"},{"@type":"DefinedTerm","name":"SPN","description":"Service principal name: an identifier for a service instance that Kerberos associates with its service account.","url":"https://hackgraph.github.io/glossary.html#term-spn"},{"@type":"DefinedTerm","name":"Kerberoasting","description":"A credential attack involving offline password guessing against Kerberos service-ticket data.","url":"https://hackgraph.github.io/glossary.html#term-kerberoasting"},{"@type":"DefinedTerm","name":"AS-REP roasting","description":"A credential attack involving offline password guessing against Kerberos authentication replies for accounts without preauthentication.","url":"https://hackgraph.github.io/glossary.html#term-as-rep-roasting"},{"@type":"DefinedTerm","name":"PKINIT","description":"A Kerberos extension that uses public-key cryptography during initial authentication, commonly with certificates.","url":"https://hackgraph.github.io/glossary.html#term-pkinit"},{"@type":"DefinedTerm","name":"krbtgt","description":"The Active Directory account used by the domain’s Kerberos Key Distribution Center.","url":"https://hackgraph.github.io/glossary.html#term-krbtgt"},{"@type":"DefinedTerm","name":"Golden Ticket","description":"A forged Kerberos ticket-granting ticket associated with compromise of the domain’s krbtgt credentials.","url":"https://hackgraph.github.io/glossary.html#term-golden-ticket"},{"@type":"DefinedTerm","name":"Silver Ticket","description":"A forged Kerberos service ticket associated with compromise of the service account’s credentials.","url":"https://hackgraph.github.io/glossary.html#term-silver-ticket"},{"@type":"DefinedTerm","name":"S4U","description":"Service for User: Kerberos extensions that support a service acting on a user’s behalf.","url":"https://hackgraph.github.io/glossary.html#term-s4u"},{"@type":"DefinedTerm","name":"ccache","description":"A store of Kerberos credentials, including tickets and session keys, whose form can be a file, memory, or another supported cache type.","url":"https://hackgraph.github.io/glossary.html#term-ccache"},{"@type":"DefinedTerm","name":"keytab","description":"A Kerberos key table containing long-term keys for one or more identities, usually stored in a file.","url":"https://hackgraph.github.io/glossary.html#term-keytab"},{"@type":"DefinedTerm","name":"NTLM","description":"A family of Windows authentication protocols that use a challenge-response exchange.","url":"https://hackgraph.github.io/glossary.html#term-ntlm"},{"@type":"DefinedTerm","name":"NetNTLM","description":"A community name for NTLM challenge-response material, distinct from the stored NT password hash.","url":"https://hackgraph.github.io/glossary.html#term-netntlm"},{"@type":"DefinedTerm","name":"NT hash","description":"An unsalted password hash used by Windows authentication, distinct from an NTLM network response.","url":"https://hackgraph.github.io/glossary.html#term-nt-hash"},{"@type":"DefinedTerm","name":"Pass-the-Hash","description":"An authentication-abuse technique involving a password hash instead of the account’s plaintext password.","url":"https://hackgraph.github.io/glossary.html#term-pass-the-hash"},{"@type":"DefinedTerm","name":"Pass-the-Ticket","description":"An authentication-abuse technique involving stolen or forged Kerberos tickets.","url":"https://hackgraph.github.io/glossary.html#term-pass-the-ticket"},{"@type":"DefinedTerm","name":"Overpass-the-Hash","description":"A credential-abuse technique involving password-derived keys and Kerberos authentication.","url":"https://hackgraph.github.io/glossary.html#term-overpass-the-hash"},{"@type":"DefinedTerm","name":"LLMNR","description":"Link-Local Multicast Name Resolution: a protocol for resolving names on the local network link when conventional DNS is unavailable.","url":"https://hackgraph.github.io/glossary.html#term-llmnr"},{"@type":"DefinedTerm","name":"NBT-NS","description":"NetBIOS Name Service: a name-registration and lookup mechanism that can use broadcasts or a name server.","url":"https://hackgraph.github.io/glossary.html#term-nbt-ns"},{"@type":"DefinedTerm","name":"mDNS","description":"Multicast DNS: a protocol for DNS-style name lookup on the local network link without a conventional DNS server.","url":"https://hackgraph.github.io/glossary.html#term-mdns"},{"@type":"DefinedTerm","name":"WPAD","description":"Web Proxy Auto-Discovery: a mechanism for automatically locating a client’s web-proxy configuration.","url":"https://hackgraph.github.io/glossary.html#term-wpad"},{"@type":"DefinedTerm","name":"SID","description":"Security identifier: a value Windows uses to identify a security principal, such as a user, group, or computer account.","url":"https://hackgraph.github.io/glossary.html#term-sid"},{"@type":"DefinedTerm","name":"RID","description":"Relative identifier: the final component of a SID that distinguishes an account or group within its issuing domain or computer.","url":"https://hackgraph.github.io/glossary.html#term-rid"},{"@type":"DefinedTerm","name":"ACL","description":"Access control list: a collection of entries describing access permissions or auditing rules for an object.","url":"https://hackgraph.github.io/glossary.html#term-acl"},{"@type":"DefinedTerm","name":"ACE","description":"Access control entry: one rule in an ACL describing access or auditing for a security principal.","url":"https://hackgraph.github.io/glossary.html#term-ace"},{"@type":"DefinedTerm","name":"DACL","description":"Discretionary access control list: the ACL in an object’s security descriptor that specifies allowed or denied access.","url":"https://hackgraph.github.io/glossary.html#term-dacl"},{"@type":"DefinedTerm","name":"GPO","description":"Group Policy Object: a collection of policy settings for users and computers.","url":"https://hackgraph.github.io/glossary.html#term-gpo"},{"@type":"DefinedTerm","name":"DCSync","description":"A credential-theft technique that abuses Active Directory’s directory-replication interfaces.","url":"https://hackgraph.github.io/glossary.html#term-dcsync"},{"@type":"DefinedTerm","name":"RBCD","description":"Resource-based constrained delegation: a Kerberos delegation model in which the destination service’s account specifies which services may act on users’ behalf.","url":"https://hackgraph.github.io/glossary.html#term-rbcd"},{"@type":"DefinedTerm","name":"gMSA","description":"Group managed service account: an Active Directory service identity with automatic password management that can be shared across multiple servers.","url":"https://hackgraph.github.io/glossary.html#term-gmsa"},{"@type":"DefinedTerm","name":"dMSA","description":"Delegated managed service account: a Windows Server 2025 service-account type with managed credentials and authentication tied to authorized device identities.","url":"https://hackgraph.github.io/glossary.html#term-dmsa"},{"@type":"DefinedTerm","name":"LAPS","description":"Local Administrator Password Solution: Windows LAPS manages local administrator passwords and backs them up to Active Directory or Microsoft Entra ID.","url":"https://hackgraph.github.io/glossary.html#term-laps"},{"@type":"DefinedTerm","name":"DPAPI","description":"Data Protection API: Windows facilities for protecting application data, normally within a user or computer context.","url":"https://hackgraph.github.io/glossary.html#term-dpapi"},{"@type":"DefinedTerm","name":"LSASS","description":"Local Security Authority Subsystem Service: a Windows process involved in authentication, local security policy, and credential handling.","url":"https://hackgraph.github.io/glossary.html#term-lsass"},{"@type":"DefinedTerm","name":"LSA","description":"Local Security Authority: the Windows security subsystem responsible for authentication and local security policy.","url":"https://hackgraph.github.io/glossary.html#term-lsa"},{"@type":"DefinedTerm","name":"SAM","description":"Security Accounts Manager: the Windows database of local user accounts and groups.","url":"https://hackgraph.github.io/glossary.html#term-sam"},{"@type":"DefinedTerm","name":"NTDS","description":"In these notes, the Active Directory database, stored in ntds.dit and including directory objects and protected credential data.","url":"https://hackgraph.github.io/glossary.html#term-ntds"},{"@type":"DefinedTerm","name":"UPN","description":"User principal name: a sign-in name written as a prefix and domain suffix joined by @, which need not be a mailbox address.","url":"https://hackgraph.github.io/glossary.html#term-upn"},{"@type":"DefinedTerm","name":"OU","description":"Organizational unit: an Active Directory container used to organize objects, delegate administration, and scope Group Policy.","url":"https://hackgraph.github.io/glossary.html#term-ou"},{"@type":"DefinedTerm","name":"DC","description":"Domain controller: a server providing Active Directory Domain Services, including directory storage and domain authentication.","url":"https://hackgraph.github.io/glossary.html#term-dc"},{"@type":"DefinedTerm","name":"DA","description":"Domain Admins: an Active Directory group with extensive domain privileges and, by default, local administrator membership on domain-joined computers.","url":"https://hackgraph.github.io/glossary.html#term-da"},{"@type":"DefinedTerm","name":"AD CS","description":"Active Directory Certificate Services: Microsoft’s Windows Server role for issuing and managing public-key certificates.","url":"https://hackgraph.github.io/glossary.html#term-ad-cs"},{"@type":"DefinedTerm","name":"NTAuth","description":"A forest-wide Active Directory store of CA certificates trusted for particular authentication uses, including smart-card logon.","url":"https://hackgraph.github.io/glossary.html#term-ntauth"},{"@type":"DefinedTerm","name":"UAC","description":"User Account Control: a Windows mechanism that separates ordinary application use from tasks requiring administrator approval or credentials.","url":"https://hackgraph.github.io/glossary.html#term-uac"},{"@type":"DefinedTerm","name":"SYSTEM","description":"The built-in Windows LocalSystem service account, which has extensive local privileges and uses the computer’s identity on the network.","url":"https://hackgraph.github.io/glossary.html#term-system"},{"@type":"DefinedTerm","name":"HVCI","description":"Hypervisor-protected code integrity, also called memory integrity: a Windows protection that isolates kernel code-integrity checks using virtualization.","url":"https://hackgraph.github.io/glossary.html#term-hvci"},{"@type":"DefinedTerm","name":"WDAC","description":"Windows Defender Application Control, now called App Control for Business: policy-based control over which applications and drivers may run.","url":"https://hackgraph.github.io/glossary.html#term-wdac"},{"@type":"DefinedTerm","name":"AMSI","description":"Antimalware Scan Interface: a Windows interface that lets applications submit content to a compatible antimalware provider for scanning.","url":"https://hackgraph.github.io/glossary.html#term-amsi"},{"@type":"DefinedTerm","name":"LOLBIN","description":"Living-off-the-land binary: a legitimate program whose existing features can be misused for security-relevant actions.","url":"https://hackgraph.github.io/glossary.html#term-lolbin"},{"@type":"DefinedTerm","name":"LOLBAS","description":"Living Off The Land Binaries, Scripts and Libraries: a project cataloguing security-relevant uses of legitimate Windows components.","url":"https://hackgraph.github.io/glossary.html#term-lolbas"},{"@type":"DefinedTerm","name":"BYOVD","description":"Bring Your Own Vulnerable Driver: abuse involving security flaws in legitimate drivers, including signed drivers.","url":"https://hackgraph.github.io/glossary.html#term-byovd"},{"@type":"DefinedTerm","name":"SeImpersonatePrivilege","description":"The Windows user right that permits a process to impersonate an authenticated client.","url":"https://hackgraph.github.io/glossary.html#term-seimpersonateprivilege"},{"@type":"DefinedTerm","name":"Potato","description":"In these notes, an informal label for Windows privilege-escalation tools with “Potato” in their names.","url":"https://hackgraph.github.io/glossary.html#term-potato"},{"@type":"DefinedTerm","name":"SMB","description":"Server Message Block: a network protocol for accessing shared files and other services.","url":"https://hackgraph.github.io/glossary.html#term-smb"},{"@type":"DefinedTerm","name":"LDAP","description":"Lightweight Directory Access Protocol: a standard protocol for accessing directory services.","url":"https://hackgraph.github.io/glossary.html#term-ldap"},{"@type":"DefinedTerm","name":"LDAPS","description":"LDAP over TLS: LDAP communication protected by an encrypted transport connection.","url":"https://hackgraph.github.io/glossary.html#term-ldaps"},{"@type":"DefinedTerm","name":"WinRM","description":"Windows Remote Management: Microsoft’s implementation of WS-Management for exchanging management information with systems.","url":"https://hackgraph.github.io/glossary.html#term-winrm"},{"@type":"DefinedTerm","name":"RDP","description":"Remote Desktop Protocol: a protocol for presenting a remote graphical session and carrying user input.","url":"https://hackgraph.github.io/glossary.html#term-rdp"},{"@type":"DefinedTerm","name":"WMI","description":"Windows Management Instrumentation: Windows infrastructure for management information and administrative operations.","url":"https://hackgraph.github.io/glossary.html#term-wmi"},{"@type":"DefinedTerm","name":"DCOM","description":"Distributed Component Object Model: an extension of COM that lets software components communicate across computers.","url":"https://hackgraph.github.io/glossary.html#term-dcom"},{"@type":"DefinedTerm","name":"RPC","description":"Remote procedure call: a mechanism that lets software request work from another process, including one on another computer.","url":"https://hackgraph.github.io/glossary.html#term-rpc"},{"@type":"DefinedTerm","name":"NTLM relay","description":"An authentication-forwarding attack that misuses another party’s NTLM exchange.","url":"https://hackgraph.github.io/glossary.html#term-ntlm-relay"},{"@type":"DefinedTerm","name":"coercion","description":"In these notes, forced authentication: inducing another system to initiate an authentication exchange.","url":"https://hackgraph.github.io/glossary.html#term-coercion"},{"@type":"DefinedTerm","name":"EPA","description":"Extended Protection for Authentication: Windows protections using channel binding and service binding to strengthen authentication.","url":"https://hackgraph.github.io/glossary.html#term-epa"},{"@type":"DefinedTerm","name":"channel binding","description":"A way to associate authentication at one protocol layer with the secure channel underneath it.","url":"https://hackgraph.github.io/glossary.html#term-channel-binding"},{"@type":"DefinedTerm","name":"SMB signing","description":"Cryptographic integrity protection for SMB messages that lets a receiver detect tampering.","url":"https://hackgraph.github.io/glossary.html#term-smb-signing"},{"@type":"DefinedTerm","name":"MITM","description":"Man-in-the-middle: an attacker’s position between communicating parties, potentially allowing traffic interception or alteration.","url":"https://hackgraph.github.io/glossary.html#term-mitm"},{"@type":"DefinedTerm","name":"ARP","description":"Address Resolution Protocol: a protocol for resolving a network-layer address to a link-layer address on a local network.","url":"https://hackgraph.github.io/glossary.html#term-arp"},{"@type":"DefinedTerm","name":"EDR","description":"Endpoint detection and response: security capabilities for detecting, investigating, and responding to suspicious activity on devices.","url":"https://hackgraph.github.io/glossary.html#term-edr"},{"@type":"DefinedTerm","name":"C2","description":"Command and control: communication used by an adversary to direct compromised systems.","url":"https://hackgraph.github.io/glossary.html#term-c2"},{"@type":"DefinedTerm","name":"BloodHound","description":"A graph-based tool for analyzing identity and access relationships, including Active Directory and Microsoft Entra ID.","url":"https://hackgraph.github.io/glossary.html#term-bloodhound"},{"@type":"DefinedTerm","name":"tier-0","description":"The identity-control tier in the legacy Active Directory administration model, expanded into the control plane in Microsoft’s enterprise access model.","url":"https://hackgraph.github.io/glossary.html#term-tier-0"},{"@type":"DefinedTerm","name":"UID","description":"User identifier: a numeric identity used by Unix-like systems to represent a user.","url":"https://hackgraph.github.io/glossary.html#term-uid"},{"@type":"DefinedTerm","name":"GID","description":"Group identifier: a numeric identity used by Unix-like systems to represent a group.","url":"https://hackgraph.github.io/glossary.html#term-gid"},{"@type":"DefinedTerm","name":"EUID","description":"Effective user identifier: the user identity a Unix-like process uses for many permission checks.","url":"https://hackgraph.github.io/glossary.html#term-euid"},{"@type":"DefinedTerm","name":"SUID","description":"Set-user-ID: a file mode bit that, when honored during program execution, sets the process’s effective user ID to the file owner’s ID.","url":"https://hackgraph.github.io/glossary.html#term-suid"},{"@type":"DefinedTerm","name":"SGID","description":"Set-group-ID: a file mode bit that, when honored during program execution, sets the process’s effective group ID to the file’s group ID.","url":"https://hackgraph.github.io/glossary.html#term-sgid"},{"@type":"DefinedTerm","name":"sudo","description":"A program that lets an authorized user run a command as another user according to a configured security policy.","url":"https://hackgraph.github.io/glossary.html#term-sudo"},{"@type":"DefinedTerm","name":"cron","description":"A background service that runs jobs according to configured schedules.","url":"https://hackgraph.github.io/glossary.html#term-cron"},{"@type":"DefinedTerm","name":"systemd","description":"A Linux system and service manager that can manage system-wide services and services for individual users.","url":"https://hackgraph.github.io/glossary.html#term-systemd"},{"@type":"DefinedTerm","name":"capabilities","description":"In Linux, separately controllable privileges that divide the authority traditionally associated with the superuser.","url":"https://hackgraph.github.io/glossary.html#term-capabilities"},{"@type":"DefinedTerm","name":"namespace","description":"In Linux, an abstraction giving a group of processes its own view of a system resource.","url":"https://hackgraph.github.io/glossary.html#term-namespace"},{"@type":"DefinedTerm","name":"cgroup","description":"Control group: a Linux mechanism for grouping processes to monitor and manage their resource use.","url":"https://hackgraph.github.io/glossary.html#term-cgroup"},{"@type":"DefinedTerm","name":"PATH","description":"An environment variable listing directories used to search for executable programs named without a directory path.","url":"https://hackgraph.github.io/glossary.html#term-path"},{"@type":"DefinedTerm","name":"NFS","description":"Network File System: a protocol that lets computers share files over a network.","url":"https://hackgraph.github.io/glossary.html#term-nfs"},{"@type":"DefinedTerm","name":"SELinux","description":"Security-Enhanced Linux: a Linux security architecture for applying mandatory access-control policies.","url":"https://hackgraph.github.io/glossary.html#term-selinux"},{"@type":"DefinedTerm","name":"AppArmor","description":"A Linux security module that uses application profiles to constrain programs’ permitted actions.","url":"https://hackgraph.github.io/glossary.html#term-apparmor"}]}</script>
+<style>
+:root{--bg:#0c0a0b;--panel:#160f11;--ink:#f0eaec;--dim:#a59699;--faint:#8a7d80;--accent:#f04450;--border:rgba(214,168,172,.13)}
+@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/engine/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.top{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:rgba(12,10,11,.85);backdrop-filter:blur(10px)}
+header.top .name{font-weight:600;font-size:17px}
+header.top .cta{margin-left:auto;font-size:14px;color:var(--dim)}
+main{max-width:860px;margin:0 auto;padding:40px 24px 96px}
+h1{font-size:30px;font-weight:600;line-height:1.2;margin:0 0 14px}
+.lead{color:var(--dim);font-size:17px;margin:0 0 10px}
+.toc{margin:20px 0 8px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.toc a{border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--ink)}
+section.phase{margin-top:44px}
+h2.phase-h{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding-bottom:6px;border-bottom:1px solid var(--border)}
+article{padding:18px 0;border-bottom:1px solid var(--border);scroll-margin-top:78px;overflow-wrap:anywhere}
+section.phase>h2{scroll-margin-top:78px}
+article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
+.kind{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
+.summary{color:var(--ink);margin:6px 0}
+.desc{color:var(--dim);margin:8px 0}
+.meta{color:var(--faint);font-size:13px}
+h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:16px 0 6px}
+ul.req{margin:4px 0;padding-left:18px;color:var(--dim);font-size:14px}
+pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;overflow-wrap:normal;margin:6px 0}
+code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
+pre .cmt{color:var(--faint)}
+ul.links{margin:4px 0;padding-left:18px;font-size:14px}
+.claim-list{padding-left:18px;font-size:14px;line-height:1.6}
+.claim-list>li+li{margin-top:18px}.claim-list p{margin:0;overflow-wrap:anywhere}
+.claim-list .claim-section{margin-top:6px;font-size:13px;color:var(--dim)}
+.claim-sources{display:grid;gap:4px;margin-top:6px}
+.claim-sources a{display:block;width:fit-content;max-width:100%;padding:2px 0;color:var(--ink);overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:.18em;border-radius:2px}
+.claim-sources a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
+.opsec b{color:var(--ink)}
+.editorial{border-left:2px solid var(--dim);padding:6px 12px;margin:12px 0;color:var(--dim);font-size:13px}.editorial p{margin:4px 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}.table-wrap{overflow:auto}.table-wrap:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);font-size:14px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header class="top"><a href="/" style="display:flex;align-items:center;gap:10px;color:var(--ink)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" stroke="#a59699" stroke-width="1.8" stroke-linejoin="round"/><rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/><rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/><rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/></svg><span class="name">HackGraph</span></a><a class="cta" href="/">Open the interactive graph &rarr;</a></header>
+<main>
+<h1>Security glossary</h1>
+<p class="lead">Plain-language definitions, with the sources behind them.</p>
+<p>91 terms · 91 AI source comparisons · 0 human source comparisons · 0 awaiting comparison.</p>
+<p>A comparison records who checked the definition against the listed source sections, and when. It covers the definition and its aliases only. AI comparisons can contain mistakes; they are a starting point for human editorial review. These records do not assess procedures, version compatibility or graph connections. <a href="/about.html">Read about the evidence labels</a>.</p>
+<nav aria-label="Glossary letters"><ul class="toc"><li><a href="#letter-A">A</a></li><li><a href="#letter-B">B</a></li><li><a href="#letter-C">C</a></li><li><a href="#letter-D">D</a></li><li><a href="#letter-E">E</a></li><li><a href="#letter-G">G</a></li><li><a href="#letter-H">H</a></li><li><a href="#letter-K">K</a></li><li><a href="#letter-L">L</a></li><li><a href="#letter-M">M</a></li><li><a href="#letter-N">N</a></li><li><a href="#letter-O">O</a></li><li><a href="#letter-P">P</a></li><li><a href="#letter-R">R</a></li><li><a href="#letter-S">S</a></li><li><a href="#letter-T">T</a></li><li><a href="#letter-U">U</a></li><li><a href="#letter-W">W</a></li></ul></nav>
+<section class="phase" aria-labelledby="letter-A"><h2 class="phase-h" id="letter-A">A</h2><article id="term-ace" data-review="compared">
+<h3>ACE</h3>
+<p class="summary">Access control entry: one rule in an ACL describing access or auditing for a security principal.</p>
+<p class="meta">Also written: ACEs</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-entries">Microsoft: Access control entries</a><br><span class="meta">primary source · Access control entries</span></li></ul>
+</article>
+<article id="term-acl" data-review="compared">
+<h3>ACL</h3>
+<p class="summary">Access control list: a collection of entries describing access permissions or auditing rules for an object.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists">Microsoft: Access control lists</a><br><span class="meta">primary source · DACLs and SACLs</span></li></ul>
+</article>
+<article id="term-ad-cs" data-review="compared">
+<h3>AD CS</h3>
+<p class="summary">Active Directory Certificate Services: Microsoft’s Windows Server role for issuing and managing public-key certificates.</p>
+<p class="meta">Also written: ADCS</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview">Microsoft: Active Directory Certificate Services</a><br><span class="meta">primary source · AD CS overview</span></li></ul>
+</article>
+<article id="term-amsi" data-review="compared">
+<h3>AMSI</h3>
+<p class="summary">Antimalware Scan Interface: a Windows interface that lets applications submit content to a compatible antimalware provider for scanning.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal">Microsoft: Antimalware Scan Interface</a><br><span class="meta">primary source · AMSI overview</span></li></ul>
+</article>
+<article id="term-apparmor" data-review="compared">
+<h3>AppArmor</h3>
+<p class="summary">A Linux security module that uses application profiles to constrain programs’ permitted actions.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://documentation.ubuntu.com/security/security-features/privilege-restriction/apparmor/">Ubuntu: AppArmor</a><br><span class="meta">primary source · Introduction; Discretionary Access Control vs. Mandatory Access Control</span></li></ul>
+</article>
+<article id="term-arp" data-review="compared">
+<h3>ARP</h3>
+<p class="summary">Address Resolution Protocol: a protocol for resolving a network-layer address to a link-layer address on a local network.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc826.html">RFC 826: Address Resolution Protocol</a><br><span class="meta">primary source · Abstract and protocol description</span></li></ul>
+</article>
+<article id="term-as-rep" data-review="compared">
+<h3>AS-REP</h3>
+<p class="summary">The Kerberos authentication service reply message, carrying a ticket and an encrypted reply for the client.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc4120.html">RFC 4120: Kerberos V5</a><br><span class="meta">primary source · Sections 1.1, 1.7 and 3.1: protocol, definitions and the authentication exchange</span></li></ul>
+</article>
+<article id="term-as-rep-roasting" data-review="compared">
+<h3>AS-REP roasting</h3>
+<p class="summary">A credential attack involving offline password guessing against Kerberos authentication replies for accounts without preauthentication.</p>
+<p class="meta">Also written: AS-REP roast</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1558/004/">MITRE ATT&amp;CK: AS-REP Roasting</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-B"><h2 class="phase-h" id="letter-B">B</h2><article id="term-bloodhound" data-review="compared">
+<h3>BloodHound</h3>
+<p class="summary">A graph-based tool for analyzing identity and access relationships, including Active Directory and Microsoft Entra ID.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://bloodhound.specterops.io/get-started/introduction">SpecterOps: BloodHound introduction</a><br><span class="meta">primary source · Introduction</span></li></ul>
+</article>
+<article id="term-byovd" data-review="compared">
+<h3>BYOVD</h3>
+<p class="summary">Bring Your Own Vulnerable Driver: abuse involving security flaws in legitimate drivers, including signed drivers.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules">Microsoft: Recommended driver block rules</a><br><span class="meta">primary source · Vulnerable driver blocklist</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-C"><h2 class="phase-h" id="letter-C">C</h2><article id="term-c2" data-review="compared">
+<h3>C2</h3>
+<p class="summary">Command and control: communication used by an adversary to direct compromised systems.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/tactics/TA0011/">MITRE ATT&amp;CK: Command and Control</a><br><span class="meta">taxonomy source · Description</span></li></ul>
+</article>
+<article id="term-capabilities" data-review="compared">
+<h3>capabilities</h3>
+<p class="summary">In Linux, separately controllable privileges that divide the authority traditionally associated with the superuser.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/capabilities.7.html">Linux man-pages: capabilities</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-ccache" data-review="compared">
+<h3>ccache</h3>
+<p class="summary">A store of Kerberos credentials, including tickets and session keys, whose form can be a file, memory, or another supported cache type.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://web.mit.edu/kerberos/krb5-latest/doc/basic/ccache_def.html">MIT: Credential cache</a><br><span class="meta">primary source · Credential cache; ccache types</span></li></ul>
+</article>
+<article id="term-cgroup" data-review="compared">
+<h3>cgroup</h3>
+<p class="summary">Control group: a Linux mechanism for grouping processes to monitor and manage their resource use.</p>
+<p class="meta">Also written: cgroups</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/cgroups.7.html">Linux man-pages: cgroups</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-channel-binding" data-review="compared">
+<h3>channel binding</h3>
+<p class="summary">A way to associate authentication at one protocol layer with the secure channel underneath it.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc5056.html">RFC 5056: Channel bindings</a><br><span class="meta">primary source · Abstract and section 2: Definitions</span></li></ul>
+</article>
+<article id="term-coercion" data-review="compared">
+<h3>coercion</h3>
+<p class="summary">In these notes, forced authentication: inducing another system to initiate an authentication exchange.</p>
+<p class="meta">Also written: coerce, coerced</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1187/">MITRE ATT&amp;CK: Forced Authentication</a><br><span class="meta">taxonomy source · Opening conceptual definition only</span></li></ul>
+</article>
+<article id="term-cron" data-review="compared">
+<h3>cron</h3>
+<p class="summary">A background service that runs jobs according to configured schedules.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man8/cron.8.html">Cronie manual: cron</a><br><span class="meta">primary source · NAME; DESCRIPTION</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-D"><h2 class="phase-h" id="letter-D">D</h2><article id="term-da" data-review="compared">
+<h3>DA</h3>
+<p class="summary">Domain Admins: an Active Directory group with extensive domain privileges and, by default, local administrator membership on domain-joined computers.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-b--privileged-accounts-and-groups-in-active-directory">Microsoft: Privileged accounts and groups</a><br><span class="meta">primary source · Krbtgt and Domain Admins</span></li></ul>
+</article>
+<article id="term-dacl" data-review="compared">
+<h3>DACL</h3>
+<p class="summary">Discretionary access control list: the ACL in an object’s security descriptor that specifies allowed or denied access.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists">Microsoft: Access control lists</a><br><span class="meta">primary source · DACLs and SACLs</span></li></ul>
+</article>
+<article id="term-dc" data-review="compared">
+<h3>DC</h3>
+<p class="summary">Domain controller: a server providing Active Directory Domain Services, including directory storage and domain authentication.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview">Microsoft: Active Directory Domain Services overview</a><br><span class="meta">primary source · Directory services and domain controllers</span></li><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center">Microsoft: Key Distribution Center</a><br><span class="meta">primary source · Authentication service and ticket-granting service</span></li></ul>
+</article>
+<article id="term-dcom" data-review="compared">
+<h3>DCOM</h3>
+<p class="summary">Distributed Component Object Model: an extension of COM that lets software components communicate across computers.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/com/com-clients-and-servers">Microsoft: COM and DCOM</a><br><span class="meta">primary source · Network extensions and distributed COM</span></li></ul>
+</article>
+<article id="term-dcsync" data-review="compared">
+<h3>DCSync</h3>
+<p class="summary">A credential-theft technique that abuses Active Directory’s directory-replication interfaces.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1003/006/">MITRE ATT&amp;CK: DCSync</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-dmsa" data-review="compared">
+<h3>dMSA</h3>
+<p class="summary">Delegated managed service account: a Windows Server 2025 service-account type with managed credentials and authentication tied to authorized device identities.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/delegated-managed-service-accounts/delegated-managed-service-accounts-overview">Microsoft: Delegated managed service accounts</a><br><span class="meta">primary source · Overview</span></li></ul>
+</article>
+<article id="term-dpapi" data-review="compared">
+<h3>DPAPI</h3>
+<p class="summary">Data Protection API: Windows facilities for protecting application data, normally within a user or computer context.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata">Microsoft: CryptProtectData and data protection</a><br><span class="meta">primary source · Remarks and protection scope</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-E"><h2 class="phase-h" id="letter-E">E</h2><article id="term-edr" data-review="compared">
+<h3>EDR</h3>
+<p class="summary">Endpoint detection and response: security capabilities for detecting, investigating, and responding to suspicious activity on devices.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/defender-endpoint/overview-endpoint-detection-response">Microsoft: Endpoint detection and response</a><br><span class="meta">primary source · Overview</span></li></ul>
+</article>
+<article id="term-epa" data-review="compared">
+<h3>EPA</h3>
+<p class="summary">Extended Protection for Authentication: Windows protections using channel binding and service binding to strengthen authentication.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/epa-support-in-service">Microsoft: Extended Protection for Authentication</a><br><span class="meta">primary source · What is EPA?; Service Binding</span></li></ul>
+</article>
+<article id="term-euid" data-review="compared">
+<h3>EUID</h3>
+<p class="summary">Effective user identifier: the user identity a Unix-like process uses for many permission checks.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/credentials.7.html">Linux man-pages: process credentials</a><br><span class="meta">primary source · User and group identifiers</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-G"><h2 class="phase-h" id="letter-G">G</h2><article id="term-gid" data-review="compared">
+<h3>GID</h3>
+<p class="summary">Group identifier: a numeric identity used by Unix-like systems to represent a group.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/credentials.7.html">Linux man-pages: process credentials</a><br><span class="meta">primary source · User and group identifiers</span></li></ul>
+</article>
+<article id="term-gmsa" data-review="compared">
+<h3>gMSA</h3>
+<p class="summary">Group managed service account: an Active Directory service identity with automatic password management that can be shared across multiple servers.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview">Microsoft: Group managed service accounts</a><br><span class="meta">primary source · Feature description</span></li></ul>
+</article>
+<article id="term-golden-ticket" data-review="compared">
+<h3>Golden Ticket</h3>
+<p class="summary">A forged Kerberos ticket-granting ticket associated with compromise of the domain’s krbtgt credentials.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1558/001/">MITRE ATT&amp;CK: Golden Ticket</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-gpo" data-review="compared">
+<h3>GPO</h3>
+<p class="summary">Group Policy Object: a collection of policy settings for users and computers.</p>
+<p class="meta">Also written: GPOs</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview">Microsoft: Group Policy overview</a><br><span class="meta">primary source · Group Policy objects</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-H"><h2 class="phase-h" id="letter-H">H</h2><article id="term-hvci" data-review="compared">
+<h3>HVCI</h3>
+<p class="summary">Hypervisor-protected code integrity, also called memory integrity: a Windows protection that isolates kernel code-integrity checks using virtualization.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity">Microsoft: Memory integrity</a><br><span class="meta">primary source · Memory integrity overview</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-K"><h2 class="phase-h" id="letter-K">K</h2><article id="term-kdc" data-review="compared">
+<h3>KDC</h3>
+<p class="summary">Key Distribution Center: a trusted Kerberos service that issues tickets and session keys.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc4120.html">RFC 4120: Kerberos V5</a><br><span class="meta">primary source · Sections 1.1, 1.7 and 3.1: protocol, definitions and the authentication exchange</span></li></ul>
+</article>
+<article id="term-kerberoasting" data-review="compared">
+<h3>Kerberoasting</h3>
+<p class="summary">A credential attack involving offline password guessing against Kerberos service-ticket data.</p>
+<p class="meta">Also written: Kerberoast</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1558/003/">MITRE ATT&amp;CK: Kerberoasting</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-kerberos" data-review="compared">
+<h3>Kerberos</h3>
+<p class="summary">A ticket-based network authentication protocol used by Active Directory and many other systems.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://web.mit.edu/kerberos/">MIT: What is Kerberos?</a><br><span class="meta">primary source · What is Kerberos?</span></li></ul>
+</article>
+<article id="term-keytab" data-review="compared">
+<h3>keytab</h3>
+<p class="summary">A Kerberos key table containing long-term keys for one or more identities, usually stored in a file.</p>
+<p class="meta">Also written: keytabs</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://web.mit.edu/kerberos/krb5-latest/doc/basic/keytab_def.html">MIT: Keytab</a><br><span class="meta">primary source · Keytab</span></li></ul>
+</article>
+<article id="term-krbtgt" data-review="compared">
+<h3>krbtgt</h3>
+<p class="summary">The Active Directory account used by the domain’s Kerberos Key Distribution Center.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-b--privileged-accounts-and-groups-in-active-directory">Microsoft: Privileged accounts and groups</a><br><span class="meta">primary source · Krbtgt and Domain Admins</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-L"><h2 class="phase-h" id="letter-L">L</h2><article id="term-laps" data-review="compared">
+<h3>LAPS</h3>
+<p class="summary">Local Administrator Password Solution: Windows LAPS manages local administrator passwords and backs them up to Active Directory or Microsoft Entra ID.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview">Microsoft: Windows LAPS overview</a><br><span class="meta">primary source · Windows LAPS; supported backup directories</span></li></ul>
+</article>
+<article id="term-ldap" data-review="compared">
+<h3>LDAP</h3>
+<p class="summary">Lightweight Directory Access Protocol: a standard protocol for accessing directory services.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc4511.html">RFC 4511: LDAP</a><br><span class="meta">primary source · Abstract; section 1</span></li></ul>
+</article>
+<article id="term-ldaps" data-review="compared">
+<h3>LDAPS</h3>
+<p class="summary">LDAP over TLS: LDAP communication protected by an encrypted transport connection.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/active-directory/enable-ldap-over-ssl-3rd-certification-authority">Microsoft: LDAP over SSL</a><br><span class="meta">primary source · LDAP over SSL/TLS overview</span></li></ul>
+</article>
+<article id="term-llmnr" data-review="compared">
+<h3>LLMNR</h3>
+<p class="summary">Link-Local Multicast Name Resolution: a protocol for resolving names on the local network link when conventional DNS is unavailable.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc4795.html">RFC 4795: LLMNR</a><br><span class="meta">primary source · Sections 1 and 2: Introduction and name resolution</span></li></ul>
+</article>
+<article id="term-lolbas" data-review="compared">
+<h3>LOLBAS</h3>
+<p class="summary">Living Off The Land Binaries, Scripts and Libraries: a project cataloguing security-relevant uses of legitimate Windows components.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://lolbas-project.github.io/">LOLBAS project: About</a><br><span class="meta">primary source · Goals and criteria</span></li></ul>
+</article>
+<article id="term-lolbin" data-review="compared">
+<h3>LOLBIN</h3>
+<p class="summary">Living-off-the-land binary: a legitimate program whose existing features can be misused for security-relevant actions.</p>
+<p class="meta">Also written: LOLBin, LOLBins</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://lolbas-project.github.io/">LOLBAS project: About</a><br><span class="meta">primary source · Goals and criteria</span></li></ul>
+</article>
+<article id="term-lsa" data-review="compared">
+<h3>LSA</h3>
+<p class="summary">Local Security Authority: the Windows security subsystem responsible for authentication and local security policy.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication">Microsoft: Credentials processes</a><br><span class="meta">primary source · Local Security Authority; Security Accounts Manager database</span></li></ul>
+</article>
+<article id="term-lsass" data-review="compared">
+<h3>LSASS</h3>
+<p class="summary">Local Security Authority Subsystem Service: a Windows process involved in authentication, local security policy, and credential handling.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication">Microsoft: Credentials processes</a><br><span class="meta">primary source · Local Security Authority; Security Accounts Manager database</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-M"><h2 class="phase-h" id="letter-M">M</h2><article id="term-mdns" data-review="compared">
+<h3>mDNS</h3>
+<p class="summary">Multicast DNS: a protocol for DNS-style name lookup on the local network link without a conventional DNS server.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc6762.html">RFC 6762: Multicast DNS</a><br><span class="meta">primary source · Abstract and section 1</span></li></ul>
+</article>
+<article id="term-mitm" data-review="compared">
+<h3>MITM</h3>
+<p class="summary">Man-in-the-middle: an attacker’s position between communicating parties, potentially allowing traffic interception or alteration.</p>
+<p class="meta">Also written: man-in-the-middle</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1557/">MITRE ATT&amp;CK: Adversary-in-the-Middle</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-N"><h2 class="phase-h" id="letter-N">N</h2><article id="term-namespace" data-review="compared">
+<h3>namespace</h3>
+<p class="summary">In Linux, an abstraction giving a group of processes its own view of a system resource.</p>
+<p class="meta">Also written: namespaces</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/namespaces.7.html">Linux man-pages: namespaces</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-nbt-ns" data-review="compared">
+<h3>NBT-NS</h3>
+<p class="summary">NetBIOS Name Service: a name-registration and lookup mechanism that can use broadcasts or a name server.</p>
+<p class="meta">Also written: NBNS</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc1001.html">RFC 1001: NetBIOS over TCP/UDP</a><br><span class="meta">primary source · Section 15: NetBIOS name service</span></li></ul>
+</article>
+<article id="term-netntlm" data-review="compared">
+<h3>NetNTLM</h3>
+<p class="summary">A community name for NTLM challenge-response material, distinct from the stored NT password hash.</p>
+<p class="meta">Also written: NetNTLMv2, NetNTLMv1</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://hashcat.net/wiki/doku.php?id=hashcat">Hashcat: documented format names</a><br><span class="meta">primary source · Options: format names NetNTLMv1 and NetNTLMv2 (names only)</span></li><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm">Microsoft: NTLM</a><br><span class="meta">primary source · NTLM authentication</span></li></ul>
+</article>
+<article id="term-nfs" data-review="compared">
+<h3>NFS</h3>
+<p class="summary">Network File System: a protocol that lets computers share files over a network.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man5/nfs.5.html">Linux NFS manual</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-nt-hash" data-review="compared">
+<h3>NT hash</h3>
+<p class="summary">An unsalted password hash used by Windows authentication, distinct from an NTLM network response.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/passwords-technical-overview">Microsoft: Passwords technical overview</a><br><span class="meta">primary source · Passwords stored as OWF; Passwords stored in Active Directory</span></li><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm">Microsoft: NTLM</a><br><span class="meta">primary source · NTLM authentication</span></li></ul>
+</article>
+<article id="term-ntauth" data-review="compared">
+<h3>NTAuth</h3>
+<p class="summary">A forest-wide Active Directory store of CA certificates trusted for particular authentication uses, including smart-card logon.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/certificates-and-public-key-infrastructure-pki/import-third-party-ca-to-enterprise-ntauth-store">Microsoft: Enterprise NTAuth store</a><br><span class="meta">primary source · More information</span></li></ul>
+</article>
+<article id="term-ntds" data-review="compared">
+<h3>NTDS</h3>
+<p class="summary">In these notes, the Active Directory database, stored in ntds.dit and including directory objects and protected credential data.</p>
+<p class="meta">Also written: ntds.dit, NTDS.dit</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview">Microsoft: Active Directory Domain Services overview</a><br><span class="meta">primary source · Directory services and domain controllers</span></li><li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/passwords-technical-overview">Microsoft: Passwords technical overview</a><br><span class="meta">primary source · Passwords stored as OWF; Passwords stored in Active Directory</span></li></ul>
+</article>
+<article id="term-ntlm" data-review="compared">
+<h3>NTLM</h3>
+<p class="summary">A family of Windows authentication protocols that use a challenge-response exchange.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm">Microsoft: NTLM</a><br><span class="meta">primary source · NTLM authentication</span></li></ul>
+</article>
+<article id="term-ntlm-relay" data-review="compared">
+<h3>NTLM relay</h3>
+<p class="summary">An authentication-forwarding attack that misuses another party’s NTLM exchange.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1557/001/">MITRE ATT&amp;CK: Name Resolution Poisoning and SMB Relay</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-O"><h2 class="phase-h" id="letter-O">O</h2><article id="term-ou" data-review="compared">
+<h3>OU</h3>
+<p class="summary">Organizational unit: an Active Directory container used to organize objects, delegate administration, and scope Group Policy.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/creating-an-organizational-unit-design">Microsoft: Designing organizational units</a><br><span class="meta">primary source · OU owner role; Account OUs and resource OUs</span></li></ul>
+</article>
+<article id="term-overpass-the-hash" data-review="compared">
+<h3>Overpass-the-Hash</h3>
+<p class="summary">A credential-abuse technique involving password-derived keys and Kerberos authentication.</p>
+<p class="meta">Also written: overpass-the-hash, OverPass-the-Hash, OPtH</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1550/002/">MITRE ATT&amp;CK: Pass the Hash</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-P"><h2 class="phase-h" id="letter-P">P</h2><article id="term-pass-the-hash" data-review="compared">
+<h3>Pass-the-Hash</h3>
+<p class="summary">An authentication-abuse technique involving a password hash instead of the account’s plaintext password.</p>
+<p class="meta">Also written: pass-the-hash, PtH</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1550/002/">MITRE ATT&amp;CK: Pass the Hash</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-pass-the-ticket" data-review="compared">
+<h3>Pass-the-Ticket</h3>
+<p class="summary">An authentication-abuse technique involving stolen or forged Kerberos tickets.</p>
+<p class="meta">Also written: pass-the-ticket, PtT</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1550/003/">MITRE ATT&amp;CK: Pass the Ticket</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-path" data-review="compared">
+<h3>PATH</h3>
+<p class="summary">An environment variable listing directories used to search for executable programs named without a directory path.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/environ.7.html">Linux man-pages: environment</a><br><span class="meta">primary source · DESCRIPTION: PATH</span></li></ul>
+</article>
+<article id="term-pkinit" data-review="compared">
+<h3>PKINIT</h3>
+<p class="summary">A Kerberos extension that uses public-key cryptography during initial authentication, commonly with certificates.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.rfc-editor.org/rfc/rfc4556.html">RFC 4556: PKINIT</a><br><span class="meta">primary source · Section 1: Introduction</span></li></ul>
+</article>
+<article id="term-potato" data-review="compared">
+<h3>Potato</h3>
+<p class="summary">In these notes, an informal label for Windows privilege-escalation tools with “Potato” in their names.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1134/">MITRE ATT&amp;CK: Access Token Manipulation</a><br><span class="meta">taxonomy source · Procedure Examples: JuicyPotato and BADPOTATO names only</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-R"><h2 class="phase-h" id="letter-R">R</h2><article id="term-rbcd" data-review="compared">
+<h3>RBCD</h3>
+<p class="summary">Resource-based constrained delegation: a Kerberos delegation model in which the destination service’s account specifies which services may act on users’ behalf.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview">Microsoft: Kerberos constrained delegation</a><br><span class="meta">primary source · Resource-based constrained delegation and S4U extensions</span></li></ul>
+</article>
+<article id="term-rdp" data-review="compared">
+<h3>RDP</h3>
+<p class="summary">Remote Desktop Protocol: a protocol for presenting a remote graphical session and carrying user input.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/troubleshoot/windows-server/remote/understanding-remote-desktop-protocol">Microsoft: Remote Desktop Protocol</a><br><span class="meta">primary source · Understanding RDP</span></li></ul>
+</article>
+<article id="term-rid" data-review="compared">
+<h3>RID</h3>
+<p class="summary">Relative identifier: the final component of a SID that distinguishes an account or group within its issuing domain or computer.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers">Microsoft: Security identifiers</a><br><span class="meta">primary source · Security identifiers; components of a SID</span></li></ul>
+</article>
+<article id="term-rpc" data-review="compared">
+<h3>RPC</h3>
+<p class="summary">Remote procedure call: a mechanism that lets software request work from another process, including one on another computer.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/rpc/rpc-start-page">Microsoft: Remote Procedure Call</a><br><span class="meta">primary source · Purpose</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-S"><h2 class="phase-h" id="letter-S">S</h2><article id="term-s4u" data-review="compared">
+<h3>S4U</h3>
+<p class="summary">Service for User: Kerberos extensions that support a service acting on a user’s behalf.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview">Microsoft: Kerberos constrained delegation</a><br><span class="meta">primary source · Resource-based constrained delegation and S4U extensions</span></li></ul>
+</article>
+<article id="term-sam" data-review="compared">
+<h3>SAM</h3>
+<p class="summary">Security Accounts Manager: the Windows database of local user accounts and groups.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/credentials-processes-in-windows-authentication">Microsoft: Credentials processes</a><br><span class="meta">primary source · Local Security Authority; Security Accounts Manager database</span></li></ul>
+</article>
+<article id="term-seimpersonateprivilege" data-review="compared">
+<h3>SeImpersonatePrivilege</h3>
+<p class="summary">The Windows user right that permits a process to impersonate an authenticated client.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/impersonate-a-client-after-authentication">Microsoft: Impersonate a client after authentication</a><br><span class="meta">primary source · Reference</span></li></ul>
+</article>
+<article id="term-selinux" data-review="compared">
+<h3>SELinux</h3>
+<p class="summary">Security-Enhanced Linux: a Linux security architecture for applying mandatory access-control policies.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man8/selinux.8.html">SELinux manual</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-sgid" data-review="compared">
+<h3>SGID</h3>
+<p class="summary">Set-group-ID: a file mode bit that, when honored during program execution, sets the process’s effective group ID to the file’s group ID.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man2/execve.2.html">Linux man-pages: execve</a><br><span class="meta">primary source · DESCRIPTION: set-user-ID and set-group-ID bits</span></li></ul>
+</article>
+<article id="term-sid" data-review="compared">
+<h3>SID</h3>
+<p class="summary">Security identifier: a value Windows uses to identify a security principal, such as a user, group, or computer account.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-identifiers">Microsoft: Security identifiers</a><br><span class="meta">primary source · Security identifiers; components of a SID</span></li></ul>
+</article>
+<article id="term-silver-ticket" data-review="compared">
+<h3>Silver Ticket</h3>
+<p class="summary">A forged Kerberos service ticket associated with compromise of the service account’s credentials.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://attack.mitre.org/techniques/T1558/002/">MITRE ATT&amp;CK: Silver Ticket</a><br><span class="meta">taxonomy source · Description (concept definition only)</span></li></ul>
+</article>
+<article id="term-smb" data-review="compared">
+<h3>SMB</h3>
+<p class="summary">Server Message Block: a network protocol for accessing shared files and other services.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview">Microsoft: SMB overview</a><br><span class="meta">primary source · Feature description</span></li></ul>
+</article>
+<article id="term-smb-signing" data-review="compared">
+<h3>SMB signing</h3>
+<p class="summary">Cryptographic integrity protection for SMB messages that lets a receiver detect tampering.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-signing-overview">Microsoft: SMB signing overview</a><br><span class="meta">primary source · How signing works</span></li></ul>
+</article>
+<article id="term-spn" data-review="compared">
+<h3>SPN</h3>
+<p class="summary">Service principal name: an identifier for a service instance that Kerberos associates with its service account.</p>
+<p class="meta">Also written: SPNs</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/ad/service-principal-names">Microsoft: Service principal names</a><br><span class="meta">primary source · Service principal names</span></li></ul>
+</article>
+<article id="term-sudo" data-review="compared">
+<h3>sudo</h3>
+<p class="summary">A program that lets an authorized user run a command as another user according to a configured security policy.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.sudo.ws/docs/man/sudo.man/">Sudo manual</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article>
+<article id="term-suid" data-review="compared">
+<h3>SUID</h3>
+<p class="summary">Set-user-ID: a file mode bit that, when honored during program execution, sets the process’s effective user ID to the file owner’s ID.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man2/execve.2.html">Linux man-pages: execve</a><br><span class="meta">primary source · DESCRIPTION: set-user-ID and set-group-ID bits</span></li></ul>
+</article>
+<article id="term-system" data-review="compared">
+<h3>SYSTEM</h3>
+<p class="summary">The built-in Windows LocalSystem service account, which has extensive local privileges and uses the computer’s identity on the network.</p>
+<p class="meta">Also written: NT AUTHORITY\SYSTEM</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account">Microsoft: LocalSystem account</a><br><span class="meta">primary source · LocalSystem account</span></li></ul>
+</article>
+<article id="term-systemd" data-review="compared">
+<h3>systemd</h3>
+<p class="summary">A Linux system and service manager that can manage system-wide services and services for individual users.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://www.freedesktop.org/software/systemd/man/latest/systemd.html">systemd manual</a><br><span class="meta">primary source · DESCRIPTION</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-T"><h2 class="phase-h" id="letter-T">T</h2><article id="term-tgs" data-review="compared">
+<h3>TGS</h3>
+<p class="summary">Ticket-granting service: the part of a Kerberos KDC that issues tickets for services.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center">Microsoft: Key Distribution Center</a><br><span class="meta">primary source · Authentication service and ticket-granting service</span></li></ul>
+</article>
+<article id="term-tgt" data-review="compared">
+<h3>TGT</h3>
+<p class="summary">Ticket-granting ticket: a Kerberos ticket used to request further tickets from the ticket-granting service.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center">Microsoft: Key Distribution Center</a><br><span class="meta">primary source · Authentication service and ticket-granting service</span></li></ul>
+</article>
+<article id="term-tier-0" data-review="compared">
+<h3>tier-0</h3>
+<p class="summary">The identity-control tier in the legacy Active Directory administration model, expanded into the control plane in Microsoft’s enterprise access model.</p>
+<p class="meta">Also written: tier 0</p>
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model">Microsoft: Enterprise access model</a><br><span class="meta">primary source · Evolution from the legacy AD tier model; Tier 0 scope expansion</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-U"><h2 class="phase-h" id="letter-U">U</h2><article id="term-uac" data-review="compared">
+<h3>UAC</h3>
+<p class="summary">User Account Control: a Windows mechanism that separates ordinary application use from tasks requiring administrator approval or credentials.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows-server/security/user-account-control/how-user-account-control-works">Microsoft: How User Account Control works</a><br><span class="meta">primary source · Administrator access tokens; consent and credential prompts</span></li></ul>
+</article>
+<article id="term-uid" data-review="compared">
+<h3>UID</h3>
+<p class="summary">User identifier: a numeric identity used by Unix-like systems to represent a user.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://man7.org/linux/man-pages/man7/credentials.7.html">Linux man-pages: process credentials</a><br><span class="meta">primary source · User and group identifiers</span></li></ul>
+</article>
+<article id="term-upn" data-review="compared">
+<h3>UPN</h3>
+<p class="summary">User principal name: a sign-in name written as a prefix and domain suffix joined by @, which need not be a mailbox address.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/ad/naming-properties">Microsoft: User naming attributes</a><br><span class="meta">primary source · userPrincipalName</span></li></ul>
+</article></section>
+<section class="phase" aria-labelledby="letter-W"><h2 class="phase-h" id="letter-W">W</h2><article id="term-wdac" data-review="compared">
+<h3>WDAC</h3>
+<p class="summary">Windows Defender Application Control, now called App Control for Business: policy-based control over which applications and drivers may run.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol">Microsoft: App Control for Business</a><br><span class="meta">primary source · App Control for Business</span></li><li><a href="https://learn.microsoft.com/en-us/windows/whats-new/whats-new-windows-11-version-24h2">Microsoft: Windows 11 24H2, App Control for Business</a><br><span class="meta">primary source · App Control for Business</span></li></ul>
+</article>
+<article id="term-winrm" data-review="compared">
+<h3>WinRM</h3>
+<p class="summary">Windows Remote Management: Microsoft’s implementation of WS-Management for exchanging management information with systems.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/winrm/portal">Microsoft: Windows Remote Management</a><br><span class="meta">primary source · Purpose</span></li></ul>
+</article>
+<article id="term-wmi" data-review="compared">
+<h3>WMI</h3>
+<p class="summary">Windows Management Instrumentation: Windows infrastructure for management information and administrative operations.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page">Microsoft: WMI</a><br><span class="meta">primary source · Purpose</span></li></ul>
+</article>
+<article id="term-wpad" data-review="compared">
+<h3>WPAD</h3>
+<p class="summary">Web Proxy Auto-Discovery: a mechanism for automatically locating a client’s web-proxy configuration.</p>
+
+<div class="editorial"><b>AI source comparison</b><p>Codex · 2026-09-06 · Definition only.</p></div>
+
+<ul class="links"><li><a href="https://learn.microsoft.com/en-us/windows/win32/winhttp/winhttp-autoproxy-support">Microsoft: WinHTTP AutoProxy support</a><br><span class="meta">primary source · WPAD and proxy auto-configuration</span></li></ul>
+</article></section>
+</main>
+<footer>
+<p>HackGraph is an open-source collection of security study notes, organized as expandable graphs. Use the graph to explore connections, or read the reference pages at your own pace. Source coverage and editorial review status are shown separately.</p>
+<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="/glossary.html">Glossary</a> &middot; <a href="/about.html">About the sources</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
+<p>Reading pages accompany the interactive graph. Material is intended for authorized security study and blue-team detection.</p>
+</footer>
+</body>
+</html>

@@ -1,0 +1,110 @@
+{
+  "checkedAt": "2026-09-07T09:32:27.326Z",
+  "browser": "153.0.8010.12",
+  "scope": "Rendering, selected-claim visibility, panel overflow, and WCAG-tagged axe checks for all six changed account/authentication panels at desktop and phone widths. Does not validate operational content.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "id": "valid-domain-creds",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "valid-domain-creds",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "valid-local-creds",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-valid-local-creds-desktop.png"
+    },
+    {
+      "id": "valid-local-creds",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-valid-local-creds-mobile.png"
+    },
+    {
+      "id": "win-logon-password",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "win-logon-password",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "win-logon-kerberos",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-win-logon-kerberos-desktop.png"
+    },
+    {
+      "id": "win-logon-kerberos",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-win-logon-kerberos-mobile.png"
+    },
+    {
+      "id": "pe-recovered-creds",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-recovered-creds",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "lin-ssh-keys",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-lin-ssh-keys-desktop.png"
+    },
+    {
+      "id": "lin-ssh-keys",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/authentication-lin-ssh-keys-mobile.png"
+    }
+  ]
+}

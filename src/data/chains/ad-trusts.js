@@ -116,42 +116,138 @@ export const adTrustNodes = [
     opsec: 'LDAP group-membership enumeration blends with normal directory traffic; large global-catalog queries across many domains are the main signal. Read-only.',
   },
   {
-    id: 'trust-modification',
-    label: 'Domain Trust Modification',
-    phase: 'persistence',
-    needs: 'domain-admin',
-    summary: 'Create or alter a trust / federation for durable cross-domain access.',
-    description: r`With Domain Admin (or write over trust objects) an attacker can add a new domain trust, flip trustAttributes (disable SID filtering / quarantine, or set TREAT_AS_EXTERNAL), or extend AD FS federation with an attacker-controlled token-signing certificate. Loosening SID filtering re-opens the SID-history / ExtraSids hopping that filtering would otherwise block, and a rogue trust/federation is durable, low-profile persistence. Distinct from forging SID history (T1134.005): this tampers with the trust relationship itself.`,
-    tools: [
-      { name: 'PowerView', url: 'https://github.com/PowerShellMafia/PowerSploit' },
-      { name: 'AD PowerShell / netdom', url: 'https://learn.microsoft.com/en-us/powershell/module/activedirectory/' },
+    "id": "trust-modification",
+    "label": "Domain Trust Modification",
+    "phase": "persistence",
+    "needs": "domain-admin",
+    "summary": "Create or alter a trust / federation for durable cross-domain access.",
+    "description": "With Domain Admin (or write over trust objects) an attacker can add a new domain trust, flip trustAttributes (disable SID filtering / quarantine, or set TREAT_AS_EXTERNAL), or extend AD FS federation with an attacker-controlled token-signing certificate. Loosening SID filtering re-opens the SID-history / ExtraSids hopping that filtering would otherwise block, and a rogue trust/federation is durable, low-profile persistence. Distinct from forging SID history (T1134.005): this tampers with the trust relationship itself.",
+    "tools": [
+      {
+        "name": "PowerView",
+        "url": "https://github.com/PowerShellMafia/PowerSploit"
+      },
+      {
+        "name": "AD PowerShell / netdom",
+        "url": "https://learn.microsoft.com/en-us/powershell/module/activedirectory/"
+      }
     ],
-    commands: [
-      { label: 'Inspect trustAttributes before tampering', code: r`Get-DomainTrust -Domain target.local`, lang: 'powershell' },
-      { label: 'Create a one-way inbound trust (netdom)', code: r`netdom trust target.local /Domain:attacker.local /add /oneside:trusted /passwordt:Trust_Pass1`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Inspect trustAttributes before tampering",
+        "code": "Get-DomainTrust -Domain target.local",
+        "lang": "powershell"
+      },
+      {
+        "label": "Create a one-way inbound trust (netdom)",
+        "code": "netdom trust target.local /Domain:attacker.local /add /oneside:trusted /passwordt:Trust_Pass1",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1484.002'),
-    references: [
-      { label: 'MITRE ATT&CK T1484.002, Trust Modification', url: 'https://attack.mitre.org/techniques/T1484/002/' },
-      { label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
-      { label: 'CyberArk, Golden SAML: Newly Discovered Attack Technique Forges Authentication to Cloud Apps', url: 'https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps' },
+    "mitre": {
+      "id": "T1484.002",
+      "url": "https://attack.mitre.org/techniques/T1484/002/"
+    },
+    "references": [
+      {
+        "label": "MITRE ATT&CK T1484.002, Trust Modification",
+        "url": "https://attack.mitre.org/techniques/T1484/002/"
+      },
+      {
+        "label": "The Hacker Recipes, Domain trusts",
+        "url": "https://www.thehacker.recipes/ad/movement/trusts/"
+      }
     ],
-    requires: ['Domain Admin / write over the trustedDomain object (or AD FS admin)', 'A target domain/forest (existing or attacker-created)'],
-    opsec: 'Trust creation/modification is a high-signal directory change (Event 4706 new trust, 4716 trusted-domain info modified, 4707 trust removed, and 5136 on trustedDomain objects; forest-trust entries add 4865/4866/4867). Disabling SID filtering or adding a federation cert is a strong, durable indicator. Defenders auditing trust topology will spot a new or loosened trust.',
+    "requires": [
+      "Domain Admin / write over the trustedDomain object (or AD FS admin)",
+      "A target domain/forest (existing or attacker-created)"
+    ],
+    "opsec": "Trust creation/modification is a high-signal directory change (Event 4706 new trust, 4716 trusted-domain info modified, 4707 trust removed, and 5136 on trustedDomain objects; forest-trust entries add 4865/4866/4867). Disabling SID filtering or adding a federation cert is a strong, durable indicator. Defenders auditing trust topology will spot a new or loosened trust."
   },
   {
-    id: 'enterprise-admin',
-    label: 'Enterprise Admin (Forest Root)',
-    phase: 'domain-dominance',
-    kind: 'goal',
-    summary: '👑 Forest-root compromise: every domain in the forest.',
-    description: r`The forest, not the domain, is Active Directory's true security boundary, and Enterprise Admins (a group in the forest-root domain) administer every domain inside it. Escalating beyond a single Domain Admin means crossing an intra-forest trust to the root: a golden/inter-realm ticket whose ExtraSids carries the root Enterprise Admins SID (<root-SID>-519), a child→parent SID-history hop, or a forged inter-realm referral ticket. From forest root you control every domain's krbtgt, every DC, and can establish persistence at forest scope. This is a distinct, higher goal than per-domain Domain Admin: a single forest can contain several Domain Admins (one per domain) but only one Enterprise Admins group, at the forest root.`,
-    requires: ['A cross-trust escalation: inter-realm trust ticket, parent-child krbtgt, or SID-history injection into the forest root'],
-    mitre: mitre('T1134.005'),
-    references: [
-      { label: 'harmj0y, A Guide to Attacking Domain Trusts', url: 'https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/' },
-      { label: 'The Hacker Recipes, Domain trusts', url: 'https://www.thehacker.recipes/ad/movement/trusts/' },
+    "id": "enterprise-admin",
+    "label": "Enterprise Admin (Forest Root)",
+    "phase": "domain-dominance",
+    "kind": "goal",
+    "summary": "Understand forest-wide administration and the forest-root group.",
+    "description": "Enterprise Admins exists in the root domain of an Active Directory forest. Its members can make forest-wide directory changes, such as adding child domains. The group is automatically included in each domain's Administrators group. Forest-wide administration and an individual domain's administrative role describe different scopes; their names do not document a procedure for obtaining either role.",
+    "requires": [
+      "A cross-trust escalation: inter-realm trust ticket, parent-child krbtgt, or SID-history injection into the forest root"
     ],
+    "mitre": {
+      "id": "T1134.005",
+      "url": "https://attack.mitre.org/techniques/T1134/005/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Active Directory security groups",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+        "kind": "primary",
+        "section": "Domain Admins; Enterprise Admins"
+      },
+      {
+        "label": "harmj0y, A Guide to Attacking Domain Trusts",
+        "url": "https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/"
+      },
+      {
+        "label": "The Hacker Recipes, Domain trusts",
+        "url": "https://www.thehacker.recipes/ad/movement/trusts/"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected identity and authorization claims in this overview. Excludes commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings. Navigation labels are project conventions.",
+      "reviewedContent": {
+        "description": "Enterprise Admins exists in the root domain of an Active Directory forest. Its members can make forest-wide directory changes, such as adding child domains. The group is automatically included in each domain's Administrators group. Forest-wide administration and an individual domain's administrative role describe different scopes; their names do not document a procedure for obtaining either role.",
+        "id": "enterprise-admin",
+        "kind": "goal",
+        "label": "Enterprise Admin (Forest Root)",
+        "mitre": {
+          "id": "T1134.005",
+          "url": "https://attack.mitre.org/techniques/T1134/005/"
+        },
+        "phase": "domain-dominance",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Active Directory security groups",
+            "section": "Domain Admins; Enterprise Admins",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          },
+          {
+            "label": "harmj0y, A Guide to Attacking Domain Trusts",
+            "url": "https://blog.harmj0y.net/redteaming/a-guide-to-attacking-domain-trusts/"
+          },
+          {
+            "label": "The Hacker Recipes, Domain trusts",
+            "url": "https://www.thehacker.recipes/ad/movement/trusts/"
+          }
+        ],
+        "requires": [
+          "A cross-trust escalation: inter-realm trust ticket, parent-child krbtgt, or SID-history injection into the forest root"
+        ],
+        "summary": "Understand forest-wide administration and the forest-root group."
+      },
+      "claims": [
+        {
+          "text": "Enterprise Admins exists in the forest-root domain and authorizes forest-wide changes in AD.",
+          "section": "Microsoft, Active Directory security groups — Enterprise Admins",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          ]
+        },
+        {
+          "text": "Enterprise Admins is automatically added to the Administrators group in every domain of the forest.",
+          "section": "Microsoft, Active Directory security groups — Enterprise Admins",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          ]
+        }
+      ]
+    }
   },
 ];
 

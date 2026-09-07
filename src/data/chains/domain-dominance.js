@@ -40,26 +40,105 @@ export const domainDominanceNodes = [
     opsec: 'Full collection generates heavy LDAP traffic and many session queries. Use stealth collection methods and avoid collecting every method at once in monitored environments.',
   },
   {
-    id: 'find-privesc-path',
-    references: [
-      { label: 'HackTricks, Active Directory Methodology', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html' },
-    ],
-    label: 'Privilege Escalation',
-    phase: 'priv-esc',
-    kind: 'category',
-    summary: 'Routes from a domain user to higher privilege.',
-    description:
-      'Every route from an ordinary domain account toward Domain Admin: ACL/DACL abuse, AD CS, Kerberos delegation, account/group manipulation, and critical CVEs. BloodHound usually identifies the shortest path.',
-    tools: [
-      { name: 'bloodyAD', url: 'https://github.com/CravateRouge/bloodyAD' },
-    ],
-    commands: [
+    "id": "find-privesc-path",
+    "references": [
       {
-        label: 'Collect BloodHound CE data (bloodyAD: basics only; use SharpHound CE / RustHound-CE / nxc --bloodhound for full ADCS + delegation edges)',
-        code: 'bloodyAD -u user -p pass -d domain.local --host dc01 get bloodhound',
-        lang: 'bash',
+        "label": "MITRE ATT&CK, Privilege Escalation",
+        "url": "https://attack.mitre.org/tactics/TA0004/",
+        "kind": "taxonomy",
+        "section": "Description"
       },
+      {
+        "label": "Microsoft, Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Active Directory Methodology",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html"
+      }
     ],
+    "label": "Privilege Escalation",
+    "phase": "priv-esc",
+    "kind": "category",
+    "summary": "Understand changes in authority and permission scope.",
+    "description": "Privilege escalation concerns obtaining greater permissions on a system or network. Windows represents process and thread authority through access tokens containing identity, group membership, and privileges. Local administrative access and authority over an entire domain describe different scopes. A connection drawn between topics does not establish that the associated permissions can be obtained.",
+    "tools": [
+      {
+        "name": "bloodyAD",
+        "url": "https://github.com/CravateRouge/bloodyAD"
+      }
+    ],
+    "commands": [
+      {
+        "label": "Collect BloodHound CE data (bloodyAD: basics only; use SharpHound CE / RustHound-CE / nxc --bloodhound for full ADCS + delegation edges)",
+        "code": "bloodyAD -u user -p pass -d domain.local --host dc01 get bloodhound",
+        "lang": "bash"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category summary and description only. Does not cover existing commands or tools, linked techniques, connection outcomes, operational applicability, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "bloodyAD -u user -p pass -d domain.local --host dc01 get bloodhound",
+            "label": "Collect BloodHound CE data (bloodyAD: basics only; use SharpHound CE / RustHound-CE / nxc --bloodhound for full ADCS + delegation edges)",
+            "lang": "bash"
+          }
+        ],
+        "description": "Privilege escalation concerns obtaining greater permissions on a system or network. Windows represents process and thread authority through access tokens containing identity, group membership, and privileges. Local administrative access and authority over an entire domain describe different scopes. A connection drawn between topics does not establish that the associated permissions can be obtained.",
+        "id": "find-privesc-path",
+        "kind": "category",
+        "label": "Privilege Escalation",
+        "phase": "priv-esc",
+        "references": [
+          {
+            "kind": "taxonomy",
+            "label": "MITRE ATT&CK, Privilege Escalation",
+            "section": "Description",
+            "url": "https://attack.mitre.org/tactics/TA0004/"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access Tokens",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "label": "HackTricks, Active Directory Methodology",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/index.html"
+          }
+        ],
+        "summary": "Understand changes in authority and permission scope.",
+        "tools": [
+          {
+            "name": "bloodyAD",
+            "url": "https://github.com/CravateRouge/bloodyAD"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "ATT&CK defines privilege escalation as gaining higher-level permissions on a system or network and includes several different scopes of elevated access.",
+          "section": "MITRE ATT&CK, Privilege Escalation — Description",
+          "sources": [
+            "https://attack.mitre.org/tactics/TA0004/"
+          ]
+        },
+        {
+          "text": "Windows access tokens describe process or thread security context through identity, group information, and privileges. A graph connection is not evidence of a resulting token or permission change.",
+          "section": "Microsoft, Access Tokens — Introduction; access-token contents; final sentence is an editorial inference about evidence",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'unconstrained-delegation',
@@ -135,15 +214,105 @@ export const domainDominanceNodes = [
     ],
   },
   {
-    id: 'krbtgt-hash',
-    label: 'krbtgt Hash',
-    phase: 'domain-dominance',
-    needs: 'domain-admin',
-    summary: 'The key to forge any Kerberos ticket.',
-    description:
-      'The krbtgt account signs every TGT in the domain. Its hash lets you forge tickets for any user with any privileges, giving durable control of Kerberos auth.',
-    requires: ['The krbtgt hash (via DCSync or NTDS.dit extraction)'],
-    mitre: mitre('T1558'),
+    "id": "krbtgt-hash",
+    "label": "krbtgt Hash",
+    "phase": "domain-dominance",
+    "needs": "domain-admin",
+    "summary": "Understand the KDC account and the tickets its key material protects.",
+    "description": "KRBTGT is the Active Directory account used by the Key Distribution Center (KDC). The KDC derives cryptographic key material from its account password to protect ticket-granting tickets (TGTs). Clients present a TGT when requesting a ticket for a particular service. Application servers validate the service ticket and may use its authorization data for access control. Read-only domain controllers (RODCs) use a separate KRBTGT account and password from a writable domain controller.",
+    "requires": [
+      "The krbtgt hash (via DCSync or NTDS.dit extraction)"
+    ],
+    "mitre": {
+      "id": "T1558",
+      "url": "https://attack.mitre.org/techniques/T1558/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Key Distribution Center",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Active Directory accounts",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis",
+        "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about KDC account identity, TGT and service-ticket roles, application authorization data, and separate RODC accounts. Excludes key acquisition, ticket forgery, prerequisites, commands, tools, applicability, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "KRBTGT is the Active Directory account used by the Key Distribution Center (KDC). The KDC derives cryptographic key material from its account password to protect ticket-granting tickets (TGTs). Clients present a TGT when requesting a ticket for a particular service. Application servers validate the service ticket and may use its authorization data for access control. Read-only domain controllers (RODCs) use a separate KRBTGT account and password from a writable domain controller.",
+        "id": "krbtgt-hash",
+        "label": "krbtgt Hash",
+        "mitre": {
+          "id": "T1558",
+          "url": "https://attack.mitre.org/techniques/T1558/"
+        },
+        "needs": "domain-admin",
+        "phase": "domain-dominance",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Key Distribution Center",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Active Directory accounts",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis",
+            "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13"
+          }
+        ],
+        "requires": [
+          "The krbtgt hash (via DCSync or NTDS.dit extraction)"
+        ],
+        "summary": "Understand the KDC account and the tickets its key material protects."
+      },
+      "claims": [
+        {
+          "text": "The KDC uses the KRBTGT account and derives cryptographic key material from its account password to protect the TGTs it issues.",
+          "section": "Microsoft — Key Distribution Center — KRBTGT principal and password-derived cryptographic key",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center"
+          ]
+        },
+        {
+          "text": "In the ticket-granting service exchange, a client presents a TGT when requesting a service ticket.",
+          "section": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis — Ticket-Granting Service (TGS) exchange",
+          "sources": [
+            "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13"
+          ]
+        },
+        {
+          "text": "An application server validates the service ticket and can use the ticket's authorization data for access control.",
+          "section": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis — Client/Server Authentication Protocol (AP) exchange",
+          "sources": [
+            "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13"
+          ]
+        },
+        {
+          "text": "An RODC uses a different KRBTGT account and password from the KDC on a writable domain controller.",
+          "section": "Microsoft — Active Directory accounts — Read-only domain controllers and the KRBTGT account",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'golden-ticket',
@@ -180,15 +349,73 @@ export const domainDominanceNodes = [
     opsec: 'Match the forging key to the domain. On an AES-only domain a ticket built from the RC4 hash (etype 23) is an encryption-downgrade tell, so forge with -aesKey; on a legacy RC4 domain the NT hash is fine. Set realistic ticket lifetimes (default 10y golden tickets are an easy hunt); mismatched RID/encryption is detectable.',
   },
   {
-    id: 'domain-admin',
-    label: 'Domain Admin',
-    phase: 'domain-dominance',
-    kind: 'goal',
-    summary: '👑 Full control of the domain.',
-    description:
-      'You hold Domain Admin (or equivalent): every host, every account, every secret. Reached by many routes, for example ACL abuse, DCSync, a forged Golden Ticket, certificate forgery or theft, KDC-bug impersonation (noPac, MS14-068), privileged-group abuse, or theft of a live DA account\'s credentials, tickets, or session. The remaining branches establish durable persistence so access survives remediation.',
-    requires: ['A DA-equivalent takeover primitive: e.g. a DA-equivalent ACL, DCSync rights, a Golden Ticket, or any equivalent path to domain dominance'],
-    mitre: mitre('T1078.002'),
+    "id": "domain-admin",
+    "label": "Domain Admin",
+    "phase": "domain-dominance",
+    "kind": "goal",
+    "summary": "Understand the Domain Admins role and its default scope.",
+    "description": "Members of Domain Admins are authorized to administer their domain. By default, the group belongs to the Administrators group on computers that join that domain, including domain controllers. This describes a powerful administrative role and its default group membership. It should not be read as proof that every secret is readable or that every connection drawn to this topic produces that authority.",
+    "requires": [
+      "A DA-equivalent takeover primitive: e.g. a DA-equivalent ACL, DCSync rights, a Golden Ticket, or any equivalent path to domain dominance"
+    ],
+    "mitre": {
+      "id": "T1078.002",
+      "url": "https://attack.mitre.org/techniques/T1078/002/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Active Directory security groups",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+        "kind": "primary",
+        "section": "Domain Admins; Enterprise Admins"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected identity and authorization claims in this overview. Excludes commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings. Navigation labels are project conventions.",
+      "reviewedContent": {
+        "description": "Members of Domain Admins are authorized to administer their domain. By default, the group belongs to the Administrators group on computers that join that domain, including domain controllers. This describes a powerful administrative role and its default group membership. It should not be read as proof that every secret is readable or that every connection drawn to this topic produces that authority.",
+        "id": "domain-admin",
+        "kind": "goal",
+        "label": "Domain Admin",
+        "mitre": {
+          "id": "T1078.002",
+          "url": "https://attack.mitre.org/techniques/T1078/002/"
+        },
+        "phase": "domain-dominance",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Active Directory security groups",
+            "section": "Domain Admins; Enterprise Admins",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          }
+        ],
+        "requires": [
+          "A DA-equivalent takeover primitive: e.g. a DA-equivalent ACL, DCSync rights, a Golden Ticket, or any equivalent path to domain dominance"
+        ],
+        "summary": "Understand the Domain Admins role and its default scope."
+      },
+      "claims": [
+        {
+          "text": "Domain Admins members are authorized to administer their domain.",
+          "section": "Microsoft, Active Directory security groups — Domain Admins",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          ]
+        },
+        {
+          "text": "By default, Domain Admins is a member of Administrators on domain-joined computers, including domain controllers.",
+          "section": "Microsoft, Active Directory security groups — Domain Admins",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'adminsdholder',

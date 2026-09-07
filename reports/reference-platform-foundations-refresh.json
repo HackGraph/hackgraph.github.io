@@ -1,0 +1,415 @@
+{
+  "scope": "Targeted GET refresh of twenty-four platform-foundation sources; superseded and removed observations retained. Browser-rendered publication captures are separate from HTTP status.",
+  "previousReportAt": "2026-09-07T04:45:01.050Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T04:45:01.040Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.698Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.243Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.030Z"
+    },
+    {
+      "url": "https://www.sudo.ws/docs/man/sudo.man/",
+      "code": 200,
+      "finalUrl": "https://www.sudo.ws/docs/man/sudo.man/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://www.sudo.ws/docs/man/sudo.man/"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:45.460Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://access.redhat.com/security/updates/backporting",
+      "code": 200,
+      "finalUrl": "https://access.redhat.com/security/updates/backporting",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://access.redhat.com/security/updates/backporting"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:18.722Z"
+    },
+    {
+      "url": "https://cwe.mitre.org/data/definitions/312.html",
+      "code": 200,
+      "finalUrl": "https://cwe.mitre.org/data/definitions/312.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://cwe.mitre.org/data/definitions/312.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.951Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.085Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.818Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:37:22.601Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.126Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.817Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.085Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.125Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.170Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.085Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.084Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.170Z"
+    },
+    {
+      "url": "https://man.openbsd.org/ssh",
+      "code": 200,
+      "finalUrl": "https://man.openbsd.org/ssh",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man.openbsd.org/ssh"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:18.846Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/acl.5.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man5/acl.5.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man5/acl.5.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:18.527Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/inode.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/inode.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/inode.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:18.527Z"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln-metrics/cvss",
+      "code": 200,
+      "finalUrl": "https://nvd.nist.gov/vuln-metrics/cvss",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://nvd.nist.gov/vuln-metrics/cvss"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.170Z"
+    },
+    {
+      "url": "https://pages.nist.gov/800-63-4/sp800-63b.html",
+      "code": 200,
+      "finalUrl": "https://pages.nist.gov/800-63-4/sp800-63b.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://pages.nist.gov/800-63-4/sp800-63b.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:18.526Z"
+    },
+    {
+      "url": "https://www.cve.org/about/Process",
+      "code": 200,
+      "finalUrl": "https://www.cve.org/about/Process",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.cve.org/about/Process"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.679Z"
+    },
+    {
+      "url": "https://www.sudo.ws/docs/man/sudo.man/",
+      "code": 200,
+      "finalUrl": "https://www.sudo.ws/docs/man/sudo.man/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.sudo.ws/docs/man/sudo.man/"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.513Z"
+    }
+  ]
+}

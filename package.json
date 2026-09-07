@@ -1,7 +1,32 @@
 {
-  "//": "Not a package. This file exists for exactly one line: \"type\": \"module\", which tells node the .js files here are ES modules. Without it node tries CommonJS first, reparses every file, and warns. There are no dependencies, no lockfile and nothing to install: `npm install` would do nothing. Do not add dependencies here without a very good reason - the site ships as plain files and that is the point.",
+  "description": "A static educational graph explorer. Packages are development tools; the published application has no runtime package dependencies.",
   "name": "hackgraph",
   "private": true,
   "type": "module",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "dev": "node tools/serve.mjs",
+    "test": "npm run test:unit && npm run test:browser && npm run verify:build",
+    "test:unit": "node --test",
+    "test:browser": "playwright test",
+    "references": "node tools/gen-reference.mjs",
+    "check:refs": "node tools/check-refs.mjs",
+    "references:status": "node tools/stamp-availability.mjs",
+    "check:content": "node tools/audit-content.mjs",
+    "check:provenance": "node tools/source-provenance.mjs",
+    "check:taxonomy": "node tools/check-taxonomy.mjs",
+    "review:inventory": "node tools/review-inventory.mjs",
+    "layout:compare": "node tools/layout-lab.mjs",
+    "layout:geometry": "node tools/layout-geometry.mjs",
+    "layout:sequences": "node tools/layout-sequences.mjs",
+    "render:expansion": "node tools/expansion-lab.mjs",
+    "build": "node tools/prepare-site.mjs",
+    "verify:build": "node tools/verify-site.mjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.63.0",
+    "axe-core": "4.13.0",
+    "elkjs": "0.12.0",
+    "jsdom": "30.0.1"
+  }
 }

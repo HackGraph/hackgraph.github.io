@@ -1,0 +1,261 @@
+{
+  "scope": "Targeted GET retrieval of ten primary publications supporting the execution-context comparisons. Other current URLs, including the three prior access exceptions, retain their earlier observations and timestamps. This is not a new complete network sweep.",
+  "previousReportAt": "2026-09-07T09:27:58.282Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.058Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.469Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.257Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.170Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.084Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:17.170Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:45.194Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:45.599Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.386Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:38.805Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.576Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:38.804Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.386Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.742Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.763Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.576Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.193Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.193Z"
+    }
+  ]
+}

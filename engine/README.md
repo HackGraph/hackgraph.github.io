@@ -2,7 +2,7 @@
 
 An embeddable engine for exploring a directed graph of steps: progressive disclosure,
 multi-parent DAGs, cycles unrolled forward, click-trail path tracing, focus and isolate
-modes, search, filters, notes, deep links. No dependencies, no build step.
+modes, search, filters, notes, deep links. No runtime dependencies; development tests use the host repository’s pinned tools.
 
 The engine knows nothing about your data. Swap the map, swap the product.
 
@@ -33,9 +33,8 @@ switcher) when the *container* — not the window — gets small.
 
 ## The data contract
 
-A **node** is `{ id, label, group, summary?, kind }` where `kind` is
-`step | category | start | goal`. Anything else you attach is passed through untouched
-and rendered in the detail panel:
+A **node** is `{ id, label, group, summary?, aliases?, kind }` where `kind` is
+`step | category | start | goal`. The detail panel renders the documented `details` fields:
 
 ```js
 {
@@ -44,6 +43,8 @@ and rendered in the detail panel:
   env: 'staging', role: 'maintainer',          // optional: drive the built-in filters
   details: {
     description: 'Long text for the panel.',
+    applicability: 'Optional author-supplied context.',
+    editorial: [{ label: 'Review status', text: 'Host-supplied evidence context.' }],
     prereqs: ['build'],                        // node ids — rendered as jump chips
     tools: ['ci-runner'],
     commands: ['ci verify --artifact $SHA'],   // each gets a copy button
@@ -68,7 +69,7 @@ const MAPS = [myMap];   // the registry the view reads
 ```
 
 `label` is the caption drawn on the edge and its heading in the panel; `tag: false`
-keeps the heading and drops the caption.
+keeps the heading and drops the caption. Captions also yield when they would overlap another caption or a card; connection details retain the full explanation. Inspecting a connection gives its caption priority.
 
 A relationship may also carry `details` in the same shape a node's does, rendered with
 the same panel sections. `prereqsLabel` renames that heading — on an edge, usually to
@@ -84,8 +85,10 @@ GraphView.mount(container, {
   maps,                  // required — array of maps (or set globalThis.MAPS)
   startMap: 'pipeline',  // which map opens
   title: 'My Graph',     // toolbar label
-  theme: 'dark' | 'light',            // default: follows the OS
-  animationMs: 470,
+  theme: 'dark' | 'light',            // default: dark (saved preference wins)
+  animationMs: 360,
+  readingUrl: '/reference.html',     // optional host reading view
+  intro: { title: 'Explore the course', body: 'Choose a topic to begin.' },
   storagePrefix: 'fg:',  // notes/marks/prefs namespace; '' disables persistence
   deepLink: true,        // read and write the URL hash
   chrome:   { toolbar, filters, panel, crumbs, hint },              // all true
@@ -106,7 +109,8 @@ view.select('node-id')      // reveal ancestry, select, centre
 view.expand(key) / view.collapse(key)
 view.clearSelection()
 view.setMap(id) / view.setTheme('light') / view.setFocus(true) / view.setIsolate(true)
-view.fit() / view.reset()
+view.fit()                 // deliberate overview, with Return to reading
+view.reset()               // return to initial reading state
 await view.shareToken()     // the compressed state token
 view.route                  // current lit path (render keys)
 view.selection              // current selection key, or null
@@ -124,6 +128,9 @@ view.destroy()              // remove listeners and empty the container
 | click empty canvas | deselect — the path is remembered and resumes on the next click |
 | hover | preview a single route (the recorded one if there is one) |
 | right-click / long-press | context menu: expand, mark, not-applicable, note, copy link |
+| Tab, Right / Left | enter the graph, expand and visit a child / visit a parent |
+| Up / Down, Home / End | nearby topic in this column, root / last peer |
+| Space / Enter | expand or collapse / open details |
 | `/` | search · `Esc` closes the panel, isolate, then the selection |
 
 **Focus** collapses the view to the path plus the selection's next steps — ancestors
@@ -166,12 +173,11 @@ node build.mjs         # dist/index.html + one self-contained page per map
 node server.mjs        # dev server on :3001, no-cache
 ```
 
-Both suites also run from the host repo's `node --test`. `view-test.mjs` skips when jsdom
-is not installed.
+Both suites run from the host repo's `npm run test:unit`. The jsdom dependency is mandatory. `npm test` also runs Chromium, Firefox and WebKit, including keyboard, touch-event, persistence, camera, accessibility and staged-build checks.
 
 The engine is checked into HackGraph because that is the only thing using it, and stays
 generic: nothing here references the host's subject matter. Publishing it separately
-needs a `package.json` and nothing else — it imports only `node:` built-ins.
+would require its own packaging and support contract; the browser runtime has no package imports.
 
 Two invariants the code protects deliberately — breaking either causes bugs that look
 like layout randomness:
@@ -180,5 +186,30 @@ like layout randomness:
   tick with edge geometry recomputed inside it. Animating any of them on a separate
   clock — including a CSS transition of "the same" duration — lets edges arrive before
   the cards they connect.
-- **Synchronous measurement.** Card heights are read immediately after creation and
-  before animating. Measuring asynchronously produces a guess-then-correct jump.
+- **Synchronous measurement.** Card heights and caption dimensions are read together
+  after their DOM batch is assembled, before layout or entrance effects begin.
+  Measuring asynchronously produces a guess-then-correct jump.
+
+## Reading, motion, and layout contracts
+
+Ordinary expansion preserves at least 0.9× scale with 14 px titles. Large branches get a screen-space choice list. Overview can fit farther out and suppresses detail; its Return to reading action restores a readable camera. Wheel/pinch gestures can zoom manually.
+
+The displayed camera coordinates are authoritative. Layout and camera geometry share one requestAnimationFrame loop, and interrupting motion starts from the current image. Layout defaults to 360 ms, camera moves cap at 360 ms, and entrance stagger caps at 100 ms. A live reduced-motion change settles active motion. Card measurement is batched after fonts are ready.
+
+Fixed shell anchors are cached per mount. Expansion reads its container dimensions before updating the graph and panel, then uses them to follow the branch. The first rendering frame allocates opacity effects only for visible entrances. A branch canceled before that frame is removed without an exit animation; offscreen exits are also removed immediately. `npm run render:expansion` measures generic 25/100/250-child expansions against the local server, with an optional saved renderer for comparison. See `reports/EXPANSION_RENDERING_REVIEW.md` for the paired observations and limits.
+
+The sidebar's connected-topic rows are built on first disclosure, rather than during selection or expansion. Closing the section makes its rows inert; reopening reuses them. Replacing the selected panel discards its rows. Icons are DOM clones and dataset text stays in text nodes. This avoids constructing a second detailed list for a reader who only uses the graph or branch chooser. `reports/LARGE_EXPANSION_REVIEW.md` records expansion and disclosure costs separately.
+
+The floating topic chooser measures the available space around its expansion card and fixed controls when opened or when the container resizes. Short landscape windows can reduce its scroll area while retaining a complete choice row. Resize updates reuse its buttons and keep the focused choice in view. Keyboard focus entering a graph card closes Help and Settings, matching pointer dismissal; mobile filters also close while desktop filters remain persistent. The measurements run outside the animation loop. `reports/OVERLAY_REVIEW.md` records the geometry regressions and added setup cost.
+
+The disclosure animates the outer container's measured height for 220 ms while the inner rows keep their natural height. A ResizeObserver updates that measurement after wrapping or text-size changes. The panel owns and disconnects this observer on close, replacement, map change, and destroy. Browsers without ResizeObserver use automatic height with an immediate size change. `reports/SIDEBAR_MOTION_REVIEW.md` records the measured reduction in repeated layout and the upfront measurement cost. `tools/sidebar-lab.mjs` accepts both `--baseline` and `--baseline-css` to compare complete renderer/style pairs.
+
+Offscreen cards and edges are culled, unchanged attributes are not rewritten, and labels use known routing coordinates rather than SVG geometry queries. Label dimensions are measured after creation and cached, including when labels are first enabled after being created hidden. A spatial grid selects non-overlapping captions in the visible area with overscan; there are no label-size reads during motion. During entrance, offscreen destinations do not paint a stack at the parent. On expansion, established coordinates receive positional priority over fresh items. Necessary movement propagates through known neighbors with 0.75 stability weighting; new fan-outs cannot pull the existing diagram toward their centers. Peer ordering and authored single-parent sibling order are constrained, with an authored-order fallback for conflicting history. Collapse compacts released space while retaining compatible peer order. Connector lanes use a first-hop crossing score. These features reduce movement in the measured corpus at the cost of somewhat taller expansion layouts and more crossings; they are not a guarantee of globally optimal layout. See `reports/LAYOUT_DECISION.md` for the measured ELK comparison and its limits.
+
+The host may provide `details.editorial`, `details.editorialTitle`, `details.claims`, and reference tuples `[label, url, kind?, section?]`. The engine displays these fields without interpreting their subject matter. The host owns review validation and content accuracy.
+
+Each claim has `text`, `section`, and a `sources` array of URLs. The panel separates its text, source section, and citation links. Link labels come from the current entry's `details.refs`; an unlabeled valid URL is displayed as its URL. Shared-definition references do not supply those labels. Claim text and labels remain text nodes, and the existing protocol check applies to destinations. Long values wrap, and links retain visible keyboard focus. The reading-page generator follows the same presentation; `reports/CITATION_PRESENTATION.md` records the verification scope.
+
+`details.definitions` holds shared vocabulary separately from an entry's claims. Each item supplies `id`, `label`, `description`, optional `review: { label, detail, scope }`, `refs`, and `accessNotes`. The definition is visible in its own section; native disclosure controls expose the comparison scope and sources with keyboard support. These records never become the entry's review or references automatically. Reference labels and source sections are rendered as text, and URLs pass the same protocol checks as other links.
+
+The pure `assignCoords` API accepts `{ stability, incremental }`; ordinary callers retain the original packing behavior unless incremental placement is requested. `blockResolve` optionally accepts nonnegative positional weights, including zero for fresh items. `orderColumns` accepts an optional `{ incremental: true }` to preserve compatible peer history (`previousCy`, `previousRank`). The renderer chooses expansion versus collapse behavior based on added and removed cards/connections. `orderTrunks` operates on generic `{ y, targets }` fan geometry and returns a new lane order without mutating its inputs.

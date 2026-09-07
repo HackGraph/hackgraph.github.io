@@ -1,0 +1,683 @@
+{
+  "measuredAt": "2026-09-07T13:24:36.511Z",
+  "scope": "Focused-card geometry against visible app overlays in a generic 100-topic course; no domain graph semantics or operational content.",
+  "rows": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 589,
+        "top": 457,
+        "right": 851,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 589,
+        "top": 457,
+        "right": 851,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 391,
+        "top": 457,
+        "right": 653,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 391,
+        "top": 457,
+        "right": 653,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 391,
+        "top": 457,
+        "right": 653,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 391,
+        "top": 457,
+        "right": 653,
+        "bottom": 543,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 509,
+        "top": 317,
+        "right": 771,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 509,
+        "top": 317,
+        "right": 771,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 311,
+        "top": 317,
+        "right": 573,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 311,
+        "top": 317,
+        "right": 573,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 311,
+        "top": 317,
+        "right": 573,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1280,
+      "height": 720,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 311,
+        "top": 317,
+        "right": 573,
+        "bottom": 403,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 381,
+        "top": 341,
+        "right": 643,
+        "bottom": 427,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 334,
+        "top": 307.96875,
+        "right": 596,
+        "bottom": 393.96875,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false,
+      "screenshot": "reports/visuals/overlay-after-1024-768-expanded.png"
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 183,
+        "top": 341,
+        "right": 445,
+        "bottom": 427,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 183,
+        "top": 341,
+        "right": 445,
+        "bottom": 427,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 183,
+        "top": 341,
+        "right": 445,
+        "bottom": 427,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 1024,
+      "height": 768,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 183,
+        "top": 341,
+        "right": 445,
+        "bottom": 427,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 291,
+        "top": 152,
+        "right": 553,
+        "bottom": 238,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 291,
+        "top": 67,
+        "right": 553,
+        "bottom": 153,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false,
+      "screenshot": "reports/visuals/overlay-after-844-390-expanded.png"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 291,
+        "top": 110.5,
+        "right": 553,
+        "bottom": 196.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 291,
+        "top": 110.5,
+        "right": 553,
+        "bottom": 196.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 291,
+        "top": 110.5,
+        "right": 553,
+        "bottom": 196.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 291,
+        "top": 110.5,
+        "right": 553,
+        "bottom": 196.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 64,
+        "top": 379,
+        "right": 326,
+        "bottom": 465,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 64,
+        "top": 200.52000427246094,
+        "right": 326,
+        "bottom": 286.52001953125,
+        "width": 262,
+        "height": 86.00001525878906
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 64,
+        "top": 337.5,
+        "right": 326,
+        "bottom": 423.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 64,
+        "top": 337.5,
+        "right": 326,
+        "bottom": 423.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 64,
+        "top": 337.5,
+        "right": 326,
+        "bottom": 423.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 64,
+        "top": 337.5,
+        "right": 326,
+        "bottom": 423.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false,
+      "screenshot": "reports/visuals/overlay-after-390-844-settings.png"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 49,
+        "top": 277,
+        "right": 311,
+        "bottom": 363,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 52,
+        "top": 135.24000549316406,
+        "right": 314,
+        "bottom": 221.24000549316406,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 49,
+        "top": 235.5,
+        "right": 311,
+        "bottom": 321.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 49,
+        "top": 235.5,
+        "right": 311,
+        "bottom": 321.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false,
+      "screenshot": "reports/visuals/overlay-after-360-640-help.png"
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 49,
+        "top": 235.5,
+        "right": 311,
+        "bottom": 321.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 360,
+      "height": 640,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 49,
+        "top": 235.5,
+        "right": 311,
+        "bottom": 321.5,
+        "width": 262,
+        "height": 86
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "initial",
+      "key": "root",
+      "card": {
+        "left": 32,
+        "top": 241.9847412109375,
+        "right": 288,
+        "bottom": 326.0152587890625,
+        "width": 256,
+        "height": 84.030517578125
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "expanded",
+      "key": "root",
+      "card": {
+        "left": 40,
+        "top": 180,
+        "right": 296,
+        "bottom": 264.0305480957031,
+        "width": 256,
+        "height": 84.03054809570312
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "child",
+      "key": "topic-0",
+      "card": {
+        "left": 32,
+        "top": 200.48486328125,
+        "right": 288,
+        "bottom": 284.515625,
+        "width": 256,
+        "height": 84.03076171875
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "help",
+      "key": "topic-1",
+      "card": {
+        "left": 32,
+        "top": 200.484375,
+        "right": 288,
+        "bottom": 284.51513671875,
+        "width": 256,
+        "height": 84.03076171875
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "filters",
+      "key": "topic-2",
+      "card": {
+        "left": 32,
+        "top": 200.484375,
+        "right": 288,
+        "bottom": 284.51513671875,
+        "width": 256,
+        "height": 84.03076171875
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    },
+    {
+      "width": 320,
+      "height": 568,
+      "state": "settings",
+      "key": "topic-3",
+      "card": {
+        "left": 32,
+        "top": 200.484375,
+        "right": 288,
+        "bottom": 284.51513671875,
+        "width": 256,
+        "height": 84.03076171875
+      },
+      "overlaps": [],
+      "outsideViewport": false
+    }
+  ],
+  "errors": []
+}

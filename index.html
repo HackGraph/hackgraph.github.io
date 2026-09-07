@@ -8,7 +8,7 @@
     <meta name="google-site-verification" content="Mig3N7VsWRpoeizKRhnflY8RkwdNVf-7cZx07smCMaU" />
     <meta
       name="description"
-      content="HackGraph is an interactive attack-path explorer. Click to expand each step from a foothold to Domain Admin or root, with the commands, tools, OPSEC notes, and cited primary sources for every technique."
+      content="HackGraph is a visual collection of security study notes. Explore connected topics across Active Directory, Windows, and Linux, with references and explicit editorial review status."
     />
     <link rel="canonical" href="https://hackgraph.github.io/" />
     <meta name="robots" content="index, follow, max-image-preview:large" />
@@ -50,7 +50,8 @@
          default identity; light is opt-in via the in-app settings toggle. */
       (function () {
         try {
-          var k = localStorage.getItem('hg-theme');
+          var k = localStorage.getItem('hg:theme') || localStorage.getItem('hg-theme');
+          try { k = JSON.parse(k); } catch (e) { /* legacy raw value */ }
           document.documentElement.dataset.theme = k === 'light' ? 'light' : 'dark';
         } catch (e) {
           document.documentElement.dataset.theme = 'dark';
@@ -76,7 +77,7 @@
             "operatingSystem": "Any (web browser)",
             "browserRequirements": "Requires JavaScript.",
             "inLanguage": "en",
-            "description": "An interactive, click-to-expand attack-path explorer, from a foothold to Domain Admin or root. Every technique includes commands, tools, OPSEC notes, and cited primary sources."
+            "description": "A visual collection of security study notes across Active Directory, Windows, and Linux, with references and explicit editorial review status."
           }
         ]
       }

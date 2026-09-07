@@ -1,0 +1,177 @@
+{
+  "scope": "Targeted GET retrieval of eight primary publications supporting the account/authentication comparisons. Other current URLs, including the three prior access exceptions, retain their earlier observations and timestamps. This is not a new complete network sweep.",
+  "previousReportAt": "2026-09-07T08:57:35.014Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.499Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.258Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.058Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.590Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.102Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.103Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.102Z"
+    },
+    {
+      "url": "https://man.openbsd.org/ssh-keygen",
+      "code": 200,
+      "finalUrl": "https://man.openbsd.org/ssh-keygen",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man.openbsd.org/ssh-keygen"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:25:36.501Z"
+    },
+    {
+      "url": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+      "code": 200,
+      "finalUrl": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.152Z"
+    },
+    {
+      "url": "https://web.mit.edu/kerberos/krb5-latest/doc/formats/ccache_file_format.html",
+      "code": 200,
+      "finalUrl": "https://web.mit.edu/kerberos/krb5-latest/doc/formats/ccache_file_format.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://web.mit.edu/kerberos/krb5-latest/doc/formats/ccache_file_format.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.734Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.459Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4252.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4252.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4252.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:24:21.378Z"
+    }
+  ]
+}

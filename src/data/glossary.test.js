@@ -9,7 +9,7 @@ const terms = (text) =>
 
 describe('glossary tokenizer', () => {
   it('matches a known term and attaches its definition', () => {
-    const segs = tokenizeGlossary('Dump LSASS to harvest hashes.');
+    const segs = tokenizeGlossary('The glossary explains LSASS.');
     const hit = segs.find((s) => s.type === 'term');
     expect(hit).toBeTruthy();
     expect(hit).toMatchObject({ type: 'term', value: 'LSASS', term: 'LSASS' });
@@ -18,7 +18,7 @@ describe('glossary tokenizer', () => {
 
   it('never loses or reorders characters (segments reassemble the input)', () => {
     const input =
-      'You hold at least one valid domain account: spray it over SMB, then DCSync from a DC to pull the krbtgt hash.';
+      'Compare Kerberos and NTLM, then read about SMB signing and the role of a DC.';
     const rebuilt = tokenizeGlossary(input)
       .map((s) => s.value)
       .join('');
@@ -28,13 +28,13 @@ describe('glossary tokenizer', () => {
   it('only matches on word boundaries (no matches inside larger words)', () => {
     // "SID" must not fire inside "considerable"; "DC" must not fire inside "DCSync".
     expect(terms('a considerable amount')).not.toContain('SID');
-    const t = terms('run DCSync now');
+    const t = terms('the DCSync definition');
     expect(t).toContain('DCSync');
     expect(t).not.toContain('DC');
   });
 
   it('wraps each term at most once per block (first occurrence)', () => {
-    const t = terms('Relay over SMB to another SMB host, then a third SMB share.');
+    const t = terms('SMB clients connect to an SMB server to access an SMB share.');
     expect(t.filter((x) => x === 'SMB')).toHaveLength(1);
   });
 
@@ -43,10 +43,10 @@ describe('glossary tokenizer', () => {
   });
 
   it('prefers the longest match and resolves aliases to the canonical term', () => {
-    // "LDAPS" is an alias of LDAP and must win over the shorter "LDAP".
-    expect(terms('relay to LDAPS on the DC')).toContain('LDAP');
+    // Related concepts are separate definitions; the longer name wins.
+    expect(terms('Read about LDAPS.')).toEqual(['LDAPS']);
     // Alias casing maps back to the canonical entry.
-    expect(terms('use pass-the-hash here')).toContain('Pass-the-Hash');
+    expect(terms('the pass-the-hash definition')).toContain('Pass-the-Hash');
   });
 
   it('returns the whole string as one text segment when nothing matches', () => {

@@ -1,0 +1,4181 @@
+{
+  "checkedAt": "2026-09-07",
+  "source": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",
+  "scope": "Structured graph mapping IDs and canonical ATT&CK technique/tactic URLs in graph, glossary and shared-definition references. Identifier status only; excludes free-text mentions, other URL families, mapping suitability and claim accuracy.",
+  "inputMode": "local-file",
+  "collection": {
+    "name": "Enterprise ATT&CK",
+    "version": "19.2",
+    "modified": "2026-08-05T21:33:58.496Z"
+  },
+  "sha256": "dc1639caa5501d720e280cf1cbd8fbe009884a0c9b3e6e9ed9d0c25166c3d8f4",
+  "coverage": {
+    "mapped": 105,
+    "cited": 62,
+    "citationOnly": 12
+  },
+  "usage": {
+    "mappedIds": [
+      "T1003",
+      "T1003.001",
+      "T1003.002",
+      "T1003.003",
+      "T1003.005",
+      "T1003.006",
+      "T1018",
+      "T1021",
+      "T1021.001",
+      "T1021.002",
+      "T1021.003",
+      "T1021.004",
+      "T1021.006",
+      "T1033",
+      "T1037.003",
+      "T1046",
+      "T1047",
+      "T1053.003",
+      "T1053.005",
+      "T1059",
+      "T1059.001",
+      "T1059.003",
+      "T1059.004",
+      "T1068",
+      "T1072",
+      "T1078",
+      "T1078.001",
+      "T1078.002",
+      "T1078.003",
+      "T1082",
+      "T1087",
+      "T1087.001",
+      "T1087.002",
+      "T1090.001",
+      "T1098",
+      "T1098.007",
+      "T1110.001",
+      "T1110.002",
+      "T1110.003",
+      "T1127.001",
+      "T1134",
+      "T1134.001",
+      "T1134.003",
+      "T1134.005",
+      "T1135",
+      "T1136.001",
+      "T1136.002",
+      "T1187",
+      "T1190",
+      "T1207",
+      "T1210",
+      "T1222",
+      "T1222.002",
+      "T1482",
+      "T1484",
+      "T1484.001",
+      "T1484.002",
+      "T1518.001",
+      "T1543.002",
+      "T1543.003",
+      "T1546.008",
+      "T1546.015",
+      "T1547",
+      "T1547.001",
+      "T1547.005",
+      "T1548",
+      "T1548.001",
+      "T1548.002",
+      "T1548.003",
+      "T1550",
+      "T1550.002",
+      "T1550.003",
+      "T1552",
+      "T1552.001",
+      "T1552.002",
+      "T1552.003",
+      "T1552.004",
+      "T1552.006",
+      "T1555",
+      "T1555.003",
+      "T1555.004",
+      "T1555.005",
+      "T1556.001",
+      "T1557",
+      "T1557.001",
+      "T1557.002",
+      "T1557.003",
+      "T1558",
+      "T1558.001",
+      "T1558.002",
+      "T1558.003",
+      "T1558.004",
+      "T1563",
+      "T1563.001",
+      "T1563.002",
+      "T1574.001",
+      "T1574.006",
+      "T1574.007",
+      "T1574.009",
+      "T1574.010",
+      "T1574.011",
+      "T1606.002",
+      "T1611",
+      "T1649",
+      "T1685"
+    ],
+    "citedIds": [
+      "T1003.001",
+      "T1003.003",
+      "T1003.006",
+      "T1003.008",
+      "T1006",
+      "T1021",
+      "T1033",
+      "T1053.003",
+      "T1053.006",
+      "T1056.001",
+      "T1059",
+      "T1059.004",
+      "T1068",
+      "T1072",
+      "T1078.003",
+      "T1082",
+      "T1098",
+      "T1098.004",
+      "T1110.002",
+      "T1127.001",
+      "T1134",
+      "T1134.001",
+      "T1136.001",
+      "T1187",
+      "T1222.002",
+      "T1484.002",
+      "T1518.001",
+      "T1543.002",
+      "T1546.015",
+      "T1548",
+      "T1548.001",
+      "T1548.002",
+      "T1548.003",
+      "T1550.002",
+      "T1550.003",
+      "T1552.001",
+      "T1552.002",
+      "T1552.003",
+      "T1552.004",
+      "T1552.006",
+      "T1555.003",
+      "T1555.005",
+      "T1556",
+      "T1557",
+      "T1557.001",
+      "T1558.001",
+      "T1558.002",
+      "T1558.003",
+      "T1558.004",
+      "T1563",
+      "T1574.006",
+      "T1574.007",
+      "T1574.009",
+      "T1606.002",
+      "T1611",
+      "T1685",
+      "TA0002",
+      "TA0003",
+      "TA0004",
+      "TA0006",
+      "TA0008",
+      "TA0011"
+    ],
+    "citationOnlyIds": [
+      "T1003.008",
+      "T1006",
+      "T1053.006",
+      "T1056.001",
+      "T1098.004",
+      "T1556",
+      "TA0002",
+      "TA0003",
+      "TA0004",
+      "TA0006",
+      "TA0008",
+      "TA0011"
+    ],
+    "locations": {
+      "T1003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "local-admin-host",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sam-lsa-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "azure-adconnect-sync",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-cred-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-host-secrets",
+          "field": "mitre.id"
+        }
+      ],
+      "T1003.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dump-lsass",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-host-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lsass-ppl-bypass",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "wdigest-downgrade",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-sedebug-lsass",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1003/001/"
+        }
+      ],
+      "T1003.002": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-sebackup-restore",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-backup-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-sam-system-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-hivenightmare",
+          "field": "mitre.id"
+        }
+      ],
+      "T1003.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ntds-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-backup-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-sebackup-restore",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1003/003/"
+        }
+      ],
+      "T1003.005": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mscache-crack",
+          "field": "mitre.id"
+        }
+      ],
+      "T1003.006": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dcsync",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-dcsync-rights",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-dc-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "DCSync",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1003/006/"
+        }
+      ],
+      "T1003.008": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-shadow",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1003/008/"
+        }
+      ],
+      "T1006": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-group-privesc",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1006/"
+        }
+      ],
+      "T1018": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-recon",
+          "field": "mitre.id"
+        }
+      ],
+      "T1021": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lateral-movement-cme",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-host-foothold",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-host-foothold",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1021/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-lateral",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-cat-logon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-cat-logon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-password",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-password",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1021/"
+        }
+      ],
+      "T1021.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rdp-lateral",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rdp-restricted-admin-pth",
+          "field": "mitre.id"
+        }
+      ],
+      "T1021.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "smb-exec-foothold",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "psexec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "smbexec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-cat-smb",
+          "field": "mitre.id"
+        }
+      ],
+      "T1021.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dcom-exec",
+          "field": "mitre.id"
+        }
+      ],
+      "T1021.004": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ssh-lateral",
+          "field": "mitre.id"
+        }
+      ],
+      "T1021.006": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "winrm-evil",
+          "field": "mitre.id"
+        }
+      ],
+      "T1033": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-identity",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-identity",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1033/"
+        }
+      ],
+      "T1037.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "logon-script-abuse",
+          "field": "mitre.id"
+        }
+      ],
+      "T1046": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "network-recon",
+          "field": "mitre.id"
+        }
+      ],
+      "T1047": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "wmiexec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-cat-wmidcom",
+          "field": "mitre.id"
+        }
+      ],
+      "T1053.003": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-jobs",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cron-writable",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cron-writable",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1053/003/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cron-wildcard",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cron-wildcard",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1053/003/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-filewrite",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-filewrite",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1053/003/"
+        }
+      ],
+      "T1053.005": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "atexec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-tasks",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-admin-schtask-system",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-scheduled-task-abuse",
+          "field": "mitre.id"
+        }
+      ],
+      "T1053.006": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-systemd",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1053/006/"
+        }
+      ],
+      "T1056.001": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-session-hijack",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1056/001/"
+        }
+      ],
+      "T1059": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "reverse-shell",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "lat-cat-shell",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mssql-exec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-exec-foothold",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-exec-foothold",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1059/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-writable-script",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-writable-script",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1059/"
+        }
+      ],
+      "T1059.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "jea-breakout",
+          "field": "mitre.id"
+        }
+      ],
+      "T1059.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mssql-linked-servers",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-mssql-xpcmdshell",
+          "field": "mitre.id"
+        }
+      ],
+      "T1059.004": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-stabilize",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-stabilize",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1059/004/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-db-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-db-creds",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1059/004/"
+        }
+      ],
+      "T1068": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "windows-local-privesc",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "windows-local-privesc",
+          "field": "references[4].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-local-privesc",
+          "field": "references[5].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "zerologon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "nopac",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "printnightmare",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-cve",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "cvegrp-kerberos",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "cvegrp-exchange",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "cvegrp-smbprint",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-quick-compromise",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ms14-068",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "certifried",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "privexchange",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ntlm-reflection",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "smbghost",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-cve",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-seloaddriver",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-hyperv-admins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-print-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-vuln-software",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-printnightmare",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-kernel-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-kernel-exploit",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cve-2023-21768",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cve-2021-1732",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cve-2020-0787",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-bluehammer",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-redsun",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-prim-kernel-exec",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-kernel",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-cve",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-custom",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-custom",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-logrotate",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-logrotate",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-filewrite",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-kernel-exploit",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-glibc",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-polkit",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-service-cve",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-service-cve",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-needrestart",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-kernel-recent",
+          "field": "mitre.id"
+        }
+      ],
+      "T1072": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-wsus-admins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-deploy-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pgcat-deploy",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-deploy-app",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-deploy-app",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1072/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "splunk-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "config-mgmt-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-sccm-admins",
+          "field": "mitre.id"
+        }
+      ],
+      "T1078": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "user-foothold",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mssql-impersonation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-recovered-creds",
+          "field": "mitre.id"
+        }
+      ],
+      "T1078.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dsrm",
+          "field": "mitre.id"
+        }
+      ],
+      "T1078.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "valid-domain-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "service-account-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "domain-admin",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pre2k-auth",
+          "field": "mitre.id"
+        }
+      ],
+      "T1078.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "valid-local-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-stored-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cred-reuse",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1078/003/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-group-privesc",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-group-privesc",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1078/003/"
+        }
+      ],
+      "T1082": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-enum",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1082/"
+        }
+      ],
+      "T1087": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-noauth",
+          "field": "mitre.id"
+        }
+      ],
+      "T1087.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "smtp-user-enum",
+          "field": "mitre.id"
+        }
+      ],
+      "T1087.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "bloodhound-recon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "username-enum-kerbrute",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rid-cycling",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "anon-ldap-dump",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rpc-null-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "domain-object-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mssql-sid-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adws-soapy-enum",
+          "field": "mitre.id"
+        }
+      ],
+      "T1090.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pivoting-tunneling",
+          "field": "mitre.id"
+        }
+      ],
+      "T1098": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adminsdholder",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-genericall",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-genericwrite",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-forcechangepassword",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "shadow-credentials",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-addallowedtoact",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "expired-password-reset",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "account-state-edit",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "account-state-edit",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1098/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "seenabledelegation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sssd-upn-spoof",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-dacl",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-account-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-tgt-control",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-tgt-user",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-tgt-computer",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "persist-backdoor",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "computer-account-persist",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-writeowner",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-writedacl",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "badsuccessor-dmsa",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "set-ntlm-hash",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-recycle-bin-reanimation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-account-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-account-operators",
+          "field": "mitre.id"
+        }
+      ],
+      "T1098.004": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-ssh-keys",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1098/004/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-filewrite",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1098/004/"
+        }
+      ],
+      "T1098.007": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-addself-group",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-tgt-group",
+          "field": "mitre.id"
+        }
+      ],
+      "T1110.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "online-brute",
+          "field": "mitre.id"
+        }
+      ],
+      "T1110.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "crack-netntlm",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "crack-hash-offline",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "crack-encrypted-file",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "timeroast",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ntlmv1-downgrade",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cred-reuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cred-reuse",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1110/002/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-shadow",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-shadow",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1110/002/"
+        }
+      ],
+      "T1110.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "password-spraying",
+          "field": "mitre.id"
+        }
+      ],
+      "T1127.001": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-evade-appcontrol",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-evade-appcontrol",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1127/001/"
+        }
+      ],
+      "T1134": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rbcd",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-tokens",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-localservice-fullpowers",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-serelabel",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "Potato",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1134/"
+        }
+      ],
+      "T1134.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "windows-local-privesc",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1134/001/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "koh-token-theft",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-admin2sys",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-seimpersonate-potato",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-pot-juicypotato",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-pot-printspoofer",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-pot-roguepotato",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-pot-godpotato",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-sedebug-lsass",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-admin-token",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-admin-token",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1134/001/"
+        }
+      ],
+      "T1134.003": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-secreatetoken",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-setcb",
+          "field": "mitre.id"
+        }
+      ],
+      "T1134.005": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-sid-history",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "enterprise-admin",
+          "field": "mitre.id"
+        }
+      ],
+      "T1135": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "anon-smb-shares",
+          "field": "mitre.id"
+        }
+      ],
+      "T1136.001": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-passwd",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-passwd",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1136/001/"
+        }
+      ],
+      "T1136.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "machineaccountquota-abuse",
+          "field": "mitre.id"
+        }
+      ],
+      "T1187": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "coerced-auth",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "remotepotato",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-coercion",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "webclient-coercion",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ntlm-theft-files",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mssql-coerce",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "passback-attack",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "coercion",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1187/"
+        }
+      ],
+      "T1190": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-services",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "proxyshell",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "proxylogon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "proxynotshell",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "internal-web-apps",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "weak-services",
+          "field": "mitre.id"
+        }
+      ],
+      "T1207": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dcshadow",
+          "field": "mitre.id"
+        }
+      ],
+      "T1210": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "eternalblue",
+          "field": "mitre.id"
+        }
+      ],
+      "T1222": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "security-descriptor-backdoor",
+          "field": "mitre.id"
+        }
+      ],
+      "T1222.002": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-files",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-passwd",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1222/002/"
+        }
+      ],
+      "T1482": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-trusts",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "foreign-membership",
+          "field": "mitre.id"
+        }
+      ],
+      "T1484": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-schema-admins",
+          "field": "mitre.id"
+        }
+      ],
+      "T1484.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "gpo-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-tgt-policy",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "acl-gplink-ou",
+          "field": "mitre.id"
+        }
+      ],
+      "T1484.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-modification",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-modification",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1484/002/"
+        }
+      ],
+      "T1518.001": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-hostcontrols",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-hostcontrols",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1518/001/"
+        }
+      ],
+      "T1543.002": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-systemd",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-systemd",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1543/002/"
+        }
+      ],
+      "T1543.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-server-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-services",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-server-operators",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-dnsadmins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-admin-service-system",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-weak-service-perms",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-prim-service-exec",
+          "field": "mitre.id"
+        }
+      ],
+      "T1546.008": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-setakeownership",
+          "field": "mitre.id"
+        }
+      ],
+      "T1546.015": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "com-hijack",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "com-hijack",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1546/015/"
+        }
+      ],
+      "T1547": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "host-persistence",
+          "field": "mitre.id"
+        }
+      ],
+      "T1547.001": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-autorun-writable",
+          "field": "mitre.id"
+        }
+      ],
+      "T1547.005": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "custom-ssp",
+          "field": "mitre.id"
+        }
+      ],
+      "T1548": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "windows-local-privesc",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1548/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-local-privesc",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-insecure-gui",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-caps",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-caps",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1548/"
+        }
+      ],
+      "T1548.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-local-privesc",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1548/001/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-suid",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-gtfobins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-gtfobins",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1548/001/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-nfs",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-nfs",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1548/001/"
+        }
+      ],
+      "T1548.002": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-uac",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-admins-filtered",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-fodhelper",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-eventvwr",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-sdclt",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-computerdefaults",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-computerdefaults",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1548/002/"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-cmstp",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-cmstp",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1548/002/"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-uac-silentcleanup",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-always-install-elevated",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cve-2019-1388",
+          "field": "mitre.id"
+        }
+      ],
+      "T1548.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-local-privesc",
+          "field": "references[4].url",
+          "url": "https://attack.mitre.org/techniques/T1548/003/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-sudo",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-gtfobins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-gtfobins",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1548/003/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-argwild",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-argwild",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1548/003/"
+        }
+      ],
+      "T1550": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-cred-reuse",
+          "field": "mitre.id"
+        }
+      ],
+      "T1550.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pass-the-hash",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "overpass-the-hash",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "unpac-the-hash",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-pth",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-pth",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1550/002/"
+        },
+        {
+          "kind": "glossary",
+          "term": "Pass-the-Hash",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1550/002/"
+        },
+        {
+          "kind": "glossary",
+          "term": "Overpass-the-Hash",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1550/002/"
+        }
+      ],
+      "T1550.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pass-the-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pass-the-ticket",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1550/003/"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-kerberos",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-logon-kerberos",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1550/003/"
+        },
+        {
+          "kind": "glossary",
+          "term": "Pass-the-Ticket",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1550/003/"
+        }
+      ],
+      "T1552": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-credaccess",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "local-cred-hunt",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "bitlocker-recovery",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-event-log-readers",
+          "field": "mitre.id"
+        }
+      ],
+      "T1552.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-naa-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "devops-secrets",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "smb-share-loot",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "creds-files",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-config-password-hunt",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-config-password-hunt",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1552/001/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cred-hunt",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cred-hunt",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1552/001/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-db-creds",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1552/001/"
+        }
+      ],
+      "T1552.002": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "creds-registry",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-winlogon-autologon",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-winlogon-autologon",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1552/002/"
+        }
+      ],
+      "T1552.003": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-powershell-history",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-powershell-history",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1552/003/"
+        }
+      ],
+      "T1552.004": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dpapi-machine-secrets",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "linux-cred-hunt",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-ssh-keys",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-ssh-keys",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1552/004/"
+        }
+      ],
+      "T1552.006": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "gpp-cpassword",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "gpp-cpassword",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1552/006/"
+        }
+      ],
+      "T1555": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-user-secrets",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dpapi-domain-backupkey",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "dpapi-user-secrets",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "goldengmsa",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "app-config-secrets",
+          "field": "mitre.id"
+        }
+      ],
+      "T1555.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "browser-creds",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-password-managers",
+          "field": "references[1].url",
+          "url": "https://attack.mitre.org/techniques/T1555/003/"
+        }
+      ],
+      "T1555.004": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "creds-vaults",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-setrustedcredman",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-dpapi-creds",
+          "field": "mitre.id"
+        }
+      ],
+      "T1555.005": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "keepass-extract",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-password-managers",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-password-managers",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1555/005/"
+        }
+      ],
+      "T1556": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-shadow",
+          "field": "references[3].url",
+          "url": "https://attack.mitre.org/techniques/T1556/"
+        }
+      ],
+      "T1556.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "skeleton-key",
+          "field": "mitre.id"
+        }
+      ],
+      "T1557": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-poisoning",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-to-wsus",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "kerberos-relay",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-relay-mssql",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adidns-spoofing",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "MITM",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1557/"
+        }
+      ],
+      "T1557.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "llmnr-poisoning",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ntlm-relay",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-unsigned",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-signing-enforced",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-drop-mic",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-to-mssql",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "relay-to-ldap",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sccm-relay-clientpush",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "NTLM relay",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1557/001/"
+        }
+      ],
+      "T1557.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "arp-poisoning",
+          "field": "mitre.id"
+        }
+      ],
+      "T1557.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "mitm6-relay",
+          "field": "mitre.id"
+        }
+      ],
+      "T1558": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "unconstrained-delegation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "krbtgt-hash",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "constrained-delegation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "diamond-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-roasting",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-delegation",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "persist-forgery",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "sapphire-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "bronze-bit",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "tgt-harvest",
+          "field": "mitre.id"
+        }
+      ],
+      "T1558.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "golden-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rodc-keylist-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "Golden Ticket",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1558/001/"
+        }
+      ],
+      "T1558.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "silver-ticket",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "Silver Ticket",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1558/002/"
+        }
+      ],
+      "T1558.003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "kerberoasting",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "kerberoast-rc4",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "kerberoast-aes",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "targeted-kerberoast",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "trust-forest-abuse",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "Kerberoasting",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1558/003/"
+        }
+      ],
+      "T1558.004": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "asrep-roasting",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "targeted-asrep",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "glossary",
+          "term": "AS-REP roasting",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/techniques/T1558/004/"
+        }
+      ],
+      "T1563": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-session-hijack",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-session-hijack",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1563/"
+        }
+      ],
+      "T1563.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ssh-hijack",
+          "field": "mitre.id"
+        }
+      ],
+      "T1563.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "rdp-session-hijack",
+          "field": "mitre.id"
+        }
+      ],
+      "T1574.001": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-dnsadmins",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-cat-dll",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-semanagevolume",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-service-dll-hijack",
+          "field": "mitre.id"
+        }
+      ],
+      "T1574.006": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-env",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-sudo-env",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1574/006/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-library",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-library",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1574/006/"
+        }
+      ],
+      "T1574.007": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-path-dll-hijack",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-path-dll-hijack",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1574/007/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-path",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-suid-path",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1574/007/"
+        }
+      ],
+      "T1574.009": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "windows-local-privesc",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1574/009/"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-unquoted-service-path",
+          "field": "mitre.id"
+        }
+      ],
+      "T1574.010": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-insecure-service-binary",
+          "field": "mitre.id"
+        }
+      ],
+      "T1574.011": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "pe-weak-registry-service",
+          "field": "mitre.id"
+        }
+      ],
+      "T1606.002": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adfs-golden-saml",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adfs-golden-saml",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1606/002/"
+        }
+      ],
+      "T1611": [
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-cat-containers",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-docker",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-docker",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-lxd",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-lxd",
+          "field": "references[2].url",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-container-escape",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-container-escape",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        {
+          "kind": "node",
+          "map": "linux-pe",
+          "id": "lin-container-cve",
+          "field": "mitre.id"
+        }
+      ],
+      "T1649": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc1",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc8",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pass-the-certificate",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc4",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc2",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc3",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc5",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc6",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc7",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc9",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc10",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc11",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc13",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc15",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "golden-certificate",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-adcs",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-adcs-template",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-adcs-ca",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc16",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-enum",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-cert-theft",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-cert-persist",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "pg-cert-publishers",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "adcs-esc14",
+          "field": "mitre.id"
+        }
+      ],
+      "T1685": [
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-cat-evasion",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-evade-amsi-av",
+          "field": "mitre.id"
+        },
+        {
+          "kind": "node",
+          "map": "win-pe",
+          "id": "win-evade-amsi-av",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/techniques/T1685/"
+        }
+      ],
+      "TA0002": [
+        {
+          "kind": "definition",
+          "id": "host-exec",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0002/"
+        }
+      ],
+      "TA0003": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-persistence",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0003/"
+        }
+      ],
+      "TA0004": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "find-privesc-path",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0004/"
+        }
+      ],
+      "TA0006": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-credaccess",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0006/"
+        },
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-cred-dump",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0006/"
+        }
+      ],
+      "TA0008": [
+        {
+          "kind": "node",
+          "map": "ad",
+          "id": "ad-cat-lateral",
+          "field": "references[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0008/"
+        }
+      ],
+      "TA0011": [
+        {
+          "kind": "glossary",
+          "term": "C2",
+          "field": "sources[0].url",
+          "url": "https://attack.mitre.org/tactics/TA0011/"
+        }
+      ]
+    }
+  },
+  "entries": {
+    "T1003": {
+      "status": "active",
+      "name": "OS Credential Dumping",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003",
+      "stixId": "attack-pattern--0a3ead4e-6d47-4ccb-854c-a6a4f9d96b22",
+      "modified": "2025-10-24T17:48:22.201Z"
+    },
+    "T1003.001": {
+      "status": "active",
+      "name": "LSASS Memory",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/001",
+      "stixId": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+      "modified": "2026-05-12T15:12:00.637Z"
+    },
+    "T1003.002": {
+      "status": "active",
+      "name": "Security Account Manager",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/002",
+      "stixId": "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011",
+      "modified": "2026-05-12T15:12:00.621Z"
+    },
+    "T1003.003": {
+      "status": "active",
+      "name": "NTDS",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/003",
+      "stixId": "attack-pattern--edf91964-b26e-4b4a-9600-ccacd7d7df24",
+      "modified": "2026-05-12T15:12:00.723Z"
+    },
+    "T1003.005": {
+      "status": "active",
+      "name": "Cached Domain Credentials",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/005",
+      "stixId": "attack-pattern--6add2ab5-2711-4e9d-87c8-7a0be8531530",
+      "modified": "2025-10-24T17:48:54.919Z"
+    },
+    "T1003.006": {
+      "status": "active",
+      "name": "DCSync",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/006",
+      "stixId": "attack-pattern--f303a39a-6255-4b89-aecc-18c4d8ca7163",
+      "modified": "2025-10-24T17:49:36.308Z"
+    },
+    "T1003.008": {
+      "status": "active",
+      "name": "/etc/passwd and /etc/shadow",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1003/008",
+      "stixId": "attack-pattern--d0b4fcdb-d67d-4ed2-99ce-788b12f8c0f4",
+      "modified": "2025-10-24T17:49:25.253Z"
+    },
+    "T1006": {
+      "status": "active",
+      "name": "Direct Volume Access",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1006",
+      "stixId": "attack-pattern--0c8ab3eb-df48-4b9c-ace7-beacaac81cc5",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1018": {
+      "status": "active",
+      "name": "Remote System Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1018",
+      "stixId": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+      "modified": "2026-05-12T15:12:00.722Z"
+    },
+    "T1021": {
+      "status": "active",
+      "name": "Remote Services",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021",
+      "stixId": "attack-pattern--54a649ff-439a-41a4-9856-8d144a2551ba",
+      "modified": "2025-10-24T17:48:48.472Z"
+    },
+    "T1021.001": {
+      "status": "active",
+      "name": "Remote Desktop Protocol",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021/001",
+      "stixId": "attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf",
+      "modified": "2026-05-12T15:12:00.723Z"
+    },
+    "T1021.002": {
+      "status": "active",
+      "name": "SMB/Windows Admin Shares",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021/002",
+      "stixId": "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541",
+      "modified": "2026-05-12T15:12:00.632Z"
+    },
+    "T1021.003": {
+      "status": "active",
+      "name": "Distributed Component Object Model",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021/003",
+      "stixId": "attack-pattern--68a0c5ed-bee2-4513-830d-5b0d650139bd",
+      "modified": "2025-10-24T17:48:53.724Z"
+    },
+    "T1021.004": {
+      "status": "active",
+      "name": "SSH",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021/004",
+      "stixId": "attack-pattern--2db31dcd-54da-405d-acef-b9129b816ed6",
+      "modified": "2026-05-12T15:12:00.624Z"
+    },
+    "T1021.006": {
+      "status": "active",
+      "name": "Windows Remote Management",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1021/006",
+      "stixId": "attack-pattern--60d0c01d-e2bf-49dd-a453-f8a9c9fa6f65",
+      "modified": "2025-10-24T17:48:51.000Z"
+    },
+    "T1033": {
+      "status": "active",
+      "name": "System Owner/User Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1033",
+      "stixId": "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1037.003": {
+      "status": "active",
+      "name": "Network Logon Script",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1037/003",
+      "stixId": "attack-pattern--c63a348e-ffc2-486a-b9d9-d7f11ec54d99",
+      "modified": "2025-10-24T17:49:21.921Z"
+    },
+    "T1046": {
+      "status": "active",
+      "name": "Network Service Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1046",
+      "stixId": "attack-pattern--e3a12395-188d-4051-9a16-ea8e14d07b88",
+      "modified": "2026-05-12T15:12:00.723Z"
+    },
+    "T1047": {
+      "status": "active",
+      "name": "Windows Management Instrumentation",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1047",
+      "stixId": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+      "modified": "2026-05-12T15:12:00.619Z"
+    },
+    "T1053.003": {
+      "status": "active",
+      "name": "Cron",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1053/003",
+      "stixId": "attack-pattern--2acf44aa-542f-4366-b4eb-55ef5747759c",
+      "modified": "2025-10-24T17:48:33.856Z"
+    },
+    "T1053.005": {
+      "status": "active",
+      "name": "Scheduled Task",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1053/005",
+      "stixId": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+      "modified": "2026-05-12T15:12:00.618Z"
+    },
+    "T1053.006": {
+      "status": "active",
+      "name": "Systemd Timers",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1053/006",
+      "stixId": "attack-pattern--a542bac9-7bc1-4da7-9a09-96f69e23cc21",
+      "modified": "2025-10-24T17:49:11.261Z"
+    },
+    "T1056.001": {
+      "status": "active",
+      "name": "Keylogging",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1056/001",
+      "stixId": "attack-pattern--09a60ea3-a8d1-4ae5-976e-5783248b72a4",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1059": {
+      "status": "active",
+      "name": "Command and Scripting Interpreter",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1059",
+      "stixId": "attack-pattern--7385dfaf-6886-4229-9ecd-6fd678040830",
+      "modified": "2026-05-12T15:12:00.641Z"
+    },
+    "T1059.001": {
+      "status": "active",
+      "name": "PowerShell",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1059/001",
+      "stixId": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+      "modified": "2026-05-12T15:12:00.706Z"
+    },
+    "T1059.003": {
+      "status": "active",
+      "name": "Windows Command Shell",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1059/003",
+      "stixId": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+      "modified": "2026-05-12T15:12:00.717Z"
+    },
+    "T1059.004": {
+      "status": "active",
+      "name": "Unix Shell",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1059/004",
+      "stixId": "attack-pattern--a9d4b653-6915-42af-98b2-5758c4ceee56",
+      "modified": "2026-05-12T15:12:00.707Z"
+    },
+    "T1068": {
+      "status": "active",
+      "name": "Exploitation for Privilege Escalation",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1068",
+      "stixId": "attack-pattern--b21c3b2d-02e6-45b1-980b-e69051040839",
+      "modified": "2025-10-24T17:49:14.643Z"
+    },
+    "T1072": {
+      "status": "active",
+      "name": "Software Deployment Tools",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1072",
+      "stixId": "attack-pattern--92a78814-b191-47ca-909c-1ccfe3777414",
+      "modified": "2026-05-12T15:12:00.705Z"
+    },
+    "T1078": {
+      "status": "active",
+      "name": "Valid Accounts",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1078",
+      "stixId": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81",
+      "modified": "2026-05-12T15:12:00.707Z"
+    },
+    "T1078.001": {
+      "status": "active",
+      "name": "Default Accounts",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1078/001",
+      "stixId": "attack-pattern--6151cbea-819b-455a-9fa6-99a1cc58797d",
+      "modified": "2026-05-12T15:12:00.636Z"
+    },
+    "T1078.002": {
+      "status": "active",
+      "name": "Domain Accounts",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1078/002",
+      "stixId": "attack-pattern--c3d4bdd9-2cfe-4a80-9d0c-07a29ecdce8f",
+      "modified": "2026-05-12T15:12:00.714Z"
+    },
+    "T1078.003": {
+      "status": "active",
+      "name": "Local Accounts",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1078/003",
+      "stixId": "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2",
+      "modified": "2026-05-12T15:12:00.726Z"
+    },
+    "T1082": {
+      "status": "active",
+      "name": "System Information Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1082",
+      "stixId": "attack-pattern--354a7f88-63fb-41b5-a801-ce3b377b36f1",
+      "modified": "2026-05-12T15:12:00.625Z"
+    },
+    "T1087": {
+      "status": "active",
+      "name": "Account Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1087",
+      "stixId": "attack-pattern--72b74d71-8169-42aa-92e0-e7b04b9f5a08",
+      "modified": "2026-05-12T15:12:00.641Z"
+    },
+    "T1087.001": {
+      "status": "active",
+      "name": "Local Account",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1087/001",
+      "stixId": "attack-pattern--25659dd6-ea12-45c4-97e6-381e3e4b593e",
+      "modified": "2026-05-12T15:12:00.623Z"
+    },
+    "T1087.002": {
+      "status": "active",
+      "name": "Domain Account",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1087/002",
+      "stixId": "attack-pattern--21875073-b0ee-49e3-9077-1e2a885359af",
+      "modified": "2026-05-12T15:12:00.622Z"
+    },
+    "T1090.001": {
+      "status": "active",
+      "name": "Internal Proxy",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1090/001",
+      "stixId": "attack-pattern--f6dacc85-b37d-458e-b58d-74fc4bbf5755",
+      "modified": "2026-05-12T15:12:00.724Z"
+    },
+    "T1098": {
+      "status": "active",
+      "name": "Account Manipulation",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1098",
+      "stixId": "attack-pattern--a10641f4-87b4-45a3-a906-92a149cb2c27",
+      "modified": "2026-05-12T15:12:00.706Z"
+    },
+    "T1098.004": {
+      "status": "active",
+      "name": "SSH Authorized Keys",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1098/004",
+      "stixId": "attack-pattern--6b57dc31-b814-4a03-8706-28bc20d739c4",
+      "modified": "2026-05-12T15:12:00.640Z"
+    },
+    "T1098.007": {
+      "status": "active",
+      "name": "Additional Local or Domain Groups",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1098/007",
+      "stixId": "attack-pattern--3e6831b2-bf4c-4ae6-b328-2e7c6633b291",
+      "modified": "2025-09-26T18:25:02.290Z"
+    },
+    "T1110.001": {
+      "status": "active",
+      "name": "Password Guessing",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1110/001",
+      "stixId": "attack-pattern--09c4c11e-4fa1-4f8c-8dad-3cf8e69ad119",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1110.002": {
+      "status": "active",
+      "name": "Password Cracking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1110/002",
+      "stixId": "attack-pattern--1d24cdee-9ea2-4189-b08e-af110bf2435d",
+      "modified": "2026-05-12T15:12:00.622Z"
+    },
+    "T1110.003": {
+      "status": "active",
+      "name": "Password Spraying",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1110/003",
+      "stixId": "attack-pattern--692074ae-bb62-4a5e-a735-02cb6bde458c",
+      "modified": "2025-10-24T17:48:53.996Z"
+    },
+    "T1127.001": {
+      "status": "active",
+      "name": "MSBuild",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1127/001",
+      "stixId": "attack-pattern--c92e3d68-2349-49e4-a341-7edca2deff96",
+      "modified": "2026-05-12T15:12:00.716Z"
+    },
+    "T1134": {
+      "status": "active",
+      "name": "Access Token Manipulation",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1134",
+      "stixId": "attack-pattern--dcaa092b-7de9-4a21-977f-7fcb77e89c48",
+      "modified": "2026-05-12T15:12:00.722Z"
+    },
+    "T1134.001": {
+      "status": "active",
+      "name": "Token Impersonation/Theft",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1134/001",
+      "stixId": "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d",
+      "modified": "2026-05-12T15:12:00.686Z"
+    },
+    "T1134.003": {
+      "status": "active",
+      "name": "Make and Impersonate Token",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1134/003",
+      "stixId": "attack-pattern--8cdeb020-e31e-4f88-a582-f53dcfbda819",
+      "modified": "2026-05-12T15:12:00.705Z"
+    },
+    "T1134.005": {
+      "status": "active",
+      "name": "SID-History Injection",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1134/005",
+      "stixId": "attack-pattern--b7dc639b-24cd-482d-a7f1-8897eda21023",
+      "modified": "2026-05-12T15:12:00.709Z"
+    },
+    "T1135": {
+      "status": "active",
+      "name": "Network Share Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1135",
+      "stixId": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+      "modified": "2025-10-24T17:48:37.475Z"
+    },
+    "T1136.001": {
+      "status": "active",
+      "name": "Local Account",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1136/001",
+      "stixId": "attack-pattern--635cbe30-392d-4e27-978e-66774357c762",
+      "modified": "2026-05-12T15:12:00.636Z"
+    },
+    "T1136.002": {
+      "status": "active",
+      "name": "Domain Account",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1136/002",
+      "stixId": "attack-pattern--7610cada-1499-41a4-b3dd-46467b68d177",
+      "modified": "2025-10-24T17:48:57.883Z"
+    },
+    "T1187": {
+      "status": "active",
+      "name": "Forced Authentication",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1187",
+      "stixId": "attack-pattern--b77cf5f3-6060-475d-bd60-40ccbf28fdc2",
+      "modified": "2025-10-24T17:49:16.134Z"
+    },
+    "T1190": {
+      "status": "active",
+      "name": "Exploit Public-Facing Application",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1190",
+      "stixId": "attack-pattern--3f886f2a-874f-4333-b794-aa6075009b1c",
+      "modified": "2026-05-12T15:12:00.628Z"
+    },
+    "T1207": {
+      "status": "active",
+      "name": "Rogue Domain Controller",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1207",
+      "stixId": "attack-pattern--564998d8-ab3e-4123-93fb-eccaa6b9714a",
+      "modified": "2026-05-12T15:12:00.634Z"
+    },
+    "T1210": {
+      "status": "active",
+      "name": "Exploitation of Remote Services",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1210",
+      "stixId": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+      "modified": "2026-08-04T20:30:55.427Z"
+    },
+    "T1222": {
+      "status": "active",
+      "name": "File and Directory Permissions Modification",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1222",
+      "stixId": "attack-pattern--65917ae0-b854-4139-83fe-bf2441cf0196",
+      "modified": "2026-05-12T15:12:00.637Z"
+    },
+    "T1222.002": {
+      "status": "active",
+      "name": "Linux and Mac Permissions",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1222/002",
+      "stixId": "attack-pattern--09b130a2-a77e-4af0-a361-f46f9aad1345",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1482": {
+      "status": "active",
+      "name": "Domain Trust Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1482",
+      "stixId": "attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0",
+      "modified": "2026-05-12T15:12:00.642Z"
+    },
+    "T1484": {
+      "status": "active",
+      "name": "Domain or Tenant Policy Modification",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1484",
+      "stixId": "attack-pattern--ebb42bbe-62d7-47d7-a55f-3b08b61d792d",
+      "modified": "2026-05-12T15:12:00.723Z"
+    },
+    "T1484.001": {
+      "status": "active",
+      "name": "Group Policy Modification",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1484/001",
+      "stixId": "attack-pattern--5d2be8b9-d24c-4e98-83bf-2f5f79477163",
+      "modified": "2026-05-12T15:12:00.635Z"
+    },
+    "T1484.002": {
+      "status": "active",
+      "name": "Trust Modification",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1484/002",
+      "stixId": "attack-pattern--24769ab5-14bd-4f4e-a752-cfb185da53ee",
+      "modified": "2026-05-12T15:12:00.623Z"
+    },
+    "T1518.001": {
+      "status": "active",
+      "name": "Security Software Discovery",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1518/001",
+      "stixId": "attack-pattern--cba37adb-d6fb-4610-b069-dd04c0643384",
+      "modified": "2026-05-12T15:12:00.716Z"
+    },
+    "T1543.002": {
+      "status": "active",
+      "name": "Systemd Service",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1543/002",
+      "stixId": "attack-pattern--dfefe2ed-4389-4318-8762-f0272b350a1b",
+      "modified": "2026-05-12T15:12:00.722Z"
+    },
+    "T1543.003": {
+      "status": "active",
+      "name": "Windows Service",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1543/003",
+      "stixId": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+      "modified": "2026-05-12T15:12:00.623Z"
+    },
+    "T1546.008": {
+      "status": "active",
+      "name": "Accessibility Features",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1546/008",
+      "stixId": "attack-pattern--70e52b04-2a0c-4cea-9d18-7149f1df9dc5",
+      "modified": "2025-10-24T17:48:56.964Z"
+    },
+    "T1546.015": {
+      "status": "active",
+      "name": "Component Object Model Hijacking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1546/015",
+      "stixId": "attack-pattern--bc0f5e80-91c0-4e04-9fbb-e4e332c85dae",
+      "modified": "2025-10-24T17:49:18.160Z"
+    },
+    "T1547": {
+      "status": "active",
+      "name": "Boot or Logon Autostart Execution",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1547",
+      "stixId": "attack-pattern--1ecb2399-e8ba-4f6b-8ba7-5c27d49405cf",
+      "modified": "2025-10-24T17:48:29.846Z"
+    },
+    "T1547.001": {
+      "status": "active",
+      "name": "Registry Run Keys / Startup Folder",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1547/001",
+      "stixId": "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279",
+      "modified": "2026-05-12T15:12:00.706Z"
+    },
+    "T1547.005": {
+      "status": "active",
+      "name": "Security Support Provider",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1547/005",
+      "stixId": "attack-pattern--5095a853-299c-4876-abd7-ac0050fb5462",
+      "modified": "2025-10-24T17:48:46.245Z"
+    },
+    "T1548": {
+      "status": "active",
+      "name": "Abuse Elevation Control Mechanism",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1548",
+      "stixId": "attack-pattern--67720091-eee3-4d2d-ae16-8264567f6f5b",
+      "modified": "2026-05-12T15:12:00.639Z"
+    },
+    "T1548.001": {
+      "status": "active",
+      "name": "Setuid and Setgid",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1548/001",
+      "stixId": "attack-pattern--6831414d-bb70-42b7-8030-d4e06b2660c9",
+      "modified": "2026-05-12T15:12:00.639Z"
+    },
+    "T1548.002": {
+      "status": "active",
+      "name": "Bypass User Account Control",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1548/002",
+      "stixId": "attack-pattern--120d5519-3098-4e1c-9191-2aa61232f073",
+      "modified": "2026-05-12T15:12:00.621Z"
+    },
+    "T1548.003": {
+      "status": "active",
+      "name": "Sudo and Sudo Caching",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1548/003",
+      "stixId": "attack-pattern--1365fe3b-0f50-455d-b4da-266ce31c23b0",
+      "modified": "2026-05-12T15:12:00.621Z"
+    },
+    "T1550": {
+      "status": "active",
+      "name": "Use Alternate Authentication Material",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1550",
+      "stixId": "attack-pattern--51a14c76-dd3b-440b-9c20-2bf91d25a814",
+      "modified": "2026-05-12T15:12:00.633Z"
+    },
+    "T1550.002": {
+      "status": "active",
+      "name": "Pass the Hash",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1550/002",
+      "stixId": "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e",
+      "modified": "2026-05-12T15:12:00.723Z"
+    },
+    "T1550.003": {
+      "status": "active",
+      "name": "Pass the Ticket",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1550/003",
+      "stixId": "attack-pattern--7b211ac6-c815-4189-93a9-ab415deca926",
+      "modified": "2026-05-12T15:12:00.643Z"
+    },
+    "T1552": {
+      "status": "active",
+      "name": "Unsecured Credentials",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552",
+      "stixId": "attack-pattern--435dfb86-2697-4867-85b5-2fef496c0517",
+      "modified": "2025-10-24T17:48:42.785Z"
+    },
+    "T1552.001": {
+      "status": "active",
+      "name": "Credentials In Files",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552/001",
+      "stixId": "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc",
+      "modified": "2026-05-12T15:12:00.672Z"
+    },
+    "T1552.002": {
+      "status": "active",
+      "name": "Credentials in Registry",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552/002",
+      "stixId": "attack-pattern--341e222a-a6e3-4f6f-b69c-831d792b1580",
+      "modified": "2026-05-12T15:12:00.624Z"
+    },
+    "T1552.003": {
+      "status": "active",
+      "name": "Shell History",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552/003",
+      "stixId": "attack-pattern--8187bd2a-866f-4457-9009-86b0ddedffa3",
+      "modified": "2025-10-24T17:49:02.375Z"
+    },
+    "T1552.004": {
+      "status": "active",
+      "name": "Private Keys",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552/004",
+      "stixId": "attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf",
+      "modified": "2026-05-12T15:12:00.635Z"
+    },
+    "T1552.006": {
+      "status": "active",
+      "name": "Group Policy Preferences",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1552/006",
+      "stixId": "attack-pattern--8d7bd4f5-3a89-4453-9c82-2c8894d5655e",
+      "modified": "2026-05-12T15:12:00.705Z"
+    },
+    "T1555": {
+      "status": "active",
+      "name": "Credentials from Password Stores",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1555",
+      "stixId": "attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0",
+      "modified": "2026-05-12T15:12:00.628Z"
+    },
+    "T1555.003": {
+      "status": "active",
+      "name": "Credentials from Web Browsers",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1555/003",
+      "stixId": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+      "modified": "2026-05-12T15:12:00.635Z"
+    },
+    "T1555.004": {
+      "status": "active",
+      "name": "Windows Credential Manager",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1555/004",
+      "stixId": "attack-pattern--d336b553-5da9-46ca-98a8-0b23f49fb447",
+      "modified": "2025-10-24T17:49:26.444Z"
+    },
+    "T1555.005": {
+      "status": "active",
+      "name": "Password Managers",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1555/005",
+      "stixId": "attack-pattern--315f51f0-6b03-4c1e-bfb2-84740afb8e21",
+      "modified": "2025-10-24T17:48:36.347Z"
+    },
+    "T1556": {
+      "status": "active",
+      "name": "Modify Authentication Process",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1556",
+      "stixId": "attack-pattern--f4c1826f-a322-41cd-9557-562100848c84",
+      "modified": "2026-05-12T15:12:00.724Z"
+    },
+    "T1556.001": {
+      "status": "active",
+      "name": "Domain Controller Authentication",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1556/001",
+      "stixId": "attack-pattern--d4b96d2c-1032-4b22-9235-2b5b649d0605",
+      "modified": "2026-05-12T15:12:00.717Z"
+    },
+    "T1557": {
+      "status": "active",
+      "name": "Adversary-in-the-Middle",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1557",
+      "stixId": "attack-pattern--035bb001-ab69-4a0b-9f6c-2de8b09e1b9d",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1557.001": {
+      "status": "active",
+      "name": "Name Resolution Poisoning and SMB Relay",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1557/001",
+      "stixId": "attack-pattern--650c784b-7504-4df7-ab2c-4ea882384d1e",
+      "modified": "2026-05-12T15:12:00.636Z"
+    },
+    "T1557.002": {
+      "status": "active",
+      "name": "ARP Cache Poisoning",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1557/002",
+      "stixId": "attack-pattern--cabe189c-a0e3-4965-a473-dcff00f17213",
+      "modified": "2025-10-24T17:49:23.221Z"
+    },
+    "T1557.003": {
+      "status": "active",
+      "name": "DHCP Spoofing",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1557/003",
+      "stixId": "attack-pattern--59ff91cd-1430-4075-8563-e6f15f4f9ff5",
+      "modified": "2025-10-24T17:48:49.941Z"
+    },
+    "T1558": {
+      "status": "active",
+      "name": "Steal or Forge Kerberos Tickets",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1558",
+      "stixId": "attack-pattern--3fc01293-ef5e-41c6-86ce-61f10706b64a",
+      "modified": "2026-05-12T15:12:00.628Z"
+    },
+    "T1558.001": {
+      "status": "active",
+      "name": "Golden Ticket",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1558/001",
+      "stixId": "attack-pattern--768dce68-8d0d-477a-b01d-0eea98b963a1",
+      "modified": "2025-10-24T17:48:58.155Z"
+    },
+    "T1558.002": {
+      "status": "active",
+      "name": "Silver Ticket",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1558/002",
+      "stixId": "attack-pattern--d273434a-448e-4598-8e14-607f4a0d5e27",
+      "modified": "2025-10-24T17:49:26.177Z"
+    },
+    "T1558.003": {
+      "status": "active",
+      "name": "Kerberoasting",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1558/003",
+      "stixId": "attack-pattern--f2877f7f-9a4c-4251-879f-1224e3006bee",
+      "modified": "2025-10-24T17:49:36.038Z"
+    },
+    "T1558.004": {
+      "status": "active",
+      "name": "AS-REP Roasting",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1558/004",
+      "stixId": "attack-pattern--3986e7fd-a8e9-4ecb-bfc6-55920855912b",
+      "modified": "2025-10-24T17:48:39.884Z"
+    },
+    "T1563": {
+      "status": "active",
+      "name": "Remote Service Session Hijacking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1563",
+      "stixId": "attack-pattern--5b0ad6f8-6a16-4966-a4ef-d09ea6e2a9f5",
+      "modified": "2025-10-24T17:48:50.118Z"
+    },
+    "T1563.001": {
+      "status": "active",
+      "name": "SSH Hijacking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1563/001",
+      "stixId": "attack-pattern--4d2a5b3e-340d-4600-9123-309dd63c9bf8",
+      "modified": "2025-10-24T17:48:45.240Z"
+    },
+    "T1563.002": {
+      "status": "active",
+      "name": "RDP Hijacking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1563/002",
+      "stixId": "attack-pattern--e0033c16-a07e-48aa-8204-7c3ca669998c",
+      "modified": "2025-10-24T17:49:30.049Z"
+    },
+    "T1574.001": {
+      "status": "active",
+      "name": "DLL",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/001",
+      "stixId": "attack-pattern--2fee9321-3e71-4cf4-af24-d4d40d355b34",
+      "modified": "2026-05-12T15:12:00.624Z"
+    },
+    "T1574.006": {
+      "status": "active",
+      "name": "Dynamic Linker Hijacking",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/006",
+      "stixId": "attack-pattern--633a100c-b2c9-41bf-9be5-905c1b16c825",
+      "modified": "2026-05-12T15:12:00.636Z"
+    },
+    "T1574.007": {
+      "status": "active",
+      "name": "Path Interception by PATH Environment Variable",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/007",
+      "stixId": "attack-pattern--0c2d00da-7742-49e7-9928-4514e5075d32",
+      "modified": "2026-05-12T15:12:00.620Z"
+    },
+    "T1574.009": {
+      "status": "active",
+      "name": "Path Interception by Unquoted Path",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/009",
+      "stixId": "attack-pattern--bf96a5a3-3bce-43b7-8597-88545984c07b",
+      "modified": "2026-05-12T15:12:00.713Z"
+    },
+    "T1574.010": {
+      "status": "active",
+      "name": "Services File Permissions Weakness",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/010",
+      "stixId": "attack-pattern--9e8b28c9-35fe-48ac-a14d-e6cc032dcbcd",
+      "modified": "2026-05-12T15:12:00.706Z"
+    },
+    "T1574.011": {
+      "status": "active",
+      "name": "Services Registry Permissions Weakness",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1574/011",
+      "stixId": "attack-pattern--17cc750b-e95b-4d7d-9dde-49e0de24148c",
+      "modified": "2026-05-12T15:12:00.622Z"
+    },
+    "T1606.002": {
+      "status": "active",
+      "name": "SAML Tokens",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1606/002",
+      "stixId": "attack-pattern--1f9c2bae-b441-4f66-a8af-b65946ee72f2",
+      "modified": "2025-10-24T17:48:30.302Z"
+    },
+    "T1611": {
+      "status": "active",
+      "name": "Escape to Host",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1611",
+      "stixId": "attack-pattern--4a5b7ade-8bb5-4853-84ed-23f262002665",
+      "modified": "2025-10-24T17:48:44.317Z"
+    },
+    "T1649": {
+      "status": "active",
+      "name": "Steal or Forge Authentication Certificates",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1649",
+      "stixId": "attack-pattern--7de1f7ac-5d0c-4c9c-8873-627202205331",
+      "modified": "2026-08-04T20:30:54.961Z"
+    },
+    "T1685": {
+      "status": "active",
+      "name": "Disable or Modify Tools",
+      "type": "attack-pattern",
+      "url": "https://attack.mitre.org/techniques/T1685",
+      "stixId": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872",
+      "modified": "2026-05-12T15:12:00.712Z"
+    },
+    "TA0002": {
+      "status": "active",
+      "name": "Execution",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0002",
+      "stixId": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+      "modified": "2025-04-25T14:45:32.769Z"
+    },
+    "TA0003": {
+      "status": "active",
+      "name": "Persistence",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0003",
+      "stixId": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+      "modified": "2025-04-25T14:45:33.492Z"
+    },
+    "TA0004": {
+      "status": "active",
+      "name": "Privilege Escalation",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0004",
+      "stixId": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
+      "modified": "2025-04-25T14:45:33.853Z"
+    },
+    "TA0006": {
+      "status": "active",
+      "name": "Credential Access",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0006",
+      "stixId": "x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263",
+      "modified": "2025-04-25T14:45:32.408Z"
+    },
+    "TA0008": {
+      "status": "active",
+      "name": "Lateral Movement",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0008",
+      "stixId": "x-mitre-tactic--7141578b-e50b-4dcc-bfa4-08a8dd689e9e",
+      "modified": "2025-08-11T19:25:08.016Z"
+    },
+    "TA0011": {
+      "status": "active",
+      "name": "Command and Control",
+      "type": "x-mitre-tactic",
+      "url": "https://attack.mitre.org/tactics/TA0011",
+      "stixId": "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813",
+      "modified": "2025-04-25T14:45:36.561Z"
+    }
+  }
+}

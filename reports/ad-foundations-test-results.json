@@ -1,0 +1,22 @@
+{
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 111,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 96,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "sourceDigest": "2c372ca0bd595f9dfb117d9963823be041e62d90e5387b9839b05f10f342d5fb",
+  "logSha256": "3d783aed6360bfaf47e65d9f037aac99588c93b16e8a94dd0c553f6e0b6cd32e",
+  "logPath": ".cache/completion-review/ad-foundations-tests.log",
+  "scope": "Software checks after the AD category overview corrections. Does not establish command applicability or operational route viability."
+}

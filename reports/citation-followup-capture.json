@@ -1,0 +1,333 @@
+{
+  "scope": "Publisher destinations, section identity and displayed attribution only. No operational instruction or graph-claim validation.",
+  "results": [
+    {
+      "id": "certipy-home",
+      "url": "https://github.com/ly4k/Certipy/wiki",
+      "checkedAt": "2026-09-07T12:16:41.658Z",
+      "status": 200,
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki",
+      "file": ".cache/citation-followup-review/captures/certipy-home.html",
+      "sha256": "40b0802517a675c563847e3cdea829503bbc650b477ce3fd0c57bcf6819d4db5",
+      "title": "Home · ly4k/Certipy Wiki · GitHub",
+      "canonical": null,
+      "headings": [
+        {
+          "text": "👋 Welcome to the Certipy Wiki",
+          "id": "",
+          "anchor": null
+        }
+      ],
+      "topicLinks": [
+        {
+          "text": "Usage",
+          "url": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage"
+        }
+      ]
+    },
+    {
+      "id": "certipy-usage",
+      "url": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage",
+      "checkedAt": "2026-09-07T12:16:42.546Z",
+      "status": 200,
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage",
+      "file": ".cache/citation-followup-review/captures/certipy-usage.html",
+      "sha256": "5a3e20b4c2afcfe3eec6af13b3bf1d3c46ab0c15d928532ca90f712fd59c6979",
+      "title": "05 ‐ Usage · ly4k/Certipy Wiki · GitHub",
+      "canonical": null,
+      "headings": [
+        {
+          "text": "Usage Example",
+          "id": "",
+          "anchor": null
+        }
+      ],
+      "topicLinks": []
+    },
+    {
+      "id": "certipy-old",
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication",
+      "checkedAt": "2026-09-07T12:16:42.970Z",
+      "status": 200,
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki/",
+      "file": ".cache/citation-followup-review/captures/certipy-old.html",
+      "sha256": "2069e61fae51577403f69c59f336bc3ff61ce0b0895bee9c28dff567f8068e95",
+      "title": "Home · ly4k/Certipy Wiki · GitHub",
+      "canonical": null,
+      "headings": [
+        {
+          "text": "👋 Welcome to the Certipy Wiki",
+          "id": "",
+          "anchor": null
+        }
+      ],
+      "topicLinks": [
+        {
+          "text": "Usage",
+          "url": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage"
+        }
+      ]
+    },
+    {
+      "id": "cyberark-alternate",
+      "url": "https://www.cyberark.com/resources/threat-research/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "checkedAt": "2026-09-07T12:16:43.726Z",
+      "status": 200,
+      "finalUrl": "https://www.paloaltonetworks.com/idira",
+      "file": ".cache/citation-followup-review/captures/cyberark-alternate.html",
+      "sha256": "c8de2ae7a7839ec1ab842cfe887770d713cbd8ada53121d5d1463d661429fe76",
+      "title": "Idira | The Identity Security Platform - Palo Alto Networks",
+      "canonical": "https://www.paloaltonetworks.com/idira",
+      "headings": [
+        {
+          "text": "Identity security for the AI enterprise.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "One platform to Secure Every Identity",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Uncontrolled privileges.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Explosive growth.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Unmanaged risk.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The identity market is fragmented, but your security strategy shouldn't be.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The Identity Security Control Plane",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Secure Every Identity: Human, Machine and Agentic",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Human",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Machine",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Agentic",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "MANUFACTURING",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "HEALTHCARE",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "GOVERNMENT SERVICES",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "BANKING",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "INSURANCE",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Proven Strategy. Analyst Recognized.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "See Idira in Action",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Stay ahead of evolving threats with the latest resources",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Frequently Asked Questions About the Idira Platform",
+          "id": "",
+          "anchor": null
+        }
+      ]
+    },
+    {
+      "id": "vectra-article",
+      "url": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+      "checkedAt": "2026-09-07T12:16:44.676Z",
+      "status": 200,
+      "finalUrl": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+      "file": ".cache/citation-followup-review/captures/vectra-article.html",
+      "sha256": "d46b4651a9b49c31972b65be86532bb7c2c2dd8285cd8b886476ac338ecfe5ba",
+      "title": "When the Defender Becomes the Door: BlueHammer, RedSun, and UnDefend in the Wild by Justin Howe",
+      "canonical": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+      "headings": [
+        {
+          "text": "When the Defender Becomes the Door: BlueHammer, RedSun, and UnDefend in the Wild",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The Three Exploits: What They Actually Do",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "BlueHammer (CVE-2026-33825): Racing the Defender",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "RedSun: The Patch Did Not Close It",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "UnDefend: Degrading the Defense Layer Quietly",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The Attack Pattern Huntress Observed",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Where Vectra AI Fits Into This Scenario",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Pre-Exploitation: Behavioral Enumeration",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Privilege Escalation: Process Anomalies on the Network",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "UnDefend: Degradation as a Detection Signal",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Response: One Click to Containment",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "What This Means Practically",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "See how Vectra AI detects post-exploitation activity",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "FAQs",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Request a Personalized Live Demo",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Related blogs",
+          "id": "",
+          "anchor": null
+        }
+      ],
+      "authorLinks": [
+        {
+          "text": "Justin HoweSr. Security Engineer",
+          "url": "https://www.vectra.ai/about/author/justin-howe"
+        }
+      ],
+      "metadataAuthors": [
+        {
+          "@type": "Person",
+          "name": "Zoey Chu",
+          "url": "https://www.vectra.ai/about/author/justin-howe",
+          "sameAs": ""
+        }
+      ]
+    },
+    {
+      "id": "vectra-author",
+      "url": "https://www.vectra.ai/about/author/justin-howe",
+      "checkedAt": "2026-09-07T12:16:45.029Z",
+      "status": 200,
+      "finalUrl": "https://www.vectra.ai/about/author/justin-howe",
+      "file": ".cache/citation-followup-review/captures/vectra-author.html",
+      "sha256": "bf15681ecf1f9019ee490d5e667720f9ebb4ac0fe646bcb4ab47c54d2ce5b17b",
+      "title": "Justin Howe: Sr. Security Engineer at Vectra AI",
+      "canonical": "https://www.vectra.ai/about/author/justin-howe",
+      "headings": [
+        {
+          "text": "Justin Howe",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Post from",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Justin Howe",
+          "id": "",
+          "anchor": null
+        }
+      ],
+      "authorLinks": [
+        {
+          "text": "Vectra AI Topics",
+          "url": "https://www.vectra.ai/about/author/justin-howe#"
+        }
+      ],
+      "metadataAuthors": [],
+      "articleLinks": [
+        {
+          "text": "Security Research\n\n\n\nAI Research\n\n\n\nThreat Briefings\n  \n    \n    \n    \n    \n  \n  \n    \n      \n    \n  \nApril 20, 2026\n  \nJustin Howeand When the Defender Becomes the Door: BlueHammer, RedSun, and UnDefend in the WildThree leaked Windows Defender exploits are now hitting real enterprise targets. Here ",
+          "url": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild"
+        }
+      ]
+    }
+  ]
+}

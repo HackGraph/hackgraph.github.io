@@ -3,12 +3,11 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
   workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # One in-flight deploy at a time; don't cancel a running production deploy.
 concurrency:
@@ -23,30 +22,45 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      # No install step: the repo has no dependencies. Node's own test runner drives
-      # the content lint, the adapter tests and the engine's two suites.
-      - run: node --test
+      # Packages are development tools. The uploaded site contains no node_modules.
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium firefox webkit
+      - run: npm run check:content
+      - run: npm test
       # The reference pages are generated and committed, so they can drift from the
       # content. Regenerate and fail if anything moved.
       - name: Reference pages match the content
         run: |
           node tools/gen-reference.mjs
-          if ! git diff --exit-code -- reference.html reference sitemap.xml; then
+          if ! git diff --exit-code -- reference.html reference about.html glossary.html sitemap.xml; then
             echo "::error::reference pages are stale; regenerate them with tools/gen-reference.mjs"
             exit 1
           fi
+      # Browser tests stage and exercise .site. Upload those same bytes; do not
+      # rebuild in the deployment job after verification.
+      - name: Staged artifact matches the tested sources
+        run: npm run verify:build
+      - uses: actions/upload-pages-artifact@v5
+        if: github.event_name != 'pull_request'
+        with:
+          path: .site
+      - name: Browser diagnostics
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-diagnostics
+          path: test-results/
 
   deploy:
     needs: test
+    if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v7
-      # There is nothing to build. The repository IS the site.
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: .
       - id: deployment
         uses: actions/deploy-pages@v5

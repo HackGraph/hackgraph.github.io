@@ -1,0 +1,140 @@
+{
+  "checkedAt": "2026-09-07T12:02:41.674Z",
+  "reviewer": "Codex",
+  "reviewerType": "ai",
+  "scope": "Two publisher-declared citation relocations; three reference records. Two supplemental-reference snapshots explicitly updated. Selected claims, their cited evidence, review dates and scopes remain unchanged. Zero additional claim comparisons.",
+  "changes": [
+    {
+      "map": "ad",
+      "node": "reverse-shell",
+      "referenceIndex": 0,
+      "before": {
+        "label": "PayloadsAllTheThings, Reverse Shell Cheatsheet",
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md"
+      },
+      "after": {
+        "label": "Internal All The Things, Reverse Shell Cheat Sheet",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/"
+      },
+      "supplementalSnapshotUpdated": false,
+      "claimEvidenceUnchanged": true
+    },
+    {
+      "map": "ad",
+      "node": "lat-cat-shell",
+      "referenceIndex": 1,
+      "before": {
+        "label": "PayloadsAllTheThings, Reverse Shell Cheatsheet",
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md"
+      },
+      "after": {
+        "label": "Internal All The Things, Reverse Shell Cheat Sheet",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/"
+      },
+      "supplementalSnapshotUpdated": true,
+      "claimEvidenceUnchanged": true
+    },
+    {
+      "map": "linux-pe",
+      "node": "lin-start",
+      "referenceIndex": 2,
+      "before": {
+        "label": "PayloadsAllTheThings, Linux Privilege Escalation",
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md"
+      },
+      "after": {
+        "label": "Internal All The Things, Linux - Privilege Escalation",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      },
+      "supplementalSnapshotUpdated": true,
+      "claimEvidenceUnchanged": true
+    }
+  ],
+  "retiredProvenanceGroup": {
+    "id": "repository-swisskyrepo-payloadsallthethings",
+    "kind": "community",
+    "reviewedAt": "2026-09-07",
+    "reviewedBy": "Codex",
+    "reviewerType": "ai",
+    "scope": "Publisher and publication-type classification for the exact listed citation URLs. No claim, command, applicability, mapping or route review.",
+    "basis": "The project introduction describes a contributed collection. Both cited files now contain publisher-written relocation notices and linked outlines. The community classification describes this publication family; the notices do not establish that the destination supports each citing claim.",
+    "evidence": [
+      {
+        "url": "https://api.github.com/repos/swisskyrepo/PayloadsAllTheThings",
+        "title": "GitHub repository metadata: swisskyrepo/PayloadsAllTheThings",
+        "section": "Repository identity, owner and fork metadata",
+        "captureSha256": "ec204787e7ad1d8dc69a3f12ce96bda9796818abd8629bab09e5e0cfeaef5cf8"
+      },
+      {
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+        "title": "PayloadsAllTheThings/Methodology and Resources/Linux - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+        "section": "File breadcrumb and containing project identity",
+        "captureSha256": "7c0a6c587d19de2c94f0e2d06c20b18254292b08bb59ece9957036208ef166d4"
+      },
+      {
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+        "title": "PayloadsAllTheThings/Methodology and Resources/Reverse Shell Cheatsheet.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+        "section": "File breadcrumb and containing project identity",
+        "captureSha256": "e145ff14d33dce1f6427b10cf3017c26d8136aeb73b125d54020bd8f4403cfa0"
+      },
+      {
+        "url": "https://github.com/swisskyrepo/PayloadsAllTheThings",
+        "title": "GitHub - swisskyrepo/PayloadsAllTheThings: A list of useful payloads and bypass for Web Application Security and Pentest/CTF · GitHub",
+        "section": "Repository introduction and invitation to contribute",
+        "captureSha256": "27246fd6026917007defe8f20f8959a5e36cf0087deb52e84172a147bb619168"
+      }
+    ],
+    "urls": [
+      "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md"
+    ]
+  },
+  "resolvedDestinationNotices": [
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "status": "relocation-notice",
+      "checkedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "observedTitle": "PayloadsAllTheThings/Methodology and Resources/Linux - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "basis": "The cited file now contains a publisher-written relocation notice and linked outline. It is a relocation stub, not the original chapter text.",
+      "captureSha256": "7c0a6c587d19de2c94f0e2d06c20b18254292b08bb59ece9957036208ef166d4"
+    },
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "status": "relocation-notice",
+      "checkedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "observedTitle": "PayloadsAllTheThings/Methodology and Resources/Reverse Shell Cheatsheet.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "basis": "The cited file now contains a publisher-written relocation notice and linked outline. It is a relocation stub, not the original chapter text.",
+      "captureSha256": "e145ff14d33dce1f6427b10cf3017c26d8136aeb73b125d54020bd8f4403cfa0"
+    }
+  ],
+  "captures": [
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "checkedAt": "2026-09-07T11:57:09.048Z",
+      "sha256": "926070288d6184fa16c62da1aa9b7ce938087feee559f425b76bd89179c09895"
+    },
+    {
+      "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/",
+      "checkedAt": "2026-09-07T11:57:09.877Z",
+      "sha256": "89d76fdb09753478dce8d39774f1f851e9778d20ba5c1cea0e0bf664774dc922"
+    },
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "checkedAt": "2026-09-07T11:57:10.188Z",
+      "sha256": "bb5d331d34cf1c313fb8524f5078c4f1981bf8e85f784cde33beb94ef81a364a"
+    },
+    {
+      "url": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/",
+      "checkedAt": "2026-09-07T11:57:10.562Z",
+      "sha256": "ac5a5b059db5bdce20a610e31b5ce4f3bbf2a491f2a8a4efebbc78c0a38d280b"
+    }
+  ],
+  "beforeGraphSha256": "4fd01638cd407a76744440185a2bb935a0ada4d4bb1d39f804c4b69f50842d2e",
+  "expectedGraphSha256": "afac544778058e8c461ea0bce52f1424fad5cd96913a5f35f4aee8c0be8b48bb"
+}

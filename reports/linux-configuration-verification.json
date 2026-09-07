@@ -1,0 +1,168 @@
+{
+  "checkedAt": "2026-09-07T13:10:27.399Z",
+  "verificationCompleted": true,
+  "commands": [
+    {
+      "command": "npm run test:unit",
+      "exitCode": 0,
+      "passed": 144,
+      "logPath": ".cache/linux-configuration-review/unit-tests.log",
+      "logSha256": "65c3a56d05face386d35900f06576a62175b92afb9b6f6fcbe5453ead6424c57"
+    },
+    {
+      "command": "npx playwright test --project=chromium",
+      "exitCode": 0,
+      "passed": 43,
+      "logPath": ".cache/linux-configuration-review/chromium-tests.log",
+      "logSha256": "c60847cd6974b7d8e6ca17a998e9bae1549959a5e9d3e61a9d020e4958189315"
+    },
+    {
+      "command": "npx playwright test --project=firefox",
+      "exitCode": 0,
+      "passed": 43,
+      "logPath": ".cache/linux-configuration-review/firefox-tests.log",
+      "logSha256": "028b8147761e81f90a38774c7d9cf6aa5d038edd6f407041c4053e80f3bced59"
+    },
+    {
+      "command": "npx playwright test --project=webkit",
+      "exitCode": 0,
+      "passed": 43,
+      "logPath": ".cache/linux-configuration-review/webkit-tests.log",
+      "logSha256": "c464e2dba3e24f6992e0ad41ff4ad33f939ff79018566ca8cdc99e3a57caef8b"
+    },
+    {
+      "command": "npm run verify:build",
+      "exitCode": 0,
+      "logPath": ".cache/linux-configuration-review/build-verification.log",
+      "logSha256": "2fcb9ff79975fc1681faf239d9201c01c48c30a8ebf7536a904e7ac07fe01146"
+    }
+  ],
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 129,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "allExpectedCasesPassed": true
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "26265d1a134cff433dc85a7d8ea7117cb5c139f4a57919f81b18aa468457f68a",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "c7ba44bd557ad2da0fa33bd303b8401930fcfb3a5023567fbad9a216fd78d2ce",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/linux-privilege-escalation.html",
+    "src/data/chains/linux-privesc.js",
+    "src/data/source-availability.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "reference/windows-privilege-escalation.html": "049f27cf01dbea11bc41774986721a62c81b58b03e0359f2259a9ad1ac6128c1",
+    "reference/linux-privilege-escalation.html": "f9ce037bdde29b2c09670265be22d431544b33de9a18f9e266a31f8f8390b877",
+    "about.html": "9ba32914f3eb80c8a0ba35cd53913d7a784be6d804f646abcbf4239cb3e3c194",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "f8142a4271128b212b15de2af9a6d7db8003845b186c77b6bbcfb24638b59e37",
+  "previousGraphDataSha256": "d9659b7f33f4b41be5c703b5669b9504ac12b34e4dc40c04a0718136b814b9ce",
+  "conceptualEntries": [
+    "lin-caps",
+    "lin-passwd",
+    "lin-shadow",
+    "lin-cron-writable",
+    "lin-systemd",
+    "lin-nfs",
+    "lin-docker",
+    "lin-lxd"
+  ],
+  "additionalClaims": 16,
+  "reviewedEntries": 116,
+  "selectedClaims": 247,
+  "unchangedEarlierReviews": 108,
+  "allOtherGraphFieldsUnchanged": true,
+  "sources": {
+    "retrieved": 11,
+    "addedReferenceOccurrences": 11
+  },
+  "provenance": {
+    "groups": 228,
+    "urls": 486,
+    "classifiedOccurrences": 736,
+    "inlineClassifiedOccurrences": 212,
+    "unclassifiedOccurrences": 1
+  },
+  "availability": {
+    "urls": 872,
+    "counts": {
+      "responded": 866,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedCurrentUrls": 11,
+    "otherObservationsUnchanged": true
+  },
+  "visual": {
+    "states": 18,
+    "axeStates": 16,
+    "violations": 0,
+    "overflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 5,
+    "screenshotsVisuallyInspected": true,
+    "integratedApplication": true
+  },
+  "hashes": {
+    "about.html": "9ba32914f3eb80c8a0ba35cd53913d7a784be6d804f646abcbf4239cb3e3c194",
+    "reference/linux-privilege-escalation.html": "f9ce037bdde29b2c09670265be22d431544b33de9a18f9e266a31f8f8390b877",
+    "src/data/chains/linux-privesc.js": "df205a94297317215ad2c64e6d82d43bda99586a3326fc126d47290d9f2993ea",
+    "src/data/source-availability.js": "620f6c42f64ea76bc13a3c2bf70f320aad2c69f31712421645634f43f9fc23be",
+    "reports/visuals/linux-configuration-lin-caps-1440.png": "55ee3d01b4f452e49d1a372e451a7e21434749491ece4ebf3e71a24541b1632b",
+    "reports/visuals/linux-configuration-lin-docker-1440.png": "5430668709d61d7d1b1895918416056a6aee1c8a4f17c7db93ab9819eadc6d15",
+    "reports/visuals/linux-configuration-lin-passwd-390.png": "bf4ef6526c713c60656049a21e1f231e4609316f8b1c6c1dba883790cfb69ec3",
+    "reports/visuals/linux-configuration-lin-lxd-390.png": "37221c438951c77b466b9fb3f24065fb8b1994d6b80339f32ae3f7484b955960",
+    "reports/visuals/linux-configuration-reading-mobile.png": "3f708e0337bd2b4d7e07bc4927292afda49af2623f204bac54a2525eb1979d36",
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "reference/windows-privilege-escalation.html": "049f27cf01dbea11bc41774986721a62c81b58b03e0359f2259a9ad1ac6128c1",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca",
+    "reports/linux-configuration-source-capture.json": "e7686c3372024ff5d2b56cbbf54c5e0b7a0b062d2967992d00d5323f32480cc9",
+    "reports/linux-configuration-review.json": "f50c085acaf6b6856399b892a5247fa793225c77d7fbaaee6937cdf5222d2e5d",
+    "reports/linux-configuration-visual-check.json": "50e660cf508c522fadb55d1719ff3f31e292339dbf57b0d45af3a398c8568df7",
+    "reports/LINUX_CONFIGURATION_REVIEW.md": "317a1dac110183d283d300cfc5e237f901497102af2e968efd980b123a53b2da",
+    "reports/COMPLETION_STATUS.md": "8c44ff2d40c700f897abbcaaebebbf966e39e0706514d59fe152d588d6bf33ce",
+    "reports/HUMAN_REVIEW.md": "b280fed7c1bc4dd5f19f7ca2004c57d6596dfa70f09c3d556c98753c2c74a4d7",
+    "reports/VERIFICATION.md": "13b73875c919033962c09378fa149b1cff4fa76bbfe1bddaffc9c4ca7d6e8fd5",
+    "reports/reference-availability.json": "d4a343461431367c9b927c1ff7185ec9a5d5a22051e905f472ff0c0030896e43",
+    "reports/review-inventory.json": "6f4dd90f052700d08a91bf6db5e97d824a628888f6d694c0245055cbfb07c9f0",
+    "reports/review-inventory.csv": "6e92fb00e2e5cb975ea995c86f2279746bc8eae05287f293fbad4c302ab87e36",
+    "reports/content-coverage.json": "7ad0d74e5aeb52005c9d2b249ff40f64285e2885a986cde912abd8b71074faeb",
+    "reports/data-parity.json": "f3710ce4d0048e7fb09efd2088470182c8e535c9f4425d5d632d1caaa7196aec",
+    "README.md": "865855eb76e087e6352846fa4bdb8a3bb8e9485c979f912ad68787c1bb9b2627",
+    "RELEASE_NOTES.md": "4fbf18cf9aaca1ea5547d50531857eecb999317c74614b6deedfadbc122de36a",
+    "IMPLEMENTATION_PLAN.md": "65418b94fff01634e522f9420e0c8efface89e630cb108b54cd8eec41fd44e16",
+    ".cache/linux-configuration-review/visual-check.mjs": "91e96159003b64fe8c4e4eac6b975b90c5f894479c4c97ded32d853cf893ac24",
+    ".cache/linux-configuration-review/visual-check.log": "c9ae0cfad8a5e75ae68c2243055ba3def024f33f606ab5f1454868523b445f05",
+    ".cache/linux-configuration-review/browser-test-list.json": "07ed5a27c3557c7939d8b12ea869a3d70e2908c74f888250e081de7234cad4d7",
+    ".cache/linux-configuration-review/captures/lxd-containers-redirect.html": "cae392624ff6513adb913757611e431b97e0d40c2fb13b68965e4fbd85cb6f7a"
+  },
+  "scope": "Eight conceptual Linux configuration explanations. All earlier review records and all commands, tools, prerequisites, applicability, IDs, kinds, mappings and connections are unchanged. No operational validation, new motion benchmark, human review, hosted workflow run or deployment."
+}

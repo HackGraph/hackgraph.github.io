@@ -1,0 +1,214 @@
+{
+  "measuredAt": "2026-09-07T06:09:11.123Z",
+  "method": "Desktop 1440×1000; three generic expansions per count/browser, each sampled over 600 ms. Inter-frame intervals use consecutive rAF timestamps; firstFrameDelayMs separately measures wall time from expansion start to execution of the first callback, including setup. Callback timing does not establish display presentation time. Local headless hardware, not a device guarantee.",
+  "rows": [
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 6.299999952316284,
+      "firstFrameDelayMs": 19.5,
+      "frames": 35,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 3.700000047683716,
+      "firstFrameDelayMs": 12.099999904632568,
+      "frames": 35,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 4.5,
+      "firstFrameDelayMs": 11.400000095367432,
+      "frames": 35,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 16.200000047683716,
+      "firstFrameDelayMs": 27.100000143051147,
+      "frames": 36,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 12.200000047683716,
+      "firstFrameDelayMs": 25.100000143051147,
+      "frames": 36,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 6.5,
+      "firstFrameDelayMs": 13.900000095367432,
+      "frames": 36,
+      "medianFrameMs": 16.699999999999818,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.80000000000109,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 8,
+      "firstFrameDelayMs": 13,
+      "frames": 25,
+      "medianFrameMs": 17.100000000000364,
+      "p95FrameMs": 50.63999999999942,
+      "maxFrameMs": 66.92000000000007,
+      "slowFrames": 4
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 12,
+      "firstFrameDelayMs": 14,
+      "frames": 34,
+      "medianFrameMs": 17.079999999999927,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 33.18000000000029,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 5,
+      "firstFrameDelayMs": 14,
+      "frames": 37,
+      "medianFrameMs": 17.019999999999527,
+      "p95FrameMs": 17.24000000000069,
+      "maxFrameMs": 17.300000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 18,
+      "firstFrameDelayMs": 19,
+      "frames": 36,
+      "medianFrameMs": 17.079999999999927,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.4399999999996,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 11,
+      "firstFrameDelayMs": 12,
+      "frames": 36,
+      "medianFrameMs": 17.05999999999949,
+      "p95FrameMs": 17.220000000000255,
+      "maxFrameMs": 17.479999999999563,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 17,
+      "firstFrameDelayMs": 18,
+      "frames": 36,
+      "medianFrameMs": 17.039999999999054,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.279999999999745,
+      "slowFrames": 0
+    }
+  ],
+  "violations": [
+    {
+      "name": "chromium",
+      "theme": "dark",
+      "width": 1440,
+      "found": []
+    },
+    {
+      "name": "chromium",
+      "theme": "dark",
+      "width": 390,
+      "found": []
+    },
+    {
+      "name": "chromium",
+      "theme": "light",
+      "width": 1440,
+      "found": []
+    },
+    {
+      "name": "chromium",
+      "theme": "light",
+      "width": 390,
+      "found": []
+    },
+    {
+      "name": "firefox",
+      "theme": "dark",
+      "width": 1440,
+      "found": []
+    },
+    {
+      "name": "firefox",
+      "theme": "dark",
+      "width": 390,
+      "found": []
+    },
+    {
+      "name": "firefox",
+      "theme": "light",
+      "width": 1440,
+      "found": []
+    },
+    {
+      "name": "firefox",
+      "theme": "light",
+      "width": 390,
+      "found": []
+    }
+  ],
+  "errors": [],
+  "context": "Retained run before separating accessibility/visual capture and timing into distinct browser processes. One Firefox 25-child sample recorded four intervals over 34 ms; cause was not established. Do not discard this observation."
+}

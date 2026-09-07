@@ -1,0 +1,101 @@
+{
+  "scope": "Eight primary publications compared against fifteen selected conceptual claims in six account, credential and authentication entries. The named sections were read from publisher documents, and their responses were retrieved by GET for this pass. This comparison excludes commands, tools, prerequisites, applicability, connection outcomes, operational route viability and ATT&CK mappings. Navigation labels remain project conventions. Exact claims, source sections, reviewer type, date and content snapshots are stored with the entries.",
+  "comparedIds": [
+    "valid-domain-creds",
+    "valid-local-creds",
+    "win-logon-password",
+    "win-logon-kerberos",
+    "pe-recovered-creds",
+    "lin-ssh-keys"
+  ],
+  "results": [
+    {
+      "label": "Microsoft, Security principals",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "section": "How security principals work; Accounts and security groups",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.102Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "title": "Security Principals | Microsoft Learn",
+      "sha256": "3cbcef6bb443101056fa092db609ff1778af98be8bf97c2e11eba8b4fc439612"
+    },
+    {
+      "label": "Microsoft, Windows Authentication Concepts",
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "section": "Authentication and authorization: A travel analogy",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.103Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "title": "Windows Authentication Concepts | Microsoft Learn",
+      "sha256": "d454c6457dff371af3a1dedf8daac8409595ece9cb68c3240e557346ecdb24b8"
+    },
+    {
+      "label": "Microsoft, Access tokens",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "section": "Opening definition and access-token contents",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.102Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "title": "Access Tokens - Win32 apps | Microsoft Learn",
+      "sha256": "26d3d47790df0e0d906e9659acd6c60d79032f521e57d758e6350b09b14776ca"
+    },
+    {
+      "label": "OpenBSD, ssh-keygen(1)",
+      "url": "https://man.openbsd.org/ssh-keygen",
+      "section": "CERTIFICATES: opening definition and user/host certificate distinction",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:25:36.501Z",
+      "code": 200,
+      "finalUrl": "https://man.openbsd.org/ssh-keygen",
+      "title": "ssh-keygen(1) - OpenBSD manual pages",
+      "sha256": "241ad8809ecd005ea5328a470654b7de4dc20ea1f1f50dd478d8eeb10b8033f2"
+    },
+    {
+      "label": "NIST SP 800-63B-4, Authenticators",
+      "url": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+      "section": "3.1.1 Passwords; 3.1.1.2 Password Verifiers",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.152Z",
+      "code": 200,
+      "finalUrl": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+      "title": "Authenticators",
+      "sha256": "3254ccd15230e2bd94d816a65388c946fd349aaecd2704ab09175b2650ba987c"
+    },
+    {
+      "label": "MIT Kerberos, Credential cache file format",
+      "url": "https://web.mit.edu/kerberos/krb5-latest/doc/formats/ccache_file_format.html",
+      "section": "Opening format description; Credential format",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.734Z",
+      "code": 200,
+      "finalUrl": "https://web.mit.edu/kerberos/krb5-latest/doc/formats/ccache_file_format.html",
+      "title": "Credential cache file format — MIT Kerberos Documentation",
+      "sha256": "e72b6d4a385b1020cdf36a09070b319f348f64a96cb601a78f0ac3723c48bee1"
+    },
+    {
+      "label": "RFC 4120, Kerberos V5",
+      "url": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "section": "1.1 The Kerberos Protocol; 1.4 Authorization",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.459Z",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "title": "RFC 4120, Kerberos V5",
+      "sha256": "729045869e58363544cba12d3fd1486b8e7b52aa67b4cf1c483dc99a3675a229"
+    },
+    {
+      "label": "RFC 4252, SSH Authentication Protocol",
+      "url": "https://www.rfc-editor.org/rfc/rfc4252.html",
+      "section": "7. Public Key Authentication Method",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:24:21.378Z",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4252.html",
+      "title": "RFC 4252, SSH Authentication Protocol",
+      "sha256": "1ba53296d30273a9c2b10f99b13807d865b471b9feb338903dcf4eb199ffa43a"
+    }
+  ]
+}

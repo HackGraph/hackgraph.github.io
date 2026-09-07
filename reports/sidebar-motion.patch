@@ -1,0 +1,99 @@
+--- a/engine/view.js
++++ b/engine/view.js
+@@ -1735,8 +1735,15 @@
+   /* ---------- detail panel: where the dataset's depth lives ---------- */
+ 
+   let panelKey = null;                // 'node:<key>' | 'edge:<id>' | null
++  let panelSizeObserver = null;
++
++  function clearPanelSizeObserver() {
++    if (panelSizeObserver) panelSizeObserver.disconnect();
++    panelSizeObserver = null;
++  }
+ 
+   function closePanel() {
++    clearPanelSizeObserver();
+     $('panel').hidden = true;
+     panelKey = null;
+     if (edgeSel) { edgeSel.el.classList.remove('hl'); edgeSel = null; relayerEdges(); }
+@@ -1935,6 +1942,7 @@
+ 
+   function renderPanel(key, force) {
+     if (panelKey === 'node:' + key && !force) return;
++    clearPanelSizeObserver();
+     if (edgeSel) { edgeSel.el.classList.remove('hl'); edgeSel = null; relayerEdges(); }
+     panelKey = 'node:' + key;
+     const defId = defIdOf(key);
+@@ -2016,6 +2024,10 @@
+       const list = el('div', 'pnextlist');
+       const inner = el('div', 'pnextinner');
+       inner.inert = true;
++      const canObserveSize = typeof ResizeObserver !== 'undefined';
++      // Keep the first opening at zero until its natural height is measured.
++      // Without ResizeObserver, auto height preserves responsive disclosure.
++      if (canObserveSize) list.style.setProperty('--topics-height', '0px');
+       // Most selections never open this section. Building its full second copy
+       // of a wide branch during graph expansion delays the first graph frame.
+       // Populate on disclosure, then retain the rows while this panel is current.
+@@ -2054,6 +2066,21 @@
+         });
+         inner.appendChild(batch);
+         populated = true;
++        if (canObserveSize) {
++          const setHeight = height => {
++            if (Number.isFinite(height)) list.style.setProperty('--topics-height', Math.ceil(height) + 'px');
++          };
++          // The inner list keeps its natural height while the outer box clips
++          // the reveal. It no longer resizes all rows on every animation frame.
++          setHeight(parseFloat(getComputedStyle(inner).height));
++          panelSizeObserver = new ResizeObserver(entries => {
++            if (!inner.isConnected) return;
++            const size = entries[0]?.borderBoxSize;
++            const box = Array.isArray(size) ? size[0] : size;
++            setHeight(box?.blockSize ?? parseFloat(getComputedStyle(inner).height));
++          });
++          panelSizeObserver.observe(inner);
++        }
+       };
+       list.appendChild(inner);
+       wrap.appendChild(list);
+@@ -2106,6 +2133,7 @@
+   function renderEdgePanel(rec) {
+     emit('onEdgeSelect', { id: rec.id, rel: rec.rel, source: rec.pv.defId, target: rec.cv.defId });
+     if (!chrome.panel) return;
++    clearPanelSizeObserver();
+     if (edgeSel) edgeSel.el.classList.remove('hl');
+     edgeSel = rec;
+     rec.el.classList.add('hl');
+@@ -2866,6 +2894,7 @@
+     shareToken() { return encodeToken(stateForToken()); },
+     destroy() {
+       destroyed = true;
++      clearPanelSizeObserver();
+       cancelAnimationFrame(raf);
+       raf = 0; layoutMotion = null; cameraMotion = null;
+       clearTimeout(urlTimer); clearTimeout(longPressTimer);
+--- a/engine/style.css
++++ b/engine/style.css
+@@ -730,14 +730,14 @@
+ .claim-list a { color: var(--ink); margin-right: 8px; }
+ .pnextchev { flex: none; width: 15px; height: 15px; transform: rotate(90deg); transition: transform .2s; }
+ .pnext.open .pnextchev { transform: rotate(-90deg); }
+-/* 0fr -> 1fr animates to the list's natural height without measuring it */
++/* The outer box reveals the measured natural list without resizing its rows.
++   Auto height keeps disclosure usable when ResizeObserver is unavailable. */
+ .pnextlist {
+-  display: grid; grid-template-rows: 0fr;
+-  transition: grid-template-rows .22s cubic-bezier(.22, 1, .36, 1);
+-}
+-.pnext.open .pnextlist { grid-template-rows: 1fr; }
+-.pnextinner { overflow: hidden; display: flex; flex-direction: column; gap: 6px; }
+-.pnext.open .pnextinner { padding-top: 8px; }
++  height: 0; overflow: hidden;
++  transition: height .22s cubic-bezier(.22, 1, .36, 1);
++}
++.pnext.open .pnextlist { height: var(--topics-height, auto); }
++.pnextinner { overflow: hidden; display: flex; flex-direction: column; gap: 6px; padding-top: 8px; }
+ .pnextitem {
+   display: flex; align-items: flex-start; gap: 10px;
+   width: 100%;

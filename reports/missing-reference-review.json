@@ -1,0 +1,311 @@
+{
+  "reviewedAt": "2026-09-07",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "scope": "Eight previously uncited entries receive foundational explanations, sixteen dedicated references and seventeen selected conceptual comparisons. The cited material does not validate the named techniques or their existing operational fields and connections.",
+  "decisions": [
+    {
+      "map": "ad",
+      "id": "crack-netntlm",
+      "previousSummary": "Offline-crack the captured hash to a password.",
+      "previousDescription": "If relaying is not viable (signing enforced everywhere), crack the captured NetNTLMv2 hash offline. This only yields usable credentials when the captured principal is a user account whose password is in scope of your wordlist and rules; machine-account (host$) captures use auto-generated ~120-character random passwords and are effectively uncrackable, and local (non-domain) captures do not give you domain credentials. So the path on to valid domain creds is conditional: the account must be a domain user with a weak or known password.",
+      "summary": "Distinguish NTLM credentials from challenge-response authentication.",
+      "description": "NTLM credentials include an account domain, user name and a one-way password hash. Network authentication uses a challenge and response to demonstrate access to those credentials without transmitting the password itself. The stored credential and the authentication exchange are different concepts.",
+      "claims": [
+        {
+          "text": "Microsoft describes NTLM credentials as an account domain, user name and a one-way password hash.",
+          "section": "Microsoft — Microsoft NTLM — NTLM authentication: credential definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+          ]
+        },
+        {
+          "text": "NTLM challenge-response authentication demonstrates access to credentials without transmitting the user's password.",
+          "section": "Microsoft — Microsoft NTLM — NTLM authentication: challenge-response purpose",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Microsoft NTLM",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "ad",
+      "id": "crack-hash-offline",
+      "previousSummary": "Recover the cleartext from a roasted ticket or a Timeroast SNTP hash.",
+      "previousDescription": "Roasted tickets (Kerberoast TGS and AS-REP) are crackable offline with a wordlist + rules. A cracked service-account or user password becomes your next identity. RC4 material falls fast, AES material only if the password is weak. Timeroast material is not a Kerberos ticket but an MS-SNTP MAC, cracked with its own mode (31300); it yields a computer-account password.",
+      "summary": "Distinguish Kerberos authentication tickets from authenticated time synchronization.",
+      "description": "Kerberos uses session tickets in network authentication. Windows also uses NTP Authentication Extensions for authenticated clock synchronization between Kerberos clients and the Key Distribution Center. Authentication tickets and time-synchronization messages serve different protocol purposes.",
+      "claims": [
+        {
+          "text": "Kerberos uses renewable session tickets for authentication to servers.",
+          "section": "Microsoft — Kerberos authentication overview — More efficient authentication to servers",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+          ]
+        },
+        {
+          "text": "Windows uses NTP Authentication Extensions for authenticated time synchronization between Kerberos clients and the Key Distribution Center.",
+          "section": "Microsoft — [MS-AUTHSOD]: Security — 2.9 Security: final paragraph",
+          "sources": [
+            "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Kerberos authentication overview",
+          "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — [MS-AUTHSOD]: Security",
+          "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "ad",
+      "id": "lateral-movement-cme",
+      "previousSummary": "Pick a transport to run code on another host.",
+      "previousDescription": "Reuse credentials, an NT hash (PtH), or a ticket (PtT) to run code on another host, hunting a more privileged session or a route to a Domain Controller. Pick the transport by what you hold on the target: local admin gives SYSTEM via service exec (PsExec/SMBExec) or a scheduled task (atexec), while WMI (wmiexec) and DCOM (dcomexec) run code as the calling admin, not SYSTEM; Remote Management Users gives WinRM; Remote Desktop Users gives RDP; a plain login gives an SSH shell or MSSQL query access (OS commands via xp_cmdshell need sysadmin). Remote exec does not always require local admin.",
+      "summary": "Distinguish Windows management infrastructure, management protocols and remote display.",
+      "description": "WMI supplies infrastructure for Windows management information and operations. WinRM implements the WS-Management protocol for exchanging management information. RDP carries remote display and user input for server-hosted Windows applications. These names describe different administrative technologies rather than a single interchangeable interface.",
+      "claims": [
+        {
+          "text": "WMI provides infrastructure for management information and operations on Windows systems.",
+          "section": "Microsoft — Windows Management Instrumentation — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+          ]
+        },
+        {
+          "text": "WinRM implements WS-Management, a protocol for exchanging management information.",
+          "section": "Microsoft — Windows Remote Management — Opening definition and WS-Management purpose",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+          ]
+        },
+        {
+          "text": "RDP provides remote display and input for Windows applications running on a server.",
+          "section": "Microsoft — Remote Desktop Protocol — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Windows Management Instrumentation",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Windows Remote Management",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Remote Desktop Protocol",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-unquoted-service-path",
+      "previousSummary": "Plant a binary along an unquoted, space-containing service path.",
+      "previousDescription": "When a service ImagePath contains spaces and is not wrapped in quotes (e.g. C:\\Program Files\\My App\\svc.exe), Windows tries each space-delimited prefix as an executable: C:\\Program.exe, then C:\\Program Files\\My.exe, and so on. If you can write to one of those intermediate directories, drop a malicious binary there and it runs as the service account on next start.",
+      "summary": "Understand service startup configuration and executable-path records.",
+      "description": "Windows uses service configuration to determine how a service starts. The Service Control Manager maintains installed-service records that include the executable path and other startup information. Understanding the stored path begins with distinguishing service configuration from the executable file it names.",
+      "claims": [
+        {
+          "text": "Windows uses service configuration information to determine how to start a service.",
+          "section": "Microsoft — Service Configuration — Opening configuration definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration"
+          ]
+        },
+        {
+          "text": "The Service Control Manager's installed-service database includes the fully qualified executable path.",
+          "section": "Microsoft — Database of Installed Services — Installed-service information: executable-path item",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Service Configuration",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Database of Installed Services",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-weak-service-perms",
+      "previousSummary": "Reconfigure a modifiable service binPath to your command.",
+      "previousDescription": "If your user holds SERVICE_CHANGE_CONFIG (or SERVICE_ALL_ACCESS) on a SYSTEM service, rewrite its binPath to an arbitrary command, then restart it. The Service Control Manager launches your command as the service account (typically LocalSystem). Find these with accesschk or SharpUp.",
+      "summary": "Distinguish access to service objects from access to files.",
+      "description": "The Windows access-control model governs access to the Service Control Manager and individual service objects. Files are also securable objects with their own security descriptors. A service object and its executable file are separate objects when describing permissions.",
+      "claims": [
+        {
+          "text": "Windows access control applies to the Service Control Manager and service objects.",
+          "section": "Microsoft — Service Security and Access Rights — Opening access-control definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "Files are securable objects whose access is governed by Windows access control and security descriptors.",
+          "section": "Microsoft — File Security and Access Rights — Opening definition; Security descriptors",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Service Security and Access Rights",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — File Security and Access Rights",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-insecure-service-binary",
+      "previousSummary": "Overwrite a service EXE you can write to.",
+      "previousDescription": "If the on-disk service executable (or its containing folder) is writable by your user but the service runs as SYSTEM, replace the binary with your payload and restart the service. Distinct from binPath abuse: here the misconfiguration is filesystem ACLs on the EXE rather than the service config.",
+      "summary": "Distinguish executable-file access from a service's account identity.",
+      "description": "Windows regulates access to files through its access-control model. Separately, each service runs in an account's security context. The permissions on an executable file and the identity of the process using it describe different parts of the security model.",
+      "claims": [
+        {
+          "text": "Windows treats files as securable objects subject to its access-control model.",
+          "section": "Microsoft — File Security and Access Rights — Opening file-security definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "Each Windows service runs in the security context of an account.",
+          "section": "Microsoft — Service User Accounts — Opening service-account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — File Security and Access Rights",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Service User Accounts",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-weak-registry-service",
+      "previousSummary": "Rewrite a service ImagePath via a writable registry key.",
+      "previousDescription": "If your user can write to a service key under HKLM\\SYSTEM\\CurrentControlSet\\Services (even without service-config rights via the SCM), modify the ImagePath value to point at your binary. On next start the service launches your executable as its configured account (SYSTEM only if the service runs as LocalSystem; check ObjectName before targeting). Enumerate writable service keys with accesschk -k.",
+      "summary": "Understand registry access control and installed-service records.",
+      "description": "Registry keys have security descriptors and access rights in the Windows security model. The Service Control Manager stores its installed-service database in the registry. Registry permissions describe access to stored configuration; the service database describes the installed services.",
+      "claims": [
+        {
+          "text": "Windows controls access to registry keys using security descriptors and access rights.",
+          "section": "Microsoft — Registry Key Security and Access Rights — Opening definition and security-descriptor paragraphs",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "The Service Control Manager maintains its installed-service database in the registry.",
+          "section": "Microsoft — Database of Installed Services — Opening database definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Registry Key Security and Access Rights",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — Database of Installed Services",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-service-dll-hijack",
+      "previousSummary": "Plant a DLL a privileged service loads from a writable path.",
+      "previousDescription": "A SYSTEM service that searches for a DLL by name and finds it in a writable, earlier search-order location (or a missing 'phantom' DLL) will load attacker code into its process. Identify the missing/hijackable module (e.g. with Process Monitor) and drop a matching DLL whose DllMain runs your payload.",
+      "summary": "Understand how loaded DLLs relate to processes and threads.",
+      "description": "A process is an executing program with one or more threads. A loaded DLL is mapped into the process's virtual address space, and its exported functions run in the context of the calling thread. The library, the process and the thread describe related but distinct parts of program execution.",
+      "claims": [
+        {
+          "text": "A process is an executing program, and one or more threads run within its context.",
+          "section": "Microsoft — Processes and Threads — Opening process and thread definitions",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads"
+          ]
+        },
+        {
+          "text": "A loaded DLL is mapped into the process's virtual address space, and an exported function runs in the calling thread's context.",
+          "section": "Microsoft — About Dynamic-Link Libraries — DLLs and Memory Management",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+          ]
+        }
+      ],
+      "referencesAdded": [
+        {
+          "label": "Microsoft — Processes and Threads",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+          "kind": "primary"
+        },
+        {
+          "label": "Microsoft — About Dynamic-Link Libraries",
+          "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+          "kind": "primary"
+        }
+      ],
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions."
+    }
+  ]
+}

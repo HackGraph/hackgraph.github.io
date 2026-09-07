@@ -1,0 +1,125 @@
+{
+  "scope": "Ten primary publications compared against 16 selected conceptual claims in eight start/goal overviews. All ten were retrieved by GET for this pass. Claims address identity, administrative scope, and process credentials only. Existing commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings are excluded. Navigation labels are project conventions. Exact claims, source sections, reviewer type, date, and content snapshots are stored with the nodes.",
+  "comparedIds": [
+    "start",
+    "domain-admin",
+    "enterprise-admin",
+    "pe-start",
+    "nt-system",
+    "win-foothold-start",
+    "lin-start",
+    "lin-root"
+  ],
+  "results": [
+    {
+      "label": "Microsoft, Active Directory Domain Services overview",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "kind": "primary",
+      "section": "Introduction",
+      "checkedAt": "2026-09-07T07:01:44.258Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "title": "Active Directory Domain Services overview | Microsoft Learn",
+      "sha256": "44ede14eed37dbe6cf127197ea2de1bc662568582da69e4daee795efd83d874f"
+    },
+    {
+      "label": "Microsoft, Active Directory security groups",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "kind": "primary",
+      "section": "Domain Admins; Enterprise Admins",
+      "checkedAt": "2026-09-07T07:01:44.585Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "title": "Active Directory Security Groups | Microsoft Learn",
+      "sha256": "4c2517e63232d06fbc64c5539f369c2e96a03b841d7fb5b19dd360178651aa64"
+    },
+    {
+      "label": "Microsoft, Remote Desktop Services overview",
+      "url": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "kind": "primary",
+      "section": "Introduction",
+      "checkedAt": "2026-09-07T07:01:44.469Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "title": "Remote Desktop Services overview in Windows Server | Microsoft Learn",
+      "sha256": "f874dadebfac5967bffe7c0f266675db7c72fb042fa0c1cfac6c3b84f0d90d71"
+    },
+    {
+      "label": "Microsoft, Windows Authentication Concepts",
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "section": "Authentication and authorization: A travel analogy; Security principals and accounts",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T07:01:44.258Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "title": "Windows Authentication Concepts | Microsoft Learn",
+      "sha256": "d454c6457dff371af3a1dedf8daac8409595ece9cb68c3240e557346ecdb24b8"
+    },
+    {
+      "label": "Microsoft, Access Tokens",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "section": "Introduction",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T07:01:44.258Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "title": "Access Tokens - Win32 apps | Microsoft Learn",
+      "sha256": "26d3d47790df0e0d906e9659acd6c60d79032f521e57d758e6350b09b14776ca"
+    },
+    {
+      "label": "Microsoft, LocalSystem Account",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "section": "Introduction",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T07:01:44.469Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "title": "LocalSystem Account - Win32 apps | Microsoft Learn",
+      "sha256": "27715c0e51d27383c02351e6d0dedc6eda34f44cd78777ab5c52a212f08d709d"
+    },
+    {
+      "label": "Microsoft, Service User Accounts",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "section": "Introduction",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T07:01:44.257Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "title": "Service User Accounts - Win32 apps | Microsoft Learn",
+      "sha256": "172f2f90044f49c2536620f2ff7319b7e34fa8006551d5f7166f00cbc52682ef"
+    },
+    {
+      "label": "Linux man-pages, capabilities(7)",
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: traditional privilege model and per-thread capabilities",
+      "checkedAt": "2026-09-07T07:01:45.194Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "title": "capabilities(7) - Linux manual page",
+      "sha256": "4536153b1135369d157142328000b6d35c315e29f99a4a9f20e15c3d4ab73262"
+    },
+    {
+      "label": "Linux man-pages, credentials(7)",
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "kind": "primary",
+      "section": "User and group identifiers",
+      "checkedAt": "2026-09-07T07:01:44.825Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "title": "credentials(7) - Linux manual page",
+      "sha256": "562485858d963954d78c164c9f612e829f94d20399b60d31882e3010a37b5630"
+    },
+    {
+      "label": "Linux man-pages, user_namespaces(7)",
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "kind": "primary",
+      "section": "DESCRIPTION: identities inside and outside a user namespace",
+      "checkedAt": "2026-09-07T07:01:45.599Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "title": "user_namespaces(7) - Linux manual page",
+      "sha256": "661ea3ffeea210a9e6c0880fceb92c5336e611d6a10cfe6a5571a7aa975f0893"
+    }
+  ]
+}

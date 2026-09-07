@@ -1,0 +1,175 @@
+{
+  "checkedAt": "2026-09-07T09:02:52.450Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 117,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "97d5fe8ad751245e5e556d8e774ca3fc815d833e27605ed64c1016945395cfd4",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "f504de809a38a477b55c0e15236610845e7da12cdca5afb25f18837a57294c34",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/linux-onramp.js",
+    "src/data/chains/pe-techniques.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedPageHashes": {
+    "reference.html": "bc5094b957578eff7e32576e18a139224d1deeac1032faaee13365dd31b30a1d",
+    "reference/active-directory.html": "6568a50b0c3437f65e4834895f1e6679bd856e4de13769c1ba45caff924f348e",
+    "reference/windows-privilege-escalation.html": "4aea6b7694e2996baa3cf736ca89585202a637d27972478b454f4600fff93408",
+    "reference/linux-privilege-escalation.html": "faa781ddcd298002e7abde278c4908addb897b4600a6c05219889f8dff3b36ac",
+    "about.html": "0cf298842ac2b9a1769408e8e7f844b93165ddab50d11b1f2ac4ac51f09b74fa",
+    "glossary.html": "1a1ba67e55e1a7be94e399b72325a9933ec6247de3da7692c6ce04e813803363",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "d034390b5fddbb8598d167fa7c4265ea500459e4cc07b7599014e611d1f4522d",
+  "graphDataBeforeSha256": "8720007985b55c829dabcb0b8cc8b7ab95d5a3ab2165eb0c45e4da97ac9de25f",
+  "changes": [
+    {
+      "map": "win-pe",
+      "id": "pe-cat-priv",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-cat-admin",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-cat-enum",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-svc-account",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-admins-filtered",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-identity",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-hostcontrols",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    }
+  ],
+  "allOtherEntryFieldsAndConnectionsUnchanged": true,
+  "sourceCapture": {
+    "publications": 12,
+    "successfulRetrievals": 12,
+    "responseHashesVerified": true,
+    "report": "reports/identity-source-capture.json"
+  },
+  "panelCheck": {
+    "states": 14,
+    "selectedClaimsPerViewport": 17,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true,
+    "screenshots": 8
+  },
+  "hashes": {
+    "about.html": "0cf298842ac2b9a1769408e8e7f844b93165ddab50d11b1f2ac4ac51f09b74fa",
+    "reference/linux-privilege-escalation.html": "faa781ddcd298002e7abde278c4908addb897b4600a6c05219889f8dff3b36ac",
+    "reference/windows-privilege-escalation.html": "4aea6b7694e2996baa3cf736ca89585202a637d27972478b454f4600fff93408",
+    "src/data/chains/linux-onramp.js": "f0fce04be0237706d04bba7bc9111f059c98a3f4c8f20663a1c1abeabae07b7c",
+    "src/data/chains/pe-techniques.js": "2a07bc47636deabaab1824a20cf919b47f5b662e73764875121b0359ade5a0b6",
+    "reports/visuals/identity-pe-svc-account-desktop.png": "d6545b2111115bfb9b4b65ce39042edb2ad7f4aa356ced14c6a45591a5aed0bb",
+    "reports/visuals/identity-pe-svc-account-mobile.png": "18a69f5c452e515a2ca8d70d3126631944a83ee87940493a708e761d1d8a05b4",
+    "reports/visuals/identity-pe-admins-filtered-desktop.png": "20f98995175b0fafc2f2503a3ff7633bd371ddabcd1b78d99941ded7fd54b8cb",
+    "reports/visuals/identity-pe-admins-filtered-mobile.png": "6018ef7fca9e36556279d6a088f771f4b4ffb3c2b2702983fbc375f630cc3285",
+    "reports/visuals/identity-lin-identity-desktop.png": "c3c67441017bc3a19aec69ae93e4db52e94e87fd4dbb6a6833e212f740479f82",
+    "reports/visuals/identity-lin-identity-mobile.png": "616c02645fd67ef2cf685c5c309976318f7ae3f34a1f128b9154ddf518b5edc1",
+    "reports/visuals/identity-lin-hostcontrols-desktop.png": "1410f60d81fd891776ec4fb2e2dca352da60f93f7d0cb97fc98601d1ae6a2757",
+    "reports/visuals/identity-lin-hostcontrols-mobile.png": "186134f28532bdbbce1d332e222b6f6c2f1856f09101c191bb65f49244c526b0",
+    "reports/identity-source-capture.json": "7a9c94aeecc6b9362d7921348cc94b4d844d077a4bcf14a88c731d07a9b03cd3",
+    "reports/reference-identity-refresh.json": "a58d2c3e97c959e95be8544a7846e5cf881ff2d414669a2799fec196b4b57cb1",
+    "reports/identity-panel-check.json": "6b34969c824249fb30f9e847a97802ec5960f0cd13d2de19d46f385d76375b51",
+    "reports/content-coverage.json": "469f5f1112f6e51b186f34382ebe18c70e465d36567c896d76f760fc1516d969",
+    "reports/review-inventory.json": "1f3a693b1b94c9a7573b5535fc5481ae7adf3c0aac834a2f6dd856f46e308e69",
+    "reports/review-inventory.csv": "0226057c32c3ccc94406cce860cfec6de414e247a417ba35b3ff2c09b6f3e659",
+    "reports/data-parity.json": "5fbd427b5c44396ae433b74f53cd87be2a8e27c0c2a680dcae6bf1288c4556ca",
+    "reports/reference-availability.json": "334bb0ac8949458af13cb12c45dffde737267617652c477ad8b60e4278003f96",
+    ".cache/identity-review/edits.mjs": "28bae25f6ecc3be1198b06c418b0246e6407c8086277fc1f3873469bb7d64fd7",
+    ".cache/identity-review/panels.mjs": "fa61424a3a89b4b137c390399a1410f9ddfb09ea13859b5b59dd8bf399fb8e30",
+    ".cache/identity-review/final-audit.mjs": "085a5bc4cb723f256111d8beceb26dcbe29ef9742a79e21796c73451f8515627"
+  },
+  "logPath": ".cache/identity-review/full-tests.log",
+  "logSha256": "584f3ea3befacd13d7e2b9cb3055754a67655704c1f6df8047a12a3e8cd115db",
+  "scope": "Local software, rendering, source-capture and data-parity checks after seven conceptual explanation corrections. The explicit AI comparisons cover selected identity, permission and audit-policy claims only. They do not establish complete entry review, command or prerequisite accuracy, applicability, ATT&CK mapping suitability, operational route viability, human review, hosted workflow execution or deployment."
+}

@@ -1,0 +1,27 @@
+{
+  "scope": "Identity of the intended Microsoft publication and a Microsoft article linking to it. No default-setting applicability or graph claim comparison.",
+  "results": [
+    {
+      "url": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/3831704",
+      "checkedAt": "2026-09-07T11:26:47.805Z",
+      "status": 200,
+      "finalUrl": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/3831704",
+      "file": ".cache/article-provenance-review/captures/supplement-0.html",
+      "sha256": "78d91da2c204a7855d516103cd08ce01fb5cbc20e073a422eedec079791b45ce",
+      "title": "SMB signing required by default in Windows Insider | Microsoft Community Hub",
+      "heading": [],
+      "articleLinks": []
+    },
+    {
+      "url": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/check-this-out-cto-guide-june-2023/3869057",
+      "checkedAt": "2026-09-07T11:26:50.216Z",
+      "status": 200,
+      "finalUrl": "https://techcommunity.microsoft.com/blog/coreinfrastructureandsecurityblog/check-this-out-cto-guide-june-2023/3869057",
+      "file": ".cache/article-provenance-review/captures/supplement-1.html",
+      "sha256": "32b96591c49cdcc16bc438fb89b54592ec1a027bc27d7d9aed88cfc7a69dfd53",
+      "title": "Check This Out! (CTO!) Guide (June 2023) | Microsoft Community Hub",
+      "heading": [],
+      "articleLinks": []
+    }
+  ]
+}

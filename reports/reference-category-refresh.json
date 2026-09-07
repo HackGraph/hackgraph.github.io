@@ -1,0 +1,275 @@
+{
+  "scope": "Delta to the earlier full sweep: GET observations from category source capture. Superseded observations and unused URLs are retained here.",
+  "previousReportAt": "2026-09-07T03:34:57.719Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.714Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.919Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man2/execve.2.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.515Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.651Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.947Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://docs.docker.com/engine/install/linux-postinstall/",
+      "code": 200,
+      "finalUrl": "https://docs.docker.com/engine/install/linux-postinstall/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://docs.docker.com/engine/install/linux-postinstall/"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:35.074Z"
+    },
+    {
+      "url": "https://docs.docker.com/engine/security/rootless/",
+      "code": 200,
+      "finalUrl": "https://docs.docker.com/engine/security/rootless/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://docs.docker.com/engine/security/rootless/"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:35.235Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-antivirus-windows"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.213Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/amsi/antimalware-scan-interface-portal"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.241Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.243Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/how-dacls-control-access-to-an-object"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.194Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.246Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.198Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man2/execve.2.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man2/execve.2.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.202Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man5/crontab.5.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.470Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:35.024Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.476Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.209Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:35.243Z"
+    }
+  ]
+}

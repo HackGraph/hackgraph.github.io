@@ -1,0 +1,76 @@
+--- a/engine/view.js
++++ b/engine/view.js
+@@ -1828,12 +1828,20 @@
+     if (d.claims?.length) {
+       section(body, 'Reviewed claims');
+       const list = el('ul', 'claim-list');
++      const sourceLabels = new Map((d.refs || []).map(([label, url]) => [url, label]));
+       for (const claim of d.claims) {
+-        const item = el('li', null, claim.text + ' — ' + claim.section + ' ');
+-        for (const [i, url] of claim.sources.entries()) {
++        const item = el('li');
++        item.appendChild(el('p', 'claim-text', claim.text));
++        item.appendChild(el('p', 'claim-section', claim.section));
++        const sources = el('div', 'claim-sources');
++        for (const url of claim.sources) {
+           const href = safeUrl(url);
+-          if (href) { const a = el('a', null, `Source ${i + 1}`); a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer'; item.appendChild(a); }
++          if (!href) continue;
++          const a = el('a', null, sourceLabels.get(url) || href);
++          a.href = href; a.target = '_blank'; a.rel = 'noopener noreferrer';
++          sources.appendChild(a);
+         }
++        if (sources.childElementCount) item.appendChild(sources);
+         list.appendChild(item);
+       }
+       body.appendChild(list);
+--- a/engine/style.css
++++ b/engine/style.css
+@@ -726,8 +726,18 @@
+ .definition-evidence summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 3px; }
+ .definition-evidence p { margin: 8px 0; }
+ .source-section { display: block; color: var(--ink-dim); font-size: 11px; margin-top: 3px; }
+-.claim-list { padding-left: 20px; color: var(--ink-dim); font-size: 13px; line-height: 1.6; }
+-.claim-list a { color: var(--ink); margin-right: 8px; }
++.claim-list { padding-left: 18px; color: var(--ink-dim); font-size: 13px; line-height: 1.6; }
++.claim-list > li + li { margin-top: 18px; }
++.claim-list p { margin: 0; overflow-wrap: anywhere; }
++.claim-list .claim-text { color: var(--ink); }
++.claim-list .claim-section { margin-top: 6px; font-size: 12px; }
++.claim-sources { display: grid; gap: 4px; margin-top: 6px; }
++.claim-sources a {
++  display: block; width: fit-content; max-width: 100%; padding: 2px 0;
++  color: var(--ink); overflow-wrap: anywhere; text-decoration: underline;
++  text-underline-offset: .18em; border-radius: 2px;
++}
++.claim-sources a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+ .pnextchev { flex: none; width: 15px; height: 15px; transform: rotate(90deg); transition: transform .2s; }
+ .pnext.open .pnextchev { transform: rotate(-90deg); }
+ /* The outer box reveals the measured natural list without resizing its rows.
+--- a/tools/gen-reference.mjs
++++ b/tools/gen-reference.mjs
+@@ -102,6 +102,12 @@
+ code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
+ pre .cmt{color:var(--faint)}
+ ul.links{margin:4px 0;padding-left:18px;font-size:14px}
++.claim-list{padding-left:18px;font-size:14px;line-height:1.6}
++.claim-list>li+li{margin-top:18px}.claim-list p{margin:0;overflow-wrap:anywhere}
++.claim-list .claim-section{margin-top:6px;font-size:13px;color:var(--dim)}
++.claim-sources{display:grid;gap:4px;margin-top:6px}
++.claim-sources a{display:block;width:fit-content;max-width:100%;padding:2px 0;color:var(--ink);overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:.18em;border-radius:2px}
++.claim-sources a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+ .opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
+ .opsec b{color:var(--ink)}
+ .editorial{border-left:2px solid var(--dim);padding:6px 12px;margin:12px 0;color:var(--dim);font-size:13px}.editorial p{margin:4px 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}.table-wrap{overflow:auto}
+@@ -155,7 +161,10 @@
+   const evidence = editorialPresentation(n);
+   for (const note of evidence.notes) parts.push(`<div class="editorial"><b>${esc(note.label)}</b><p>${esc(note.text)}</p></div>`);
+   if (evidence.applicability) parts.push(`<p class="meta applicability"><b>Applicability:</b> ${esc(evidence.applicability)}</p>`);
+-  if (evidence.claims.length) parts.push(`<h4>Reviewed claims</h4><ul>${evidence.claims.map(c => `<li>${esc(c.text)} — ${esc(c.section)} ${c.sources.map((u, i) => `<a href="${esc(u)}">Source ${i + 1}</a>`).join(' ')}</li>`).join('')}</ul>`);
++  if (evidence.claims.length) {
++    const sourceLabels = new Map(evidence.sources.map(source => [source.url, source.label]));
++    parts.push(`<h4>Reviewed claims</h4><ul class="claim-list">${evidence.claims.map(claim => `<li><p class="claim-text">${esc(claim.text)}</p><p class="claim-section">${esc(claim.section)}</p><div class="claim-sources">${claim.sources.map(url => `<a href="${esc(url)}">${esc(sourceLabels.get(url) || url)}</a>`).join('')}</div></li>`).join('')}</ul>`);
++  }
+   if (n.requires?.length)
+     parts.push(`<h4>Requires</h4><ul class="req">${n.requires.map((r) => `<li>${esc(r)}</li>`).join('')}</ul>`);
+   if (n.commands?.length) {

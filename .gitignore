@@ -2,3 +2,7 @@ node_modules
 engine/dist
 .DS_Store
 *.local
+.site/
+test-results/
+playwright-report/
+.cache/

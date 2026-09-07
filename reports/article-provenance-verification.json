@@ -1,0 +1,181 @@
+{
+  "checkedAt": "2026-09-07T11:52:12.662Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 129,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "f1e79104ae66e1ad1c173083412024c53665d530d51e9c1cd9833c20da3625f8",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "e8791899e8e5359d52bf2d99950303d8528ce92a9426f428bf18a9316d293ca2",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/initial-access.js",
+    "src/data/editorial.js",
+    "src/data/glossary-review.js",
+    "src/data/relationship-review.js",
+    "src/data/source-availability.js",
+    "src/data/source-locations.js",
+    "src/data/source-provenance.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "4fd01638cd407a76744440185a2bb935a0ada4d4bb1d39f804c4b69f50842d2e",
+  "previousGraphDataSha256": "5c8c74b14f7495c8ff650fabb0d7f80b61ef59c5b797b6d6814e3a8fe4cb9e90",
+  "referenceCorrection": {
+    "map": "ad",
+    "id": "relay-unsigned",
+    "referenceIndex": 1,
+    "from": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/4090550",
+    "to": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/3831704"
+  },
+  "allOtherGraphFieldsUnchanged": true,
+  "claimReviewRecordsUnchanged": true,
+  "reviewedEntries": 98,
+  "selectedClaims": 209,
+  "provenance": {
+    "groups": 228,
+    "urls": 487,
+    "groupsAdded": 165,
+    "urlsAdded": 187,
+    "additionalOccurrencesClassified": 233,
+    "totalOccurrencesClassifiedByRegistry": 736,
+    "remainingUnclassified": 1,
+    "affectedEntries": 174,
+    "affectedComparedEntries": 14,
+    "byKindAdded": {
+      "primary": {
+        "urls": 5,
+        "occurrences": 5
+      },
+      "research": {
+        "urls": 125,
+        "occurrences": 169
+      },
+      "community": {
+        "urls": 30,
+        "occurrences": 32
+      },
+      "database": {
+        "urls": 27,
+        "occurrences": 27
+      }
+    }
+  },
+  "captures": {
+    "citationGets": 188,
+    "publisherIdentityGets": 3,
+    "responded": 186,
+    "blocked": 4,
+    "tlsFailure": 1,
+    "pdfTitlePages": 8,
+    "renderedNvdRecordIdentities": 23,
+    "indexedReaderIdentityObservations": 5,
+    "supplementalMicrosoftCaptures": 2
+  },
+  "availability": {
+    "urls": 853,
+    "counts": {
+      "responded": 847,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedCurrentCitations": 188,
+    "otherDatesAndObservationsUnchanged": true
+  },
+  "destinationNotices": {
+    "urls": 4,
+    "affectedEntries": 7
+  },
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "0a7e5ef0e54e094576ab1034f8fbe34eb549bf63b341f384fd1a45c01ed88907",
+    "reference/windows-privilege-escalation.html": "6cc42d818eb0d7cbd4867a001a1e134f56ff8d31427e4516a7f5c49c9792540c",
+    "reference/linux-privilege-escalation.html": "876686a2121c2bffccb29a464f51e14c17edb581fd087a8aa2875b6d4ea8dd78",
+    "about.html": "55df57763c42ff9a64fc7330ba4f6151087d7194fd3a99adfe70d2f023f08f4c",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "visual": {
+    "states": 8,
+    "axeStates": 6,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 4,
+    "screenshotsVisuallyInspected": true
+  },
+  "hashes": {
+    "about.html": "55df57763c42ff9a64fc7330ba4f6151087d7194fd3a99adfe70d2f023f08f4c",
+    "reference/active-directory.html": "0a7e5ef0e54e094576ab1034f8fbe34eb549bf63b341f384fd1a45c01ed88907",
+    "reference/linux-privilege-escalation.html": "876686a2121c2bffccb29a464f51e14c17edb581fd087a8aa2875b6d4ea8dd78",
+    "reference/windows-privilege-escalation.html": "6cc42d818eb0d7cbd4867a001a1e134f56ff8d31427e4516a7f5c49c9792540c",
+    "src/data/chains/initial-access.js": "3771cb445da43b9bc9e64357b57942758424958157a0e2baa096963af73e0318",
+    "src/data/editorial.js": "2c63631152c4801b11835d7f415228216b259210b6559e84ce39b3bfbb0881e0",
+    "src/data/glossary-review.js": "5851d734faefdcd56d1e9362236eb7f8a4320351b169a050e0faa4dd457930f2",
+    "src/data/relationship-review.js": "fa0ac333c1c73c30db1e00996c91a029ff2df222435498c75025c11cf1a53b5d",
+    "src/data/source-availability.js": "150927342b327ec0c9951baf9228bf7fff2a2417874df7f568ead826e5976f04",
+    "src/data/source-locations.js": "4829cea14dcb7420b23e7c177bdfcf292ee57d0a1e2c83640dae031fc49c824f",
+    "src/data/source-provenance.js": "7188a20f401525194b83b1ef22a218adb7de514224e5ba4825b4d326c4f1c85f",
+    "reports/source-provenance-capture.json": "662651cc4dfda9a8c00504cf6754a63b0d2c00fbe86e71cfc32116671578027d",
+    "reports/repository-provenance-capture.json": "b654937a854b8a0788d66037947ed95d07da22688b2a8b40cbc9d214e07655d0",
+    "reports/project-documentation-provenance-capture.json": "c6145c892c0a1df8694d8504ae2768d63c8671717d1749357abc99be6e207fd5",
+    "reports/article-provenance-capture.json": "5fbbcdf26b9e268fa0fa8578b2ff4950252392393668fb4bd96f9ca48424552a",
+    "reports/article-provenance-reader.json": "332b4f1f85e03275dfb2d7682e0ecf7d631aa86c951ea34a6c6a6e0518d62cb4",
+    "reports/article-provenance-nvd-rendered.json": "9fe348051ef5b312d2fe4c10a578d3544cab6815d33a39df429bccbc2611d651",
+    "reports/article-provenance-supplement.json": "21c830e902f1f72a7719f3beb30f7a81a5950eab065f92407552519cedba2985",
+    "src/data/schema.d.ts": "5a9bbb57deb3c5c364be8d2c67f61c3d47163ec416d1b4c7e6e66a035bad0da0",
+    "src/data/editorial.test.js": "74b055b5f502c7d77d6231b9fa69abbd51cc6e8e058953d502e100252f8b210a",
+    "tools/source-provenance.mjs": "fb16c0dd0a8f5594f33de97d3805c2588651e5a1e2ee4dec11ec5a63fbbcf9c1",
+    "tools/source-provenance.test.mjs": "47eec72d4868b9112cace4e138327d555cba0b1c11a03e7b60fe7f918c395f21",
+    "tools/review-inventory.mjs": "21a10900d1d281a4c408ff4465c616edb754093371073aeb7b4e9a1f5ef25a7c",
+    "tools/review-inventory.test.mjs": "4b57a00571d54a4cdc0394f5876daa6fbd2b2389b414a856fe58844d3678c6d5",
+    "tools/gen-reference.mjs": "56cb6b1b9e5a5b2426e13cdfa154e0a07c19b6d1f984711f7284bad9dca8b2c1",
+    "browser/source-provenance.spec.mjs": "f955bce80edcef42db0162b33dbb394fa2bcd4f4fb9d35d4c8de945dbeab6cd8",
+    "reports/source-provenance.json": "0c02d3222c4eb80f8edf65cd72fc83adf63243a653a2225899f45e9efc805044",
+    "reports/article-citation-findings.json": "6a1bf35585a81a0db7c5b3ad46ac7c855f3a9bb17165a6e26b3359495c731665",
+    "reports/article-provenance-visual-check.json": "f945ea4a66beac740525b5479c8c915fb8e0f2f96c20f760f697f65764c0d219",
+    "reports/content-coverage.json": "01fd28dd1950221238eba29de3c5c715fcc6e7bc688d706f174ec212047c1bc6",
+    "reports/review-inventory.json": "0b5ebedbfed15ad06d140b415a2cbb12e95342fafd47deb473f9f6cf09a9c82b",
+    "reports/review-inventory.csv": "8a96963d57bb2a33a354fdf9f2ecbf0371389e3bbf099d8429ba0caa13d38089",
+    "reports/reference-availability.json": "0ef75c26622eef8e04185c1b140201b3245dbae0093fba627036f4a9ba8825f0",
+    "reports/data-parity.json": "d3fda069506be8817e4afdfae45fa004479f573d57ee8d031b560eb91ddc23c6",
+    "reports/ARTICLE_PROVENANCE_REVIEW.md": "cbbed5b3ed2d824014604c16573fe05901860ae63e11ec41573c90263bdde005",
+    "reports/HUMAN_REVIEW.md": "131e7eb049ae88fb123550d95429f97e055ccc6010f02d0c6ba5f8411ce3714a",
+    "reports/VERIFICATION.md": "48322b8123779700f7318424194d6d6eeb5bf3561954fdda8f47f0ebfacc6f5f",
+    "README.md": "033143e3e9ff083ea871fd9ddc4e394e46ca67792d76a7eb6fa8e0d89e7a55b3",
+    "RELEASE_NOTES.md": "239331911adf78b11852dbc6f0d55b903525c7cf2c96c86ee624897347153eb2",
+    "IMPLEMENTATION_PLAN.md": "35088338e2bde913cd598503a9deb595e2eac8f73bba33a7856948354cea19a1",
+    "CONTRIBUTING.md": "aece03643bcb2988dfd8b2a4709ec953690642ea9d0609ff25a2d179389b6344",
+    "reports/visuals/article-provenance-panel-1440.png": "599378f0c6400178171e7f563a7b804e5d464c147667f8ef8c9b3319eac8cccc",
+    "reports/visuals/article-provenance-panel-390.png": "0beeb9287b85eace4284be2fca28df9045bfb6dc42a84e4f341efe5e7ce866c9",
+    "reports/visuals/article-provenance-reading-mobile.png": "5e916fd8677e572e1318cecf3b7beb2c6aa86fa1252a313b3c31d324c1ed838d",
+    "reports/visuals/article-provenance-guide-mobile.png": "168c63bf7cc160a06dc9a84e8e453263b4a58597eeb4e6855302226ebe4d2fd7"
+  },
+  "logPath": ".cache/article-provenance-review/full-tests.log",
+  "logSha256": "02787dd84598debe7556569d10b8fafcef0e412245db2c6629cc2194dd6aa4f5",
+  "scope": "Publication identity/type classification, a database source label, citation-destination notices, one citation-identifier correction, and targeted HTTP observations. All other authored graph fields and all claim-review records are unchanged. No complete URL sweep, new graph-claim comparison, human review, operational validation, motion benchmark, hosted workflow run or deployment is claimed."
+}

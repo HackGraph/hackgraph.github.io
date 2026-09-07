@@ -1,0 +1,180 @@
+{
+  "checkedAt": "2026-09-07T14:28:43.433Z",
+  "verificationCompleted": true,
+  "commands": [
+    {
+      "command": "npm run test:unit",
+      "exitCode": 0,
+      "passed": 145,
+      "logPath": ".cache/citation-retirement-review/unit-tests.log",
+      "logSha256": "085c4a162c338bfe036035f4bac9347741c717052eb3aff45b229db2d23aac8d"
+    },
+    {
+      "command": "npx playwright test --project=chromium",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/citation-retirement-review/chromium-tests.log",
+      "logSha256": "1ef85e4392c00e2bc40f7240792c61f7c94575276b2163f63f562690ca245cf8"
+    },
+    {
+      "command": "npx playwright test --project=firefox",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/citation-retirement-review/firefox-tests.log",
+      "logSha256": "4ba0792eee6ffd85f1388989b714a14deb82d58ca94b9b90f323fc99af80a587"
+    },
+    {
+      "command": "npx playwright test --project=webkit",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/citation-retirement-review/webkit-tests.log",
+      "logSha256": "f5fe95a0dd82d778df199f5d1c84a1d19a47c869ec991177f5a33982aeeff84b"
+    },
+    {
+      "command": "npm run verify:build",
+      "exitCode": 0,
+      "logPath": ".cache/citation-retirement-review/build-verification.log",
+      "logSha256": "39158e4936e3ac3a49cafea8f2a8665006f1b3a681f1b8e0264e7e5b94671ad4"
+    }
+  ],
+  "unit": {
+    "passed": 145,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 144,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "allExpectedCasesPassed": true
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "46903d008e5950cdc27cd445073a7f2114ae49980359cecc0191211372d012cc",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "b24a68f523ed22942faf4496bf4be6d4a1c39d5032b2453ba61c0929f587a639",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/ad-additions.js",
+    "src/data/chains/ad-categories.js",
+    "src/data/chains/ad-trusts.js",
+    "src/data/chains/linux-privesc.js",
+    "src/data/editorial.js",
+    "src/data/source-availability.js",
+    "src/data/source-provenance.js",
+    "src/data/taxonomy-status.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "c678f01d5565441dbe591196eeee7c60de94e09e9cbb150c0e88e2c8e35f0be2",
+    "reference/windows-privilege-escalation.html": "c6484f3d3915399a9c5a4ffd111165301256c3965cca0350ab0e779fbf34e6f5",
+    "reference/linux-privilege-escalation.html": "64082ef23fb9f194e6018d0f4a5355388340d543a346f832bb08ce36e0ba5814",
+    "about.html": "af28b5d6df8c390aac15ee48a7313ed5d980321690462dac1bddca022fb20dc4",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "838721344ef1caaff92b154dccb3569747aa06cb2969ce9276b860c4866dfdb8",
+  "changedReferenceEntries": 5,
+  "additionalClaims": 0,
+  "reviewedEntries": 124,
+  "selectedClaims": 264,
+  "unchangedReviewRecords": 123,
+  "supplementalReferenceSnapshotsUpdated": 1,
+  "allOtherGraphFieldsUnchanged": true,
+  "duplicateMappingLinksSuppressed": 54,
+  "provenance": {
+    "groups": 226,
+    "urls": 484,
+    "registryClassifiedOccurrences": 732,
+    "inlineClassifiedOccurrences": 229,
+    "unclassifiedOccurrences": 0
+  },
+  "availability": {
+    "urls": 874,
+    "counts": {
+      "responded": 869,
+      "blocked": 4,
+      "unreachable": 1
+    },
+    "refreshed": 1,
+    "retired": 3,
+    "otherObservationsUnchanged": true
+  },
+  "visual": {
+    "states": 14,
+    "axeStates": 10,
+    "violations": 0,
+    "overflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 6,
+    "screenshotsVisuallyInspected": true
+  },
+  "hashes": {
+    "about.html": "af28b5d6df8c390aac15ee48a7313ed5d980321690462dac1bddca022fb20dc4",
+    "reference/active-directory.html": "c678f01d5565441dbe591196eeee7c60de94e09e9cbb150c0e88e2c8e35f0be2",
+    "reference/linux-privilege-escalation.html": "64082ef23fb9f194e6018d0f4a5355388340d543a346f832bb08ce36e0ba5814",
+    "reference/windows-privilege-escalation.html": "c6484f3d3915399a9c5a4ffd111165301256c3965cca0350ab0e779fbf34e6f5",
+    "src/data/chains/ad-additions.js": "59e781f6043127fd6292d5e6000ad30b5924d00067e5d72407297a65686da2cf",
+    "src/data/chains/ad-categories.js": "26c2472b4771f0aaf8af92f8db95b6db3eca30ceca37258d522432c2b479f05f",
+    "src/data/chains/ad-trusts.js": "176ae89943bcbf8a7ebdf5baa2c1a266b398248ef19966fde49a38720a47b292",
+    "src/data/chains/linux-privesc.js": "bdaa87cb9b511c3daba14d8c73f4a20319812459722220d867577ac1fd08e5c7",
+    "src/data/editorial.js": "0fbaa0cca9f1df774dde51a141add7b884967f9d7103c84abbc95b6a8bbed5d1",
+    "src/data/source-availability.js": "547ad8e17e694b89d6299ae9f3b1d94aa431cbb750306c72cd8a120e0b852da4",
+    "src/data/source-provenance.js": "270563944ad17c68ba5ece94dcd381626bc812c8d7b0873e9d3e653123c79ad0",
+    "src/data/taxonomy-status.js": "1e3be5c2393b1cb7f19f5e970e52249d1f69f6fb6f3fbd39dc4fbdf8bb07ffc6",
+    "reports/visuals/citation-retirement-adfs-golden-saml-1440.png": "94e5f380e186f0aac553f5b16e473d4d8da7fda608a2cf1b233b4f41d3d799d4",
+    "reports/visuals/citation-retirement-lin-kernel-recent-1440.png": "a31b57e7c3f2ecda95af36919d358daa220278bbe876a86c8d45bd366eccd9ff",
+    "reports/visuals/citation-retirement-adfs-golden-saml-390.png": "9f208508bf3fa8c1caed0292c4ed2a14fb9e412c2eaa16bacc164fd00de1b304",
+    "reports/visuals/citation-retirement-persist-fed-390.png": "60cc491ea0c7b1ad8a9be9900f039a3aacb8f5cbf07d867584a78e61ce804362",
+    "reports/visuals/citation-retirement-reading-ad-mobile.png": "3cedfcc448676ea0c6fa29f7cc447d1014979d9329e6be12b237401980307f80",
+    "reports/visuals/citation-retirement-reading-linux-pe-mobile.png": "b5a38335295386fa959489ae7c0449b6541b877d2cd4b5c198391507ac707d2b",
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca",
+    "tools/review-inventory.mjs": "158c39cb9b5c8c32fbad27c6c58c8b5bd1b0cb94882c457a4dc9369b454ee799",
+    "tools/review-inventory.test.mjs": "d12748be494c52f90e4f6ac767f2156ad4967c792abd9448ae88ab031d0ae054",
+    "src/data/editorial.test.js": "1047fc17905416b6b32190588fe759d79f07bbbbdcddb916743f58b5491c6dbd",
+    "reports/citation-retirement-review.json": "10d2e8874854860a2e776a0d33d2b94f9f2da4608a34fdc77aa369823dcbb680",
+    "reports/citation-retirement-source-capture.json": "e75a5ac63934c6d327796e6dab9caaa78ca2f736b25ea5c15dc286ec4ee16b7e",
+    "reports/retired-source-provenance.json": "628231ad38a6759bc97f4339164ec8ce7b3e38c9cd4f9c6040e134d08dc8d713",
+    "reports/source-provenance.json": "1d0548be4520522cc5e56d62219bac893b368e3d8e8f5b264b86a04bd13b9176",
+    "reports/taxonomy-status.json": "df447bc1ebc9c41704ba1babf3240c779cfb0ae9f0ebae3fa7acc418474cacdd",
+    "reports/reference-citation-retirement-refresh.json": "5800f89d64cba6c9065a4155062ab7973c1802aa9522850a489b056f24858835",
+    "reports/reference-availability.json": "888c81c28f6f205eca6ba5a95c320bf39330c7e9f694e3734780ccdfa25d5352",
+    "reports/taxonomy-reference-deduplication.json": "305f6a3c36c8c31979bb173af0f5a3d78cf4866debd6748b18d57891bc4f506e",
+    "reports/citation-retirement-visual-check.json": "82dfbefe97a199ac8f5808e0bf500893ce752fbe66ef4a543ac9deaf7368f4b6",
+    "reports/review-inventory.json": "e7e77ebd70ffb0d817400c5100b2b702db2b32ae4c7b2cd6b3dd922452266221",
+    "reports/review-inventory.csv": "dd797d09f63b170f0d244442c26f1433bd9dfc9e315c0291b84edcca825f9830",
+    "reports/content-coverage.json": "48880b0666da6469dcdaced6bdd65856e928c936b31f097b6419e97895847ece",
+    "reports/data-parity.json": "5e18cd2d38d8b8fd051f5d5122a8d66c50a9d60cee5c6cdf1c5b4262fffaa39b",
+    "reports/CITATION_RETIREMENT_REVIEW.md": "e7ef774c02ee5ece07f8b9f9cdb1298413227d76509cbab2acf0f68e6e034226",
+    "reports/VERIFICATION.md": "47dbd3c69c7b33162df25a8f7a4c4d79c4e011f562451b58d8d51b718c572b30",
+    "reports/HUMAN_REVIEW.md": "f7f8f780d229c10ca209d4daaeb3e9c5bcbdcecef1b260fbda3aeebfca930ca5",
+    "reports/COMPLETION_STATUS.md": "3864e506c93549a02a8f7eeed25f5eda8b0791649c2b1955db73dab97300eda6",
+    "README.md": "5c8bebb3a7ba2e6d6adc4b25e3eb030fae19c76d0d4fea2cbaffdfdd580a3209",
+    "RELEASE_NOTES.md": "391a17be720ed5c5d3dec684f6d7e7a86473aaa80afaca59afb1b5eba61ea33e",
+    "IMPLEMENTATION_PLAN.md": "a0555d6539c68a93fda9bab494ad3bc7ea407706f105311e94821055b3fdcfe7",
+    ".cache/citation-retirement-review/unit-before-metadata-sync.log": "f05c8896b140f3fdd0e38eb30eb4a885ce6b68846120c7b3604b787cb7392bf5",
+    ".cache/citation-retirement-review/unit-before-fixture-fix.log": "a0a897d393ff30b3761788873bbe3b9665c6f8695765400819c5d1f136b4b902",
+    ".cache/citation-retirement-review/duplicate-link-before.log": "e130bfdc35f6d95976d993897c35c605a88e8d6e29fb292eade801bca81d6449",
+    ".cache/citation-retirement-review/visual-fixture-failure.log": "b01d06f0d30befae5e65fc76e27f7d2055efc27d05b6ee8c121329def1f6ac03",
+    ".cache/citation-retirement-review/visual-check.mjs": "2f2e02d78af1ed3e683e4aff637aff9ea23e1898effe5bea5c0eac28f634c961"
+  },
+  "scope": "Reference corrections and duplicate mapping-link presentation. All selected claims, descriptions, commands, prerequisites, applicability and connections are unchanged. No operational validation, new motion benchmark, human review, hosted workflow or deployment."
+}

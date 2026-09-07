@@ -7,6 +7,9 @@ on:
     - cron: '0 6 * * 1' # Mondays 06:00 UTC
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   check-refs:
     runs-on: ubuntu-latest
@@ -15,5 +18,14 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      # no install: the repo has no dependencies
+      # The audit itself uses Node built-ins only.
       - run: node tools/check-refs.mjs
+      - run: node tools/check-taxonomy.mjs
+        if: always()
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: source-availability
+          path: |
+            reports/reference-availability.json
+            reports/taxonomy-status.json

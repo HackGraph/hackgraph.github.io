@@ -1,0 +1,17 @@
+# KDC-account review and citation follow-up — 7 September 2026 UTC
+
+The KRBTGT overview now explains the account's role in the Key Distribution Center, the distinction between ticket-granting and service tickets, application authorization data, and separate RODC accounts. It replaces the unsupported blanket promises about every ticket, arbitrary privileges and durable control with four selected conceptual comparisons against three Microsoft publications.
+
+[kerberos-account-review.json](kerberos-account-review.json) records the exact changes and source sections. [kerberos-account-source-capture.json](kerberos-account-source-capture.json) retains the three successful HTTP observations and capture hashes. The KDC reference describes the password-derived key and TGT role; the MS-KILE synopsis distinguishes TGS and application exchanges; the Active Directory account reference supplies the RODC distinction. No inference about ticket forgery, key acquisition, prerequisites, commands or connection outcomes was added.
+
+The graph now has 213 selected conceptual comparisons across 99 entries. Dedicated references cover 303 of 311 techniques. Another 291 technique nodes and all 765 connections lack claim comparisons. The 98 earlier graph comparison records are unchanged. Existing IDs, entry kinds, commands, prerequisites, applicability and connections are unchanged.
+
+The Certipy reference previously named an Authentication chapter that redirects to Home. Its replacement is explicitly labeled as the current Usage guide, linked from the publisher's wiki navigation. That guide identifies certificate authentication in its sub-command overview. This repairs the reading-list destination; it does not establish a historical chapter relocation or validate the citing entry. That entry remains unreviewed. The historical missing-chapter finding is preserved in [citation-followup-decisions.json](citation-followup-decisions.json).
+
+Vectra's directly retrieved article displays Justin Howe as its author and links his profile, which lists the article. The JSON-LD still names Zoey Chu while linking that same profile. The provenance record now distinguishes the corroborated displayed attribution from this unresolved publisher metadata conflict. No individual author was added to the graph citation, and the article's claims were not assessed.
+
+An additional indexed CyberArk publication path also redirects to the product page when fetched directly. No usable replacement was established. Its destination notice remains on three entries. The research-index citation and the unavailable n00py publication also remain unresolved.
+
+The registry still covers 736 reference occurrences across 486 exact URLs in 228 groups. Together with 184 inline source-type labels, 920 of 921 graph reference occurrences have recorded types. The combined HTTP inventory contains 854 URLs: 848 responded, four were blocked and two were unreachable. Five currently cited URLs were refreshed in this pass; other observations retain their dates.
+
+[kerberos-account-visual-check.json](kerberos-account-visual-check.json) records four KDC-account panel states, two citation-only panel states and two JavaScript-disabled reading states. [citation-followup-verification.json](citation-followup-verification.json) records the assembled suite, reference repeatability, data parity and public artifact. These checks leave the broader content review and human evaluation unfinished.

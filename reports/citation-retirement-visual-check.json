@@ -1,0 +1,160 @@
+{
+  "checkedAt": "2026-09-07T14:19:30.988Z",
+  "browser": "153.0.8010.12",
+  "scope": "Five actual panels at desktop/dark and mobile/light widths; four JavaScript-disabled reading states. Selected text, source links, keyboard focus and overflow; axe on ten graph states only. No operational or human review.",
+  "observations": [
+    {
+      "surface": "graph-panel",
+      "id": "adfs-golden-saml",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 1,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/citation-retirement-adfs-golden-saml-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "persist-fed",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 3,
+      "sources": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "trust-modification",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "expired-password-reset",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-kernel-recent",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/citation-retirement-lin-kernel-recent-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "adfs-golden-saml",
+      "width": 390,
+      "theme": "light",
+      "claims": 0,
+      "sources": 1,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/citation-retirement-adfs-golden-saml-390.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "persist-fed",
+      "width": 390,
+      "theme": "light",
+      "claims": 3,
+      "sources": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/citation-retirement-persist-fed-390.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "trust-modification",
+      "width": 390,
+      "theme": "light",
+      "claims": 0,
+      "sources": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "expired-password-reset",
+      "width": 390,
+      "theme": "light",
+      "claims": 0,
+      "sources": 2,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-kernel-recent",
+      "width": 390,
+      "theme": "light",
+      "claims": 0,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "reading-page",
+      "id": "adfs-golden-saml",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "claims": 0,
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "adfs-golden-saml",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "claims": 0,
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/citation-retirement-reading-ad-mobile.png"
+    },
+    {
+      "surface": "reading-page",
+      "id": "lin-kernel-recent",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "claims": 0,
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "lin-kernel-recent",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "claims": 0,
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/citation-retirement-reading-linux-pe-mobile.png"
+    }
+  ],
+  "runtimeErrors": []
+}

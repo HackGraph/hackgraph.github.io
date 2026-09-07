@@ -1,0 +1,142 @@
+{
+  "checkedAt": "2026-09-07T07:09:09.767Z",
+  "browser": "153.0.8010.12",
+  "scope": "Rendering, selected-claim visibility, panel overflow, and WCAG-tagged axe checks for all eight changed start/goal panels at desktop and phone widths. Does not validate operational content.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "id": "start",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "start",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "domain-admin",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-domain-admin-desktop.png"
+    },
+    {
+      "id": "domain-admin",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-domain-admin-mobile.png"
+    },
+    {
+      "id": "enterprise-admin",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "enterprise-admin",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-start",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-start",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "nt-system",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-nt-system-desktop.png"
+    },
+    {
+      "id": "nt-system",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-nt-system-mobile.png"
+    },
+    {
+      "id": "win-foothold-start",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "win-foothold-start",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "lin-start",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "lin-start",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "lin-root",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-lin-root-desktop.png"
+    },
+    {
+      "id": "lin-root",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/context-lin-root-mobile.png"
+    }
+  ]
+}

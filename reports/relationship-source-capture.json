@@ -1,0 +1,53 @@
+{
+  "scope": "Source retrieval provenance for the shared-definition comparison only.",
+  "results": [
+    {
+      "url": "https://attack.mitre.org/tactics/TA0002/",
+      "finalUrl": "https://attack.mitre.org/tactics/TA0002/",
+      "code": 200,
+      "title": "Execution, Tactic TA0002 - Enterprise | MITRE ATT&CK®",
+      "checkedAt": "2026-09-07T03:29:34.851Z",
+      "sha256": "2325a684490ac99a45156845db8f39d4f6ea58bdb9f3bd336a04d32960a90276"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "title": "Access Tokens - Win32 apps | Microsoft Learn",
+      "checkedAt": "2026-09-07T03:29:35.229Z",
+      "sha256": "26d3d47790df0e0d906e9659acd6c60d79032f521e57d758e6350b09b14776ca"
+    },
+    {
+      "url": "https://csrc.nist.gov/glossary/term/authentication",
+      "finalUrl": "https://csrc.nist.gov/glossary/term/authentication",
+      "code": 200,
+      "title": "authentication - Glossary | CSRC",
+      "checkedAt": "2026-09-07T03:29:35.739Z",
+      "sha256": "65acffe4396b22bdd80ed49851c81efca0ae08762a6f4689e71107404447d073"
+    },
+    {
+      "url": "https://csrc.nist.gov/glossary/term/authorization",
+      "finalUrl": "https://csrc.nist.gov/glossary/term/authorization",
+      "code": 200,
+      "title": "authorization - Glossary | CSRC",
+      "checkedAt": "2026-09-07T03:29:35.876Z",
+      "sha256": "578a6fcdcbb0c43f660c2f69b177a200522efc841cc42fc3a0e9e7341edf1212"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "title": "capabilities(7) - Linux manual page",
+      "checkedAt": "2026-09-07T03:29:35.664Z",
+      "sha256": "4536153b1135369d157142328000b6d35c315e29f99a4a9f20e15c3d4ab73262"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "title": "user_namespaces(7) - Linux manual page",
+      "checkedAt": "2026-09-07T03:29:35.631Z",
+      "sha256": "661ea3ffeea210a9e6c0880fceb92c5336e611d6a10cfe6a5571a7aa975f0893"
+    }
+  ]
+}

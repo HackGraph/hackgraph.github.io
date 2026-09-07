@@ -1,0 +1,12 @@
+{
+  "scope": "Publication identity and taxonomy-reference classification only. No operational claim review.",
+  "url": "https://attack.mitre.org/techniques/T1606/002/",
+  "checkedAt": "2026-09-07T14:09:23.493Z",
+  "status": 200,
+  "finalUrl": "https://attack.mitre.org/techniques/T1606/002/",
+  "title": "Forge Web Credentials: SAML Tokens, Sub-technique T1606.002 - Enterprise | MITRE ATT&CK®",
+  "file": ".cache/citation-retirement-review/mitre-saml.html",
+  "sha256": "d4a50f8daf6715631fc7dc15b7ddcb552f4908393bdb1495c823003244644b4f",
+  "textFile": ".cache/citation-retirement-review/mitre-saml.txt",
+  "textSha256": "0b3bc981ecf7fc9c410331b3be6834901b9ecad9484e2341190e6a3d47017e1d"
+}

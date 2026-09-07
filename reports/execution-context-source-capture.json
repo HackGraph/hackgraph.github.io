@@ -1,0 +1,123 @@
+{
+  "scope": "Ten primary publications compared against fourteen selected conceptual claims in six execution-identity, processor-mode and task/startup-permission explanations. The named sections were read from publisher documents, and their responses were retrieved by GET for this pass. This comparison excludes commands, tools, prerequisites, applicability, connection outcomes, operational route viability and ATT&CK mappings. Navigation labels remain project conventions. Exact claims, source sections, reviewer type, date and content snapshots are stored with the entries.",
+  "comparedIds": [
+    "local-admin-host",
+    "service-account-creds",
+    "pe-prim-kernel-exec",
+    "pe-admin-schtask-system",
+    "pe-scheduled-task-abuse",
+    "pe-autorun-writable"
+  ],
+  "results": [
+    {
+      "label": "Microsoft, User mode and kernel mode",
+      "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+      "section": "Opening mode distinction; User mode; Kernel mode",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.386Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode",
+      "title": "User Mode and Kernel Mode - Windows drivers | Microsoft Learn",
+      "sha256": "de8cb6f9929f4b225d94cf2bf7c4b813bb51dca772e7aee0bd382bc0da070c59"
+    },
+    {
+      "label": "Microsoft, How User Account Control works",
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "section": "Sign in process; The UAC user experience",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:38.805Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "title": "How User Account Control works | Microsoft Learn",
+      "sha256": "4969bde6abb5d43509b9c94fed92bc163f22fe49e13640e4c6a0de37446880bd"
+    },
+    {
+      "label": "Microsoft, File Security and Access Rights",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "section": "Opening file/directory security-descriptor and access-check explanation",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.576Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "title": "File Security and Access Rights - Win32 apps | Microsoft Learn",
+      "sha256": "39e93d992e3acd44e5463517b92b226c6aefbb8dd4c4f0b009605e2c4b8303fe"
+    },
+    {
+      "label": "Microsoft, LocalSystem Account",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "section": "Opening account definition",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:38.804Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "title": "LocalSystem Account - Win32 apps | Microsoft Learn",
+      "sha256": "27715c0e51d27383c02351e6d0dedc6eda34f44cd78777ab5c52a212f08d709d"
+    },
+    {
+      "label": "Microsoft, Service User Accounts",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "section": "Opening definition; service access token and resource checks",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.386Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "title": "Service User Accounts - Win32 apps | Microsoft Learn",
+      "sha256": "172f2f90044f49c2536620f2ff7319b7e34fa8006551d5f7166f00cbc52682ef"
+    },
+    {
+      "label": "Microsoft, Run and RunOnce Registry Keys",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "section": "Opening purpose and repeated/one-time distinction",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.742Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys",
+      "title": "Run and RunOnce Registry Keys - Win32 apps | Microsoft Learn",
+      "sha256": "f065b4185a312c54390b794722d1287cd34bdcd786cbfc3ab3ff443b88f8cd5b"
+    },
+    {
+      "label": "Microsoft, Registry Key Security and Access Rights",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "section": "Opening key security-descriptor and access-check explanation",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.763Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "title": "Registry Key Security and Access Rights - Win32 apps | Microsoft Learn",
+      "sha256": "f5031b24cbe27469052eadd49f2c83aba4b92345c3003cb7f83ab131b33614f8"
+    },
+    {
+      "label": "Microsoft, Security Contexts for Tasks",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "section": "Opening context definition; Specifying Credentials; task permissions",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.576Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/taskschd/security-contexts-for-running-tasks",
+      "title": "Security Contexts for Tasks - Win32 apps | Microsoft Learn",
+      "sha256": "8d83b78b2b6d833e0e8f65482c34a2ffb0ffe1a607a728819890c5b7153604eb"
+    },
+    {
+      "label": "Linux man-pages, capabilities(7)",
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "section": "DESCRIPTION: traditional privilege model and per-thread capabilities",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.193Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "title": "capabilities(7) - Linux manual page",
+      "sha256": "4536153b1135369d157142328000b6d35c315e29f99a4a9f20e15c3d4ab73262"
+    },
+    {
+      "label": "Linux man-pages, user_namespaces(7)",
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "section": "DESCRIPTION: identities inside and outside a user namespace",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T09:37:39.193Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "title": "user_namespaces(7) - Linux manual page",
+      "sha256": "661ea3ffeea210a9e6c0880fceb92c5336e611d6a10cfe6a5571a7aa975f0893"
+    }
+  ]
+}

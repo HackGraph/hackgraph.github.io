@@ -1,0 +1,113 @@
+{
+  "checkedAt": "2026-09-07T10:12:24.326Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 134,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 120,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "7cf4ebfe5179c6d98a72ce579f5c1531b4654cdb1d2d7e82c8f7069b0bac02c5",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "aac8f240bb783c7496aba5cca9426fd4fa2f3cc1c4ea606f143dc0b755250efb",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "glossary.html",
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/taxonomy-status.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "5c8c74b14f7495c8ff650fabb0d7f80b61ef59c5b797b6d6814e3a8fe4cb9e90",
+  "graphDataUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "685403b347ca9619acdd5bb439a70a09cb893b5d91042b7ae0b9ed18814e5421",
+    "reference/active-directory.html": "7e71ba0d7e4599e108ee78ec49dbcf1f6beb2638bf63f257486498f9cbf949f2",
+    "reference/windows-privilege-escalation.html": "406781bc5aa2c7e32d2d984a000a3d6d7511d8ea876c5ca4158947e9d5622f56",
+    "reference/linux-privilege-escalation.html": "442170a87e3dc995f84ad7e6f5918e38d211c5f6b01824767aadb6b1315d42d2",
+    "about.html": "6a655164a71014a314a9e72f0e58f4e62bf7e625357da96ea1edc885ba68026e",
+    "glossary.html": "26d46b166968a56f8ba3664fd5e2521eaa43d545db8ce66459d71a89485c900f",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "taxonomy": {
+    "identifiers": 117,
+    "techniques": 111,
+    "tactics": 6,
+    "active": 117,
+    "added": [
+      "T1003.008",
+      "T1006",
+      "T1053.006",
+      "T1056.001",
+      "T1098.004",
+      "T1556",
+      "TA0002",
+      "TA0003",
+      "TA0004",
+      "TA0006",
+      "TA0008",
+      "TA0011"
+    ],
+    "publisherSha256": "dc1639caa5501d720e280cf1cbd8fbe009884a0c9b3e6e9ed9d0c25166c3d8f4",
+    "inputMode": "local-file",
+    "fullSourceInventoryCrossCheck": true,
+    "report": "reports/taxonomy-status.json"
+  },
+  "readingCheck": {
+    "states": 4,
+    "axeStates": 2,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "keyboardTableFocus": true,
+    "keyboardTableScrolling": true,
+    "screenshots": 3,
+    "screenshotsVisuallyInspected": true
+  },
+  "hashes": {
+    "about.html": "6a655164a71014a314a9e72f0e58f4e62bf7e625357da96ea1edc885ba68026e",
+    "glossary.html": "26d46b166968a56f8ba3664fd5e2521eaa43d545db8ce66459d71a89485c900f",
+    "reference.html": "685403b347ca9619acdd5bb439a70a09cb893b5d91042b7ae0b9ed18814e5421",
+    "reference/active-directory.html": "7e71ba0d7e4599e108ee78ec49dbcf1f6beb2638bf63f257486498f9cbf949f2",
+    "reference/linux-privilege-escalation.html": "442170a87e3dc995f84ad7e6f5918e38d211c5f6b01824767aadb6b1315d42d2",
+    "reference/windows-privilege-escalation.html": "406781bc5aa2c7e32d2d984a000a3d6d7511d8ea876c5ca4158947e9d5622f56",
+    "src/data/taxonomy-status.js": "28052a3e0643ba1aac9b1ac43dfe1db1f11a3a8fe10c87057581ca15816a53ed",
+    "tools/check-taxonomy.mjs": "62994ace27f78b8dcb15538a98cc1f843337adbd934a474125ac6b3748a0a52f",
+    "tools/taxonomy.test.mjs": "63da06ea514b1f787e467c92573b1ff14eebaa855a03db5ca5ff51f5384cac39",
+    "tools/taxonomy-cli.test.mjs": "36b287fdc4f79d5d3f0c4d54add9aa40775ccd6b26f0824ed792a02a46a3280b",
+    "tools/gen-reference.mjs": "dc20a91b6488e7174122d300d463bf78b5d494874ad59d4d2c1daf1fac748833",
+    "browser/reading-guide.spec.mjs": "79e16d964f1ffec66c26b95804cfda4bee6fa60e93911792eb0efe1102784213",
+    "reports/taxonomy-status.json": "53709d1f15636a498676eb9ad5c6fb3b3829030e3ddea17e382b5ee6461c8f45",
+    "reports/taxonomy-reading-check.json": "a95ec0ee86c4a7a5c37052521670c61ae9f6968d86b478d0601928a55abe175b",
+    "reports/content-coverage.json": "088a55db913d4d94eeea9fcb71896466f039de87256177a240013a200eb31535",
+    "reports/review-inventory.json": "c8fbacd4a9902be0d71e6abb70d233ddafa4581cc4d5c643952070fc399a2244",
+    "reports/review-inventory.csv": "ff21591f8968d7a54ba09b5b199a671dee3315db20a31e34de7539f77f6ae9b2",
+    "reports/visuals/taxonomy-coverage-1440.png": "9971a0b322f823c93d7d349a26e92a816da9689d745dc3c305d28c3bc2e20e6f",
+    "reports/visuals/taxonomy-coverage-390.png": "ce18414296f027185d92719f566102081b971f060ecd9064ed892694b313df8e",
+    "reports/visuals/taxonomy-coverage-table-focus.png": "8c467bd93e6e08c6020684a8c41f9c113b311a3bd143bb30ea4ba34a5aed97ba"
+  },
+  "logPath": ".cache/taxonomy-citation-review/full-tests.log",
+  "logSha256": "d46be0ad10fd6d106819509fae12eeb713c535e42d9ced9c08dccfaa1a108be0",
+  "scope": "Taxonomy collector and publisher-record status coverage, reading-guide wording and keyboard table access, source-inventory parity and local software/artifact checks. Reuses the captured Enterprise ATT&CK 19.2 bundle; no new complete network sweep. Graph content, references, review statuses, source-kind classifications and routing are unchanged. No operational validation, human review, new motion benchmark, hosted workflow execution or deployment."
+}

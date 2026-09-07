@@ -1,0 +1,254 @@
+{
+  "scope": "Primary documentation for selected authentication, management and Windows object definitions. No procedure or attack-path validation.",
+  "results": [
+    {
+      "id": "ntlm",
+      "label": "Microsoft — Microsoft NTLM",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "checkedAt": "2026-09-07T13:41:23.843Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "title": "Microsoft NTLM - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/ntlm.html",
+      "sha256": "ebae2a7e4cde81d29bf7c602d30c57ede6ad6cef5c8f2a718c89da1d445f2c25",
+      "textFile": ".cache/missing-reference-review/captures/ntlm.txt",
+      "textSha256": "c92c06e61763a1c7607da84c19cb65a0f8b5814dd12aa70dca754cab5d670fc2",
+      "characters": 3532,
+      "headings": [
+        "NTLM authentication",
+        "NTLM noninteractive authentication",
+        "Related content"
+      ]
+    },
+    {
+      "id": "kerberos",
+      "label": "Microsoft — Kerberos authentication overview",
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "checkedAt": "2026-09-07T13:41:23.855Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "title": "Kerberos authentication overview in Windows Server | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/kerberos.html",
+      "sha256": "c4e7b6dc6fb2be5186dd5a2fc0f13fdf34d7f08fac16f941a3e47363968b1121",
+      "textFile": ".cache/missing-reference-review/captures/kerberos.txt",
+      "textSha256": "53e90c63a776324eb5b801895aa31ad17f604b66b25a291661a610fb86b7288e",
+      "characters": 4487,
+      "headings": [
+        "Practical applications",
+        "Delegated authentication",
+        "Single sign on",
+        "Interoperability",
+        "More efficient authentication to servers",
+        "Mutual authentication",
+        "Encryption types",
+        "Related content"
+      ]
+    },
+    {
+      "id": "time",
+      "label": "Microsoft — [MS-AUTHSOD]: Security",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+      "checkedAt": "2026-09-07T13:41:23.855Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+      "title": "[MS-AUTHSOD]: Security | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/time.html",
+      "sha256": "edc0cbeed1fe6b87bcd122cd687e869e3ff274c01a3094fcc9696d776b26df99",
+      "textFile": ".cache/missing-reference-review/captures/time.txt",
+      "textSha256": "db68ab43bbc3630363bfa8a3456f5a3b804897d3d2f068b05fdf868bc7ade23e",
+      "characters": 1487,
+      "headings": []
+    },
+    {
+      "id": "wmi",
+      "label": "Microsoft — Windows Management Instrumentation",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "title": "Windows Management Instrumentation - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/wmi.html",
+      "sha256": "d7073fc73e5e1c0ddb37a18b332a6e61e6e67e231e2e380c5acb75eb799b6761",
+      "textFile": ".cache/missing-reference-review/captures/wmi.txt",
+      "textSha256": "905b83114346bcd66d6e12c167cb4f12c3c4e3ce472b43c7b93719ac4aec6171",
+      "characters": 3200,
+      "headings": [
+        "Where is WMI applicable?",
+        "Developer audience",
+        "Run-time requirements",
+        "In this section"
+      ]
+    },
+    {
+      "id": "winrm",
+      "label": "Microsoft — Windows Remote Management",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "title": "Windows Remote Management - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/winrm.html",
+      "sha256": "06d3aaab1cb8fa39dbaeab126c87c18ed663adcbbb319daaf682b5955d968d5f",
+      "textFile": ".cache/missing-reference-review/captures/winrm.txt",
+      "textSha256": "b6bcf643e8a0bc7c7f38d7c3fe667f8ffb9740503cb8d2301c79a708a5eea19a",
+      "characters": 3072,
+      "headings": [
+        "Who is WinRM for?",
+        "Where can I use WinRM?",
+        "Run-time requirements",
+        "See also"
+      ]
+    },
+    {
+      "id": "rdp",
+      "label": "Microsoft — Remote Desktop Protocol",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+      "title": "Remote Desktop Protocol - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/rdp.html",
+      "sha256": "0aa4268f832f0f68c88d5e3f1482ce63b64dfeed73cd740168c3259209321006",
+      "textFile": ".cache/missing-reference-review/captures/rdp.txt",
+      "textSha256": "bab5dfe01ec1db23a962fec99ebdd811b77c1b6c61644d4c352bf8e839bc342d",
+      "characters": 4558,
+      "headings": [
+        "Basic Architecture",
+        "Features"
+      ]
+    },
+    {
+      "id": "configuration",
+      "label": "Microsoft — Service Configuration",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+      "title": "Service Configuration - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/configuration.html",
+      "sha256": "220dc2382e3e7d9bdfbc685018cad24d1f2945cf7d3285fdd34565e9a0a8d7c6",
+      "textFile": ".cache/missing-reference-review/captures/configuration.txt",
+      "textSha256": "880e2eb0e5973f5da6d2d36fba57a20ee6b5f39c799dfd10ab81d210b8ac2088",
+      "characters": 1255,
+      "headings": [
+        "Related topics"
+      ]
+    },
+    {
+      "id": "database",
+      "label": "Microsoft — Database of Installed Services",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+      "title": "Database of Installed Services - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/database.html",
+      "sha256": "a2b76af3e9c449b9c2eeafed370778f7a861aecf3402438dfa6022d4c8bc69df",
+      "textFile": ".cache/missing-reference-review/captures/database.txt",
+      "textSha256": "39150ec306afc9b95d507483c266460fba5ac6691b900972c920af9630cc129e",
+      "characters": 2808,
+      "headings": []
+    },
+    {
+      "id": "serviceSecurity",
+      "label": "Microsoft — Service Security and Access Rights",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "title": "Service Security and Access Rights - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/serviceSecurity.html",
+      "sha256": "5f83962a259e3e44c91e96fa25b2a681c130e7cd24d901f2c54786ccb8afb915",
+      "textFile": ".cache/missing-reference-review/captures/serviceSecurity.txt",
+      "textSha256": "40f2f14791454c01a5eb4f362c130f28b2e63eda9d1a3691de55abe332856f33",
+      "characters": 8741,
+      "headings": [
+        "Access Rights for the Service Control Manager",
+        "Access Rights for a Service"
+      ]
+    },
+    {
+      "id": "fileSecurity",
+      "label": "Microsoft — File Security and Access Rights",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "title": "File Security and Access Rights - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/fileSecurity.html",
+      "sha256": "39e93d992e3acd44e5463517b92b226c6aefbb8dd4c4f0b009605e2c4b8303fe",
+      "textFile": ".cache/missing-reference-review/captures/fileSecurity.txt",
+      "textSha256": "ebcbe328159c8171b323f3ae29f69d859080f6f9156318ebdefc590423558168",
+      "characters": 9164,
+      "headings": [
+        "Security descriptors",
+        "File access rights",
+        "Backup and restore access rights",
+        "Related content"
+      ]
+    },
+    {
+      "id": "serviceAccounts",
+      "label": "Microsoft — Service User Accounts",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "title": "Service User Accounts - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/serviceAccounts.html",
+      "sha256": "172f2f90044f49c2536620f2ff7319b7e34fa8006551d5f7166f00cbc52682ef",
+      "textFile": ".cache/missing-reference-review/captures/serviceAccounts.txt",
+      "textSha256": "dae4544f97227499707621342d32ed7e9a3a60e09e55cde9edfd88857fd373d8",
+      "characters": 1909,
+      "headings": []
+    },
+    {
+      "id": "registry",
+      "label": "Microsoft — Registry Key Security and Access Rights",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "title": "Registry Key Security and Access Rights - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/registry.html",
+      "sha256": "f5031b24cbe27469052eadd49f2c83aba4b92345c3003cb7f83ab131b33614f8",
+      "textFile": ".cache/missing-reference-review/captures/registry.txt",
+      "textSha256": "6da4b6113a1db9eeff180013adf1dec8d687bd691f68dfff7768610f4cbdf0de",
+      "characters": 3484,
+      "headings": []
+    },
+    {
+      "id": "dll",
+      "label": "Microsoft — About Dynamic-Link Libraries",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "checkedAt": "2026-09-07T13:41:25.401Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "title": "About Dynamic-Link Libraries - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/dll.html",
+      "sha256": "49378a635982743c551aa102997ac1e75f385b2e1e39ee68a258d670d8e2e254",
+      "textFile": ".cache/missing-reference-review/captures/dll.txt",
+      "textSha256": "f9c32bbcb99b50d7fe5a32ac84a5637829b2571223e6e26bb9257263d0cf2c56",
+      "characters": 2555,
+      "headings": [
+        "Types of Dynamic Linking",
+        "DLLs and Memory Management"
+      ]
+    },
+    {
+      "id": "processes",
+      "label": "Microsoft — Processes and Threads",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+      "checkedAt": "2026-09-07T13:41:25.401Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+      "title": "Processes and Threads - Win32 apps | Microsoft Learn",
+      "file": ".cache/missing-reference-review/captures/processes.html",
+      "sha256": "2cf655d852cc906982a97e8cb0505a7c62d439eca9851ee3a6ab3df62922e385",
+      "textFile": ".cache/missing-reference-review/captures/processes.txt",
+      "textSha256": "9699d5de549499217f99a3abc449e1c4a5bd1dedd93aa9247f67ba1543b9a344",
+      "characters": 1420,
+      "headings": []
+    }
+  ]
+}

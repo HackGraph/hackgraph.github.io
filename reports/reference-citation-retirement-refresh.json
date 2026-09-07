@@ -1,0 +1,83 @@
+{
+  "checkedAt": "2026-09-07T14:11:11.371Z",
+  "scope": "One taxonomy publication identity refresh and three retired citation URLs. Other HTTP observations retain their existing timestamps and values. Retirement does not mean that a failed request recovered.",
+  "results": [
+    {
+      "url": "https://attack.mitre.org/techniques/T1606/002/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/techniques/T1606/002/",
+      "status": "responded",
+      "checkedAt": "2026-09-07T14:09:23.493Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/techniques/T1606/002/"
+        }
+      ]
+    }
+  ],
+  "superseded": [
+    {
+      "url": "https://attack.mitre.org/techniques/T1606/002/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/techniques/T1606/002/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/techniques/T1606/002/"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:05.946Z"
+    }
+  ],
+  "retired": [
+    {
+      "url": "https://blog.exodusintel.com",
+      "code": 200,
+      "finalUrl": "https://blog.exodusintel.com/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://blog.exodusintel.com/"
+        }
+      ],
+      "checkedAt": "2026-09-07T11:16:33.835Z"
+    },
+    {
+      "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "code": 200,
+      "finalUrl": "https://www.paloaltonetworks.com/idira",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.paloaltonetworks.com/idira"
+        }
+      ],
+      "checkedAt": "2026-09-07T11:17:02.227Z"
+    },
+    {
+      "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "code": 0,
+      "status": "unreachable",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 0,
+          "error": {
+            "name": "TypeError",
+            "code": "CERT_HAS_EXPIRED",
+            "message": "fetch failed"
+          }
+        }
+      ],
+      "checkedAt": "2026-09-07T11:17:06.468Z"
+    }
+  ]
+}

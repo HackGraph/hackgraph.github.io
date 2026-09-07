@@ -1,0 +1,108 @@
+{
+  "checkedAt": "2026-09-07T09:16:11.502Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 117,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "32eaa6fcd619f44576f82b0b91f17446715fdd8c7d5dc8f28763950d12291476",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "97d5fe8ad751245e5e556d8e774ca3fc815d833e27605ed64c1016945395cfd4",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "engine/style.css",
+    "engine/view.js",
+    "glossary.html",
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedPageHashes": {
+    "reference.html": "f80f87c3562130c1307634974b66c4c06388de4317b102a48d12da534091159f",
+    "reference/active-directory.html": "cc4e1c07cc013316d275b7dcabeda3c5b8b74d5b5eb5f7f238a547e0f8f0717c",
+    "reference/windows-privilege-escalation.html": "b79ab51d0f0aae384077f5ce6f228359d5e3f9c7eeb2a592d8717ab09cc53260",
+    "reference/linux-privilege-escalation.html": "d87cf57a280b7fdd4e9c304f761f626ac9610fffdf771d38178f755700f42129",
+    "about.html": "abf6ce9a2b8b449137e0bb3d767d89a466be76201331d1279f8806db1b620389",
+    "glossary.html": "46bc64242cd35ec66babe51bc24141184ef215d52dfb82934868d0e9226d76c9",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "d034390b5fddbb8598d167fa7c4265ea500459e4cc07b7599014e611d1f4522d",
+  "graphDataUnchanged": true,
+  "presentation": {
+    "states": 18,
+    "genericNodeAndConnectionStates": 8,
+    "actualNodeStates": 8,
+    "javaScriptDisabledReadingStates": 2,
+    "axeCheckedStates": 16,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true,
+    "screenshots": 10,
+    "enlargedTextComputedFontVerified": true,
+    "keyboardActivationDestinationMocked": true
+  },
+  "claimSourceFidelity": {
+    "selectedClaims": 180,
+    "test": "tools/reference.test.mjs",
+    "fields": [
+      "claim text",
+      "source section",
+      "citation order",
+      "reference labels",
+      "destination URLs"
+    ]
+  },
+  "hashes": {
+    "about.html": "abf6ce9a2b8b449137e0bb3d767d89a466be76201331d1279f8806db1b620389",
+    "engine/style.css": "b7be02407b6dab7db10a60befda728f9214ae65218e99c31443d4708d0b38645",
+    "engine/view.js": "54cfe1d652836a78f11519080cb25a2b84064dad8b44ece3143ea82d2574a4b3",
+    "glossary.html": "46bc64242cd35ec66babe51bc24141184ef215d52dfb82934868d0e9226d76c9",
+    "reference.html": "f80f87c3562130c1307634974b66c4c06388de4317b102a48d12da534091159f",
+    "reference/active-directory.html": "cc4e1c07cc013316d275b7dcabeda3c5b8b74d5b5eb5f7f238a547e0f8f0717c",
+    "reference/linux-privilege-escalation.html": "d87cf57a280b7fdd4e9c304f761f626ac9610fffdf771d38178f755700f42129",
+    "reference/windows-privilege-escalation.html": "b79ab51d0f0aae384077f5ce6f228359d5e3f9c7eeb2a592d8717ab09cc53260",
+    "tools/gen-reference.mjs": "fdccd763047277dd09f90adef7c43a490f9cab584156121298cbf0623bdb4f8a",
+    "tools/reference.test.mjs": "4167a8337430f93d4b08b3509f8d4c8c865f24599cd0853e15d2219197448c19",
+    "reports/visuals/citations-pe-svc-account-1440-dark.png": "7463cc726f8c1b2833a4c35f3fb5f9dac3ff9ba1472450eb631ea6c1722fad99",
+    "reports/visuals/citations-pe-svc-account-1440-light.png": "e04806a726e5fecaca70b7e326165413e23e903b0ddeb3d9089783330d76bee5",
+    "reports/visuals/citations-pe-svc-account-390-dark.png": "d04510c2b3f8adb8cbabb82089d4e179c1e879a8eb25fdbb578daca7892ce7f5",
+    "reports/visuals/citations-pe-svc-account-390-light.png": "1c9e2097c67f8febeb1346bd10bbf5c40a9061227eec968d35e327a3c8c52a7f",
+    "reports/visuals/citations-lin-hostcontrols-1440-dark.png": "fcf5cc12870114892c7773ec61aafc5038aea0d951877d4c41b6430d722061b1",
+    "reports/visuals/citations-lin-hostcontrols-1440-light.png": "f576471f02b2f0d4f86b7f1e0b95108102479bc65f1b673523602aa7419ddf8d",
+    "reports/visuals/citations-lin-hostcontrols-390-dark.png": "ad3684ed9bf3bc2fc01a108124e6d0cd30686b5fde634b44e737d22e9fbb10eb",
+    "reports/visuals/citations-lin-hostcontrols-390-light.png": "817e41713c2b585668b5cfe5c6d49692a8d7d25efe418967319c08c5b6a05b85",
+    "reports/visuals/citations-reading-1440.png": "938f543d0c70d2420973d99e63cf7c8c52ba7a0aa3a6e4a875242c446d47d8c7",
+    "reports/visuals/citations-reading-390.png": "9c6a6acac2ef789edc3025e857429751b4cf28203b6fabdb72147c5194b8d959",
+    "reports/citation-panel-check.json": "6b769a698e1666ae8bfe06c07c57a81244b1ef128c6d8ebc82be83b8b6854680",
+    "reports/citation-presentation.patch": "37f2cae6e4dc19a6819a1d8598f56a82e33292a73f4ee7628ff38ce14d9c7aa1",
+    ".cache/citation-presentation/check.mjs": "4cb9549e235f11a0f6a5ab1254acae8ffe6e60d1c7f4ad3bd0d3eacf4c49e365",
+    ".cache/citation-presentation/final-audit.mjs": "39650eed12db59019319f6f4e5151dd3f5458e5210aa1e78d9647994c1386afb"
+  },
+  "logPath": ".cache/citation-presentation/full-tests.log",
+  "logSha256": "fb5beaf433b10b92f9c4f996b3eaa72dec24001c73bb674c4a8cb382a4bb0773",
+  "scope": "Citation presentation, keyboard navigation, generated-page fidelity and local artifact checks. Authored data, references and review statuses are unchanged. No source-claim comparison, operational route or command validation, physical-device testing, human review, new motion benchmark, hosted workflow run or deployment."
+}

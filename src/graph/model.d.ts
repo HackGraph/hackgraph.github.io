@@ -1,8 +1,7 @@
 /**
  * Generic graph-platform data contract.
  *
- * This is the boundary between the ENGINE (this `graph/` package plus the reusable
- * `components/` widgets) and any DOMAIN that plugs into it. Everything here is
+ * This is the boundary between the ENGINE (the pure engine and embeddable renderer) and any DOMAIN that plugs into it. Everything here is
  * domain-agnostic: a node has an id, a label, a group it belongs to, and an optional
  * one-line summary — nothing about security, MITRE, Windows, exploits, etc.
  *
@@ -13,24 +12,23 @@
  */
 
 /** Drives node styling and whether a node is a terminal goal.
- *  A `category` groups other nodes (a folder/section header): clicking one expands
- *  it rather than opening a detail panel. Omitted ⇒ `technique`. */
+ *  A `category` groups other nodes (a folder/section header). Omitted ⇒ `technique`. */
 export type NodeKind = 'start' | 'technique' | 'goal' | 'category';
 
-/** An ordered group that nodes belong to — rendered as a left→right column and
- *  carrying the color used on the node rail/badge, the legend, and the minimap.
+/** An ordered group that nodes belong to, carrying their category color.
+ *  Layout columns follow graph ranks, not phase order.
  *  (The security maps model these as attack "phases"; other domains might use
  *  stages, lanes, or categories — the engine only needs id + label + color.) */
 export interface PhaseDef {
   id: string;
   label: string;
-  /** Hex color for this group's rail/badge/legend/minimap. */
+  /** CSS color for this group. */
   color: string;
 }
 
 /** A single node in the graph. Domains extend this with their own detail fields. */
 export interface GraphNode {
-  /** Unique within a map; ids may be shared across authoring chains to converge. */
+  /** Unique within a map; edges reference this id when topics converge. */
   id: string;
   /** Short name shown on the node card. */
   label: string;
@@ -47,9 +45,9 @@ export interface GraphEdge {
   source: string;
   target: string;
   /**
-   * Canonical relationship id (see data/relationships.ts). It supplies a reusable caption
-   * and explanation so same-meaning edges read the same everywhere; `label` and
-   * `description` below each override their half of it for one specific edge.
+   * Optional relationship id resolved by the domain adapter. It may supply a
+   * reusable caption and a separately presented definition. The generic engine
+   * does not interpret domain meaning or infer causality from the endpoints.
    */
   rel?: string;
   /** Caption + explanation surfaced when the edge is inspected. */
@@ -57,7 +55,7 @@ export interface GraphEdge {
   description?: string;
 }
 
-/** A complete, registrable map: a directed graph (a DAG, possibly converging). */
+/** A complete, registrable map: a directed graph, possibly converging or cyclic. */
 export interface GraphMap {
   id: string;
   name: string;

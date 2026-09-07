@@ -1,99 +1,68 @@
-#!/usr/bin/env node
-// Liveness check for every reference/tool URL in the technique data.
-// FAIL on dead links (404 / 5xx / unreachable); WARN on known bot-blocked
-// hosts that 403 automated requests but are valid in a browser.
+// HTTP availability only. This does not verify page content or cited claims.
+import { mkdir, writeFile } from 'node:fs/promises';
+import { pathToFileURL } from 'node:url';
+import { MAPS } from '../src/data/index.js';
+import { GLOSSARY } from '../src/data/glossary.js';
+import { sourceRecords } from '../src/data/editorial.js';
+import { RELATIONSHIPS } from '../src/data/relationships.js';
 
-// Valid pages that reject automated requests (verified manually in-browser).
-const BOT_BLOCKED = ['medium.com', 'nvd.nist.gov', 'rapid7.com', 'secureworks.com', 'research.ifcr.dk'];
-const UA = 'Mozilla/5.0 (HackGraph link-check)';
-const TIMEOUT = 20000;
-const CONCURRENCY = 8;
-
-// Read the DATA, not the files. Scraping source text for `url:` literals silently
-// checked nothing the moment the content stopped being TypeScript: the walker still
-// looked for `.ts`, found none, and reported "All 0 URLs reachable" every week.
-const { MAPS } = await import('../src/data/index.js');
-
-const urls = new Set();
-const add = u => { if (typeof u === 'string' && /^https?:/.test(u)) urls.add(u); };
-for (const map of MAPS) {
-  for (const n of map.nodes) {
-    add(n.mitre?.url);
-    for (const r of n.references ?? []) add(r.url);
-    for (const t of n.tools ?? []) add(typeof t === 'string' ? null : t?.url);
+export function collectUrls(maps = MAPS) {
+  const urls = new Set();
+  for (const m of maps) for (const entry of [...m.nodes, ...m.edges]) {
+    for (const r of [...sourceRecords(entry), ...(entry.tools || [])]) if (/^https?:/.test(r.url)) urls.add(r.url);
   }
-  for (const e of map.edges) {
-    add(e.mitre?.url);
-    for (const r of e.references ?? []) add(r.url);
-    for (const t of e.tools ?? []) add(typeof t === 'string' ? null : t?.url);
-  }
-}
-const list = [...urls].sort();
-if (!list.length) {
-  console.error('No URLs found — the data shape changed and this check is lying. Fix it.');
-  process.exit(1);
-}
-console.log(`Checking ${list.length} unique reference URLs…`);
-
-// One fetch with its own timeout, so a HEAD stall does not eat the GET's budget.
-async function fetchOnce(url, method) {
-  const ctrl = new AbortController();
-  const to = setTimeout(() => ctrl.abort(), TIMEOUT);
-  try {
-    return await fetch(url, { method, redirect: 'follow', signal: ctrl.signal, headers: { 'user-agent': UA } });
-  } finally {
-    clearTimeout(to);
-  }
+  for (const term of GLOSSARY) for (const s of term.sources || []) urls.add(s.url);
+  for (const definition of Object.values(RELATIONSHIPS)) for (const s of definition.references || []) urls.add(s.url);
+  return [...urls].sort();
 }
 
-async function status(url) {
-  // HEAD is cheap, but plenty of CDNs and blogs stall it, reject it, or 404 it
-  // while a real browser GET returns 200 (e.g. dirkjanm.io). So fall back to GET
-  // on ANY error or non-2xx/3xx before calling a link dead, instead of trusting a
-  // single HEAD. Failures are rare, so the extra request costs little.
-  let res = null;
-  try {
-    res = await fetchOnce(url, 'HEAD');
-  } catch {
-    // HEAD timed out or the connection failed; the GET retry below decides.
-  }
-  if (!res || res.status >= 400 || [403, 405, 501, 999].includes(res.status)) {
+export function classify(code, finalUrl = '') {
+  if (code === 0) return 'unreachable';
+  if ([401, 403, 429, 999].includes(code)) return 'blocked';
+  if ([404, 410].includes(code) || /\/(?:en\/)?404\.html(?:[?#]|$)/.test(finalUrl)) return 'not-found';
+  if (code >= 200 && code < 400) return 'responded';
+  return 'unavailable';
+}
+
+export async function checkUrl(url, { fetcher = fetch, timeout = 20000 } = {}) {
+  const attempts = [];
+  async function once(method) {
     try {
-      res = await fetchOnce(url, 'GET');
-    } catch {
-      return 0;
+      const response = await fetcher(url, { method, redirect: 'follow', signal: AbortSignal.timeout(timeout), headers: { 'user-agent': 'HackGraph source availability check' } });
+      const result = { code: response.status, finalUrl: response.url || url };
+      await response.body?.cancel();
+      attempts.push({ method, ...result });
+      return result;
+    } catch (error) {
+      attempts.push({ method, code: 0, error: { name: error.name || 'Error',
+        code: error.cause?.code || error.code || null, message: String(error.message || error).slice(0, 300) } });
+      throw error;
     }
   }
-  // Soft-404: some GitBook sites (e.g. HackTricks) serve a 200 that redirects to /404.html.
-  if (res.url && /\/(en\/)?404\.html$/.test(res.url)) return 404;
-  return res.status;
-}
-
-const results = [];
-let idx = 0;
-async function worker() {
-  while (idx < list.length) {
-    const url = list[idx++];
-    results.push({ url, code: await status(url) });
+  let result;
+  try { result = await once('HEAD'); } catch { /* GET gets its own timeout */ }
+  if (!result || result.code >= 400) {
+    try { result = await once('GET'); } catch { result = { code: 0, finalUrl: null }; }
   }
-}
-await Promise.all(Array.from({ length: CONCURRENCY }, worker));
-
-const fails = [];
-const warns = [];
-for (const { url, code } of results) {
-  if (code >= 200 && code < 400) continue;
-  const blocked = BOT_BLOCKED.some((d) => url.includes(d));
-  (blocked && (code === 403 || code === 429 || code === 0) ? warns : fails).push({ url, code });
+  return { url, ...result, status: classify(result.code, result.finalUrl || ''), attempts, checkedAt: new Date().toISOString() };
 }
 
-if (warns.length) {
-  console.log(`\n⚠  ${warns.length} bot-blocked (valid in browser):`);
-  for (const w of warns.sort((a, b) => a.url.localeCompare(b.url))) console.log(`   ${w.code}  ${w.url}`);
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  const urls = collectUrls();
+  if (!urls.length) throw new Error('No source URLs found');
+  console.log(`Checking ${urls.length} URLs (HTTP availability only)…`);
+  let next = 0;
+  const results = [];
+  await Promise.all(Array.from({ length: 8 }, async () => {
+    while (next < urls.length) results.push(await checkUrl(urls[next++]));
+  }));
+  results.sort((a, b) => a.url.localeCompare(b.url));
+  const counts = {};
+  for (const r of results) counts[r.status] = (counts[r.status] || 0) + 1;
+  const report = { checkedAt: new Date().toISOString(), scope: 'HTTP availability, not source accuracy or claim verification', counts, results };
+  await mkdir(new URL('../reports/', import.meta.url), { recursive: true });
+  await writeFile(new URL('../reports/reference-availability.json', import.meta.url), JSON.stringify(report, null, 2) + '\n');
+  console.log(JSON.stringify(counts));
+  for (const r of results.filter(r => r.status !== 'responded')) console.log(`${r.status} (${r.code}) ${r.url}`);
+  if (results.some(r => !['responded', 'blocked'].includes(r.status))) process.exitCode = 1;
 }
-if (fails.length) {
-  console.log(`\n✖  ${fails.length} dead/unreachable:`);
-  for (const f of fails.sort((a, b) => a.url.localeCompare(b.url))) console.log(`   ${f.code}  ${f.url}`);
-  process.exit(1);
-}
-console.log(`\n✓  All ${list.length} URLs reachable (${warns.length} bot-blocked warnings).`);

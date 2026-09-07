@@ -1,0 +1,122 @@
+{
+  "checkedAt": "2026-09-07T11:46:34.589Z",
+  "browser": "153.0.8010.12",
+  "scope": "Citation-destination notices and source-type presentation, preserved selected claims, keyboard source-link focus, overflow and WCAG-tagged axe checks in four actual category-panel states and two reading-guide states. Two JavaScript-disabled reading-page states have overflow and source-type checks only; no axe. No content or operational review.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "surface": "actual-category-panel",
+      "id": "persist-fed",
+      "width": 1440,
+      "theme": "dark",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "claims": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/article-provenance-panel-1440.png"
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "persist-fed",
+      "width": 1440,
+      "theme": "light",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "claims": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "persist-fed",
+      "width": 390,
+      "theme": "dark",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "claims": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "actual-category-panel",
+      "id": "persist-fed",
+      "width": 390,
+      "theme": "light",
+      "javaScriptEnabled": true,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "claims": 3,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/article-provenance-panel-390.png"
+    },
+    {
+      "surface": "reading-page",
+      "id": "persist-fed",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "persist-fed",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "sourceKinds": [
+        "primary",
+        "primary",
+        "primary",
+        "research"
+      ],
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/article-provenance-reading-mobile.png"
+    },
+    {
+      "surface": "reading-guide",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "reading-guide",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/article-provenance-guide-mobile.png"
+    }
+  ]
+}

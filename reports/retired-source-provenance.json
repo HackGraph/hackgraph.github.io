@@ -1,0 +1,59 @@
+{
+  "scope": "Historical source-type and destination observations for citations retired in reports/citation-retirement-review.json. These records are preserved for audit and are not active publication classifications.",
+  "retiredAt": "2026-09-07",
+  "groups": [
+    {
+      "id": "article-publication-013",
+      "kind": "research",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Publication identity and type only. No comparison of graph claims, procedures, commands, applicability, mappings or route viability.",
+      "basis": "The captured article or paper presents attributed security research or analysis. The publication title, byline or named publishing site identifies the material. The research label includes follow-up analysis and archived research publications; it does not assert first discovery, peer review, current applicability or correctness. This citation identifies the research blog index, not a specific research article. Claim-to-publication correspondence remains unresolved.",
+      "urls": [
+        "https://blog.exodusintel.com"
+      ],
+      "evidence": [
+        {
+          "url": "https://blog.exodusintel.com",
+          "title": "Homepage - Exodus Intelligence",
+          "section": "Publication title, author or publishing-site attribution, and publication-form metadata",
+          "captureSha256": "9c2cf74adda560c8323b64aa76da3b6c2f856a55cd4b12977e79b79754d909f0"
+        }
+      ]
+    },
+    {
+      "id": "article-publication-145",
+      "kind": "research",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Publication identity and type only. No comparison of graph claims, procedures, commands, applicability, mappings or route viability.",
+      "basis": "The captured article or paper presents attributed security research or analysis. The publication title, byline or named publishing site identifies the material. The research label includes follow-up analysis and archived research publications; it does not assert first discovery, peer review, current applicability or correctness. Publication identity was observed through the web reader, which may return indexed content. The separate live response is retained and is not reported as successful article retrieval. The live cited URL redirects to a product landing page. The indexed publisher article identifies the original title, Shaked Reiner and 21 November 2017. That establishes publication identity while leaving the live citation-destination problem visible.",
+      "urls": [
+        "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps"
+      ],
+      "evidence": [
+        {
+          "url": "https://www.cyberark.com/resources/all-blog-posts/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+          "title": "Golden SAML: Newly Discovered Attack Technique Forges Authentication to Cloud Apps",
+          "section": "Indexed publisher article heading and author/date block; the live cited URL redirects to a product landing page",
+          "captureSha256": "b5dcb95462f02e7d12a46aae221eb8594426473ff937136d6d1596bfeef4913c"
+        }
+      ]
+    }
+  ],
+  "destinations": [
+    {
+      "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "status": "unrelated-destination",
+      "checkedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "observedTitle": "Idira | The Identity Security Platform - Palo Alto Networks",
+      "finalUrl": "https://www.paloaltonetworks.com/idira",
+      "basis": "The cited research-article URL redirects to a product landing page. Indexed publisher content separately identifies the original research publication.",
+      "captureSha256": "4b4e4e52ecee7a65677ed77d8fe5e2ee19cedac9818b7f01267f7f0cd9314381"
+    }
+  ]
+}

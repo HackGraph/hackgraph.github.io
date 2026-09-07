@@ -146,42 +146,149 @@ export const credentialAccessNodes = [
     ],
   },
   {
-    id: 'crack-hash-offline',
-    label: 'Crack Hash Offline',
-    phase: 'credential-access',
-    needs: 'none',
-    summary: 'Recover the cleartext from a roasted ticket or a Timeroast SNTP hash.',
-    description:
-      'Roasted tickets (Kerberoast TGS and AS-REP) are crackable offline with a wordlist + rules. A cracked service-account or user password becomes your next identity. RC4 material falls fast, AES material only if the password is weak. Timeroast material is not a Kerberos ticket but an MS-SNTP MAC, cracked with its own mode (31300); it yields a computer-account password.',
-    tools: [
-      { name: 'hashcat', url: 'https://hashcat.net/hashcat/' },
-      { name: 'john', url: 'https://www.openwall.com/john/' },
+    "id": "crack-hash-offline",
+    "label": "Crack Hash Offline",
+    "phase": "credential-access",
+    "needs": "none",
+    "summary": "Distinguish Kerberos authentication tickets from authenticated time synchronization.",
+    "description": "Kerberos uses session tickets in network authentication. Windows also uses NTP Authentication Extensions for authenticated clock synchronization between Kerberos clients and the Key Distribution Center. Authentication tickets and time-synchronization messages serve different protocol purposes.",
+    "tools": [
+      {
+        "name": "hashcat",
+        "url": "https://hashcat.net/hashcat/"
+      },
+      {
+        "name": "john",
+        "url": "https://www.openwall.com/john/"
+      }
     ],
-    commands: [
+    "commands": [
       {
-        label: 'Kerberoast TGS (mode 13100)',
-        code: 'hashcat -m 13100 tgs.txt rockyou.txt -r rules/best64.rule',
-        lang: 'bash',
+        "label": "Kerberoast TGS (mode 13100)",
+        "code": "hashcat -m 13100 tgs.txt rockyou.txt -r rules/best64.rule",
+        "lang": "bash"
       },
       {
-        label: 'AS-REP RC4 (mode 18200); AES AS-REPs need John, see below',
-        code: 'hashcat -m 18200 asrep.txt rockyou.txt -r rules/best64.rule',
-        lang: 'bash',
+        "label": "AS-REP RC4 (mode 18200); AES AS-REPs need John, see below",
+        "code": "hashcat -m 18200 asrep.txt rockyou.txt -r rules/best64.rule",
+        "lang": "bash"
       },
       {
-        label: 'AES AS-REP (etype 17/18): stock hashcat has no mode, use John',
-        code: 'john --format=krb5asrep --wordlist=rockyou.txt asrep_aes.txt',
-        lang: 'bash',
+        "label": "AES AS-REP (etype 17/18): stock hashcat has no mode, use John",
+        "code": "john --format=krb5asrep --wordlist=rockyou.txt asrep_aes.txt",
+        "lang": "bash"
       },
       {
-        label: 'Timeroast SNTP MAC (mode 31300; --username strips the RID prefix)',
-        code: 'hashcat -m 31300 --username timeroast_hashes.txt rockyou.txt',
-        lang: 'bash',
-      },
+        "label": "Timeroast SNTP MAC (mode 31300; --username strips the RID prefix)",
+        "code": "hashcat -m 31300 --username timeroast_hashes.txt rockyou.txt",
+        "lang": "bash"
+      }
     ],
-    requires: ['A roasted ticket/hash', 'A weak-enough password'],
-    mitre: mitre('T1110.002'),
-    opsec: 'Offline and invisible to the target. Strong/AES-only passwords resist this; escalate by another method if cracking fails.',
+    "requires": [
+      "A roasted ticket/hash",
+      "A weak-enough password"
+    ],
+    "mitre": {
+      "id": "T1110.002",
+      "url": "https://attack.mitre.org/techniques/T1110/002/"
+    },
+    "opsec": "Offline and invisible to the target. Strong/AES-only passwords resist this; escalate by another method if cracking fails.",
+    "references": [
+      {
+        "label": "Microsoft — Kerberos authentication overview",
+        "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — [MS-AUTHSOD]: Security",
+        "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "hashcat -m 13100 tgs.txt rockyou.txt -r rules/best64.rule",
+            "label": "Kerberoast TGS (mode 13100)",
+            "lang": "bash"
+          },
+          {
+            "code": "hashcat -m 18200 asrep.txt rockyou.txt -r rules/best64.rule",
+            "label": "AS-REP RC4 (mode 18200); AES AS-REPs need John, see below",
+            "lang": "bash"
+          },
+          {
+            "code": "john --format=krb5asrep --wordlist=rockyou.txt asrep_aes.txt",
+            "label": "AES AS-REP (etype 17/18): stock hashcat has no mode, use John",
+            "lang": "bash"
+          },
+          {
+            "code": "hashcat -m 31300 --username timeroast_hashes.txt rockyou.txt",
+            "label": "Timeroast SNTP MAC (mode 31300; --username strips the RID prefix)",
+            "lang": "bash"
+          }
+        ],
+        "description": "Kerberos uses session tickets in network authentication. Windows also uses NTP Authentication Extensions for authenticated clock synchronization between Kerberos clients and the Key Distribution Center. Authentication tickets and time-synchronization messages serve different protocol purposes.",
+        "id": "crack-hash-offline",
+        "label": "Crack Hash Offline",
+        "mitre": {
+          "id": "T1110.002",
+          "url": "https://attack.mitre.org/techniques/T1110/002/"
+        },
+        "needs": "none",
+        "opsec": "Offline and invisible to the target. Strong/AES-only passwords resist this; escalate by another method if cracking fails.",
+        "phase": "credential-access",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Kerberos authentication overview",
+            "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — [MS-AUTHSOD]: Security",
+            "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df"
+          }
+        ],
+        "requires": [
+          "A roasted ticket/hash",
+          "A weak-enough password"
+        ],
+        "summary": "Distinguish Kerberos authentication tickets from authenticated time synchronization.",
+        "tools": [
+          {
+            "name": "hashcat",
+            "url": "https://hashcat.net/hashcat/"
+          },
+          {
+            "name": "john",
+            "url": "https://www.openwall.com/john/"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Kerberos uses renewable session tickets for authentication to servers.",
+          "section": "Microsoft — Kerberos authentication overview — More efficient authentication to servers",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+          ]
+        },
+        {
+          "text": "Windows uses NTP Authentication Extensions for authenticated time synchronization between Kerberos clients and the Key Distribution Center.",
+          "section": "Microsoft — [MS-AUTHSOD]: Security — 2.9 Security: final paragraph",
+          "sources": [
+            "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'crack-encrypted-file',
@@ -211,60 +318,253 @@ hashcat -m 13400 h rockyou.txt`, lang: 'bash' },
     opsec: 'Cracking is entirely offline and invisible to the target; only the initial file read is logged. Strong passphrases resist it.',
   },
   {
-    id: 'service-account-creds',
-    label: 'Service Account Creds',
-    phase: 'lateral-movement',
-    needs: 'domain-user',
-    summary: 'Often over-privileged. Reuse them.',
-    description:
-      'Cracked service accounts frequently have local admin on many servers, or membership in privileged groups. Validate where these creds are admin, then move.',
-    tools: [{ name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' }],
-    commands: [
+    "id": "service-account-creds",
+    "label": "Service Account Creds",
+    "phase": "lateral-movement",
+    "needs": "domain-user",
+    "summary": "Understand the account identity used by a Windows service.",
+    "description": "A Windows service runs in the security context of its configured account. On a successful service logon, Windows attaches an access token to the service process. Resource access checks compare that token with the resource's security descriptor. The role service account identifies how the account is used; its resource permissions need to be described separately.",
+    "tools": [
       {
-        label: 'Find where the account is local admin',
-        code: "nxc smb hosts.txt -u svc_sql -p 'Summer2024!' | grep Pwn3d",
-        lang: 'bash',
-      },
+        "name": "NetExec",
+        "url": "https://github.com/Pennyw0rth/NetExec"
+      }
     ],
-    requires: ['Cracked service-account credentials'],
-    mitre: mitre('T1078.002'),
+    "commands": [
+      {
+        "label": "Find where the account is local admin",
+        "code": "nxc smb hosts.txt -u svc_sql -p 'Summer2024!' | grep Pwn3d",
+        "lang": "bash"
+      }
+    ],
+    "requires": [
+      "Cracked service-account credentials"
+    ],
+    "mitre": {
+      "id": "T1078.002",
+      "url": "https://attack.mitre.org/techniques/T1078/002/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Service User Accounts",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+        "section": "Opening definition; service access token and resource checks",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "nxc smb hosts.txt -u svc_sql -p 'Summer2024!' | grep Pwn3d",
+            "label": "Find where the account is local admin",
+            "lang": "bash"
+          }
+        ],
+        "description": "A Windows service runs in the security context of its configured account. On a successful service logon, Windows attaches an access token to the service process. Resource access checks compare that token with the resource's security descriptor. The role service account identifies how the account is used; its resource permissions need to be described separately.",
+        "id": "service-account-creds",
+        "label": "Service Account Creds",
+        "mitre": {
+          "id": "T1078.002",
+          "url": "https://attack.mitre.org/techniques/T1078/002/"
+        },
+        "needs": "domain-user",
+        "phase": "lateral-movement",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Service User Accounts",
+            "section": "Opening definition; service access token and resource checks",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          }
+        ],
+        "requires": [
+          "Cracked service-account credentials"
+        ],
+        "summary": "Understand the account identity used by a Windows service.",
+        "tools": [
+          {
+            "name": "NetExec",
+            "url": "https://github.com/Pennyw0rth/NetExec"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "A Windows service executes in its account's security context and receives an access token after a successful service logon.",
+          "section": "Microsoft, Service User Accounts — Opening definition; service access token and resource checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        },
+        {
+          "text": "Windows checks a service process's access token against a resource's security descriptor when deciding access.",
+          "section": "Microsoft, Service User Accounts — Opening definition; service access token and resource checks",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'lateral-movement-cme',
-    label: 'Remote Execution',
-    phase: 'lateral-movement',
-    needs: 'creds',
-    hub: true, // the creds-reuse / remote-exec convergence hub
-    summary: 'Pick a transport to run code on another host.',
-    description:
-      'Reuse credentials, an NT hash (PtH), or a ticket (PtT) to run code on another host, hunting a more privileged session or a route to a Domain Controller. Pick the transport by what you hold on the target: local admin gives SYSTEM via service exec (PsExec/SMBExec) or a scheduled task (atexec), while WMI (wmiexec) and DCOM (dcomexec) run code as the calling admin, not SYSTEM; Remote Management Users gives WinRM; Remote Desktop Users gives RDP; a plain login gives an SSH shell or MSSQL query access (OS commands via xp_cmdshell need sysadmin). Remote exec does not always require local admin.',
-    tools: [
-      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
-      { name: 'Impacket (psexec/smbexec/atexec/wmiexec/dcomexec)', url: 'https://github.com/fortra/impacket' },
-    ],
-    commands: [
+    "id": "lateral-movement-cme",
+    "label": "Remote Execution",
+    "phase": "lateral-movement",
+    "needs": "creds",
+    "hub": true,
+    "summary": "Distinguish Windows management infrastructure, management protocols and remote display.",
+    "description": "WMI supplies infrastructure for Windows management information and operations. WinRM implements the WS-Management protocol for exchanging management information. RDP carries remote display and user input for server-hosted Windows applications. These names describe different administrative technologies rather than a single interchangeable interface.",
+    "tools": [
       {
-        label: 'Find where your creds are admin, then exec',
-        code: `nxc smb hosts.txt -u svc_sql -p 'Summer2024!' -x "whoami /groups"`,
-        lang: 'bash',
+        "name": "NetExec",
+        "url": "https://github.com/Pennyw0rth/NetExec"
       },
       {
-        label: 'Run a PowerShell command (-X)',
-        code: "nxc smb <host> -u user -p pass -X '$PSVersionTable'",
-        lang: 'bash',
+        "name": "Impacket (psexec/smbexec/atexec/wmiexec/dcomexec)",
+        "url": "https://github.com/fortra/impacket"
+      }
+    ],
+    "commands": [
+      {
+        "label": "Find where your creds are admin, then exec",
+        "code": "nxc smb hosts.txt -u svc_sql -p 'Summer2024!' -x \"whoami /groups\"",
+        "lang": "bash"
       },
       {
-        label: 'Hunt logged-on users to find a pivot',
-        code: 'nxc smb 10.0.0.0/24 -u user -p pass --loggedon-users',
-        lang: 'bash',
+        "label": "Run a PowerShell command (-X)",
+        "code": "nxc smb <host> -u user -p pass -X '$PSVersionTable'",
+        "lang": "bash"
       },
+      {
+        "label": "Hunt logged-on users to find a pivot",
+        "code": "nxc smb 10.0.0.0/24 -u user -p pass --loggedon-users",
+        "lang": "bash"
+      }
     ],
-    requires: [
-      'Credentials, an NT hash (PtH), or a Kerberos ticket (PtT)',
-      'Authorization on the target: local admin, a remote-access group, or a valid service login',
+    "requires": [
+      "Credentials, an NT hash (PtH), or a Kerberos ticket (PtT)",
+      "Authorization on the target: local admin, a remote-access group, or a valid service login"
     ],
-    mitre: mitre('T1021'),
-    opsec: 'Each hop generates logon events (4624) keyed to the transport: type 3 for SMB/WMI, type 10 for RDP. Reuse legitimate admin tooling and change windows to blend in; do not spray every host at once.',
+    "mitre": {
+      "id": "T1021",
+      "url": "https://attack.mitre.org/techniques/T1021/"
+    },
+    "opsec": "Each hop generates logon events (4624) keyed to the transport: type 3 for SMB/WMI, type 10 for RDP. Reuse legitimate admin tooling and change windows to blend in; do not spray every host at once.",
+    "references": [
+      {
+        "label": "Microsoft — Windows Management Instrumentation",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Windows Remote Management",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft — Remote Desktop Protocol",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "nxc smb hosts.txt -u svc_sql -p 'Summer2024!' -x \"whoami /groups\"",
+            "label": "Find where your creds are admin, then exec",
+            "lang": "bash"
+          },
+          {
+            "code": "nxc smb <host> -u user -p pass -X '$PSVersionTable'",
+            "label": "Run a PowerShell command (-X)",
+            "lang": "bash"
+          },
+          {
+            "code": "nxc smb 10.0.0.0/24 -u user -p pass --loggedon-users",
+            "label": "Hunt logged-on users to find a pivot",
+            "lang": "bash"
+          }
+        ],
+        "description": "WMI supplies infrastructure for Windows management information and operations. WinRM implements the WS-Management protocol for exchanging management information. RDP carries remote display and user input for server-hosted Windows applications. These names describe different administrative technologies rather than a single interchangeable interface.",
+        "hub": true,
+        "id": "lateral-movement-cme",
+        "label": "Remote Execution",
+        "mitre": {
+          "id": "T1021",
+          "url": "https://attack.mitre.org/techniques/T1021/"
+        },
+        "needs": "creds",
+        "opsec": "Each hop generates logon events (4624) keyed to the transport: type 3 for SMB/WMI, type 10 for RDP. Reuse legitimate admin tooling and change windows to blend in; do not spray every host at once.",
+        "phase": "lateral-movement",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Windows Management Instrumentation",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Windows Remote Management",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft — Remote Desktop Protocol",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol"
+          }
+        ],
+        "requires": [
+          "Credentials, an NT hash (PtH), or a Kerberos ticket (PtT)",
+          "Authorization on the target: local admin, a remote-access group, or a valid service login"
+        ],
+        "summary": "Distinguish Windows management infrastructure, management protocols and remote display.",
+        "tools": [
+          {
+            "name": "NetExec",
+            "url": "https://github.com/Pennyw0rth/NetExec"
+          },
+          {
+            "name": "Impacket (psexec/smbexec/atexec/wmiexec/dcomexec)",
+            "url": "https://github.com/fortra/impacket"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "WMI provides infrastructure for management information and operations on Windows systems.",
+          "section": "Microsoft — Windows Management Instrumentation — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+          ]
+        },
+        {
+          "text": "WinRM implements WS-Management, a protocol for exchanging management information.",
+          "section": "Microsoft — Windows Remote Management — Opening definition and WS-Management purpose",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+          ]
+        },
+        {
+          "text": "RDP provides remote display and input for Windows applications running on a server.",
+          "section": "Microsoft — Remote Desktop Protocol — Opening definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol"
+          ]
+        }
+      ]
+    }
   },
 ];
 

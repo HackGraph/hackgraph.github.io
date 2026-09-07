@@ -1,0 +1,70 @@
+{
+  "scope": "Publication identity from the web reader and publisher listings. These observations may use indexed content and do not replace direct HTTP results or validate citing claims.",
+  "results": [
+    {
+      "url": "https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4",
+      "evidenceUrl": "https://research.ifcr.dk/certifried-active-directory-domain-privilege-escalation-cve-2022-26923-9e098fe298f4",
+      "checkedAt": "2026-09-07T11:28:30.868Z",
+      "method": "web-reader",
+      "indexedContentPossible": true,
+      "title": "Certifried: Active Directory Domain Privilege Escalation (CVE-2022–26923)",
+      "author": "Oliver Lyak",
+      "publishedAt": "2022-05-10",
+      "section": "Article heading and author/date block",
+      "file": ".cache/article-provenance-review/webreader-blocked.txt",
+      "sha256": "3a29d51e81cc572af2f5c9f5f8abe56e920738e197c7c5209a49cccf2d455299"
+    },
+    {
+      "url": "https://research.ifcr.dk/certipy-2-0-bloodhound-new-escalations-shadow-credentials-golden-certificates-and-more-34d1c26f0dc6",
+      "evidenceUrl": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+      "checkedAt": "2026-09-07T11:28:30.869Z",
+      "method": "web-reader",
+      "indexedContentPossible": true,
+      "title": "Certipy 2.0: BloodHound, New Escalations, Shadow Credentials, Golden Certificates, and more!",
+      "author": "Oliver Lyak",
+      "publishedAt": "2022-02-19",
+      "section": "Related-publication listing in the author's Certipy 4.0 article; the exact 2.0 article could not be retrieved",
+      "file": ".cache/article-provenance-review/webreader-related.txt",
+      "sha256": "e2cfdce1796a4f23266f0f8d18a9d9af3800eca97dd4f84934df7c7167684aa4"
+    },
+    {
+      "url": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+      "evidenceUrl": "https://research.ifcr.dk/certipy-4-0-esc9-esc10-bloodhound-gui-new-authentication-and-request-methods-and-more-7237d88061f7",
+      "checkedAt": "2026-09-07T11:28:30.870Z",
+      "method": "web-reader",
+      "indexedContentPossible": true,
+      "title": "Certipy 4.0: ESC9 & ESC10, BloodHound GUI, New Authentication and Request Methods — and more!",
+      "author": "Oliver Lyak",
+      "publishedAt": "2022-08-04",
+      "section": "Article heading and author/date block",
+      "file": ".cache/article-provenance-review/webreader-byline.txt",
+      "sha256": "cfd2bf942d89bbb50e0ffb00f0c105cc7a2a89e19301e33a78ff2afda2104468"
+    },
+    {
+      "url": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "evidenceUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "checkedAt": "2026-09-07T11:28:30.871Z",
+      "method": "web-reader",
+      "indexedContentPossible": true,
+      "title": "BadSuccessor: Abusing dMSA to Escalate Privileges in Active Directory",
+      "author": "Yuval Gordon",
+      "publishedAt": "2025-05-21",
+      "section": "Article heading and author/date block",
+      "file": ".cache/article-provenance-review/webreader-byline.txt",
+      "sha256": "cfd2bf942d89bbb50e0ffb00f0c105cc7a2a89e19301e33a78ff2afda2104468"
+    },
+    {
+      "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "evidenceUrl": "https://www.cyberark.com/resources/all-blog-posts/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "checkedAt": "2026-09-07T11:28:30.871Z",
+      "method": "web-reader",
+      "indexedContentPossible": true,
+      "title": "Golden SAML: Newly Discovered Attack Technique Forges Authentication to Cloud Apps",
+      "author": "Shaked Reiner",
+      "publishedAt": "2017-11-21",
+      "section": "Indexed publisher article heading and author/date block; the live cited URL redirects to a product landing page",
+      "file": ".cache/article-provenance-review/webreader-cyberark.txt",
+      "sha256": "b5dcb95462f02e7d12a46aae221eb8594426473ff937136d6d1596bfeef4913c"
+    }
+  ]
+}

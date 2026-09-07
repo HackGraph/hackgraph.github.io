@@ -1,0 +1,101 @@
+{
+  "scope": "Citation identity, destination and attribution findings only. One citation URL was corrected; graph procedures and route viability were not assessed.",
+  "findings": [
+    {
+      "id": "microsoft-citation-identifier",
+      "status": "citation-url-corrected",
+      "url": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/4090550",
+      "replacementUrl": "https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/3831704",
+      "observedTitle": "Re: conditional formatting based on content of another cell | Microsoft Community Hub",
+      "finalUrl": "https://techcommunity.microsoft.com/discussions/excelgeneral/re-conditional-formatting-based-on-content-of-another-cell/4090550",
+      "captureSha256": "248d0c209dcd895dd51bc55f1c01831b23ec2ecf25a787cfcfd0927fa20b5907",
+      "observation": "The numeric article identifier opened an unrelated Excel discussion. The exact intended publication title was located under identifier 3831704; only this citation URL was corrected.",
+      "checkedAt": "2026-09-07",
+      "occurrences": [
+        {
+          "map": "ad",
+          "id": "relay-unsigned",
+          "referenceIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "cyberark-article-redirect",
+      "status": "destination-needs-editorial-resolution",
+      "url": "https://www.cyberark.com/resources/threat-research-blog/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "observedTitle": "Idira | The Identity Security Platform - Palo Alto Networks",
+      "finalUrl": "https://www.paloaltonetworks.com/idira",
+      "captureSha256": "4b4e4e52ecee7a65677ed77d8fe5e2ee19cedac9818b7f01267f7f0cd9314381",
+      "observation": "The live citation redirects to a product landing page. Indexed publisher content identifies the original research article; live access to that article remains unresolved.",
+      "checkedAt": "2026-09-07",
+      "occurrences": [
+        {
+          "map": "ad",
+          "id": "adfs-golden-saml",
+          "referenceIndex": 0
+        },
+        {
+          "map": "ad",
+          "id": "persist-fed",
+          "referenceIndex": 3
+        },
+        {
+          "map": "ad",
+          "id": "trust-modification",
+          "referenceIndex": 2
+        }
+      ]
+    },
+    {
+      "id": "n00py-unlocated-publication",
+      "status": "publication-unlocated",
+      "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "error": {
+        "name": "TypeError",
+        "message": "fetch failed",
+        "cause": "CERT_HAS_EXPIRED"
+      },
+      "observation": "The exact URL still fails TLS validation because of an expired certificate. The web search found no matching publication and the Wayback availability response contained no snapshot. No source type was assigned.",
+      "checkedAt": "2026-09-07",
+      "occurrences": [
+        {
+          "map": "ad",
+          "id": "expired-password-reset",
+          "referenceIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "research-index-citation",
+      "status": "specific-publication-needed",
+      "url": "https://blog.exodusintel.com",
+      "observedTitle": "Homepage - Exodus Intelligence",
+      "captureSha256": "9c2cf74adda560c8323b64aa76da3b6c2f856a55cd4b12977e79b79754d909f0",
+      "observation": "The reference points to a research blog index. Its publication family is identified, but no particular supporting article is identified by the citation.",
+      "checkedAt": "2026-09-07",
+      "occurrences": [
+        {
+          "map": "linux-pe",
+          "id": "lin-kernel-recent",
+          "referenceIndex": 4
+        }
+      ]
+    },
+    {
+      "id": "publication-author-metadata-conflict",
+      "status": "author-attribution-unresolved",
+      "url": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+      "observedTitle": "When the Defender Becomes the Door: BlueHammer, RedSun, and UnDefend in the Wild by Justin Howe",
+      "captureSha256": "d46b4651a9b49c31972b65be86532bb7c2c2dd8285cd8b886476ac338ecfe5ba",
+      "observation": "The title names Justin Howe while captured machine-readable author metadata names Zoey Chu. No individual-author attribution was used in the source-type decision.",
+      "checkedAt": "2026-09-07",
+      "occurrences": [
+        {
+          "map": "win-pe",
+          "id": "pe-redsun",
+          "referenceIndex": 2
+        }
+      ]
+    }
+  ]
+}

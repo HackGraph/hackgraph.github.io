@@ -1,0 +1,38 @@
+{
+  "reviewedAt": "2026-09-07",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "scope": "Publisher-declared identifier succession only. No evaluation of the procedures or applicability associated with a mapping.",
+  "source": "https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json",
+  "sha256": "dc1639caa5501d720e280cf1cbd8fbe009884a0c9b3e6e9ed9d0c25166c3d8f4",
+  "sourceSection": "attack-pattern external_references and the explicit revoked-by STIX relationship",
+  "decision": "Replace the two authored uses of T1562.001 and their duplicated taxonomy citation with T1685, as declared by MITRE.",
+  "entries": {
+    "T1562.001": {
+      "status": "revoked",
+      "name": "Disable or Modify Tools",
+      "url": "https://attack.mitre.org/techniques/T1562/001",
+      "stixId": "attack-pattern--ac08589e-ee59-4935-8667-d845e38fe579",
+      "modified": "2026-04-14T22:54:28.635Z",
+      "revokedBy": [
+        {
+          "id": "T1685",
+          "name": "Disable or Modify Tools",
+          "url": "https://attack.mitre.org/techniques/T1685",
+          "status": "active",
+          "stixId": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872",
+          "modified": "2026-05-12T15:12:00.712Z",
+          "relationshipId": "relationship--30d508e7-2562-40aa-8ca2-9534dc411e22",
+          "relationshipModified": "2026-04-14T22:54:28.660Z"
+        }
+      ]
+    },
+    "T1685": {
+      "status": "active",
+      "name": "Disable or Modify Tools",
+      "url": "https://attack.mitre.org/techniques/T1685",
+      "stixId": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872",
+      "modified": "2026-05-12T15:12:00.712Z"
+    }
+  }
+}

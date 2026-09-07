@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Reading HackGraph and its sources</title>
+<meta name="description" content="How to navigate HackGraph and interpret its sources, applicability, and editorial review coverage."/>
+<meta name="keywords" content="cybersecurity, offensive security, penetration testing, red team, OSCP notes, OSEP, CRTP, PNPT, CTF, privilege escalation, Active Directory, Windows privilege escalation, Linux privilege escalation, Kerberoasting, NTLM relay, AD CS ESC1, pass-the-hash, DCSync, ethical hacking, attack path, pentest cheat sheet"/>
+<link rel="canonical" href="https://hackgraph.github.io/about.html"/>
+<meta name="robots" content="index, follow, max-image-preview:large"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<meta name="theme-color" content="#0c0a0b"/>
+<meta property="og:type" content="article"/>
+<meta property="og:site_name" content="HackGraph"/>
+<meta property="og:title" content="Reading HackGraph and its sources"/>
+<meta property="og:description" content="How to navigate HackGraph and interpret its sources, applicability, and editorial review coverage."/>
+<meta property="og:url" content="https://hackgraph.github.io/about.html"/>
+<meta property="og:image" content="https://hackgraph.github.io/og-image.png"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hackgraph.github.io/og-image.png"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"AboutPage","name":"Reading HackGraph","url":"https://hackgraph.github.io/about.html"}</script>
+<style>
+:root{--bg:#0c0a0b;--panel:#160f11;--ink:#f0eaec;--dim:#a59699;--faint:#8a7d80;--accent:#f04450;--border:rgba(214,168,172,.13)}
+@font-face{font-family:'Geist';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-sans-latin-400-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist';font-weight:600;font-display:swap;src:url('/engine/fonts/geist-sans-latin-600-normal.woff2') format('woff2')}
+@font-face{font-family:'Geist Mono';font-weight:400;font-display:swap;src:url('/engine/fonts/geist-mono-latin-400-normal.woff2') format('woff2')}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Geist',system-ui,-apple-system,sans-serif;line-height:1.6;letter-spacing:-.01em;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+header.top{border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;position:sticky;top:0;background:rgba(12,10,11,.85);backdrop-filter:blur(10px)}
+header.top .name{font-weight:600;font-size:17px}
+header.top .cta{margin-left:auto;font-size:14px;color:var(--dim)}
+main{max-width:860px;margin:0 auto;padding:40px 24px 96px}
+h1{font-size:30px;font-weight:600;line-height:1.2;margin:0 0 14px}
+.lead{color:var(--dim);font-size:17px;margin:0 0 10px}
+.toc{margin:20px 0 8px;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:10px}
+.toc a{border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--ink)}
+section.phase{margin-top:44px}
+h2.phase-h{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding-bottom:6px;border-bottom:1px solid var(--border)}
+article{padding:18px 0;border-bottom:1px solid var(--border);scroll-margin-top:78px;overflow-wrap:anywhere}
+section.phase>h2{scroll-margin-top:78px}
+article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
+.kind{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
+.summary{color:var(--ink);margin:6px 0}
+.desc{color:var(--dim);margin:8px 0}
+.meta{color:var(--faint);font-size:13px}
+h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:16px 0 6px}
+ul.req{margin:4px 0;padding-left:18px;color:var(--dim);font-size:14px}
+pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;overflow-wrap:normal;margin:6px 0}
+code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
+pre .cmt{color:var(--faint)}
+ul.links{margin:4px 0;padding-left:18px;font-size:14px}
+.claim-list{padding-left:18px;font-size:14px;line-height:1.6}
+.claim-list>li+li{margin-top:18px}.claim-list p{margin:0;overflow-wrap:anywhere}
+.claim-list .claim-section{margin-top:6px;font-size:13px;color:var(--dim)}
+.claim-sources{display:grid;gap:4px;margin-top:6px}
+.claim-sources a{display:block;width:fit-content;max-width:100%;padding:2px 0;color:var(--ink);overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:.18em;border-radius:2px}
+.claim-sources a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
+.opsec b{color:var(--ink)}
+.editorial{border-left:2px solid var(--dim);padding:6px 12px;margin:12px 0;color:var(--dim);font-size:13px}.editorial p{margin:4px 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}.table-wrap{overflow:auto}.table-wrap:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);font-size:14px;border-top:1px solid var(--border)}
+</style>
+</head>
+<body>
+<header class="top"><a href="/" style="display:flex;align-items:center;gap:10px;color:var(--ink)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" stroke="#a59699" stroke-width="1.8" stroke-linejoin="round"/><rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/><rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/><rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/></svg><span class="name">HackGraph</span></a><a class="cta" href="/">Open the interactive graph &rarr;</a></header>
+<main>
+<h1>Reading HackGraph</h1>
+<p class="lead">A visual notebook for learning how security concepts connect.</p>
+<h2>Explore at reading scale</h2>
+<p>Open a card to read its notes. Use the plus button to reveal connected topics. Large branches offer a list so you can choose the next topic without shrinking the text. Overview shows the arrangement; Return to reading restores readable detail.</p>
+<p>Tab to the graph, use Right to expand and visit a child, Left for a parent, and Up or Down for nearby topics in the same column. Space expands or collapses a branch; Enter opens its notes. Escape closes details. Search also matches alternate names and your locally saved notes.</p>
+<h2>Connections and browsing history</h2>
+<p>The trail records the topics you visited. It is navigation history, not evidence that those topics form a feasible sequence. Categories organize subjects; start and goal cards provide context. A repeated card is another visual instance of the same underlying topic, used to keep loops readable. Open “About this connection” in a topic's connected-topics list to read the authored relationship.</p>
+<p>HackGraph's connections are authored study relationships. They are not imported ATT&amp;CK relationships. MITRE distinguishes associations such as technique hierarchy, observed use, mitigation, and detection in its <a href="https://mitre-attack.github.io/attack-data-model/schemas/relationship-types/">relationship model</a>. A classification link on a card does not establish the meaning of an arrow connected to it.</p>
+<p>The shared relationship definitions in the graph panels explain recurring labels. They appear separately from each connection's explanation and evidence. 3 definitions have AI source comparisons; 1 is a project-defined convention. These records cover the vocabulary, and do not count as reviews of the connections using it.</p>
+<h2>What the source labels mean</h2>
+<p>Primary sources are original specifications, vendor documentation, or original project documentation. Research and community sources provide their own analysis. Taxonomy references identify a classification. Database references are curated records that may combine information from several contributors. Unclassified sources have not yet been assigned a source type. These labels describe source provenance, not a guarantee of correctness.</p>
+<p>Source types come from an explicit citation label or a recorded classification for that exact publication URL. New URLs remain unclassified until a classification is recorded. Classifying a publication does not review the claims that cite it.</p>
+<p>A citation-destination notice means the inspected URL opened a different page or a relocation notice. It can appear alongside a known source type and a successful HTTP response. Check the named publication before relying on that citation.</p>
+<p>“Review not recorded” means there is no documented claim-level editorial review. “Selected claims source-reviewed” records who compared particular claims with named source sections, and when. “Historical context” identifies explicitly scoped historical material. A build date describes the site artifact, not when its knowledge was verified.</p>
+<p>Authored applicability notes are preserved. Missing applicability is unknown. Version filters reflect existing tags; an undimmed topic does not confirm compatibility. Windows 11 25H2 and 26H1 appear in the catalog with coverage unknown.</p>
+<h2>Current coverage</h2>
+<p>The latest recorded HTTP audit checked 874 URLs on 2026-09-07. 869 responded; 5 have automated access exceptions. Of those, 5 publications were located separately through the web reader. The reader may use indexed content. A response or a located publication does not verify a claim. Affected entries explain the recorded observations.</p>
+<p>This inventory is generated from the same data as the graph. It counts each entry's explicitly listed reading sources, including taxonomy citations in that list. Automatically displayed mapping links and tool homepages are excluded. Counts describe coverage, not accuracy.</p>
+<div class="table-wrap" role="region" aria-label="Editorial evidence coverage" tabindex="0"><table><caption>Editorial evidence coverage</caption><thead><tr><th scope="col">Map</th><th scope="col">Topics</th><th scope="col">Techniques with references</th><th scope="col">Connections with references</th><th scope="col">Review records</th></tr></thead><tbody><tr><th scope="row">ad</th><td>250</td><td>198 / 198</td><td>0 / 530</td><td>60</td></tr><tr><th scope="row">win-pe</th><td>93</td><td>75 / 75</td><td>0 / 154</td><td>44</td></tr><tr><th scope="row">linux-pe</th><td>47</td><td>38 / 38</td><td>0 / 81</td><td>20</td></tr></tbody></table></div>
+<p><a href="/glossary.html">The glossary</a> has 91 definitions: 91 have a recorded AI source comparison, 0 have a recorded human comparison, and 0 need comparison. These counts are separate from the graph entries above. Each comparison covers the displayed definition and its aliases; it does not establish the accuracy of surrounding notes or connections. Editing a definition, alias or source makes its old comparison stale.</p>
+<p>ATT&amp;CK identifier status was checked on 2026-09-07 against <a href="https://attack.mitre.org/resources/working-with-attack/">MITRE's published data</a> (Enterprise ATT&amp;CK 19.2). 117 identifiers were checked; 0 are missing, deprecated, or revoked. This includes mapped IDs and technique/tactic citations in topics, connections, glossary entries, and shared definitions. Identifier checks and HTTP link checks do not verify the associated content.</p>
+<p><a href="https://github.com/HackGraph/hackgraph.github.io/issues">Report a correction</a> with the topic, a precise claim, a supporting source section, and the context in which it applies.</p>
+</main>
+<footer>
+<p>HackGraph is an open-source collection of security study notes, organized as expandable graphs. Use the graph to explore connections, or read the reference pages at your own pace. Source coverage and editorial review status are shown separately.</p>
+<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="/glossary.html">Glossary</a> &middot; <a href="/about.html">About the sources</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
+<p>Reading pages accompany the interactive graph. Material is intended for authorized security study and blue-team detection.</p>
+</footer>
+</body>
+</html>

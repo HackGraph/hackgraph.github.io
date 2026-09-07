@@ -1,0 +1,235 @@
+{
+  "scope": "Rendered NVD record identity headings only. No description, score, affected-version or claim comparison.",
+  "results": [
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2018-8120",
+      "checkedAt": "2026-09-07T11:22:40.970Z",
+      "id": "CVE-2018-8120",
+      "title": "NVD-CVE-2018-8120",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2018-8120",
+      "matchingHeading": "CVE-2018-8120  Detail",
+      "file": ".cache/article-provenance-review/captures/article-075-rendered.html",
+      "sha256": "3b65bde389f17858705a40ddffdcd8d50cb01da4277d9ff06e170d8d7cba2c9a"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-0724",
+      "checkedAt": "2026-09-07T11:22:57.112Z",
+      "id": "CVE-2019-0724",
+      "title": "NVD-CVE-2019-0724",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2019-0724",
+      "matchingHeading": "CVE-2019-0724  Detail",
+      "file": ".cache/article-provenance-review/captures/article-076-rendered.html",
+      "sha256": "97d5a0015dec2e082e8b11360fe71914b139c1a7e1159f4d1ab84224bb153328"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2019-14287",
+      "checkedAt": "2026-09-07T11:23:04.429Z",
+      "id": "CVE-2019-14287",
+      "title": "NVD-CVE-2019-14287",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2019-14287",
+      "matchingHeading": "CVE-2019-14287  Detail",
+      "file": ".cache/article-provenance-review/captures/article-077-rendered.html",
+      "sha256": "6235983b59bd9dc516a183c626c5b940154fd905f0a86d2c7609d5d093973ce3"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-36934",
+      "checkedAt": "2026-09-07T11:23:17.169Z",
+      "id": "CVE-2021-36934",
+      "title": "NVD-CVE-2021-36934",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2021-36934",
+      "matchingHeading": "CVE-2021-36934  Detail",
+      "file": ".cache/article-provenance-review/captures/article-078-rendered.html",
+      "sha256": "f2b2ab35f711645e7f19a5e66a9d6823886a52726223f93965df49d444025296"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2021-4034",
+      "checkedAt": "2026-09-07T11:23:26.960Z",
+      "id": "CVE-2021-4034",
+      "title": "NVD-CVE-2021-4034",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2021-4034",
+      "matchingHeading": "CVE-2021-4034  Detail",
+      "file": ".cache/article-provenance-review/captures/article-079-rendered.html",
+      "sha256": "f50b8916ed525072dfd969406171a151bfa811ba22fc48e4b0bb764cc24b3fed"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-0492",
+      "checkedAt": "2026-09-07T11:23:34.076Z",
+      "id": "CVE-2022-0492",
+      "title": "NVD-CVE-2022-0492",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2022-0492",
+      "matchingHeading": "CVE-2022-0492  Detail",
+      "file": ".cache/article-provenance-review/captures/article-080-rendered.html",
+      "sha256": "e567f501caa43b6990b894c2bf67c64a4250b29400f63ddc01a7e31338631814"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-0847",
+      "checkedAt": "2026-09-07T11:23:39.338Z",
+      "id": "CVE-2022-0847",
+      "title": "NVD-CVE-2022-0847",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2022-0847",
+      "matchingHeading": "CVE-2022-0847  Detail",
+      "file": ".cache/article-provenance-review/captures/article-081-rendered.html",
+      "sha256": "7c87d2e5445309d70206ef9db13ca3eb413c680e60c7092351232ad50a0333a7"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2022-41347",
+      "checkedAt": "2026-09-07T11:23:41.133Z",
+      "id": "CVE-2022-41347",
+      "title": "NVD-CVE-2022-41347",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2022-41347",
+      "matchingHeading": "CVE-2022-41347  Detail",
+      "file": ".cache/article-provenance-review/captures/article-082-rendered.html",
+      "sha256": "2cd14b95b54e053b7f34e5081b9f3a9a54eb8666bc18963542f8f42ba588f4d9"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-32784",
+      "checkedAt": "2026-09-07T11:23:54.787Z",
+      "id": "CVE-2023-32784",
+      "title": "NVD-CVE-2023-32784",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2023-32784",
+      "matchingHeading": "CVE-2023-32784  Detail",
+      "file": ".cache/article-provenance-review/captures/article-083-rendered.html",
+      "sha256": "d74e500de74da2b4aa295fb9e201f28f61c57225110f0b09269204eabc6ab540"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2023-4911",
+      "checkedAt": "2026-09-07T11:24:04.644Z",
+      "id": "CVE-2023-4911",
+      "title": "NVD-CVE-2023-4911",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2023-4911",
+      "matchingHeading": "CVE-2023-4911  Detail",
+      "file": ".cache/article-provenance-review/captures/article-084-rendered.html",
+      "sha256": "095f0165352cdf4cf133ca8ee5274858f45f292e2754f28c220e8765792d264f"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-1086",
+      "checkedAt": "2026-09-07T11:24:17.436Z",
+      "id": "CVE-2024-1086",
+      "title": "NVD-CVE-2024-1086",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2024-1086",
+      "matchingHeading": "CVE-2024-1086  Detail",
+      "file": ".cache/article-provenance-review/captures/article-085-rendered.html",
+      "sha256": "b6dd57742242da4fd7ce77969d2c8235c46366b953fd6cc509f3795bb79d6a37"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-21626",
+      "checkedAt": "2026-09-07T11:24:29.432Z",
+      "id": "CVE-2024-21626",
+      "title": "NVD-CVE-2024-21626",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2024-21626",
+      "matchingHeading": "CVE-2024-21626  Detail",
+      "file": ".cache/article-provenance-review/captures/article-086-rendered.html",
+      "sha256": "51147b350c1eb9ee9fa2e4fca4cdf72bc0bc6c32b3c552b4f15e63a83fab4323"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2024-48990",
+      "checkedAt": "2026-09-07T11:24:35.813Z",
+      "id": "CVE-2024-48990",
+      "title": "NVD-CVE-2024-48990",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2024-48990",
+      "matchingHeading": "CVE-2024-48990  Detail",
+      "file": ".cache/article-provenance-review/captures/article-087-rendered.html",
+      "sha256": "d68381e0f8d47987a41b9384af86d87363e212c2abc3023cdf6bf425630542d1"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-11561",
+      "checkedAt": "2026-09-07T11:24:39.699Z",
+      "id": "CVE-2025-11561",
+      "title": "NVD-CVE-2025-11561",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2025-11561",
+      "matchingHeading": "CVE-2025-11561  Detail",
+      "file": ".cache/article-provenance-review/captures/article-088-rendered.html",
+      "sha256": "baa84e7ac8050a4a3605e0e3b540d1411c77e5a5e528147dee5b6c0ef9d1c8b7"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-32463",
+      "checkedAt": "2026-09-07T11:24:44.373Z",
+      "id": "CVE-2025-32463",
+      "title": "NVD-CVE-2025-32463",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2025-32463",
+      "matchingHeading": "CVE-2025-32463  Detail",
+      "file": ".cache/article-provenance-review/captures/article-089-rendered.html",
+      "sha256": "6b433121c9be2f3b3c5797e404892cbd7638a5a7f78b82754a578f2204dd0abe"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2025-33073",
+      "checkedAt": "2026-09-07T11:24:53.384Z",
+      "id": "CVE-2025-33073",
+      "title": "NVD-CVE-2025-33073",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2025-33073",
+      "matchingHeading": "CVE-2025-33073  Detail",
+      "file": ".cache/article-provenance-review/captures/article-090-rendered.html",
+      "sha256": "e0edaa81af34fd73ec59aa27b472818bc678c2f8266c4e49c187e6f9c35131e1"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-23111",
+      "checkedAt": "2026-09-07T11:24:56.078Z",
+      "id": "CVE-2026-23111",
+      "title": "NVD-CVE-2026-23111",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2026-23111",
+      "matchingHeading": "CVE-2026-23111  Detail",
+      "file": ".cache/article-provenance-review/captures/article-091-rendered.html",
+      "sha256": "cfff0e1d76117e4aef629999279105048ebc2c1f008583ff65389eb452fea228"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-31431",
+      "checkedAt": "2026-09-07T11:25:05.160Z",
+      "id": "CVE-2026-31431",
+      "title": "NVD-CVE-2026-31431",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2026-31431",
+      "matchingHeading": "CVE-2026-31431  Detail",
+      "file": ".cache/article-provenance-review/captures/article-092-rendered.html",
+      "sha256": "683455784479f3ab3340281067fae8183354734e0841625c4fcbd23ed0ebedfe"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-33825",
+      "checkedAt": "2026-09-07T11:25:19.091Z",
+      "id": "CVE-2026-33825",
+      "title": "NVD-CVE-2026-33825",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2026-33825",
+      "matchingHeading": "CVE-2026-33825  Detail",
+      "file": ".cache/article-provenance-review/captures/article-093-rendered.html",
+      "sha256": "1c118441a920593d6147150c28c19e3267311da145e07011f88a34043e98827a"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-41091",
+      "checkedAt": "2026-09-07T11:25:24.559Z",
+      "id": "CVE-2026-41091",
+      "title": "NVD-CVE-2026-41091",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2026-41091",
+      "matchingHeading": "CVE-2026-41091  Detail",
+      "file": ".cache/article-provenance-review/captures/article-094-rendered.html",
+      "sha256": "a56307b9d1ce1fc0f676666cd83e8804465e36984178d691f6a4d3429e0a832f"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/cve-2017-0144",
+      "checkedAt": "2026-09-07T11:25:32.212Z",
+      "id": "CVE-2017-0144",
+      "title": "NVD-CVE-2017-0144",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2017-0144",
+      "matchingHeading": "CVE-2017-0144  Detail",
+      "file": ".cache/article-provenance-review/captures/article-095-rendered.html",
+      "sha256": "fff8b31c814d053cbd9206a245d049a17304903a591b10f34e20276224bea5f2"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/cve-2020-0796",
+      "checkedAt": "2026-09-07T11:25:44.913Z",
+      "id": "CVE-2020-0796",
+      "title": "NVD-CVE-2020-0796",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2020-0796",
+      "matchingHeading": "CVE-2020-0796  Detail",
+      "file": ".cache/article-provenance-review/captures/article-096-rendered.html",
+      "sha256": "1eabddb76d189afc94475d4c7c19b6d33864d4b502ceaca9563f0c1dffcd5214"
+    },
+    {
+      "url": "https://nvd.nist.gov/vuln/detail/cve-2023-32784",
+      "checkedAt": "2026-09-07T11:25:52.260Z",
+      "id": "CVE-2023-32784",
+      "title": "NVD-CVE-2023-32784",
+      "finalUrl": "https://nvd.nist.gov/vuln/detail/cve-2023-32784",
+      "matchingHeading": "CVE-2023-32784  Detail",
+      "file": ".cache/article-provenance-review/captures/article-097-rendered.html",
+      "sha256": "d74e500de74da2b4aa295fb9e201f28f61c57225110f0b09269204eabc6ab540"
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+--- before/engine/view.js
++++ after/engine/view.js
+@@ -146,8 +146,10 @@
+   root.innerHTML = MARKUP;
+   const instanceId = 'fg-' + (++instanceSerial);
+ 
+-  // scoped lookup — ids would collide between instances, data-el never does
+-  const $ = name => root.querySelector('[data-el="' + name + '"]');
++  // These shell anchors survive map changes and panel-content updates. Cache
++  // them per mount so card creation never searches the growing graph subtree.
++  const anchors = new Map([...root.querySelectorAll('[data-el]')].map(el => [el.dataset.el, el]));
++  const $ = name => anchors.get(name);
+   const viewport = $('viewport'), world = $('world'), svg = $('edges');
+   viewport.setAttribute('role', 'region');
+   viewport.setAttribute('aria-label', 'Topic graph');
+@@ -618,6 +620,15 @@
+       if (rec.culled !== culled) {
+         rec.culled = culled;
+         [rec.el, rec.hit].filter(Boolean).forEach(el => { el.style.visibility = culled ? 'hidden' : ''; });
++      }
++      if (rec.entryDelay !== undefined) {
++        const delay = rec.entryDelay;
++        delete rec.entryDelay;
++        if (!culled) {
++          const timing = { duration: 300, delay };
++          fade(rec.el, 0, 1, timing);
++          if (rec.label) fade(rec.label, 0, 1, timing);
++        }
+       }
+       if (rec.label) owners.set(rec, rec.label);
+       if (culled) return;
+@@ -692,6 +703,12 @@
+       removed = true;
+       views.delete(v.key);
+       expandedKeys.delete(v.key);
++      if (v.entryDelay !== undefined || v.culled) {
++        // Nothing visible needs to fade. In particular, a branch canceled
++        // before its first frame must not flash a stack of exit animations.
++        v.el.remove();
++        return;
++      }
+       v.targetX = v.xDisp;             // freeze: fade out in place, no squashing
+       v.targetCy = v.cyDisp;
+       exitPool.add(v);
+@@ -701,12 +718,11 @@
+ 
+     // Views entering + per-key layout inputs.
+     //
+-    // Heights are still measured SYNCHRONOUSLY before anything animates — that property is
+-    // what keeps the first layout from being a guess. But reading offsetHeight right after
+-    // each appendChild flushes layout once PER NODE over a DOM that is still growing, which
+-    // is quadratic: a 3,000-wide fan-out spent most of ~29s here. Append the whole batch
+-    // first, then measure it, so the same information costs one flush instead of N.
++    // Build cards and captions before reading either size. Both measurements
++    // use the same browser layout, and the solver still gets actual heights
++    // before the first animation frame.
+     const fresh = [];
++    const cardBatch = document.createDocumentFragment();
+     vg.nodeKeys.forEach(key => {
+       let v = views.get(key);
+       if (v) { v.previousCy = v.cyDisp; v.previousRank = v.rank; }
+@@ -716,7 +732,7 @@
+         });
+         v = makeView(key);
+         v.el.style.visibility = 'hidden';
+-        world.appendChild(v.el);
++        cardBatch.appendChild(v.el);
+         views.set(key, v);
+         fresh.push([v, key]);
+       }
+@@ -724,18 +740,13 @@
+       v.targetX = v.rank * COL_PITCH;
+       v.pks = parents.get(key) || [];
+     });
+-    fresh.forEach(([v]) => { v.h = v.el.offsetHeight; });   // one flush for the batch
+-    fresh.forEach(([v, key], enterIdx) => {
++    world.appendChild(cardBatch);
++    fresh.forEach(([v, key]) => {
+       v.entering = true;
+       const spawn = (parents.get(key) || []).map(k => views.get(k)).find(Boolean);
+       v.cyDisp = spawn ? spawn.cyDisp : (anchor ? anchor.cyDisp : 0);
+       v.rank = rank.get(key);
+       v.xDisp = v.targetX = v.rank * COL_PITCH;
+-      place(v);
+-      v.el.style.visibility = '';
+-      // the stagger is a flourish for a handful of cards; uncapped, 3,000 of them would
+-      // queue nearly two minutes of entrance before the last one appeared
+-      fade(v.el, 0, 1, { duration: 220, delay: Math.min(enterIdx * 16, 96) });
+     });
+ 
+     // instance badges (#2, #3…) — counted over the full render order
+@@ -759,6 +770,11 @@
+           liveEdgeIds.has(id)) return;
+       removed = true;
+       edgeRecs.delete(id);
++      if (rec.entryDelay !== undefined || rec.culled) {
++        rec.el.remove(); if (rec.hit) rec.hit.remove(); if (rec.label) rec.label.remove();
++        return;
++      }
++      delete rec.entryDelay;
+       fadingEdges.add(rec);
+       if (rec.hit) { rec.hit.remove(); rec.hit = null; }
+       rec.el.classList.remove('lit', 'hl');
+@@ -774,6 +790,8 @@
+ 
+     // edges entering / refreshing
+     let edgeIdx = 0;
++    const edgeBatch = document.createDocumentFragment();
++    const labelBatch = document.createDocumentFragment();
+     vg.edges.forEach(e => {
+       const pv = views.get(e.source), cv = views.get(e.target);
+       let rec = edgeRecs.get(e.id);
+@@ -789,8 +807,8 @@
+       const hit = document.createElementNS(SVGNS, 'path');
+       hit.setAttribute('class', 'edgehit');
+       hit.dataset.edge = e.id;
+-      gBase.appendChild(el);
+-      gBase.appendChild(hit);
++      edgeBatch.appendChild(el);
++      edgeBatch.appendChild(hit);
+       rec = { id: e.id, rel: e.rel, pv, cv, ws: wsOf.get(e.id) || [], el, hit, back: backEdges.has(e.id) };
+       const relDef = features.edgeTags ? model.rels[e.rel] : null;
+       // `tag: false` gives a relationship a name and an explanation for the panel without
+@@ -801,19 +819,26 @@
+         lab.className = 'elabel';
+         lab.textContent = relDef.label;
+         lab.dataset.edge = e.id;
+-        $('elabels').appendChild(lab);
++        labelBatch.appendChild(lab);
+         rec.label = lab;
+-        fade(lab, 0, 1, { duration: 300, delay: 60 + edgeIdx * 35 });
+       }
+       el.setAttribute('d', edgeD(rec));
+       hit.setAttribute('d', el.getAttribute('d'));
+-      fade(el, 0, 1, { duration: 300, delay: 60 + edgeIdx * 35 });
++      rec.entryDelay = 60 + edgeIdx * 35;
+       edgeRecs.set(e.id, rec);
+       edgeIdx++;
+     });
+-    // One batched measurement after labels enter the DOM. Motion only uses these
+-    // cached dimensions, including when labels yield to a hovered connection.
++    gBase.appendChild(edgeBatch);
++    $('elabels').appendChild(labelBatch);
++    // No DOM writes between these size reads. Starting opacity animations
++    // earlier would also make the browser resolve their styles during sizing.
++    fresh.forEach(([v]) => { v.h = v.el.offsetHeight; });
+     measureLabels();
++    fresh.forEach(([v], index) => {
++      place(v);
++      v.el.style.visibility = '';
++      v.entryDelay = Math.min(index * 16, 96);
++    });
+ 
+     // layout: packed columns over views + waypoints, forward hops only
+     const items = [...vg.nodeKeys.map(k => views.get(k))];
+@@ -904,6 +929,14 @@
+         v.el.style.visibility = culled ? 'hidden' : '';
+       }
+       place(v);
++      // Decide entrance visibility after the final layout and camera target
++      // are known. Offscreen cards need no opacity animation to allocate or
++      // service; later panning reveals them normally.
++      if (v.entryDelay !== undefined) {
++        const delay = v.entryDelay;
++        delete v.entryDelay;
++        if (!culled) fade(v.el, 0, 1, { duration: 220, delay });
++      }
+     });
+     updateAllEdges();
+     if (finished) {
+@@ -935,6 +968,10 @@
+   function toggleKey(key) {
+     const v = views.get(key);
+     if (!v || !hasChildren(model, v.defId)) return;
++    // Capture the container before changing the graph or details. The camera
++    // can use these dimensions without forcing layout of the newly built UI.
++    dimensions.width = vw(); dimensions.height = vh();
++    root.classList.toggle('narrow', dimensions.width <= 920);
+     setFocusKey(key);
+     if (expandedKeys.has(key)) {
+       expandedKeys.delete(key);
+@@ -1037,7 +1074,7 @@
+     const { rx, ry } = reserve();
+     const s = Math.max(READ_SCALE, Math.min(view.s, 1.3));
+     const b = bboxOf([parent, ...kids]);
+-    const width = vw() - rx, height = vh() - ry;
++    const width = dimensions.width - rx, height = dimensions.height - ry;
+     const fits = (b.maxX - b.minX) * s <= width - 64 && (b.maxY - b.minY) * s <= height - 150;
+     let x = view.x, y = view.y;
+     // A scale adjustment is anchored on the expansion origin.

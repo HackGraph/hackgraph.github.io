@@ -1,0 +1,154 @@
+{
+  "checkedAt": "2026-09-07T12:22:12.085Z",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "scope": "One replacement reading-guide citation and publisher-displayed author attribution. No operational or graph-claim validation from these identity observations.",
+  "citationCorrection": {
+    "map": "ad",
+    "id": "pass-the-certificate",
+    "referenceIndex": 1,
+    "before": {
+      "label": "Certipy wiki, Authentication (Pass the Certificate / PKINIT)",
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication"
+    },
+    "after": {
+      "label": "Certipy wiki, Usage (sub-command overview)",
+      "url": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage"
+    },
+    "basis": "The current guide is linked by the publisher and identifies certificate authentication in its overview. This does not recover the nonexistent chapter or verify commands.",
+    "resolvedNotice": {
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication",
+      "status": "chapter-missing",
+      "checkedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "observedTitle": "Home · ly4k/Certipy Wiki · GitHub",
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki/",
+      "basis": "The requested chapter redirects to the project wiki Home page. The chapter is not present at the cited destination. Publisher identity is established; chapter identity and claim support are unresolved.",
+      "captureSha256": "623756f83897a32eef4336262bacc6b38af0a9199de9c57557ea833f890a4506"
+    }
+  },
+  "attribution": {
+    "url": "https://www.vectra.ai/blog/when-the-defender-becomes-the-door-bluehammer-redsun-and-undefend-in-the-wild",
+    "displayedAuthor": "Justin Howe",
+    "corroboratingProfile": "https://www.vectra.ai/about/author/justin-howe",
+    "conflictingMetadataName": "Zoey Chu",
+    "conflictStillPresent": true
+  },
+  "unresolvedCyberArk": {
+    "inspectedAlternate": {
+      "id": "cyberark-alternate",
+      "url": "https://www.cyberark.com/resources/threat-research/golden-saml-newly-discovered-attack-technique-forges-authentication-to-cloud-apps",
+      "checkedAt": "2026-09-07T12:16:43.726Z",
+      "status": 200,
+      "finalUrl": "https://www.paloaltonetworks.com/idira",
+      "file": ".cache/citation-followup-review/captures/cyberark-alternate.html",
+      "sha256": "c8de2ae7a7839ec1ab842cfe887770d713cbd8ada53121d5d1463d661429fe76",
+      "title": "Idira | The Identity Security Platform - Palo Alto Networks",
+      "canonical": "https://www.paloaltonetworks.com/idira",
+      "headings": [
+        {
+          "text": "Identity security for the AI enterprise.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "One platform to Secure Every Identity",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Uncontrolled privileges.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Explosive growth.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Unmanaged risk.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The identity market is fragmented, but your security strategy shouldn't be.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "The Identity Security Control Plane",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Secure Every Identity: Human, Machine and Agentic",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Human",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Machine",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Agentic",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "MANUFACTURING",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "HEALTHCARE",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "GOVERNMENT SERVICES",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "BANKING",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "INSURANCE",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Proven Strategy. Analyst Recognized.",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "See Idira in Action",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Stay ahead of evolving threats with the latest resources",
+          "id": "",
+          "anchor": null
+        },
+        {
+          "text": "Frequently Asked Questions About the Idira Platform",
+          "id": "",
+          "anchor": null
+        }
+      ]
+    },
+    "status": "No usable replacement located; existing notice retained."
+  }
+}

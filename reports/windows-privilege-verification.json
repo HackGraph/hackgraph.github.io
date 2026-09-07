@@ -1,0 +1,159 @@
+{
+  "checkedAt": "2026-09-07T12:57:30.163Z",
+  "verificationCompleted": true,
+  "commands": [
+    {
+      "command": "npm test",
+      "exitCode": 143,
+      "unitPassed": 144,
+      "browserPassesReported": 122,
+      "interruption": "SIGTERM; cause not established",
+      "logPath": ".cache/windows-privilege-review/full-tests-terminated.log",
+      "logSha256": "ba26ada0784f65c07cf5f9c36f11063e4000b9cfc578a411d6a3f0d41607cbde"
+    },
+    {
+      "command": "npx playwright test --project=webkit",
+      "exitCode": 0,
+      "browserPassed": 43,
+      "logPath": ".cache/windows-privilege-review/webkit-completion.log",
+      "logSha256": "55b6e99682bf851d2609646e5441850bfb7159234f6b027c94dfaf04c1cfbdfd"
+    },
+    {
+      "command": "npm run verify:build",
+      "exitCode": 0
+    }
+  ],
+  "browserCoverage": {
+    "uniqueCases": 129,
+    "expectedCases": 129,
+    "allExpectedCasesPassed": true,
+    "testListPath": ".cache/windows-privilege-review/browser-test-list.json",
+    "testListSha256": "55ffb814eec3c705ab05d020d715068fc77cc7f79768f3b1cb056a8223069094",
+    "completion": "Unit, Chromium and Firefox results retained from the interrupted run; the complete WebKit project passed separately against the unchanged public artifact."
+  },
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 129,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "c7ba44bd557ad2da0fa33bd303b8401930fcfb3a5023567fbad9a216fd78d2ce",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "4e45992e8b85cd00860a0ad0d8796423d945799fb855ff9608c68d9d91dde52e",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/pe-techniques.js",
+    "src/data/source-availability.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "d9659b7f33f4b41be5c703b5669b9504ac12b34e4dc40c04a0718136b814b9ce",
+  "previousGraphDataSha256": "cf8b474ad0fd809f15ecdde442636e8fc100f54d39d5399c86c7c13245fa79e0",
+  "conceptualEntries": [
+    "pe-sebackup-restore",
+    "pe-sedebug-lsass",
+    "pe-setakeownership",
+    "pe-seloaddriver",
+    "pe-semanagevolume",
+    "pe-setrustedcredman",
+    "pe-secreatetoken",
+    "pe-setcb",
+    "pe-serelabel"
+  ],
+  "additionalClaims": 18,
+  "reviewedEntries": 108,
+  "selectedClaims": 231,
+  "unchangedEarlierReviewRecords": 99,
+  "allOtherGraphFieldsUnchanged": true,
+  "sources": {
+    "retrieved": 15,
+    "archivedPolicyReferences": 10,
+    "apiAndDriverReferences": 5,
+    "addedReferenceOccurrences": 17
+  },
+  "provenance": {
+    "groups": 228,
+    "urls": 486,
+    "classifiedOccurrences": 736,
+    "inlineClassifiedOccurrences": 201,
+    "unclassifiedOccurrences": 1
+  },
+  "availability": {
+    "urls": 866,
+    "counts": {
+      "responded": 860,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedCurrentUrls": 15,
+    "otherObservationsUnchanged": true
+  },
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "reference/windows-privilege-escalation.html": "049f27cf01dbea11bc41774986721a62c81b58b03e0359f2259a9ad1ac6128c1",
+    "reference/linux-privilege-escalation.html": "21884a73e6ba2e34c05ca89a2c0e41da728f006614b2fb836e4038fb5efb090b",
+    "about.html": "c5797688a0b1cb4363969bb5c836703c58e67f9c975c2e3e073655075fe44fcc",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "visual": {
+    "states": 20,
+    "axeStates": 18,
+    "violations": 0,
+    "overflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 5,
+    "screenshotsVisuallyInspected": true,
+    "integratedApplication": true
+  },
+  "hashes": {
+    "about.html": "c5797688a0b1cb4363969bb5c836703c58e67f9c975c2e3e073655075fe44fcc",
+    "reference/windows-privilege-escalation.html": "049f27cf01dbea11bc41774986721a62c81b58b03e0359f2259a9ad1ac6128c1",
+    "src/data/chains/pe-techniques.js": "a0d055b89a42f13279911ad24cc0461b6dcd5ea0071efa8c5c549a6f9639fac4",
+    "src/data/source-availability.js": "ca44935080e76b3315824780c9410aa612b862feb468c7aed2f657d92c949abe",
+    "reports/visuals/windows-privilege-pe-sebackup-restore-1440.png": "138a09b494b583a8d352931e0c0a9d1720969f049dd9fa17dca4dcf42303f889",
+    "reports/visuals/windows-privilege-pe-secreatetoken-1440.png": "6b9d45ed95ac8efc721027292a301c723fbb7c1ac2a9759a2414f361457caefc",
+    "reports/visuals/windows-privilege-pe-sedebug-lsass-390.png": "0c746656c67a9fdff3f9fcb191225f39f8c06bf75992a893ccbe6e38ca3d8dd2",
+    "reports/visuals/windows-privilege-pe-serelabel-390.png": "e0eb3589653c02cdf3566cda7373a775c49d4bb1c0193c848f9bca1fbdc33691",
+    "reports/visuals/windows-privilege-reading-mobile.png": "519696783738bdb104b3824647bc4a9e370bbb245127d35f07320d02b9cfbaf3",
+    "reports/windows-privilege-source-capture.json": "0460ac7ad05cf204b8812c61bc35d4333d027c2a14f8c70ab655593efe7b6f20",
+    "reports/windows-privilege-review.json": "471a7e07d0541f147cee01a3c54cbf795bccd7df2646e4815eb61a679208bde3",
+    "reports/windows-privilege-visual-check.json": "1448a4a6f4fdf283f18f21c2bafd8701ecdaae254136d063fd4d707e804a1d80",
+    "reports/WINDOWS_PRIVILEGE_REVIEW.md": "3757d7d48961bad010f61873f28853c68a82d59c864aa23429aefebf04c28da9",
+    "reports/COMPLETION_STATUS.md": "961d4cf661986b10a0114c2857a24119c844d911c99df9dc08ddfb36a1064b3d",
+    "reports/HUMAN_REVIEW.md": "f727f14f39d883705c1b3645a9b6bee89511e89dc595a6fb3ad7501969a526d6",
+    "reports/VERIFICATION.md": "3c085557e86be1dabf0581319da296ae81b520fcf431cb493133b2cd99a57e50",
+    "reports/reference-availability.json": "b5284e7378c3f9eb22b5cdbb58f8cf57e24724094dba8cf202b1f9297002ab0b",
+    "reports/review-inventory.json": "06c3d1e47b6f564bc3f0674c20dbfc255065cf07c96e011c5f8fae3d60d3b838",
+    "reports/review-inventory.csv": "2dcfe815526bd13a755fd807a0800a4419fc3c1e2fcc732214cc3a15d3903e9f",
+    "reports/content-coverage.json": "fb91d1e35b102f45550e6d9cfd911c7a74162a5b01f2764af4802327f80f608f",
+    "reports/data-parity.json": "4a4b77d6dfa93bd816d8e0a10764369e52e26a997183664566f83915ae3f74b3",
+    "README.md": "477cb2943d8ccd00c8bfce9a28cd8c223ed806c45d120626e66257be0efa8d2e",
+    "RELEASE_NOTES.md": "f87ac8d8c733b24e8c370bf468489ea656157023f62728cdbf1d87e1cef84ea6",
+    "IMPLEMENTATION_PLAN.md": "3a2c021133b982424b1c8d93a996c0f052f9b7cf0974d179d261dc372a30bffa",
+    ".cache/windows-privilege-review/visual-check.mjs": "2201cda8c3f834b0459f625e00fe0b6a39a287f583d2e9b5d0072c88eb937bfe",
+    ".cache/windows-privilege-review/visual-check-integrated.log": "88cac3b2eceeb26fd8dd1a17ad9d1d75ecb6c7c314aaf9825b2836f79e71652e"
+  },
+  "logPath": ".cache/windows-privilege-review/full-tests-terminated.log",
+  "logSha256": "ba26ada0784f65c07cf5f9c36f11063e4000b9cfc578a411d6a3f0d41607cbde",
+  "scope": "Nine conceptual Windows privilege explanations. All earlier review records and all commands, tools, prerequisites, applicability, IDs, kinds, mappings and connections are unchanged. No operational validation, new motion benchmark, human review, hosted workflow run or deployment."
+}

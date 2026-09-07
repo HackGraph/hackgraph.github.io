@@ -1,0 +1,23 @@
+{
+  "checkedAt": "2026-09-07T13:24:55.850Z",
+  "scope": "Actual application initial expansion, focused-card geometry and axe checks. No content or route validation.",
+  "rows": [
+    {
+      "width": 1024,
+      "height": 768,
+      "map": "ad",
+      "obstructions": [],
+      "violations": [],
+      "screenshot": "reports/visuals/overlay-integrated-1024-768.png"
+    },
+    {
+      "width": 844,
+      "height": 390,
+      "map": "ad",
+      "obstructions": [],
+      "violations": [],
+      "screenshot": "reports/visuals/overlay-integrated-844-390.png"
+    }
+  ],
+  "errors": []
+}

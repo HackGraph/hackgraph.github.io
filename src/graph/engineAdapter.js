@@ -16,6 +16,8 @@
  * the dataset were swapped.
  */
 import { RELATIONSHIPS } from '../data/relationships.js';
+import { editorialPresentation } from '../data/editorial.js';
+import { connectionPresentation } from '../data/connections.js';
 
 /** A relationship entry as the engine expects it. */
 
@@ -44,14 +46,15 @@ function detailsOf(
   // away every tool's homepage and every command's caption.
   const tools = n.tools ;
   const commands = n.commands ;
-  const refs = [];
-  const mitre = n.mitre ;
-  if (mitre?.url) refs.push([`MITRE ATT&CK · ${mitre.id}`, mitre.url]);
-  for (const r of (n.references) ?? []) {
-    refs.push([r.label, r.url]);
-  }
+  const evidence = editorialPresentation(n);
+  const refs = evidence.sources.map(r => [r.label, r.url, r.kind]);
   const d = {
     description: opts.ownDescription === false ? undefined : (n.description),
+    applicability: evidence.applicability,
+    editorial: evidence.notes,
+    editorialTitle: opts.editorialTitle,
+    claims: evidence.claims,
+    definitions: opts.definition ? [opts.definition] : undefined,
     caution: n.opsec,
     // this dataset's caution box has a name of its own
     cautionLabel: n.opsec ? 'OPSEC' : undefined,
@@ -74,7 +77,8 @@ function relKey(label) {
  *
  * An edge names a canonical relationship with `rel` and may override either half of it:
  * `label` for a caption specific to this step, `description` for a specific explanation.
- * Whatever it does not override, the canonical entry supplies. Only an EXPLICIT label is
+ * The canonical definition is shown separately from the edge's authored explanation.
+ * Only an EXPLICIT label is
  * drawn on the canvas — a bare `rel` still earns a named, explained edge panel, but
  * captioning all 75 of them would bury the graph in text that says what the two nodes
  * already say.
@@ -105,19 +109,13 @@ function buildRels(map) {
     if (e.rel && !canon) {
       throw new Error(`[${map.id}] edge ${e.source} -> ${e.target} references unknown rel "${e.rel}"`);
     }
-    const summary = e.description ?? canon?.description ?? '';
-    // On an edge the list answers "is this my branch?", not "what do I need first", so it
-    // is named for the question it actually answers.
-    const details = detailsOf(e, { prereqsLabel: 'Applies when', ownDescription: false });
-    // An edge may explain itself without naming itself, and it still needs a panel heading.
-    // What that heading should say depends on what the edge carries: a list of conditions is
-    // telling you when to take this branch, where a bare paragraph only describes the move.
-    const label =
-      e.label ??
-      canon?.label ??
-      (details?.prereqs ? 'when to take this' : summary || details ? 'transition' : undefined);
+    const presentation = connectionPresentation(e);
+    const summary = presentation.description;
+    const details = detailsOf(e, { prereqsLabel: 'Authored conditions', ownDescription: false,
+      editorialTitle: 'Connection evidence', definition: presentation.definition });
+    const label = presentation.label;
     if (!label) return { source: e.source, target: e.target };
-    const rel = intern(e.rel ?? relKey(label), { label, summary, tag: e.label !== undefined, details });
+    const rel = intern(e.rel ?? relKey(label), { label, summary, tag: presentation.hasAuthoredCaption, details });
     return { source: e.source, target: e.target, rel };
   });
 
@@ -141,6 +139,7 @@ export function toEngineMap(map) {
       group: labelOfPhase.get(n.phase) ?? n.phase,
       kind: n.kind,
       summary: n.summary,
+      aliases: n.aliases,
       // carried so host filters can dim on them; the engine itself never looks at these
       versions: (n).versions,
       needs: (n).needs,

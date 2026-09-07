@@ -1,0 +1,1261 @@
+{
+  "measuredAt": "2026-09-07T07:53:43.660Z",
+  "method": "One browser/page at a time; generic 100/250-topic courses at 1440×1000. Expand and settle the graph, then first-open, close and reopen the sidebar list, observing each action for 600 ms. Four repetitions per browser/source/count; retain the first as warmup but exclude it from groups. Click timing includes the synchronous disclosure handler, firstFrame records wall time to the first rAF callback, and intervals use consecutive rAF timestamps. No physical presentation measurement or device guarantee.",
+  "rendererSources": {
+    "current": "3565f1437fbb26e03b9d7024da243920c3175e28c0233e574677a95063dc3052"
+  },
+  "scriptSha256": "abe18b9bd17d5a458de900b534df7f5b810e9db04e12f247348a295b8f97d586",
+  "groups": [
+    {
+      "browser": "chromium",
+      "count": 100,
+      "variant": "current",
+      "action": "first-open",
+      "sync": {
+        "min": 0.9000000953674316,
+        "median": 1.0999999046325684,
+        "max": 1.2999999523162842
+      },
+      "firstFrame": {
+        "min": 14.299999952316284,
+        "median": 14.600000143051147,
+        "max": 17.399999856948853
+      },
+      "p95": {
+        "min": 16.700000000000273,
+        "median": 16.799999999999272,
+        "max": 16.800000000000182
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "chromium",
+      "count": 100,
+      "variant": "current",
+      "action": "close",
+      "sync": {
+        "min": 0,
+        "median": 0,
+        "max": 0.09999990463256836
+      },
+      "firstFrame": {
+        "min": 6.5,
+        "median": 7.099999904632568,
+        "max": 7.299999952316284
+      },
+      "p95": {
+        "min": 16.700000000000273,
+        "median": 16.700000000000728,
+        "max": 16.799999999999272
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "chromium",
+      "count": 100,
+      "variant": "current",
+      "action": "reopen",
+      "sync": {
+        "min": 0.09999990463256836,
+        "median": 0.09999990463256836,
+        "max": 0.10000014305114746
+      },
+      "firstFrame": {
+        "min": 3.5999999046325684,
+        "median": 4.599999904632568,
+        "max": 5.5
+      },
+      "p95": {
+        "min": 16.700000000000728,
+        "median": 16.800000000000182,
+        "max": 16.80000000000109
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "chromium",
+      "count": 250,
+      "variant": "current",
+      "action": "first-open",
+      "sync": {
+        "min": 1.5999999046325684,
+        "median": 1.8999998569488525,
+        "max": 3.0999999046325684
+      },
+      "firstFrame": {
+        "min": 11.900000095367432,
+        "median": 12.700000047683716,
+        "max": 13.299999952316284
+      },
+      "p95": {
+        "min": 16.799999999999272,
+        "median": 16.799999999999272,
+        "max": 16.799999999999272
+      },
+      "slowFrames": 0,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    },
+    {
+      "browser": "chromium",
+      "count": 250,
+      "variant": "current",
+      "action": "close",
+      "sync": {
+        "min": 0.09999990463256836,
+        "median": 0.09999990463256836,
+        "max": 0.10000014305114746
+      },
+      "firstFrame": {
+        "min": 7,
+        "median": 7.199999809265137,
+        "max": 9.199999809265137
+      },
+      "p95": {
+        "min": 16.700000000000728,
+        "median": 16.799999999999272,
+        "max": 16.80000000000109
+      },
+      "slowFrames": 0,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    },
+    {
+      "browser": "chromium",
+      "count": 250,
+      "variant": "current",
+      "action": "reopen",
+      "sync": {
+        "min": 0,
+        "median": 0.09999990463256836,
+        "max": 0.10000014305114746
+      },
+      "firstFrame": {
+        "min": 4.5,
+        "median": 5.3999998569488525,
+        "max": 6.8999998569488525
+      },
+      "p95": {
+        "min": 16.700000000000728,
+        "median": 16.700000000000728,
+        "max": 16.700000000000728
+      },
+      "slowFrames": 0,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    },
+    {
+      "browser": "firefox",
+      "count": 100,
+      "variant": "current",
+      "action": "first-open",
+      "sync": {
+        "min": 2,
+        "median": 4,
+        "max": 5
+      },
+      "firstFrame": {
+        "min": 9,
+        "median": 9,
+        "max": 10
+      },
+      "p95": {
+        "min": 17.18000000000029,
+        "median": 17.200000000000728,
+        "max": 17.279999999999745
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "firefox",
+      "count": 100,
+      "variant": "current",
+      "action": "close",
+      "sync": {
+        "min": 0,
+        "median": 1,
+        "max": 1
+      },
+      "firstFrame": {
+        "min": 1,
+        "median": 3,
+        "max": 15
+      },
+      "p95": {
+        "min": 17.220000000000255,
+        "median": 17.23999999999978,
+        "max": 33.340000000000146
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "firefox",
+      "count": 100,
+      "variant": "current",
+      "action": "reopen",
+      "sync": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "firstFrame": {
+        "min": 7,
+        "median": 13,
+        "max": 17
+      },
+      "p95": {
+        "min": 17.18000000000029,
+        "median": 17.219999999999345,
+        "max": 17.219999999999345
+      },
+      "slowFrames": 0,
+      "collapsedElements": 1253,
+      "openElements": 2053
+    },
+    {
+      "browser": "firefox",
+      "count": 250,
+      "variant": "current",
+      "action": "first-open",
+      "sync": {
+        "min": 7,
+        "median": 12,
+        "max": 18
+      },
+      "firstFrame": {
+        "min": 8,
+        "median": 13,
+        "max": 19
+      },
+      "p95": {
+        "min": 17.200000000000728,
+        "median": 17.31999999999971,
+        "max": 17.31999999999971
+      },
+      "slowFrames": 0,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    },
+    {
+      "browser": "firefox",
+      "count": 250,
+      "variant": "current",
+      "action": "close",
+      "sync": {
+        "min": 0,
+        "median": 1,
+        "max": 1
+      },
+      "firstFrame": {
+        "min": 5,
+        "median": 6,
+        "max": 7
+      },
+      "p95": {
+        "min": 17.23999999999978,
+        "median": 33.2599999999984,
+        "max": 50
+      },
+      "slowFrames": 4,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    },
+    {
+      "browser": "firefox",
+      "count": 250,
+      "variant": "current",
+      "action": "reopen",
+      "sync": {
+        "min": 0,
+        "median": 0,
+        "max": 0
+      },
+      "firstFrame": {
+        "min": 3,
+        "median": 8,
+        "max": 13
+      },
+      "p95": {
+        "min": 17.200000000000728,
+        "median": 33.54000000000087,
+        "max": 50.159999999999854
+      },
+      "slowFrames": 4,
+      "collapsedElements": 2903,
+      "openElements": 4903
+    }
+  ],
+  "rows": [
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 2.299999952316284,
+      "firstFrameDelayMs": 14,
+      "p95FrameMs": 16.700000000000045,
+      "maxFrameMs": 16.799999999999955,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.20000004768371582,
+      "firstFrameDelayMs": 7.800000190734863,
+      "p95FrameMs": 16.700000000000045,
+      "maxFrameMs": 16.700000000000045,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 5.6000001430511475,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.799999999999955,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1.2999999523162842,
+      "firstFrameDelayMs": 14.299999952316284,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.799999999999727,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 7.299999952316284,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.799999999999727,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 5.5,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999727,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1.0999999046325684,
+      "firstFrameDelayMs": 17.399999856948853,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 6.5,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.700000000000728,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 3.5999999046325684,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.9000000953674316,
+      "firstFrameDelayMs": 14.600000143051147,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 7.099999904632568,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 4.599999904632568,
+      "p95FrameMs": 16.80000000000109,
+      "maxFrameMs": 16.80000000000109,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 1.7000000476837158,
+      "firstFrameDelayMs": 14.300000190734863,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 10,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 7.900000095367432,
+      "p95FrameMs": 16.80000000000109,
+      "maxFrameMs": 16.80000000000109,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 1.8999998569488525,
+      "firstFrameDelayMs": 13.299999952316284,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.80000000000109,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 9.199999809265137,
+      "p95FrameMs": 16.80000000000109,
+      "maxFrameMs": 16.80000000000109,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 6.8999998569488525,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 3.0999999046325684,
+      "firstFrameDelayMs": 12.700000047683716,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 7.199999809265137,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.09999990463256836,
+      "firstFrameDelayMs": 5.3999998569488525,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 1.5999999046325684,
+      "firstFrameDelayMs": 11.900000095367432,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 7,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0.10000014305114746,
+      "firstFrameDelayMs": 4.5,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.700000000000728,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 8,
+      "firstFrameDelayMs": 9,
+      "p95FrameMs": 33.299999999999955,
+      "maxFrameMs": 33.320000000000164,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 3,
+      "p95FrameMs": 17.26000000000022,
+      "maxFrameMs": 17.5,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 0,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 10,
+      "p95FrameMs": 17.179999999999836,
+      "maxFrameMs": 17.259999999999764,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 5,
+      "firstFrameDelayMs": 9,
+      "p95FrameMs": 17.279999999999745,
+      "maxFrameMs": 17.340000000000146,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 15,
+      "p95FrameMs": 33.340000000000146,
+      "maxFrameMs": 33.76000000000022,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 1,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 7,
+      "p95FrameMs": 17.18000000000029,
+      "maxFrameMs": 17.18000000000029,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 4,
+      "firstFrameDelayMs": 9,
+      "p95FrameMs": 17.200000000000728,
+      "maxFrameMs": 17.24000000000069,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 1,
+      "p95FrameMs": 17.220000000000255,
+      "maxFrameMs": 17.24000000000069,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 2,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 13,
+      "p95FrameMs": 17.219999999999345,
+      "maxFrameMs": 17.220000000001164,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 2,
+      "firstFrameDelayMs": 10,
+      "p95FrameMs": 17.18000000000029,
+      "maxFrameMs": 17.26000000000022,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "close",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 3,
+      "p95FrameMs": 17.23999999999978,
+      "maxFrameMs": 17.23999999999978,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 100,
+      "repeat": 3,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 1253,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 17,
+      "p95FrameMs": 17.219999999999345,
+      "maxFrameMs": 17.220000000001164,
+      "slowFrames": 0,
+      "elements": 2053,
+      "topicRows": 100,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 10,
+      "firstFrameDelayMs": 11,
+      "p95FrameMs": 17.280000000000655,
+      "maxFrameMs": 17.299999999999272,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 14,
+      "p95FrameMs": 17.200000000000728,
+      "maxFrameMs": 17.23999999999978,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 0,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 5,
+      "p95FrameMs": 17.219999999999345,
+      "maxFrameMs": 17.340000000000146,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 12,
+      "firstFrameDelayMs": 13,
+      "p95FrameMs": 17.200000000000728,
+      "maxFrameMs": 33.18000000000029,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 6,
+      "p95FrameMs": 17.23999999999978,
+      "maxFrameMs": 17.26000000000022,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 1,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 3,
+      "p95FrameMs": 17.200000000000728,
+      "maxFrameMs": 17.2400000000016,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 7,
+      "firstFrameDelayMs": 8,
+      "p95FrameMs": 17.31999999999971,
+      "maxFrameMs": 33.29999999999927,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 1,
+      "firstFrameDelayMs": 5,
+      "p95FrameMs": 50,
+      "maxFrameMs": 50.5,
+      "slowFrames": 4,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 2,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 13,
+      "p95FrameMs": 33.54000000000087,
+      "maxFrameMs": 33.779999999998836,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "first-open",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 18,
+      "firstFrameDelayMs": 19,
+      "p95FrameMs": 17.31999999999971,
+      "maxFrameMs": 33.31999999999971,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "close",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 7,
+      "p95FrameMs": 33.2599999999984,
+      "maxFrameMs": 33.400000000001455,
+      "slowFrames": 0,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "false"
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "current",
+      "count": 250,
+      "repeat": 3,
+      "action": "reopen",
+      "collapsed": {
+        "elements": 2903,
+        "topicRows": 0
+      },
+      "synchronousMs": 0,
+      "firstFrameDelayMs": 8,
+      "p95FrameMs": 50.159999999999854,
+      "maxFrameMs": 50.56000000000131,
+      "slowFrames": 4,
+      "elements": 4903,
+      "topicRows": 250,
+      "expanded": "true"
+    }
+  ],
+  "errors": []
+}

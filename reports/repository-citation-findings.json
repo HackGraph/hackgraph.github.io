@@ -1,0 +1,64 @@
+{
+  "scope": "Citation destination identity observations. HTTP success, publisher type and claim support remain separate. Authored citation URLs are unchanged.",
+  "findings": [
+    {
+      "id": "certipy-authentication-chapter-redirect",
+      "status": "needs-editorial-resolution",
+      "observation": "The requested chapter redirects to the project wiki Home page. The chapter is not present at the cited destination. Publisher identity is established; chapter identity and claim support are unresolved.",
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication",
+      "checkedAt": "2026-09-07T10:58:09.618Z",
+      "httpStatus": 200,
+      "observedTitle": "Home · ly4k/Certipy Wiki · GitHub",
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki/",
+      "captureSha256": "623756f83897a32eef4336262bacc6b38af0a9199de9c57557ea833f890a4506",
+      "occurrences": [
+        {
+          "map": "ad",
+          "id": "pass-the-certificate",
+          "referenceIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "payloads-linux-relocation-notice",
+      "status": "publisher-relocation-recorded",
+      "observation": "The cited file now contains a publisher-written relocation notice and linked outline. It is a relocation stub, not the original chapter text.",
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "checkedAt": "2026-09-07T10:58:12.121Z",
+      "httpStatus": 200,
+      "observedTitle": "PayloadsAllTheThings/Methodology and Resources/Linux - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "captureSha256": "7c0a6c587d19de2c94f0e2d06c20b18254292b08bb59ece9957036208ef166d4",
+      "occurrences": [
+        {
+          "map": "linux-pe",
+          "id": "lin-start",
+          "referenceIndex": 2
+        }
+      ]
+    },
+    {
+      "id": "payloads-shell-relocation-notice",
+      "status": "publisher-relocation-recorded",
+      "observation": "The cited file now contains a publisher-written relocation notice and linked outline. It is a relocation stub, not the original chapter text.",
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "checkedAt": "2026-09-07T10:58:12.168Z",
+      "httpStatus": 200,
+      "observedTitle": "PayloadsAllTheThings/Methodology and Resources/Reverse Shell Cheatsheet.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "captureSha256": "e145ff14d33dce1f6427b10cf3017c26d8136aeb73b125d54020bd8f4403cfa0",
+      "occurrences": [
+        {
+          "map": "ad",
+          "id": "reverse-shell",
+          "referenceIndex": 0
+        },
+        {
+          "map": "ad",
+          "id": "lat-cat-shell",
+          "referenceIndex": 1
+        }
+      ]
+    }
+  ]
+}

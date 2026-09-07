@@ -1,0 +1,247 @@
+{
+  "scope": "Targeted GET retrieval of twelve primary publications supporting the identity/permissions comparisons. Other current URLs, including the three prior access exceptions, retain their earlier observations and timestamps. This is not a new complete network sweep.",
+  "previousReportAt": "2026-09-07T07:05:19.227Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.258Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:33.246Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.198Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.825Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.322Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.058Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.058Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.322Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:51.788Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:51.914Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.322Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.322Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:56:28.937Z"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7",
+      "code": 200,
+      "finalUrl": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.622Z"
+    },
+    {
+      "url": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html",
+      "code": 200,
+      "finalUrl": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.583Z"
+    },
+    {
+      "url": "https://www.kernel.org/doc/html/latest/security/credentials.html",
+      "code": 200,
+      "finalUrl": "https://www.kernel.org/doc/html/latest/security/credentials.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.kernel.org/doc/html/latest/security/credentials.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T08:54:52.781Z"
+    }
+  ]
+}

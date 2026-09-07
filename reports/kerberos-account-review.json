@@ -1,0 +1,60 @@
+{
+  "reviewedAt": "2026-09-07",
+  "reviewedBy": "Codex",
+  "reviewerType": "ai",
+  "map": "ad",
+  "id": "krbtgt-hash",
+  "scope": "Selected conceptual claims about KDC account identity, TGT and service-ticket roles, application authorization data, and separate RODC accounts. Excludes key acquisition, ticket forgery, prerequisites, commands, tools, applicability, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+  "claims": [
+    {
+      "text": "The KDC uses the KRBTGT account and derives cryptographic key material from its account password to protect the TGTs it issues.",
+      "section": "Microsoft — Key Distribution Center — KRBTGT principal and password-derived cryptographic key",
+      "sources": [
+        "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center"
+      ]
+    },
+    {
+      "text": "In the ticket-granting service exchange, a client presents a TGT when requesting a service ticket.",
+      "section": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis — Ticket-Granting Service (TGS) exchange",
+      "sources": [
+        "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13"
+      ]
+    },
+    {
+      "text": "An application server validates the service ticket and can use the ticket's authorization data for access control.",
+      "section": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis — Client/Server Authentication Protocol (AP) exchange",
+      "sources": [
+        "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13"
+      ]
+    },
+    {
+      "text": "An RODC uses a different KRBTGT account and password from the KDC on a writable domain controller.",
+      "section": "Microsoft — Active Directory accounts — Read-only domain controllers and the KRBTGT account",
+      "sources": [
+        "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts"
+      ]
+    }
+  ],
+  "previousSummary": "The key to forge any Kerberos ticket.",
+  "previousDescription": "The krbtgt account signs every TGT in the domain. Its hash lets you forge tickets for any user with any privileges, giving durable control of Kerberos auth.",
+  "summary": "Understand the KDC account and the tickets its key material protects.",
+  "description": "KRBTGT is the Active Directory account used by the Key Distribution Center (KDC). The KDC derives cryptographic key material from its account password to protect ticket-granting tickets (TGTs). Clients present a TGT when requesting a ticket for a particular service. Application servers validate the service ticket and may use its authorization data for access control. Read-only domain controllers (RODCs) use a separate KRBTGT account and password from a writable domain controller.",
+  "addedReferences": [
+    {
+      "label": "Microsoft — Key Distribution Center",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center",
+      "kind": "primary"
+    },
+    {
+      "label": "Microsoft — Active Directory accounts",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts",
+      "kind": "primary"
+    },
+    {
+      "label": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13",
+      "kind": "primary"
+    }
+  ],
+  "allOtherEntryFieldsUnchanged": true
+}

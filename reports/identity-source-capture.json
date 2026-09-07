@@ -1,0 +1,146 @@
+{
+  "scope": "Twelve primary publications compared against seventeen selected conceptual claims in seven Windows/Linux identity, permissions and audit-policy entries. Each publication was read through the web reader and retrieved by GET for this pass. This comparison excludes commands, tools, prerequisites, applicability, connection outcomes, operational route viability and ATT&CK mappings. Navigation labels remain project conventions. Exact claims, source sections, reviewer type, date and content snapshots are stored with the entries.",
+  "comparedIds": [
+    "pe-cat-priv",
+    "pe-cat-admin",
+    "pe-cat-enum",
+    "pe-svc-account",
+    "pe-admins-filtered",
+    "lin-identity",
+    "lin-hostcontrols"
+  ],
+  "results": [
+    {
+      "label": "Microsoft, Application Pool Identities",
+      "url": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities",
+      "section": "Application Pool Identity Accounts; Securing Resources",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.322Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/iis/manage/configuring-security/application-pool-identities",
+      "title": "Application Pool Identities | Microsoft Learn",
+      "sha256": "ac9226094174fa1651ae65043c4fa21d33c404db8b3709dcf30cad8f67399d07"
+    },
+    {
+      "label": "Microsoft, How User Account Control works",
+      "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "section": "Sign in process; The UAC user experience",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.058Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+      "title": "How User Account Control works | Microsoft Learn",
+      "sha256": "4969bde6abb5d43509b9c94fed92bc163f22fe49e13640e4c6a0de37446880bd"
+    },
+    {
+      "label": "Microsoft, Access tokens",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "section": "Access token contents",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.058Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "title": "Access Tokens - Win32 apps | Microsoft Learn",
+      "sha256": "26d3d47790df0e0d906e9659acd6c60d79032f521e57d758e6350b09b14776ca"
+    },
+    {
+      "label": "Microsoft, DACLs and ACEs",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces",
+      "section": "Opening explanation and group-access example",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.322Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/dacls-and-aces",
+      "title": "DACLs and ACEs - Win32 apps | Microsoft Learn",
+      "sha256": "6280aaedb8fc54c7a99dcb1b6f50397986e3c73727392daae10443fdc9bbefde"
+    },
+    {
+      "label": "Microsoft, Privileges",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "section": "Privilege/access-right distinction; access-token checks",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:51.788Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/privileges",
+      "title": "Privileges - Win32 apps | Microsoft Learn",
+      "sha256": "fdc6966a2b43e19653f0e626ddc2766bc7a8100059d74dbdb44fd33c38041289"
+    },
+    {
+      "label": "Microsoft, SID Attributes in an Access Token",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "section": "SE_GROUP_USE_FOR_DENY_ONLY",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:51.914Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/sid-attributes-in-an-access-token",
+      "title": "SID Attributes in an Access Token - Win32 apps | Microsoft Learn",
+      "sha256": "4dff0a4f0e364b76004697eaf425c526382b5e3dc5f8bf6721b01124b0811198"
+    },
+    {
+      "label": "Microsoft, LocalService Account",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account",
+      "section": "Opening account definition",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.322Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localservice-account",
+      "title": "LocalService Account - Win32 apps | Microsoft Learn",
+      "sha256": "44116525ce38a9b8f00aa364f6282d0e853701876b4959a5bd3b595899ae96a5"
+    },
+    {
+      "label": "Microsoft, NetworkService Account",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account",
+      "section": "Opening account definition and network credentials",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.322Z",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/networkservice-account",
+      "title": "NetworkService Account - Win32 apps | Microsoft Learn",
+      "sha256": "299918318aa7c386b802410dc3ffcf8df6bc9e9859d57a37615aafd364ec5e96"
+    },
+    {
+      "label": "Linux man-pages, credentials(7)",
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "section": "User and group identifiers",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:56:28.937Z",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "title": "credentials(7) - Linux manual page",
+      "sha256": "562485858d963954d78c164c9f612e829f94d20399b60d31882e3010a37b5630"
+    },
+    {
+      "label": "Linux Audit, audit.rules(7)",
+      "url": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7",
+      "section": "DESCRIPTION: File System and System Call; HARD WIRED EVENTS",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.622Z",
+      "code": 200,
+      "finalUrl": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7",
+      "title": "Linux Audit, audit.rules(7)",
+      "sha256": "9cd6097a61dbc0d9377b76fe923b889f64b270d953aa69d6ebf9d4a765951e45"
+    },
+    {
+      "label": "Linux kernel, Linux Security Module Usage",
+      "url": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html",
+      "section": "Opening explanation of the LSM framework and MAC extensions",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.583Z",
+      "code": 200,
+      "finalUrl": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html",
+      "title": "Linux Security Module Usage — The Linux Kernel documentation",
+      "sha256": "3085040af9a37204d4cc62cfffbf7a05c9e15217c80f59ff28df1b5bac704cf9"
+    },
+    {
+      "label": "Linux kernel, Credentials in Linux",
+      "url": "https://www.kernel.org/doc/html/latest/security/credentials.html",
+      "section": "Overview: Rules, access control lists and security calculations",
+      "kind": "primary",
+      "checkedAt": "2026-09-07T08:54:52.781Z",
+      "code": 200,
+      "finalUrl": "https://www.kernel.org/doc/html/latest/security/credentials.html",
+      "title": "Credentials in Linux — The Linux Kernel documentation",
+      "sha256": "9fbac5ff4b0ea4b04d2a3d3d15156e2d70af287d9a58e47dd3badd9c54c2c22d"
+    }
+  ]
+}

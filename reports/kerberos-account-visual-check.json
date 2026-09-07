@@ -1,0 +1,95 @@
+{
+  "checkedAt": "2026-09-07T12:26:17.179Z",
+  "browser": "153.0.8010.12",
+  "scope": "Four KDC-account panel states, two citation-only panel states and two JavaScript-disabled reading states. Selected-claim presentation, source-link focus and overflow; axe on six graph states only. No operational or human review.",
+  "observations": [
+    {
+      "surface": "graph-panel",
+      "id": "krbtgt-hash",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 4,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/kerberos-account-panel-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "krbtgt-hash",
+      "width": 1440,
+      "theme": "light",
+      "claims": 4,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "krbtgt-hash",
+      "width": 390,
+      "theme": "dark",
+      "claims": 4,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "krbtgt-hash",
+      "width": 390,
+      "theme": "light",
+      "claims": 4,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/kerberos-account-panel-390.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pass-the-certificate",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "pass-the-certificate",
+      "width": 390,
+      "theme": "dark",
+      "claims": 0,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "reading-page",
+      "id": "krbtgt-hash",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "claims": 4,
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "krbtgt-hash",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "claims": 4,
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/kerberos-account-reading-mobile.png"
+    }
+  ],
+  "runtimeErrors": []
+}

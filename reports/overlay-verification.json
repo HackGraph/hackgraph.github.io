@@ -1,0 +1,135 @@
+{
+  "checkedAt": "2026-09-07T13:33:34.540Z",
+  "verificationCompleted": true,
+  "commands": [
+    {
+      "command": "npm run test:unit",
+      "exitCode": 0,
+      "passed": 144,
+      "logPath": ".cache/overlay-review/unit-tests.log",
+      "logSha256": "124bbcc1b99c5c90b903625e96cb70cf92a513265dd87e86724da1396a9afe52"
+    },
+    {
+      "command": "npx playwright test --project=chromium",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/overlay-review/chromium-tests.log",
+      "logSha256": "4d3bfd013674ed00af2a27c28d941543ce5867d291d21917169ed652803ce6d3"
+    },
+    {
+      "command": "npx playwright test --project=firefox",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/overlay-review/firefox-tests.log",
+      "logSha256": "15100da2998301b3f577ff4a864070875d6939d1073393ec013bbd7c1ece83d4"
+    },
+    {
+      "command": "npx playwright test --project=webkit",
+      "exitCode": 0,
+      "passed": 48,
+      "logPath": ".cache/overlay-review/webkit-tests.log",
+      "logSha256": "6b4d06b19c4cff6c4ec00b974edec730ef98748e4b6501ccb24af3953a3fc3e7"
+    },
+    {
+      "command": "npm run verify:build",
+      "exitCode": 0,
+      "logPath": ".cache/overlay-review/build-verification.log",
+      "logSha256": "63c15b75f9750d58225ad4100ca3443d9f52a731b2429b5892af9dc7cbbfe143"
+    }
+  ],
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 144,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ],
+    "allExpectedCasesPassed": true
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "5022316c8bc7e8a0361e2ce0966eb4e7bd0e40ad58f624ed20a4acd1dd8cbab1",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "26265d1a134cff433dc85a7d8ea7117cb5c139f4a57919f81b18aa468457f68a",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "engine/view.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "reference/windows-privilege-escalation.html": "049f27cf01dbea11bc41774986721a62c81b58b03e0359f2259a9ad1ac6128c1",
+    "reference/linux-privilege-escalation.html": "f9ce037bdde29b2c09670265be22d431544b33de9a18f9e266a31f8f8390b877",
+    "about.html": "9ba32914f3eb80c8a0ba35cd53913d7a784be6d804f646abcbf4239cb3e3c194",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "rendererSha256": "1cf73c7456480d25a54cba64aac3cceaf5b22b8e762a4344b10daa796750df51",
+  "previousRendererSha256": "54cfe1d652836a78f11519080cb25a2b84064dad8b44ece3143ea82d2574a4b3",
+  "graphDataSha256": "f8142a4271128b212b15de2af9a6d7db8003845b186c77b6bbcfb24638b59e37",
+  "allContentAndReviewRecordsUnchanged": true,
+  "visual": {
+    "genericStates": 42,
+    "obstructedBefore": 12,
+    "obstructedAfter": 0,
+    "integratedStates": 2,
+    "axeStates": 2,
+    "violations": 0,
+    "runtimeErrors": 0,
+    "screenshots": 6,
+    "screenshotsVisuallyInspected": true
+  },
+  "timing": {
+    "observations": 48,
+    "groups": 12,
+    "interFrameIntervalsOver34ms": 0,
+    "scope": "One browser page active at a time. Each source variant has four repetitions per count/browser; the first is retained as warmup and excluded from grouped statistics. Generic 25/100/250-child expansions at 1440×1000, 600 ms each. Inter-frame intervals use consecutive rAF timestamps; firstFrameDelayMs measures wall time to the first callback, including setup. Neither measures physical presentation time. Local headless observations, not device guarantees.",
+    "report": "reports/overlay-expansion-timing.json",
+    "setupCost": "Median increases of approximately 1–6 ms in the six browser/count groups; first-callback changes are mixed."
+  },
+  "hashes": {
+    "engine/view.js": "1cf73c7456480d25a54cba64aac3cceaf5b22b8e762a4344b10daa796750df51",
+    "reports/visuals/overlay-after-1024-768-expanded.png": "86f2975d8699d0d0853dd02b7bf7a0fd7f4d2787c3736bbc14e4e23611062f85",
+    "reports/visuals/overlay-after-844-390-expanded.png": "b967d5c7190ae1a56aa0e8b6e7d018bef17b4abbef48c0be8baff2ee1cf1b6ae",
+    "reports/visuals/overlay-after-390-844-settings.png": "4312eb914909760a61eb90d2e1b487b7c5788073e5abd71d62df6b34629f6096",
+    "reports/visuals/overlay-after-360-640-help.png": "5a00938c01b569641939bd5ffd387fa0d7bb6cbd8c92a8781db2e5ab89bc37c2",
+    "reports/visuals/overlay-integrated-1024-768.png": "b584ed41c513692b2c62ab3363dd838e3198b38f086d07125b2342930d5ed575",
+    "reports/visuals/overlay-integrated-844-390.png": "4333c76322a247f55abaa2c261b50000c019c07705bc302ee5bb68cdc960076e",
+    "browser/overlays.spec.mjs": "a40a62c8a4036476f1546c6c2f140b8bd0dc8b3bb17d613993ccc18baff018cb",
+    "reports/OVERLAY_REVIEW.md": "2fa0fd2765ce4cd3fe08aac5bc6d6702434b7921853f1febd68045925963302c",
+    "reports/overlay-before-expanded.json": "a01e64dc90d7c8524b6bc791b122e8b1f53fc1f5f0047393d3a151d14918c520",
+    "reports/overlay-after.json": "b3cc3e9312409e9eb93acb926f41722d8d9dfbe7ab8a9ae5ad6c729ee71ddcb7",
+    "reports/overlay-integrated.json": "882f4dd785baf8f5a28049af5f0fb1ca50842d57f806522ad1f2a398c98dd397",
+    "reports/overlay-expansion-timing.json": "76311f25e0f06e7f77aa94cedc479d67f7ebefb747a586c68dd0c9fdcaa0ef80",
+    "reports/VERIFICATION.md": "69f9488e3ea04d825b1a8c07abf06d71d344d0ffdfe682d90a1986946853ce43",
+    "reports/HUMAN_REVIEW.md": "1c1a852b645776583b02cf2e0e1869974a3f44e3ee2d07e534fa1b23409a9005",
+    "reports/COMPLETION_STATUS.md": "7e76a86c3abeb7ff734b6c6086fbddf1cfe4b17e230a19ddb7ed86f9c8bb6def",
+    "reports/LAYOUT_DECISION.md": "6809f0506e6b2a2f2325b66cdb5c90126279c18fac6dc0960a68b4da25c6a110",
+    "README.md": "6ebed835e13347958a3a3a698dcb3a567bc5ed6aa0cf818f473f4b247a6ced3a",
+    "RELEASE_NOTES.md": "6342cf76773eebf29d4e47ee4d4624d48ffe60b93743e2b075a296e0c63c3362",
+    "IMPLEMENTATION_PLAN.md": "dadc612505da32e5a3a36f41822a573c14989d3ef05194273bfb87d63069fd91",
+    "engine/README.md": "f18b2862100796c61b758376ce9df12f7c53188c820c14f791a6568c9bf888fc",
+    ".cache/overlay-review/inspect.mjs": "3552eaf5952f0ac77578aca2fbb56697b054fc67a5c860164bd931d0b9edc23b",
+    ".cache/overlay-review/integrated.mjs": "9cf9a57f557ae12ff730143a41695dbfb20fbde62361e8a041aae0be5752e4e1",
+    ".cache/overlay-review/browser-test-list.json": "b1cd093d16d7a2c0554b99cd52e54e2d0b10e18a88734dbe162f5f01f9d97206",
+    ".cache/overlay-review/regression-before.log": "af078143ab8bc89932d5838b9e2c122da72ac7998a7ba9a04089e80c902f1f08",
+    ".cache/overlay-review/overlays-all-browsers.log": "f06f1574dede97cbeacbbadabde7f4d63f12072351d8af47260ea4786f002ae9",
+    ".cache/overlay-review/overlays-all-browsers-fixed.log": "c04f6b5fa323999809f806c9392826bc108ae1162a26fbb71e28da437f837cb1",
+    ".cache/overlay-review/focused-row-before.log": "1f3047ba8684be71d2151da58d5154ed879caca627be199bdca2b2f4cac20f4a"
+  },
+  "scope": "Focused-card overlay placement, keyboard dismissal and responsive choice visibility. No graph-content, citation, review-status, command or connection changes. No physical-device, screen-reader, actual Safari, hosted workflow or deployment verification."
+}

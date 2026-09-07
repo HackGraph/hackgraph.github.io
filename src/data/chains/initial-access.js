@@ -8,13 +8,71 @@ import { mitre } from '../lib.js';
 /** @type {import('../schema.js').TechniqueNodeDef[]} */
 export const initialAccessNodes = [
   {
-    id: 'start',
-    label: 'Engagement Start',
-    phase: 'recon',
-    kind: 'start',
-    summary: 'You have network access. Pick a path.',
-    description:
-      'You are plugged into the internal network (or have a low-privilege foothold). From here the goal is to acquire your first set of valid domain credentials, then escalate toward Domain Admin. What you hold now splits the approach: nothing, a valid domain account, or valid local credentials.',
+    "id": "start",
+    "label": "Engagement Start",
+    "phase": "recon",
+    "kind": "start",
+    "summary": "Explore directory identities and their access boundaries.",
+    "description": "This map organizes Active Directory identity and access-control topics. AD DS stores information about network objects, including user and computer accounts, and integrates authentication with object access control. Windows accounts can be local to a computer or belong to a domain. These are different account scopes; network access alone does not establish either account identity or administrative authority.",
+    "references": [
+      {
+        "label": "Microsoft, Active Directory Domain Services overview",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+        "kind": "primary",
+        "section": "Introduction"
+      },
+      {
+        "label": "Microsoft, Windows Authentication Concepts",
+        "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+        "section": "Authentication and authorization: A travel analogy; Security principals and accounts",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected identity and authorization claims in this overview. Excludes commands, tools, prerequisites, connection outcomes, route viability, and ATT&CK mappings. Navigation labels are project conventions.",
+      "reviewedContent": {
+        "description": "This map organizes Active Directory identity and access-control topics. AD DS stores information about network objects, including user and computer accounts, and integrates authentication with object access control. Windows accounts can be local to a computer or belong to a domain. These are different account scopes; network access alone does not establish either account identity or administrative authority.",
+        "id": "start",
+        "kind": "start",
+        "label": "Engagement Start",
+        "phase": "recon",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Active Directory Domain Services overview",
+            "section": "Introduction",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Windows Authentication Concepts",
+            "section": "Authentication and authorization: A travel analogy; Security principals and accounts",
+            "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+          }
+        ],
+        "summary": "Explore directory identities and their access boundaries."
+      },
+      "claims": [
+        {
+          "text": "AD DS stores information about network objects and integrates sign-in authentication with directory-object access control.",
+          "section": "Microsoft, Active Directory Domain Services overview — Introduction",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+          ]
+        },
+        {
+          "text": "Windows distinguishes local accounts from domain accounts, with authentication and authorization addressing identity and permitted access.",
+          "section": "Microsoft, Windows Authentication Concepts — Security principals and accounts; Authentication and authorization: A travel analogy",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'network-recon',
@@ -150,7 +208,7 @@ export const initialAccessNodes = [
     opsec: 'The relayed authentication and any code execution leave logon events (4624 type 3) on the target; the LDAP ACL write for --escalate-user is a high-signal directory modification (5136). --escalate-user also needs the relayed account to hold write access over the domain object.',
     references: [
       { label: 'The Hacker Recipes, NTLM relay', url: 'https://www.thehacker.recipes/ad/movement/ntlm/relay' },
-      { label: 'Microsoft, SMB signing required by default', url: 'https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/4090550' },
+      { label: 'Microsoft, SMB signing required by default', url: 'https://techcommunity.microsoft.com/blog/filecab/smb-signing-required-by-default-in-windows-insider/3831704' },
       { label: 'Microsoft Learn, Control SMB signing behavior (24H2 and Server 2025 defaults)', url: 'https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-signing' },
     ],
   },
@@ -189,27 +247,107 @@ export const initialAccessNodes = [
     ],
   },
   {
-    id: 'crack-netntlm',
-    label: 'Crack NetNTLMv2',
-    phase: 'credential-access',
-    needs: 'none',
-    summary: 'Offline-crack the captured hash to a password.',
-    description:
-      'If relaying is not viable (signing enforced everywhere), crack the captured NetNTLMv2 hash offline. This only yields usable credentials when the captured principal is a user account whose password is in scope of your wordlist and rules; machine-account (host$) captures use auto-generated ~120-character random passwords and are effectively uncrackable, and local (non-domain) captures do not give you domain credentials. So the path on to valid domain creds is conditional: the account must be a domain user with a weak or known password.',
-    tools: [
-      { name: 'hashcat', url: 'https://hashcat.net/hashcat/' },
-      { name: 'john', url: 'https://www.openwall.com/john/' },
-    ],
-    commands: [
+    "id": "crack-netntlm",
+    "label": "Crack NetNTLMv2",
+    "phase": "credential-access",
+    "needs": "none",
+    "summary": "Distinguish NTLM credentials from challenge-response authentication.",
+    "description": "NTLM credentials include an account domain, user name and a one-way password hash. Network authentication uses a challenge and response to demonstrate access to those credentials without transmitting the password itself. The stored credential and the authentication exchange are different concepts.",
+    "tools": [
       {
-        label: 'Crack NetNTLMv2 (mode 5600)',
-        code: 'hashcat -m 5600 captured.txt rockyou.txt -r rules/best64.rule',
-        lang: 'bash',
+        "name": "hashcat",
+        "url": "https://hashcat.net/hashcat/"
       },
+      {
+        "name": "john",
+        "url": "https://www.openwall.com/john/"
+      }
     ],
-    requires: ['A captured NetNTLMv2 hash'],
-    mitre: mitre('T1110.002'),
-    opsec: 'Fully offline: zero footprint on the target once captured.',
+    "commands": [
+      {
+        "label": "Crack NetNTLMv2 (mode 5600)",
+        "code": "hashcat -m 5600 captured.txt rockyou.txt -r rules/best64.rule",
+        "lang": "bash"
+      }
+    ],
+    "requires": [
+      "A captured NetNTLMv2 hash"
+    ],
+    "mitre": {
+      "id": "T1110.002",
+      "url": "https://attack.mitre.org/techniques/T1110/002/"
+    },
+    "opsec": "Fully offline: zero footprint on the target once captured.",
+    "references": [
+      {
+        "label": "Microsoft — Microsoft NTLM",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected foundational definitions of authentication, Windows management, service configuration and securable objects. These sources support only the listed conceptual claims. Excludes technique mechanics, commands, tools, prerequisites, applicability, version or algorithm details, connection outcomes, attack-path viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "hashcat -m 5600 captured.txt rockyou.txt -r rules/best64.rule",
+            "label": "Crack NetNTLMv2 (mode 5600)",
+            "lang": "bash"
+          }
+        ],
+        "description": "NTLM credentials include an account domain, user name and a one-way password hash. Network authentication uses a challenge and response to demonstrate access to those credentials without transmitting the password itself. The stored credential and the authentication exchange are different concepts.",
+        "id": "crack-netntlm",
+        "label": "Crack NetNTLMv2",
+        "mitre": {
+          "id": "T1110.002",
+          "url": "https://attack.mitre.org/techniques/T1110/002/"
+        },
+        "needs": "none",
+        "opsec": "Fully offline: zero footprint on the target once captured.",
+        "phase": "credential-access",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft — Microsoft NTLM",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+          }
+        ],
+        "requires": [
+          "A captured NetNTLMv2 hash"
+        ],
+        "summary": "Distinguish NTLM credentials from challenge-response authentication.",
+        "tools": [
+          {
+            "name": "hashcat",
+            "url": "https://hashcat.net/hashcat/"
+          },
+          {
+            "name": "john",
+            "url": "https://www.openwall.com/john/"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Microsoft describes NTLM credentials as an account domain, user name and a one-way password hash.",
+          "section": "Microsoft — Microsoft NTLM — NTLM authentication: credential definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+          ]
+        },
+        {
+          "text": "NTLM challenge-response authentication demonstrates access to credentials without transmitting the user's password.",
+          "section": "Microsoft — Microsoft NTLM — NTLM authentication: challenge-response purpose",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'smb-exec-foothold',
@@ -238,26 +376,155 @@ export const initialAccessNodes = [
     ],
   },
   {
-    id: 'local-admin-host',
-    aliases: ['AdminTo'],
-    label: 'Admin / Root on Host',
-    phase: 'priv-esc',
-    needs: 'local-admin',
-    summary: 'Local admin / SYSTEM on Windows, or root on Linux.',
-    description:
-      'You hold administrative control of a host: SYSTEM or local administrator on Windows, or root on Linux. With it, you can harvest the host\'s credentials. On Windows, dumping LSASS yields live credentials (NTLM hashes, Kerberos tickets, sometimes cleartext); dumping the SAM/SECURITY/SYSTEM hives yields local NT hashes, LSA secrets, and cached DCC2 domain-logon verifiers (which must be cracked offline, they cannot be passed); DPAPI material decrypts protected local and user secrets such as Credential Manager, browser, and application data. On Linux, loot keytabs, ticket caches, and SSH keys. Reuse what you recover to move to the next host.',
-    requires: ['Local admin / SYSTEM (Windows) or root (Linux) on a host'],
-    mitre: mitre('T1003'),
-    tools: [
-      { name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' },
+    "id": "local-admin-host",
+    "aliases": [
+      "AdminTo"
     ],
-    commands: [
+    "label": "Admin / Root on Host",
+    "phase": "priv-esc",
+    "needs": "local-admin",
+    "summary": "Distinguish Windows administrative identities and Linux root context.",
+    "description": "Windows administrator membership, the token used by an application, and LocalSystem are distinct concepts. In UAC Admin Approval Mode, an administrator has separate standard and administrative tokens. LocalSystem is a predefined account with extensive local privileges. Linux divides traditional superuser privileges into capabilities; user namespaces can give a process UID 0 inside a namespace while it remains unprivileged outside. Administrative context needs these identity and scope distinctions.",
+    "requires": [
+      "Local admin / SYSTEM (Windows) or root (Linux) on a host"
+    ],
+    "mitre": {
+      "id": "T1003",
+      "url": "https://attack.mitre.org/techniques/T1003/"
+    },
+    "tools": [
       {
-        label: 'Dump SAM / LSA / DPAPI remotely (NetExec)',
-        code: 'nxc smb <host> -u Administrator -H <NTHASH> --local-auth --sam --lsa --dpapi',
-        lang: 'bash',
-      },
+        "name": "NetExec",
+        "url": "https://github.com/Pennyw0rth/NetExec"
+      }
     ],
+    "commands": [
+      {
+        "label": "Dump SAM / LSA / DPAPI remotely (NetExec)",
+        "code": "nxc smb <host> -u Administrator -H <NTHASH> --local-auth --sam --lsa --dpapi",
+        "lang": "bash"
+      }
+    ],
+    "references": [
+      {
+        "label": "Microsoft, How User Account Control works",
+        "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works",
+        "section": "Sign in process; The UAC user experience",
+        "kind": "primary"
+      },
+      {
+        "label": "Microsoft, LocalSystem Account",
+        "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+        "section": "Opening account definition",
+        "kind": "primary"
+      },
+      {
+        "label": "Linux man-pages, capabilities(7)",
+        "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+        "section": "DESCRIPTION: traditional privilege model and per-thread capabilities",
+        "kind": "primary"
+      },
+      {
+        "label": "Linux man-pages, user_namespaces(7)",
+        "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+        "section": "DESCRIPTION: identities inside and outside a user namespace",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims about execution identities, processor modes, and task/startup permissions. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "aliases": [
+          "AdminTo"
+        ],
+        "commands": [
+          {
+            "code": "nxc smb <host> -u Administrator -H <NTHASH> --local-auth --sam --lsa --dpapi",
+            "label": "Dump SAM / LSA / DPAPI remotely (NetExec)",
+            "lang": "bash"
+          }
+        ],
+        "description": "Windows administrator membership, the token used by an application, and LocalSystem are distinct concepts. In UAC Admin Approval Mode, an administrator has separate standard and administrative tokens. LocalSystem is a predefined account with extensive local privileges. Linux divides traditional superuser privileges into capabilities; user namespaces can give a process UID 0 inside a namespace while it remains unprivileged outside. Administrative context needs these identity and scope distinctions.",
+        "id": "local-admin-host",
+        "label": "Admin / Root on Host",
+        "mitre": {
+          "id": "T1003",
+          "url": "https://attack.mitre.org/techniques/T1003/"
+        },
+        "needs": "local-admin",
+        "phase": "priv-esc",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, How User Account Control works",
+            "section": "Sign in process; The UAC user experience",
+            "url": "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, LocalSystem Account",
+            "section": "Opening account definition",
+            "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          },
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, capabilities(7)",
+            "section": "DESCRIPTION: traditional privilege model and per-thread capabilities",
+            "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          },
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, user_namespaces(7)",
+            "section": "DESCRIPTION: identities inside and outside a user namespace",
+            "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+          }
+        ],
+        "requires": [
+          "Local admin / SYSTEM (Windows) or root (Linux) on a host"
+        ],
+        "summary": "Distinguish Windows administrative identities and Linux root context.",
+        "tools": [
+          {
+            "name": "NetExec",
+            "url": "https://github.com/Pennyw0rth/NetExec"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "In UAC Admin Approval Mode, an administrator has separate standard and administrative access tokens.",
+          "section": "Microsoft, How User Account Control works — Sign in process; The UAC user experience",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/security/application-security/application-control/user-account-control/how-it-works"
+          ]
+        },
+        {
+          "text": "LocalSystem is a predefined Windows account with extensive local privileges.",
+          "section": "Microsoft, LocalSystem Account — Opening account definition",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+          ]
+        },
+        {
+          "text": "Linux divides traditional superuser privileges into independently enabled per-thread capabilities.",
+          "section": "Linux man-pages, capabilities(7) — DESCRIPTION: traditional privilege model and per-thread capabilities",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          ]
+        },
+        {
+          "text": "A process can have UID 0 inside a user namespace while remaining unprivileged outside it.",
+          "section": "Linux man-pages, user_namespaces(7) — DESCRIPTION: identities inside and outside a user namespace",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'dump-lsass',
@@ -331,40 +598,194 @@ export const initialAccessNodes = [
     ],
   },
   {
-    id: 'valid-domain-creds',
-    label: 'Valid Domain Credentials',
-    phase: 'enumeration',
-    needs: 'domain-user',
-    hub: true, // the domain-identity convergence hub: many creds-yielding steps lead back here
-    summary: 'A foothold identity to enumerate and escalate from.',
-    description:
-      "You hold at least one valid domain account (cleartext, hash, or ticket) to enumerate and escalate from. Check first whether it is already local admin somewhere. Many users administer their own workstation or a cluster of hosts, so spray the credential across the estate and watch for NetExec's (Pwn3d!) marker, then move to dumping credentials as local admin.",
-    tools: [{ name: 'NetExec', url: 'https://github.com/Pennyw0rth/NetExec' }],
-    commands: [
+    "id": "valid-domain-creds",
+    "label": "Valid Domain Credentials",
+    "phase": "enumeration",
+    "needs": "domain-user",
+    "hub": true,
+    "summary": "An Active Directory account identity, with permissions determined separately.",
+    "description": "An Active Directory domain account is a directory object representing an identity. Windows identifies security principals with security identifiers (SIDs). Authentication verifies an identity; authorization determines the permitted resources and operations. A valid domain identity therefore needs to be described separately from the permissions assigned to it.",
+    "tools": [
       {
-        label: 'Find where these creds are already local admin (look for (Pwn3d!))',
-        code: 'nxc smb 10.0.0.0/24 -u user -p pass -d domain.local',
-        lang: 'bash',
+        "name": "NetExec",
+        "url": "https://github.com/Pennyw0rth/NetExec"
+      }
+    ],
+    "commands": [
+      {
+        "label": "Find where these creds are already local admin (look for (Pwn3d!))",
+        "code": "nxc smb 10.0.0.0/24 -u user -p pass -d domain.local",
+        "lang": "bash"
+      }
+    ],
+    "requires": [
+      "Any valid domain credential"
+    ],
+    "references": [
+      {
+        "label": "Microsoft, Security principals",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+        "section": "How security principals work; Accounts and security groups",
+        "kind": "primary"
       },
+      {
+        "label": "Microsoft, Windows Authentication Concepts",
+        "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+        "section": "Authentication and authorization: A travel analogy",
+        "kind": "primary"
+      },
+      {
+        "label": "NetExec, SMB authentication & (Pwn3d!) check",
+        "url": "https://www.netexec.wiki/smb-protocol/authentication"
+      }
     ],
-    requires: ['Any valid domain credential'],
-    references: [
-      { label: 'NetExec, SMB authentication & (Pwn3d!) check', url: 'https://www.netexec.wiki/smb-protocol/authentication' },
-    ],
-    mitre: mitre('T1078.002'),
-    opsec: 'A subnet-wide SMB spray is noisy: it drives a Type 3 network logon on every reachable host, landing as 4624 on success and 4625 where the account is not authorized, which is an easy volumetric detection. Scope the spray to a known target list rather than a blind /24.',
+    "mitre": {
+      "id": "T1078.002",
+      "url": "https://attack.mitre.org/techniques/T1078/002/"
+    },
+    "opsec": "A subnet-wide SMB spray is noisy: it drives a Type 3 network logon on every reachable host, landing as 4624 on success and 4625 where the account is not authorized, which is an easy volumetric detection. Scope the spray to a known target list rather than a blind /24.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the account, credential, and authentication explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "nxc smb 10.0.0.0/24 -u user -p pass -d domain.local",
+            "label": "Find where these creds are already local admin (look for (Pwn3d!))",
+            "lang": "bash"
+          }
+        ],
+        "description": "An Active Directory domain account is a directory object representing an identity. Windows identifies security principals with security identifiers (SIDs). Authentication verifies an identity; authorization determines the permitted resources and operations. A valid domain identity therefore needs to be described separately from the permissions assigned to it.",
+        "hub": true,
+        "id": "valid-domain-creds",
+        "label": "Valid Domain Credentials",
+        "mitre": {
+          "id": "T1078.002",
+          "url": "https://attack.mitre.org/techniques/T1078/002/"
+        },
+        "needs": "domain-user",
+        "opsec": "A subnet-wide SMB spray is noisy: it drives a Type 3 network logon on every reachable host, landing as 4624 on success and 4625 where the account is not authorized, which is an easy volumetric detection. Scope the spray to a known target list rather than a blind /24.",
+        "phase": "enumeration",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Security principals",
+            "section": "How security principals work; Accounts and security groups",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+          },
+          {
+            "kind": "primary",
+            "label": "Microsoft, Windows Authentication Concepts",
+            "section": "Authentication and authorization: A travel analogy",
+            "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+          },
+          {
+            "label": "NetExec, SMB authentication & (Pwn3d!) check",
+            "url": "https://www.netexec.wiki/smb-protocol/authentication"
+          }
+        ],
+        "requires": [
+          "Any valid domain credential"
+        ],
+        "summary": "An Active Directory account identity, with permissions determined separately.",
+        "tools": [
+          {
+            "name": "NetExec",
+            "url": "https://github.com/Pennyw0rth/NetExec"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Active Directory domain accounts are directory objects, and Windows identifies security principals using SIDs.",
+          "section": "Microsoft, Security principals — How security principals work; Accounts and security groups",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+          ]
+        },
+        {
+          "text": "Authentication verifies identity; authorization determines allowed access, which authentication alone does not guarantee.",
+          "section": "Microsoft, Windows Authentication Concepts — Authentication and authorization: A travel analogy",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'valid-local-creds',
-    label: 'Valid Local Credentials',
-    phase: 'initial-access',
-    needs: 'creds',
-    hub: true, // the local-identity convergence hub
-    summary: 'A local account on a host, often low-privilege; may need escalation to local admin.',
-    description:
-      'You hold a valid LOCAL account (not a domain account): a default/weak local login, a cracked SAM hash, or creds from a config file. If it is low-privilege you must escalate locally before you can harvest secrets or pivot. Local admin on a domain-joined host lets you dump domain credentials.',
-    requires: ['Any valid local account on a host'],
-    mitre: mitre('T1078.003'),
+    "id": "valid-local-creds",
+    "label": "Valid Local Credentials",
+    "phase": "initial-access",
+    "needs": "creds",
+    "hub": true,
+    "summary": "An account managed by a computer's local account database.",
+    "description": "Local users and groups are managed in the computer's Security Accounts Manager (SAM) database. Domain accounts are instead directory objects held in Active Directory. This distinction identifies where an account is managed. Windows evaluates resource access using the account's security context and the permissions assigned to the resource; local account scope alone does not describe those permissions.",
+    "requires": [
+      "Any valid local account on a host"
+    ],
+    "mitre": {
+      "id": "T1078.003",
+      "url": "https://attack.mitre.org/techniques/T1078/003/"
+    },
+    "references": [
+      {
+        "label": "Microsoft, Security principals",
+        "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+        "section": "How security principals work; Accounts and security groups",
+        "kind": "primary"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the account, credential, and authentication explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "description": "Local users and groups are managed in the computer's Security Accounts Manager (SAM) database. Domain accounts are instead directory objects held in Active Directory. This distinction identifies where an account is managed. Windows evaluates resource access using the account's security context and the permissions assigned to the resource; local account scope alone does not describe those permissions.",
+        "hub": true,
+        "id": "valid-local-creds",
+        "label": "Valid Local Credentials",
+        "mitre": {
+          "id": "T1078.003",
+          "url": "https://attack.mitre.org/techniques/T1078/003/"
+        },
+        "needs": "creds",
+        "phase": "initial-access",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Microsoft, Security principals",
+            "section": "How security principals work; Accounts and security groups",
+            "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+          }
+        ],
+        "requires": [
+          "Any valid local account on a host"
+        ],
+        "summary": "An account managed by a computer's local account database."
+      },
+      "claims": [
+        {
+          "text": "Local users and groups are managed in the local SAM database; domain accounts are stored in Active Directory.",
+          "section": "Microsoft, Security principals — Accounts and security groups",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+          ]
+        },
+        {
+          "text": "Windows resource access checks compare access-token information with the resource's access-control entries.",
+          "section": "Microsoft, Security principals — Authorization and access control components",
+          "sources": [
+            "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'windows-local-privesc',

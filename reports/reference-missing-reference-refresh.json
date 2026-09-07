@@ -1,0 +1,330 @@
+{
+  "checkedAt": "2026-09-07T13:44:05.570Z",
+  "scope": "Fourteen primary documents retrieved for selected conceptual comparisons in eight previously uncited entries. Other observations remain unchanged. No operational validation.",
+  "results": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:23.843Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:23.855Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:23.855Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-authsod/e59cfa30-91dc-4889-ba17-2793080cf1df"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.597Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/termserv/remote-desktop-protocol"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-configuration"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/database-of-installed-services"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:24.878Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:25.158Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:25.401Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+        }
+      ]
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads",
+      "status": "responded",
+      "checkedAt": "2026-09-07T13:41:25.401Z",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/procthread/processes-and-threads"
+        }
+      ]
+    }
+  ],
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.263Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.092Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.641Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.085Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/fileio/file-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.576Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.386Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-key-security-and-access-rights"
+        }
+      ],
+      "checkedAt": "2026-09-07T09:37:39.763Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/dlls/about-dynamic-link-libraries"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:37:22.601Z"
+    }
+  ]
+}

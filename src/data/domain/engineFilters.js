@@ -10,7 +10,7 @@
  * rebuilt as DOM, because there is no React inside the canvas any more.
  */
 import { FOOTHOLDS, footholdSatisfies } from '../footholds.js';
-import { WINDOWS_VERSIONS } from '../windows-versions.js';
+import { WINDOWS_VERSIONS, versionCoverage } from '../windows-versions.js';
 
 /** A node as the engine hands it back — our adapter's shape. */
 
@@ -31,16 +31,15 @@ export const versionFilter = {
   appliesTo: (map) => usedVersionIds(map).size > 0,
   initial: () => ({ id: null }),
   isActive: (s) => s.id != null,
-  dims: (node, s) => s.id != null && !!node.versions && !node.versions.includes(s.id),
+  dims: (node, s) => versionCoverage(node, s.id) === 'outside-authored-range',
   control(state, container, onChange) {
-    const used = usedVersionIds({ nodes: [] });
-    void used; // the option list is filtered per family below, from the live map
     const select = document.createElement('select');
     select.className = 'fselect';
-    select.title = "Dim techniques that don't apply to this Windows version";
+    select.title = 'Highlight authored version coverage; unlisted applicability remains unknown';
+    select.setAttribute('aria-label', 'Windows version coverage');
     const all = document.createElement('option');
     all.value = '';
-    all.textContent = 'All versions';
+    all.textContent = 'No version filter';
     select.appendChild(all);
     for (const family of ['client','server' ]) {
       const group = document.createElement('optgroup');
@@ -48,17 +47,21 @@ export const versionFilter = {
       for (const v of WINDOWS_VERSIONS.filter((w) => w.family === family)) {
         const o = document.createElement('option');
         o.value = v.id;
-        o.textContent = v.label;
+        o.textContent = v.label + (v.catalogOnly ? ' · coverage unknown' : '');
         group.appendChild(o);
       }
       if (group.childElementCount) select.appendChild(group);
     }
     select.value = state.id ?? '';
+    const note = document.createElement('p');
+    note.className = 'filter-note';
+    note.textContent = 'This filter reflects authored tags. An undimmed topic is not confirmation of compatibility.';
     select.addEventListener('change', () => {
       state.id = select.value || null;
       onChange();
     });
     container.appendChild(select);
+    container.appendChild(note);
   },
 };
 
@@ -80,11 +83,13 @@ export const footholdFilter = {
       const on = () => state.have.includes(f.id);
       chip.className = 'fchip' + (on() ? '' : ' off');
       chip.textContent = f.label;
+      chip.setAttribute('aria-pressed', String(on()));
       chip.addEventListener('click', () => {
         const i = state.have.indexOf(f.id);
         if (i >= 0) state.have.splice(i, 1);
         else state.have.push(f.id);
         chip.classList.toggle('off', !on());
+        chip.setAttribute('aria-pressed', String(on()));
         onChange();
       });
       container.appendChild(chip);

@@ -1,0 +1,69 @@
+{
+  "scope": "Publisher-declared relocation notices and destination publication identity only. No command, applicability or route validation.",
+  "results": [
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "checkedAt": "2026-09-07T11:57:09.048Z",
+      "status": 200,
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Linux%20-%20Privilege%20Escalation.md",
+      "file": ".cache/citation-relocation-review/captures/notice-0.html",
+      "sha256": "926070288d6184fa16c62da1aa9b7ce938087feee559f425b76bd89179c09895",
+      "title": "PayloadsAllTheThings/Methodology and Resources/Linux - Privilege Escalation.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "headings": [
+        "Linux - Privilege Escalation.md",
+        "Linux - Privilege Escalation.md",
+        "Linux - Privilege Escalation"
+      ],
+      "canonical": null,
+      "relocation": {
+        "notice": "⚠️ Content of this page has been moved to InternalAllTheThings/redteam/persistence/linux-persistence",
+        "target": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    },
+    {
+      "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/",
+      "checkedAt": "2026-09-07T11:57:09.877Z",
+      "status": 200,
+      "finalUrl": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/",
+      "file": ".cache/citation-relocation-review/captures/destination-0.html",
+      "sha256": "89d76fdb09753478dce8d39774f1f851e9778d20ba5c1cea0e0bf664774dc922",
+      "title": "Linux - Privilege Escalation - Internal All The Things",
+      "headings": [
+        "Linux - Privilege Escalation"
+      ],
+      "canonical": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+    },
+    {
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "checkedAt": "2026-09-07T11:57:10.188Z",
+      "status": 200,
+      "finalUrl": "https://github.com/swisskyrepo/PayloadsAllTheThings/blob/master/Methodology%20and%20Resources/Reverse%20Shell%20Cheatsheet.md",
+      "file": ".cache/citation-relocation-review/captures/notice-1.html",
+      "sha256": "bb5d331d34cf1c313fb8524f5078c4f1981bf8e85f784cde33beb94ef81a364a",
+      "title": "PayloadsAllTheThings/Methodology and Resources/Reverse Shell Cheatsheet.md at master · swisskyrepo/PayloadsAllTheThings · GitHub",
+      "headings": [
+        "Reverse Shell Cheatsheet.md",
+        "Reverse Shell Cheatsheet.md",
+        "Reverse Shell Cheat Sheet"
+      ],
+      "canonical": null,
+      "relocation": {
+        "notice": "⚠️ Content of this page has been moved to InternalAllTheThings/cheatsheet/shell-reverse",
+        "target": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/"
+      }
+    },
+    {
+      "url": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/",
+      "checkedAt": "2026-09-07T11:57:10.562Z",
+      "status": 200,
+      "finalUrl": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/",
+      "file": ".cache/citation-relocation-review/captures/destination-1.html",
+      "sha256": "ac5a5b059db5bdce20a610e31b5ce4f3bbf2a491f2a8a4efebbc78c0a38d280b",
+      "title": "Reverse Shell Cheat Sheet - Internal All The Things",
+      "headings": [
+        "Reverse Shell Cheat Sheet"
+      ],
+      "canonical": "https://swisskyrepo.github.io/InternalAllTheThings/cheatsheets/shell-reverse-cheatsheet/"
+    }
+  ]
+}

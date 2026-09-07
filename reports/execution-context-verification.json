@@ -1,0 +1,164 @@
+{
+  "checkedAt": "2026-09-07T09:45:18.099Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 117,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "aac8f240bb783c7496aba5cca9426fd4fa2f3cc1c4ea606f143dc0b755250efb",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "0b1bc4866f294cb0ed245e4df941e5e665d5233c75fed3be9aa7ba3645e77df4",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/credential-access.js",
+    "src/data/chains/initial-access.js",
+    "src/data/chains/pe-techniques.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedPageHashes": {
+    "reference.html": "f80f87c3562130c1307634974b66c4c06388de4317b102a48d12da534091159f",
+    "reference/active-directory.html": "a426d7b9f2987d1e8ad3e06d4f66cb261b809e9f05375804ffe8f83da5ef3893",
+    "reference/windows-privilege-escalation.html": "7a2fd8fdcfe5790840078ac9439c0579151928f9a70ffff998ba9e25422be808",
+    "reference/linux-privilege-escalation.html": "cf79c083f06f5be507a73c5dfd4b49b33fb4b13d3063c0f204af4ba6ad0968d7",
+    "about.html": "9fe6c647c720ae46f1b9241fd11756119966ca9286880eab8d18e3ce4d9079dc",
+    "glossary.html": "46bc64242cd35ec66babe51bc24141184ef215d52dfb82934868d0e9226d76c9",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "5c8c74b14f7495c8ff650fabb0d7f80b61ef59c5b797b6d6814e3a8fe4cb9e90",
+  "graphDataBeforeSha256": "e611528dfc11d6b4cbe0103b79c7d51654d40faf6528ca30e1ccd2cc716b6d4f",
+  "changes": [
+    {
+      "map": "ad",
+      "id": "local-admin-host",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 4
+    },
+    {
+      "map": "ad",
+      "id": "service-account-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-admin-schtask-system",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-autorun-writable",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-scheduled-task-abuse",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-prim-kernel-exec",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    }
+  ],
+  "allOtherEntryFieldsAndConnectionsUnchanged": true,
+  "sourceCapture": {
+    "publications": 10,
+    "successfulRetrievals": 10,
+    "responseHashesVerified": true,
+    "report": "reports/execution-context-source-capture.json"
+  },
+  "panelCheck": {
+    "states": 12,
+    "selectedClaimsPerViewport": 14,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true,
+    "screenshots": 6
+  },
+  "hashes": {
+    "about.html": "9fe6c647c720ae46f1b9241fd11756119966ca9286880eab8d18e3ce4d9079dc",
+    "reference/active-directory.html": "a426d7b9f2987d1e8ad3e06d4f66cb261b809e9f05375804ffe8f83da5ef3893",
+    "reference/windows-privilege-escalation.html": "7a2fd8fdcfe5790840078ac9439c0579151928f9a70ffff998ba9e25422be808",
+    "src/data/chains/credential-access.js": "d4d762466028e86cf69c1553db1f69bdc39ea0f6823a30e64fc6ff701a8a5799",
+    "src/data/chains/initial-access.js": "91e60905a3dcfa47130a5ef687722485f6148316c467b5ce7ae6d434cf355d16",
+    "src/data/chains/pe-techniques.js": "bc07cb719a7c145cae7fd9c53d395d6d0d6c864e1dd397973c85156efee85a94",
+    "reports/visuals/execution-context-local-admin-host-desktop.png": "b898a1a8677dc1741f539314dbb00940ae2c644ac15ced6e290a034b653e2c3f",
+    "reports/visuals/execution-context-local-admin-host-mobile.png": "ca8041feba67ae45d1b609cf621a1324826174d6537618063d1eab554b56a76e",
+    "reports/visuals/execution-context-pe-prim-kernel-exec-desktop.png": "63c0087638a0cc7e0c2506f8b9b50f90ba54963793d4b409e682a5211912e01a",
+    "reports/visuals/execution-context-pe-prim-kernel-exec-mobile.png": "873f14ee221a49610c1fb15b512c5aa1c60cfa9bf354ade93a273eb280360dd7",
+    "reports/visuals/execution-context-pe-scheduled-task-abuse-desktop.png": "5d1aedac2254819c6afbd64942f418f6f17eb7031bafcd4b08318ba7b623f80f",
+    "reports/visuals/execution-context-pe-scheduled-task-abuse-mobile.png": "25bfb08e88ae00a2b9aaedb513aabf16714d847ebc4371470df5337935e4ffbd",
+    "reports/execution-context-source-capture.json": "15584b771f20cfd91885c73c36c21849e4973e7556d3feef28b9f5053e83cd70",
+    "reports/reference-execution-context-refresh.json": "652804c548b265ed91f9348b92230772f9ea103642534e493b85e611d8440636",
+    "reports/execution-context-panel-check.json": "873017a0581a7417ad2075e70c7b10e4881ce6d97a8e13324de8ebcf05152b41",
+    "reports/content-coverage.json": "088a55db913d4d94eeea9fcb71896466f039de87256177a240013a200eb31535",
+    "reports/review-inventory.json": "c8fbacd4a9902be0d71e6abb70d233ddafa4581cc4d5c643952070fc399a2244",
+    "reports/review-inventory.csv": "ff21591f8968d7a54ba09b5b199a671dee3315db20a31e34de7539f77f6ae9b2",
+    "reports/data-parity.json": "cda12129b28accab74dd9a0634e2433ce5857bdd0a84a4de7a7745cad32888e4",
+    "reports/reference-availability.json": "f2883266598c3e2a22db04f8176358fd7f41e6cb0a34a3caa5dadd9568ef08a5",
+    ".cache/execution-context-review/edits.mjs": "79657b1646033f1df3d1c97d84c09a6b2122b97a1fb67cd22c9a146393387757",
+    ".cache/execution-context-review/panels.mjs": "cea03483eb03adb6ccea35b19bb4d717a555d3b7037f4c70336d4c945926bde0",
+    ".cache/execution-context-review/final-audit.mjs": "d80a8b9e4d7b7366f88f1874427f0f1fdccf1d7170bbd9f63c494aaa44143e1f"
+  },
+  "logPath": ".cache/execution-context-review/full-tests.log",
+  "logSha256": "c5153c1108fb2afb0eec4748e7efd2eabb1be67066f9c5ccb8cd9d89bebf2aae",
+  "scope": "Local software, rendering, source-capture and data-parity checks after six conceptual explanation corrections. The explicit AI comparisons cover selected execution-identity, processor-mode and task/startup-permission claims only. They do not establish complete entry review, command or prerequisite accuracy, applicability, ATT&CK mapping suitability, operational route viability, human review, hosted workflow execution or deployment."
+}

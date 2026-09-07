@@ -1,0 +1,47 @@
+{
+  "checkedAt": "2026-09-07T10:04:38.352Z",
+  "browser": "153.0.8010.12",
+  "scope": "Reading-guide count and scope, reference-count explanation, keyboard table focus/scrolling and horizontal overflow at two widths with JavaScript enabled and disabled. Axe runs only in the two JavaScript-enabled states.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": [],
+      "keyboardFocus": true,
+      "keyboardScrolled": false
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "javaScriptEnabled": true,
+      "overflow": false,
+      "violations": [],
+      "keyboardFocus": true,
+      "keyboardScrolled": true
+    },
+    {
+      "width": 1440,
+      "height": 1000,
+      "javaScriptEnabled": false,
+      "overflow": false,
+      "violations": null,
+      "keyboardFocus": true,
+      "keyboardScrolled": false,
+      "screenshot": "reports/visuals/taxonomy-coverage-1440.png"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "javaScriptEnabled": false,
+      "overflow": false,
+      "violations": null,
+      "keyboardFocus": true,
+      "keyboardScrolled": true,
+      "screenshot": "reports/visuals/taxonomy-coverage-390.png",
+      "focusScreenshot": "reports/visuals/taxonomy-coverage-table-focus.png"
+    }
+  ]
+}

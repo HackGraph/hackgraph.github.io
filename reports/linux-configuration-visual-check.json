@@ -1,0 +1,207 @@
+{
+  "checkedAt": "2026-09-07T13:04:30.218Z",
+  "browser": "153.0.8010.12",
+  "scope": "Eight actual panels at desktop/dark and mobile/light widths; two JavaScript-disabled reading states. Selected text, source links, keyboard focus and overflow; axe on sixteen graph states only. No operational or human review.",
+  "observations": [
+    {
+      "surface": "graph-panel",
+      "id": "lin-caps",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/linux-configuration-lin-caps-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-passwd",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-shadow",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-cron-writable",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-systemd",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-nfs",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-docker",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/linux-configuration-lin-docker-1440.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-lxd",
+      "width": 1440,
+      "theme": "dark",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-caps",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-passwd",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/linux-configuration-lin-passwd-390.png"
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-shadow",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-cron-writable",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-systemd",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 6,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-nfs",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 4,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-docker",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "surface": "graph-panel",
+      "id": "lin-lxd",
+      "width": 390,
+      "theme": "light",
+      "claims": 2,
+      "sources": 5,
+      "keyboardFocus": true,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/linux-configuration-lin-lxd-390.png"
+    },
+    {
+      "surface": "reading-page",
+      "id": "lin-lxd",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "claims": 2,
+      "overflow": false,
+      "violations": null
+    },
+    {
+      "surface": "reading-page",
+      "id": "lin-lxd",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "claims": 2,
+      "overflow": false,
+      "violations": null,
+      "screenshot": "reports/visuals/linux-configuration-reading-mobile.png"
+    }
+  ],
+  "runtimeErrors": []
+}

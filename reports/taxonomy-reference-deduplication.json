@@ -1,0 +1,275 @@
+{
+  "scope": "Presentation only. An explicit reference with the exact mapped URL supplies its own label once; a distinct fragment or URL remains separate. No authored reference, mapping or review record changes.",
+  "entries": [
+    {
+      "map": "ad",
+      "id": "windows-local-privesc",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    {
+      "map": "ad",
+      "id": "lat-host-foothold",
+      "url": "https://attack.mitre.org/techniques/T1021/"
+    },
+    {
+      "map": "ad",
+      "id": "pass-the-ticket",
+      "url": "https://attack.mitre.org/techniques/T1550/003/"
+    },
+    {
+      "map": "ad",
+      "id": "gpp-cpassword",
+      "url": "https://attack.mitre.org/techniques/T1552/006/"
+    },
+    {
+      "map": "ad",
+      "id": "account-state-edit",
+      "url": "https://attack.mitre.org/techniques/T1098/"
+    },
+    {
+      "map": "ad",
+      "id": "adfs-golden-saml",
+      "url": "https://attack.mitre.org/techniques/T1606/002/"
+    },
+    {
+      "map": "ad",
+      "id": "com-hijack",
+      "url": "https://attack.mitre.org/techniques/T1546/015/"
+    },
+    {
+      "map": "ad",
+      "id": "trust-modification",
+      "url": "https://attack.mitre.org/techniques/T1484/002/"
+    },
+    {
+      "map": "ad",
+      "id": "sccm-deploy-app",
+      "url": "https://attack.mitre.org/techniques/T1072/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-logon-password",
+      "url": "https://attack.mitre.org/techniques/T1021/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-logon-pth",
+      "url": "https://attack.mitre.org/techniques/T1550/002/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-logon-kerberos",
+      "url": "https://attack.mitre.org/techniques/T1550/003/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-exec-foothold",
+      "url": "https://attack.mitre.org/techniques/T1059/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-evade-amsi-av",
+      "url": "https://attack.mitre.org/techniques/T1685/"
+    },
+    {
+      "map": "win-pe",
+      "id": "win-evade-appcontrol",
+      "url": "https://attack.mitre.org/techniques/T1127/001/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-uac-computerdefaults",
+      "url": "https://attack.mitre.org/techniques/T1548/002/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-uac-cmstp",
+      "url": "https://attack.mitre.org/techniques/T1548/002/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-admin-token",
+      "url": "https://attack.mitre.org/techniques/T1134/001/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-winlogon-autologon",
+      "url": "https://attack.mitre.org/techniques/T1552/002/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-powershell-history",
+      "url": "https://attack.mitre.org/techniques/T1552/003/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-config-password-hunt",
+      "url": "https://attack.mitre.org/techniques/T1552/001/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-password-managers",
+      "url": "https://attack.mitre.org/techniques/T1555/005/"
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-path-dll-hijack",
+      "url": "https://attack.mitre.org/techniques/T1574/007/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-stabilize",
+      "url": "https://attack.mitre.org/techniques/T1059/004/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-enum",
+      "url": "https://attack.mitre.org/techniques/T1082/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-identity",
+      "url": "https://attack.mitre.org/techniques/T1033/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-hostcontrols",
+      "url": "https://attack.mitre.org/techniques/T1518/001/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-sudo-gtfobins",
+      "url": "https://attack.mitre.org/techniques/T1548/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-sudo-env",
+      "url": "https://attack.mitre.org/techniques/T1574/006/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-sudo-argwild",
+      "url": "https://attack.mitre.org/techniques/T1548/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-suid-gtfobins",
+      "url": "https://attack.mitre.org/techniques/T1548/001/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-suid-library",
+      "url": "https://attack.mitre.org/techniques/T1574/006/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-suid-path",
+      "url": "https://attack.mitre.org/techniques/T1574/007/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-caps",
+      "url": "https://attack.mitre.org/techniques/T1548/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-suid-custom",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-cron-writable",
+      "url": "https://attack.mitre.org/techniques/T1053/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-cron-wildcard",
+      "url": "https://attack.mitre.org/techniques/T1053/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-systemd",
+      "url": "https://attack.mitre.org/techniques/T1543/002/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-writable-script",
+      "url": "https://attack.mitre.org/techniques/T1059/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-logrotate",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-cred-hunt",
+      "url": "https://attack.mitre.org/techniques/T1552/001/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-ssh-keys",
+      "url": "https://attack.mitre.org/techniques/T1552/004/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-db-creds",
+      "url": "https://attack.mitre.org/techniques/T1059/004/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-cred-reuse",
+      "url": "https://attack.mitre.org/techniques/T1110/002/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-session-hijack",
+      "url": "https://attack.mitre.org/techniques/T1563/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-passwd",
+      "url": "https://attack.mitre.org/techniques/T1136/001/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-shadow",
+      "url": "https://attack.mitre.org/techniques/T1110/002/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-filewrite",
+      "url": "https://attack.mitre.org/techniques/T1053/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-nfs",
+      "url": "https://attack.mitre.org/techniques/T1548/001/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-group-privesc",
+      "url": "https://attack.mitre.org/techniques/T1078/003/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-docker",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-lxd",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-container-escape",
+      "url": "https://attack.mitre.org/techniques/T1611/"
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-service-cve",
+      "url": "https://attack.mitre.org/techniques/T1068/"
+    }
+  ]
+}

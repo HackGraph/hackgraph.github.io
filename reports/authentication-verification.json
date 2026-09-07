@@ -1,0 +1,168 @@
+{
+  "checkedAt": "2026-09-07T09:33:16.116Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 117,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "0b1bc4866f294cb0ed245e4df941e5e665d5233c75fed3be9aa7ba3645e77df4",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "32eaa6fcd619f44576f82b0b91f17446715fdd8c7d5dc8f28763950d12291476",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/chains/initial-access.js",
+    "src/data/chains/linux-privesc.js",
+    "src/data/chains/pe-techniques.js",
+    "src/data/chains/win-foothold.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPagesRepeatable": true,
+  "generatedPageHashes": {
+    "reference.html": "f80f87c3562130c1307634974b66c4c06388de4317b102a48d12da534091159f",
+    "reference/active-directory.html": "e0809e91a445b5bae08de1d8069f6238fc15927942bfc10d9586553a887630ef",
+    "reference/windows-privilege-escalation.html": "caef7fa0d0a812741af05d98b800bec3d44a78e99ec0f5db3544e0e3c8fa1160",
+    "reference/linux-privilege-escalation.html": "cf79c083f06f5be507a73c5dfd4b49b33fb4b13d3063c0f204af4ba6ad0968d7",
+    "about.html": "2584ca6911fdb3e81f40bee27e1d0526d3ca666e953f38d0ab4d4eabe546ab5c",
+    "glossary.html": "46bc64242cd35ec66babe51bc24141184ef215d52dfb82934868d0e9226d76c9",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "graphDataSha256": "e611528dfc11d6b4cbe0103b79c7d51654d40faf6528ca30e1ccd2cc716b6d4f",
+  "graphDataBeforeSha256": "d034390b5fddbb8598d167fa7c4265ea500459e4cc07b7599014e611d1f4522d",
+  "changes": [
+    {
+      "map": "ad",
+      "id": "valid-domain-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "ad",
+      "id": "valid-local-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "win-pe",
+      "id": "win-logon-password",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    },
+    {
+      "map": "win-pe",
+      "id": "win-logon-kerberos",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    },
+    {
+      "map": "win-pe",
+      "id": "pe-recovered-creds",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 2
+    },
+    {
+      "map": "linux-pe",
+      "id": "lin-ssh-keys",
+      "fields": [
+        "summary",
+        "description",
+        "references",
+        "review"
+      ],
+      "claims": 3
+    }
+  ],
+  "allOtherEntryFieldsAndConnectionsUnchanged": true,
+  "sourceCapture": {
+    "publications": 8,
+    "successfulRetrievals": 8,
+    "responseHashesVerified": true,
+    "report": "reports/authentication-source-capture.json"
+  },
+  "panelCheck": {
+    "states": 12,
+    "selectedClaimsPerViewport": 15,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true,
+    "screenshots": 6
+  },
+  "hashes": {
+    "about.html": "2584ca6911fdb3e81f40bee27e1d0526d3ca666e953f38d0ab4d4eabe546ab5c",
+    "reference/active-directory.html": "e0809e91a445b5bae08de1d8069f6238fc15927942bfc10d9586553a887630ef",
+    "reference/linux-privilege-escalation.html": "cf79c083f06f5be507a73c5dfd4b49b33fb4b13d3063c0f204af4ba6ad0968d7",
+    "reference/windows-privilege-escalation.html": "caef7fa0d0a812741af05d98b800bec3d44a78e99ec0f5db3544e0e3c8fa1160",
+    "src/data/chains/initial-access.js": "9704cab60154b838da80df7afb951f716b13b1296775fe197e6146327b9d48b1",
+    "src/data/chains/linux-privesc.js": "f7309e8f338fc7d88ea25f530933e219d71eeae1a00a76a4863262e79c6c0004",
+    "src/data/chains/pe-techniques.js": "5c2ea1a20c9bdcf6863f1fac8348ccb4a57d61b4b941f64296b93d4ef44dd205",
+    "src/data/chains/win-foothold.js": "7124652d300216fc6ea058e0a965f41a75f71154460afeaae7a07ac252ae6dbe",
+    "reports/visuals/authentication-valid-local-creds-desktop.png": "2d95b651dbdb7bfa4ddd14d5fd62bdc8c018f406e3cb9ff126dea27eede4662b",
+    "reports/visuals/authentication-valid-local-creds-mobile.png": "65122c348a888d756b87b92769c68f7647aa51e486dcc55f1483977e95c85756",
+    "reports/visuals/authentication-win-logon-kerberos-desktop.png": "46e827a8b2d2ca1a459d881cf44c0aa40b754510a976b8fd51eb2d5c97a7690f",
+    "reports/visuals/authentication-win-logon-kerberos-mobile.png": "9f3f2d5b821feca2abbd0f5d0c23101ea9b1dd98aa7bc0995066c7574319b133",
+    "reports/visuals/authentication-lin-ssh-keys-desktop.png": "314f2d3da584aad16a0c040e4c49fc3e7ad9c3255d41f1256a6cabf35d914d16",
+    "reports/visuals/authentication-lin-ssh-keys-mobile.png": "66fe4c505230d71a1dd7424589a369f52bc442f9db7cb6c4d0e33ef50bbc2c4b",
+    "reports/authentication-source-capture.json": "5e9ada6818839c0117bdf6cb6d9f20095da1d80e33440c966db0b2854fc02a50",
+    "reports/reference-authentication-refresh.json": "5f16365ad3e88aa0c8350844cecea18c4d2ea741657991cf86728e5e9fb769f0",
+    "reports/authentication-panel-check.json": "ac88b22c508bcb2012eee33079ff0884846197ce2be7e02c8adccf2483998220",
+    "reports/content-coverage.json": "7e297d44aecc5271a17d6c29cf7b56a1ab93dd1cb5d55324ebb665231368d595",
+    "reports/review-inventory.json": "7eaefef1ec701309dca9a04eeaf8688fbd110ca93470f077af465618ee3a8f9d",
+    "reports/review-inventory.csv": "9f0d40aeae1641967b4a4192a7c6e63a7f4172e1635bba2f14629257c88b53ac",
+    "reports/data-parity.json": "60b785cf345349d7fe22333d9b29668bb9ac9f1ab9471bc0a03670210b8dd5f3",
+    "reports/reference-availability.json": "a235d05b55b0d18b61947a4b6046598fdd8aeb623a1609ad2126a7e30103a2b0",
+    ".cache/authentication-review/edits.mjs": "2b0e50fe3c3747b39559a73a6ea5e220b6e653cac4016d1880b6e6aa6cd58e8b",
+    ".cache/authentication-review/panels.mjs": "7b7b55fe7e1c0e4c7fd162d0c7bf4e90addc516892779f71d5523c6f9c245eb1",
+    ".cache/authentication-review/final-audit.mjs": "0577159ac3b7a1085891bdfc14ffe23cc74eb8aea1b12160b0d101de37273255"
+  },
+  "logPath": ".cache/authentication-review/full-tests.log",
+  "logSha256": "c888e93949ae61376d888232c8e71623a857814a5511bcc1d08aed138cb465bc",
+  "scope": "Local software, rendering, source-capture and data-parity checks after six conceptual explanation corrections. The explicit AI comparisons cover selected account, credential and authentication claims only. They do not establish complete entry review, command or prerequisite accuracy, applicability, ATT&CK mapping suitability, operational route viability, human review, hosted workflow execution or deployment."
+}

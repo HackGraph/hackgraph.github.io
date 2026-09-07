@@ -2,22 +2,10 @@
 // engine + data, then drives it. Catches packaging/mount regressions that the
 // pure-engine suite cannot see.   Run:  node view-test.mjs
 //
-// jsdom is the one thing this test needs and the one thing the repo does not ship, so
-// it usually cannot run. It reports a real SKIP rather than exiting 0 quietly: as a
-// silent success it was a green tick on a test that executed nothing.
 import { readFileSync } from 'node:fs';
+import { JSDOM } from 'jsdom';
 
-let JSDOM;
-try { ({ JSDOM } = await import('jsdom')); } catch { /* reported below */ }
-
-if (!JSDOM) {
-  if (process.env.NODE_TEST_CONTEXT) {
-    const { test } = await import('node:test');
-    test('view mounts in jsdom', { skip: 'jsdom not installed' }, () => {});
-  } else {
-    console.log('jsdom not available — skipping view mount test');
-  }
-} else {
+{
   const read = f => readFileSync(new URL('./' + f, import.meta.url), 'utf8');
 
   let failures = 0;

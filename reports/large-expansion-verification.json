@@ -1,0 +1,83 @@
+{
+  "checkedAt": "2026-09-07T08:05:30.481Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 105,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "a207778ed88f6898baa563c508fecba08ad8e9cc66b229b61d7bdd8af26cf68a",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "22d83879052e0fd16f0e370b7dfe042dbc2a6a96d2f54fff303c76d455f8f481",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "engine/view.js",
+    "engine/style.css"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "generatedPages": [
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/windows-privilege-escalation.html",
+    "reference/linux-privilege-escalation.html",
+    "about.html",
+    "glossary.html",
+    "sitemap.xml"
+  ],
+  "generatedPagesRepeatable": true,
+  "dataParityCurrent": true,
+  "graphDataSha256": "8720007985b55c829dabcb0b8cc8b7ab95d5a3ab2165eb0c45e4da97ac9de25f",
+  "visualCheck": {
+    "states": 4,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshotsVisuallyInspected": true
+  },
+  "performance": {
+    "expansion": "reports/large-expansion.json",
+    "disclosure": "reports/sidebar-disclosure.json",
+    "followup": "reports/sidebar-disclosure-followup.json",
+    "stylesheetAtTimingCapture": "67b19c8fe19f6ee9b7e4ec80281a6316f5e73285d5fa711546b234629302df6d",
+    "stylesheetAfterContrastFix": "12da2a6ab63612d81b8930db85824eefed002c829bf99e3c55f92a55b9c3edf9",
+    "timingsPrecedeColorOnlyCssFix": true,
+    "unresolvedFollowupSlowIntervals": 8
+  },
+  "hashes": {
+    "engine/view.js": "3565f1437fbb26e03b9d7024da243920c3175e28c0233e574677a95063dc3052",
+    "engine/style.css": "12da2a6ab63612d81b8930db85824eefed002c829bf99e3c55f92a55b9c3edf9",
+    "browser/expansion-rendering.spec.mjs": "9bc7cb1fc80607fb3e3d36730a2358ceb420c07ee5490d60249d7d2a39abefc2",
+    "browser/learning.spec.mjs": "5071d913a0cfc95f88383f1931645cef674628f0cc87f83331d1fcc9be241d0b",
+    "tools/sidebar-lab.mjs": "abe18b9bd17d5a458de900b534df7f5b810e9db04e12f247348a295b8f97d586",
+    "reports/visuals/sidebar-1440-dark-open.png": "07b55ddbb3d38d88c1521f9c33e0a989192897828c036622076b3c9cadd60443",
+    "reports/visuals/sidebar-1440-light-open.png": "f692528ef6ce1e002a0cbd40bb59118f3972cb7e7d8da3d299c894493387005f",
+    "reports/visuals/sidebar-390-dark-open.png": "607740451c91687d38416a7bfb73124289342be5afbd5c6eb1b20e1b6b56175f",
+    "reports/visuals/sidebar-390-light-open.png": "d54b414f126115b6f9b5a307d9080d4bf6a8f78f6260603a0b85ac66dc3730ad",
+    "reports/large-expansion.json": "b281ebd510429648dfa3820e9b844f9bcf5a1f0d8f8db46b0e5608590f18b385",
+    "reports/sidebar-disclosure.json": "eb6f5e178601b25be5cdfe2729b9080092da737f67b1208aa16f61f2146c58d2",
+    "reports/sidebar-disclosure-followup.json": "c58f42fb111bab383df644a0ea6fc5dfacec3b14c28e870021e1b45f18e90c32",
+    "reports/sidebar-panel-check.json": "f1f5224c9d8fa2b402aa5ada95c145ac4fc63142020ca9b6aa516cd2947cfbd5",
+    "reports/large-expansion.patch": "dba5b055545e9d0dec4ddbfec5ba69c759076b4cd5fa5694fe0beacb281cacbe"
+  },
+  "logPath": ".cache/large-expansion/final-tests.log",
+  "logSha256": "43718c91da2ef2c4bd0bafb8934800a7eb49bb771a4dc4b9b648b67d7142ccb0",
+  "scope": "Local software checks. Large-list timing outliers remain unresolved. No graph-content review status changes, operational graph validation, hosted workflow execution or deployment."
+}

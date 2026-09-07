@@ -1,0 +1,889 @@
+{
+  "measuredAt": "2026-09-07T07:43:46.206Z",
+  "method": "One browser page active at a time. Each source variant has four repetitions per count/browser; the first is retained as warmup and excluded from grouped statistics. Generic 25/100/250-child expansions at 1440×1000, 600 ms each. Inter-frame intervals use consecutive rAF timestamps; firstFrameDelayMs measures wall time to the first callback, including setup. Neither measures physical presentation time. Local headless observations, not device guarantees.",
+  "rendererSources": {
+    "before": "65e557ebbc7cc86c303479240b9f0be25a96fc742c4d9c6a75a3453898d14d48",
+    "after": "3565f1437fbb26e03b9d7024da243920c3175e28c0233e574677a95063dc3052"
+  },
+  "groups": [
+    {
+      "browser": "chromium",
+      "count": 25,
+      "variant": "before",
+      "sync": {
+        "min": 2.5999999046325684,
+        "median": 4.599999904632568,
+        "max": 4.799999952316284
+      },
+      "firstFrame": {
+        "min": 9.799999952316284,
+        "median": 11.299999952316284,
+        "max": 18.5
+      },
+      "p95": {
+        "min": 16.799999999999955,
+        "median": 16.799999999999955,
+        "max": 16.800000000000182
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "count": 25,
+      "variant": "after",
+      "sync": {
+        "min": 1.7999999523162842,
+        "median": 1.8999998569488525,
+        "max": 1.9000000953674316
+      },
+      "firstFrame": {
+        "min": 5.299999952316284,
+        "median": 6.5,
+        "max": 7.199999809265137
+      },
+      "p95": {
+        "min": 16.700000000000045,
+        "median": 16.799999999999955,
+        "max": 16.800000000000182
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "count": 100,
+      "variant": "before",
+      "sync": {
+        "min": 6.699999809265137,
+        "median": 7.099999904632568,
+        "max": 7.200000047683716
+      },
+      "firstFrame": {
+        "min": 14.5,
+        "median": 17.899999856948853,
+        "max": 22.40000009536743
+      },
+      "p95": {
+        "min": 16.700000000000273,
+        "median": 16.700000000000273,
+        "max": 16.700000000000728
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "count": 100,
+      "variant": "after",
+      "sync": {
+        "min": 5.299999952316284,
+        "median": 5.700000047683716,
+        "max": 8.700000047683716
+      },
+      "firstFrame": {
+        "min": 9.5,
+        "median": 14.700000047683716,
+        "max": 19.600000143051147
+      },
+      "p95": {
+        "min": 16.700000000000728,
+        "median": 16.800000000000182,
+        "max": 16.800000000000182
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "count": 250,
+      "variant": "before",
+      "sync": {
+        "min": 13.5,
+        "median": 14.199999809265137,
+        "max": 14.900000095367432
+      },
+      "firstFrame": {
+        "min": 29.700000047683716,
+        "median": 30.899999856948853,
+        "max": 32.5
+      },
+      "p95": {
+        "min": 16.700000000000728,
+        "median": 16.700000000000728,
+        "max": 16.700000000000728
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "count": 250,
+      "variant": "after",
+      "sync": {
+        "min": 10.100000143051147,
+        "median": 11.200000047683716,
+        "max": 13
+      },
+      "firstFrame": {
+        "min": 20.299999952316284,
+        "median": 21.600000143051147,
+        "max": 21.700000047683716
+      },
+      "p95": {
+        "min": 16.699999999999818,
+        "median": 16.700000000000728,
+        "max": 16.799999999999272
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 25,
+      "variant": "before",
+      "sync": {
+        "min": 8,
+        "median": 9,
+        "max": 9
+      },
+      "firstFrame": {
+        "min": 15,
+        "median": 15,
+        "max": 17
+      },
+      "p95": {
+        "min": 17.220000000000027,
+        "median": 17.240000000000236,
+        "max": 17.339999999999918
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 25,
+      "variant": "after",
+      "sync": {
+        "min": 4,
+        "median": 4,
+        "max": 6
+      },
+      "firstFrame": {
+        "min": 4,
+        "median": 5,
+        "max": 18
+      },
+      "p95": {
+        "min": 17.199999999999818,
+        "median": 17.25999999999999,
+        "max": 17.2800000000002
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 100,
+      "variant": "before",
+      "sync": {
+        "min": 10,
+        "median": 11,
+        "max": 13
+      },
+      "firstFrame": {
+        "min": 11,
+        "median": 12,
+        "max": 14
+      },
+      "p95": {
+        "min": 17.18000000000029,
+        "median": 17.23999999999978,
+        "max": 17.26000000000022
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 100,
+      "variant": "after",
+      "sync": {
+        "min": 8,
+        "median": 10,
+        "max": 10
+      },
+      "firstFrame": {
+        "min": 14,
+        "median": 14,
+        "max": 15
+      },
+      "p95": {
+        "min": 17.199999999999818,
+        "median": 17.199999999999818,
+        "max": 17.24000000000069
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 250,
+      "variant": "before",
+      "sync": {
+        "min": 26,
+        "median": 26,
+        "max": 33
+      },
+      "firstFrame": {
+        "min": 27,
+        "median": 28,
+        "max": 34
+      },
+      "p95": {
+        "min": 17.199999999999818,
+        "median": 17.279999999998836,
+        "max": 17.280000000000655
+      },
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "count": 250,
+      "variant": "after",
+      "sync": {
+        "min": 19,
+        "median": 21,
+        "max": 21
+      },
+      "firstFrame": {
+        "min": 20,
+        "median": 23,
+        "max": 23
+      },
+      "p95": {
+        "min": 17.26000000000022,
+        "median": 17.280000000000655,
+        "max": 17.299999999999272
+      },
+      "slowFrames": 0
+    }
+  ],
+  "rows": [
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 5.799999952316284,
+      "firstFrameDelayMs": 21.09999990463257,
+      "frames": 35,
+      "p95FrameMs": 16.799999999999955,
+      "maxFrameMs": 16.800000000000068,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 4.599999904632568,
+      "firstFrameDelayMs": 9.799999952316284,
+      "frames": 36,
+      "p95FrameMs": 16.799999999999955,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 4.799999952316284,
+      "firstFrameDelayMs": 18.5,
+      "frames": 35,
+      "p95FrameMs": 16.799999999999955,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 25,
+      "repeat": 3,
+      "synchronousMs": 2.5999999046325684,
+      "firstFrameDelayMs": 11.299999952316284,
+      "frames": 35,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 7.400000095367432,
+      "firstFrameDelayMs": 18,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 7.099999904632568,
+      "firstFrameDelayMs": 14.5,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 7.200000047683716,
+      "firstFrameDelayMs": 22.40000009536743,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000273,
+      "maxFrameMs": 16.700000000000728,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 100,
+      "repeat": 3,
+      "synchronousMs": 6.699999809265137,
+      "firstFrameDelayMs": 17.899999856948853,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.799999999999272,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 250,
+      "repeat": 0,
+      "synchronousMs": 14.5,
+      "firstFrameDelayMs": 30.5,
+      "frames": 36,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 250,
+      "repeat": 1,
+      "synchronousMs": 14.199999809265137,
+      "firstFrameDelayMs": 30.899999856948853,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 250,
+      "repeat": 2,
+      "synchronousMs": 13.5,
+      "firstFrameDelayMs": 29.700000047683716,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.700000000000728,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "before",
+      "count": 250,
+      "repeat": 3,
+      "synchronousMs": 14.900000095367432,
+      "firstFrameDelayMs": 32.5,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 4.200000047683716,
+      "firstFrameDelayMs": 15,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000045,
+      "maxFrameMs": 16.700000000000045,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 1.7999999523162842,
+      "firstFrameDelayMs": 7.199999809265137,
+      "frames": 35,
+      "p95FrameMs": 16.799999999999955,
+      "maxFrameMs": 16.800000000000068,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 1.8999998569488525,
+      "firstFrameDelayMs": 5.299999952316284,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000045,
+      "maxFrameMs": 16.799999999999955,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 25,
+      "repeat": 3,
+      "synchronousMs": 1.9000000953674316,
+      "firstFrameDelayMs": 6.5,
+      "frames": 35,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 5.5,
+      "firstFrameDelayMs": 10.799999952316284,
+      "frames": 35,
+      "p95FrameMs": 16.799999999999727,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 5.299999952316284,
+      "firstFrameDelayMs": 9.5,
+      "frames": 36,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 5.700000047683716,
+      "firstFrameDelayMs": 19.600000143051147,
+      "frames": 35,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 100,
+      "repeat": 3,
+      "synchronousMs": 8.700000047683716,
+      "firstFrameDelayMs": 14.700000047683716,
+      "frames": 35,
+      "p95FrameMs": 16.800000000000182,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 250,
+      "repeat": 0,
+      "synchronousMs": 11.099999904632568,
+      "firstFrameDelayMs": 19.59999990463257,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.700000000000728,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 250,
+      "repeat": 1,
+      "synchronousMs": 13,
+      "firstFrameDelayMs": 21.600000143051147,
+      "frames": 36,
+      "p95FrameMs": 16.799999999999272,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 250,
+      "repeat": 2,
+      "synchronousMs": 10.100000143051147,
+      "firstFrameDelayMs": 21.700000047683716,
+      "frames": 35,
+      "p95FrameMs": 16.699999999999818,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "chromium",
+      "version": "153.0.8010.12",
+      "variant": "after",
+      "count": 250,
+      "repeat": 3,
+      "synchronousMs": 11.200000047683716,
+      "firstFrameDelayMs": 20.299999952316284,
+      "frames": 36,
+      "p95FrameMs": 16.700000000000728,
+      "maxFrameMs": 16.800000000000182,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 11,
+      "firstFrameDelayMs": 13,
+      "frames": 36,
+      "p95FrameMs": 17.24000000000001,
+      "maxFrameMs": 17.279999999999973,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 8,
+      "firstFrameDelayMs": 15,
+      "frames": 35,
+      "p95FrameMs": 17.339999999999918,
+      "maxFrameMs": 17.399999999999864,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 9,
+      "firstFrameDelayMs": 17,
+      "frames": 35,
+      "p95FrameMs": 17.220000000000027,
+      "maxFrameMs": 17.559999999999945,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 25,
+      "repeat": 3,
+      "synchronousMs": 9,
+      "firstFrameDelayMs": 15,
+      "frames": 35,
+      "p95FrameMs": 17.240000000000236,
+      "maxFrameMs": 17.359999999999673,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 14,
+      "firstFrameDelayMs": 15,
+      "frames": 36,
+      "p95FrameMs": 17.2199999999998,
+      "maxFrameMs": 17.23999999999978,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 10,
+      "firstFrameDelayMs": 11,
+      "frames": 36,
+      "p95FrameMs": 17.18000000000029,
+      "maxFrameMs": 17.26000000000022,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 13,
+      "firstFrameDelayMs": 14,
+      "frames": 36,
+      "p95FrameMs": 17.23999999999978,
+      "maxFrameMs": 17.31999999999971,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 100,
+      "repeat": 3,
+      "synchronousMs": 11,
+      "firstFrameDelayMs": 12,
+      "frames": 36,
+      "p95FrameMs": 17.26000000000022,
+      "maxFrameMs": 17.31999999999971,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 250,
+      "repeat": 0,
+      "synchronousMs": 25,
+      "firstFrameDelayMs": 26,
+      "frames": 35,
+      "p95FrameMs": 17.300000000000182,
+      "maxFrameMs": 33.26000000000022,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 250,
+      "repeat": 1,
+      "synchronousMs": 33,
+      "firstFrameDelayMs": 34,
+      "frames": 36,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.220000000000255,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 250,
+      "repeat": 2,
+      "synchronousMs": 26,
+      "firstFrameDelayMs": 27,
+      "frames": 36,
+      "p95FrameMs": 17.280000000000655,
+      "maxFrameMs": 17.280000000000655,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "before",
+      "count": 250,
+      "repeat": 3,
+      "synchronousMs": 26,
+      "firstFrameDelayMs": 28,
+      "frames": 36,
+      "p95FrameMs": 17.279999999998836,
+      "maxFrameMs": 17.279999999998836,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 25,
+      "repeat": 0,
+      "synchronousMs": 5,
+      "firstFrameDelayMs": 12,
+      "frames": 35,
+      "p95FrameMs": 17.120000000000005,
+      "maxFrameMs": 17.139999999999986,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 25,
+      "repeat": 1,
+      "synchronousMs": 6,
+      "firstFrameDelayMs": 18,
+      "frames": 34,
+      "p95FrameMs": 17.25999999999999,
+      "maxFrameMs": 33.22000000000003,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 25,
+      "repeat": 2,
+      "synchronousMs": 4,
+      "firstFrameDelayMs": 4,
+      "frames": 36,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.319999999999936,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 25,
+      "repeat": 3,
+      "synchronousMs": 4,
+      "firstFrameDelayMs": 5,
+      "frames": 35,
+      "p95FrameMs": 17.2800000000002,
+      "maxFrameMs": 17.360000000000127,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 100,
+      "repeat": 0,
+      "synchronousMs": 9,
+      "firstFrameDelayMs": 10,
+      "frames": 36,
+      "p95FrameMs": 17.159999999999854,
+      "maxFrameMs": 17.18000000000029,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 100,
+      "repeat": 1,
+      "synchronousMs": 8,
+      "firstFrameDelayMs": 14,
+      "frames": 35,
+      "p95FrameMs": 17.24000000000069,
+      "maxFrameMs": 17.399999999999636,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 100,
+      "repeat": 2,
+      "synchronousMs": 10,
+      "firstFrameDelayMs": 14,
+      "frames": 35,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.23999999999978,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 100,
+      "repeat": 3,
+      "synchronousMs": 10,
+      "firstFrameDelayMs": 15,
+      "frames": 35,
+      "p95FrameMs": 17.199999999999818,
+      "maxFrameMs": 17.520000000000437,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 250,
+      "repeat": 0,
+      "synchronousMs": 21,
+      "firstFrameDelayMs": 22,
+      "frames": 36,
+      "p95FrameMs": 17.279999999999745,
+      "maxFrameMs": 17.280000000000655,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 250,
+      "repeat": 1,
+      "synchronousMs": 21,
+      "firstFrameDelayMs": 23,
+      "frames": 36,
+      "p95FrameMs": 17.280000000000655,
+      "maxFrameMs": 17.460000000000036,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 250,
+      "repeat": 2,
+      "synchronousMs": 21,
+      "firstFrameDelayMs": 23,
+      "frames": 36,
+      "p95FrameMs": 17.26000000000022,
+      "maxFrameMs": 17.26000000000022,
+      "slowFrames": 0
+    },
+    {
+      "browser": "firefox",
+      "version": "155.0",
+      "variant": "after",
+      "count": 250,
+      "repeat": 3,
+      "synchronousMs": 19,
+      "firstFrameDelayMs": 20,
+      "frames": 36,
+      "p95FrameMs": 17.299999999999272,
+      "maxFrameMs": 17.479999999999563,
+      "slowFrames": 0
+    }
+  ],
+  "errors": []
+}

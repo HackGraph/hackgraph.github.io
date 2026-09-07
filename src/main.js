@@ -18,7 +18,7 @@ import { toEngineMap } from './graph/engineAdapter.js';
 import { ENGINE_FILTERS } from './data/domain/engineFilters.js';
 import { decorateProse } from './data/domain/engineProse.js';
 import { loadGraphView } from './graph/engine/loadView.js';
-import { BUILD_DATE_LABEL, BUILD_HASH } from './buildInfo.js';
+import { BUILD_DATE_LABEL, BUILD_HASH, BUILD_COMMIT } from './buildInfo.js';
 import { REPO_URL } from './repo.js';
 
 /**
@@ -86,11 +86,16 @@ async function boot() {
   GraphView.mount(host, {
     maps: MAPS.map(toEngineMap),
     title: 'HackGraph',
+    readingUrl: '/reference.html',
+    intro: {
+      title: 'See how security concepts connect.',
+      body: 'Explore Active Directory, Windows, and Linux through connected study notes and sources. Start with the card below.',
+    },
     // open on the entry point alone; expanding it is the reader's first move
     expandRoot: false,
     brandMark: logoMark(),
     repoUrl: REPO_URL,
-    build: { date: BUILD_DATE_LABEL, hash: BUILD_HASH },
+    build: { date: BUILD_DATE_LABEL, hash: BUILD_HASH, commit: BUILD_COMMIT },
     // the engine renders the entire interface
     chrome: { toolbar: true, filters: true, panel: true, crumbs: true, zoom: true },
     features: {

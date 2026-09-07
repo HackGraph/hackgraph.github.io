@@ -1,0 +1,109 @@
+{
+  "checkedAt": "2026-09-07T10:52:21.696Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 140,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 126,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "e712abba89351ad090c4033799271a53f4593b1e80d77fff7a7ab65aebdd9d51",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 68,
+    "sourceDigest": "7cf4ebfe5179c6d98a72ce579f5c1531b4654cdb1d2d7e82c8f7069b0bac02c5",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "glossary.html",
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "reference/windows-privilege-escalation.html",
+    "src/data/editorial.js",
+    "src/data/source-provenance.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "5c8c74b14f7495c8ff650fabb0d7f80b61ef59c5b797b6d6814e3a8fe4cb9e90",
+  "graphDataUnchanged": true,
+  "claimReviewRecordsUnchanged": true,
+  "reviewedEntries": 98,
+  "selectedClaims": 209,
+  "provenance": {
+    "groups": 12,
+    "urls": 216,
+    "occurrencesClassified": 408,
+    "remainingUnclassified": 329,
+    "affectedEntries": 264,
+    "affectedComparedEntries": 46,
+    "publisherCaptures": 34
+  },
+  "generatedPagesRepeatable": true,
+  "readingBodiesUnchangedByWrapFix": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "77690bb84107269eacd2434f7ee0193fb2057eabf9499131317a44b933a84de3",
+    "reference/windows-privilege-escalation.html": "2f814405fa65b5bf4d96efbab5ae0f8f9403efd71a89e69e64cc5e02494961b9",
+    "reference/linux-privilege-escalation.html": "577d270e7f5b5d2ecc5d9cab7eb7cac14b99d08f07b083b4ff21aced16214665",
+    "about.html": "a0285cf3c7654e8a7d16cede47186e305f82e5cf8ad42ef47347575711811565",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "visual": {
+    "states": 8,
+    "axeStates": 6,
+    "axeViolations": 0,
+    "horizontalOverflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 4,
+    "screenshotsVisuallyInspected": true
+  },
+  "hashes": {
+    "about.html": "a0285cf3c7654e8a7d16cede47186e305f82e5cf8ad42ef47347575711811565",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "77690bb84107269eacd2434f7ee0193fb2057eabf9499131317a44b933a84de3",
+    "reference/linux-privilege-escalation.html": "577d270e7f5b5d2ecc5d9cab7eb7cac14b99d08f07b083b4ff21aced16214665",
+    "reference/windows-privilege-escalation.html": "2f814405fa65b5bf4d96efbab5ae0f8f9403efd71a89e69e64cc5e02494961b9",
+    "src/data/editorial.js": "27c35b95702358ab71e768301d6388d8e011e3ad92b0904950ad21ed41c6ee68",
+    "src/data/source-provenance.js": "2d5d661ade0165a0eb574bfc1b7af8de7b9ba6f2e0c8d44b2dc8eb16aa4025ee",
+    "tools/audit-content.mjs": "18d784372585d09d6d2ebb077bfa486475a849c40729667e23859fcb497bb593",
+    "tools/prepare-site.mjs": "ded6b28d34c03b550c7576a9ac81d4300a4837564196fa10f2b9878ac7ff0598",
+    "tools/source-provenance.mjs": "c7195bcd6086063606d0ff951e66caf375999ea9674ae4e2d19fd1283f682539",
+    "tools/source-provenance.test.mjs": "14f0afb6e5eee5a788b30ff08aee49e9024727938ef325377c4d2bbeacdaa88b",
+    "tools/reference.test.mjs": "ea9786ab1cebe1936ccf5d777d4ce6b89e7755dce3e352accf88771e00087476",
+    "tools/review-inventory.test.mjs": "6d2812682aad77290e1eca090cd95507e218d47fc048989a5a11ab9814ef7a32",
+    "tools/gen-reference.mjs": "d78ebb79ef64f49d93cf8573dfb1ba15bdf58f6a534bfbb3ac8214274f13962d",
+    "src/data/editorial.test.js": "c0b94915711982033468d672c5031777876541239fd29b6150dcef634e8a8290",
+    "browser/source-provenance.spec.mjs": "445de9a7956bf2fad2203e82486fc790b7acba75d79ccadc4aaf855fa992310a",
+    "browser/reading-guide.spec.mjs": "61bc97ba541807d55fb36b518185216904c659f4761fed7f2933b57cf9fd0964",
+    "reports/source-provenance.json": "0a0b12610542fc9e7456fbb1e7b7c7ea9e1cc74fe68323f3a2446013693b939a",
+    "reports/source-provenance-capture.json": "662651cc4dfda9a8c00504cf6754a63b0d2c00fbe86e71cfc32116671578027d",
+    "reports/source-provenance-visual-check.json": "3795d54eb0cac50332d378fa07da4e90f54f50159f3548ecd97f17e17c092973",
+    "reports/content-coverage.json": "b9085f34f69a739487a763a9a5fa077ff4108408f367ab13c6f20e3b8e460d05",
+    "reports/review-inventory.json": "fef7efc972e0706580a007fabeda0dab61e87aea92005f606b7fe1133e2d4e68",
+    "reports/review-inventory.csv": "ff21591f8968d7a54ba09b5b199a671dee3315db20a31e34de7539f77f6ae9b2",
+    "reports/visuals/source-provenance-panel-1440.png": "932b93a82d70bb478b96246b7e7a710099af9226b2d34831c30c1e2851e505cf",
+    "reports/visuals/source-provenance-panel-390.png": "e9b305c15a02974c476d97353ea6545ad8239e3e9c63c1f43ab7f317bd029909",
+    "reports/visuals/source-provenance-reading-mobile.png": "86f0497805a009d7fb59168cc3bcebd4a63f8abadc40b18557cc21b5582a53b8",
+    "reports/visuals/source-provenance-guide-mobile.png": "d34bbc7ab3ff17a330f5f04af1ae703539ec8aada8cc9c0525ac5f29e0213577"
+  },
+  "logPath": ".cache/source-provenance-review/full-tests.log",
+  "logSha256": "997a872850e8d7eaafdafc722279158967bbea575f97d1dbc9998a9d7b44e756",
+  "scope": "Publication identity/type classification, exact-URL provenance infrastructure, source-label presentation and full-page prose wrapping. Captures identify publishers; they do not validate document-to-claim support or procedures. All authored graph fields and claim-review records are unchanged. No new complete URL sweep, human review, operational validation, motion benchmark, hosted workflow run or deployment."
+}

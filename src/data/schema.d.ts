@@ -2,15 +2,15 @@
  * Security-domain content schema for HackGraph.
  *
  * These types EXTEND the generic, domain-agnostic platform contract in
- * `src/graph/model.ts` (GraphNode / GraphEdge / GraphMap) with the fields specific to
+ * `src/graph/model.d.ts` (GraphNode / GraphEdge / GraphMap) with the fields specific to
  * an offensive-security methodology: MITRE ids, tools, commands, OPSEC notes, version
  * applicability, foothold gating, and a canonical edge-relationship id.
  *
  * The engine and reusable widgets only ever see the generic base; everything added
- * here is projected into presentation by the domain layer (see data/build.ts). A
- * "map" is a directed graph (a DAG, possibly with convergence) of technique nodes;
+ * here is projected into presentation by the domain layer (see graph/engineAdapter.js). A
+ * "map" is a directed graph, possibly converging or cyclic, of topics and context nodes;
  * additional domains (web, cloud, network) are just more MapDefinitions registered in
- * data/index.ts.
+ * data/index.js.
  */
 
 import type { GraphEdge, GraphMap, GraphNode } from '../graph/model.js';
@@ -41,6 +41,37 @@ export interface Command {
 export interface Reference {
   label: string;
   url: string;
+  kind?: 'primary' | 'research' | 'community' | 'taxonomy' | 'database' | 'unclassified';
+  /** Precise source locator; required for shared-definition comparisons. */
+  section?: string;
+}
+
+/** Vocabulary explanation, reviewed independently of connections using its ID. */
+export interface RelationshipDefinition {
+  label: string;
+  description: string;
+  origin: 'source-based' | 'project-convention';
+  references: Reference[];
+}
+
+export interface RelationshipDefinitionReview {
+  reviewedAt: string;
+  reviewedBy: string;
+  reviewerType: 'ai' | 'human';
+  scope: string;
+  reviewedContent: RelationshipDefinition;
+}
+
+/** Review scope applies only to cited claims, never automatically to an entry. */
+export interface EditorialReview {
+  status: 'unreviewed' | 'source-reviewed' | 'historical';
+  reviewedAt?: string;
+  reviewedBy?: string;
+  reviewerType?: 'ai' | 'human';
+  /** Exact authored entry excluding review; changes invalidate the comparison. */
+  reviewedContent?: Record<string, unknown>;
+  scope?: string;
+  claims?: { text: string; section: string; sources: string[] }[];
 }
 
 export interface MitreRef {
@@ -51,6 +82,7 @@ export interface MitreRef {
 
 /** A single attack technique / step: the generic node plus security detail fields. */
 export interface TechniqueNodeDef extends GraphNode {
+  review?: EditorialReview;
   /** Longer markdown-ish body shown in the detail panel. */
   description?: string;
   tools?: Tool[];
@@ -62,23 +94,21 @@ export interface TechniqueNodeDef extends GraphNode {
   /** Detection / stealth considerations. */
   opsec?: string;
   /**
-   * Windows-version applicability: which builds the technique works on, and when it
-   * was patched. Keeps the map honest about outdated vectors (e.g. an eventvwr UAC
-   * bypass patched after Win10 1607). Use "All supported Windows versions" for
-   * version-independent vectors (the privilege/service model rather than a bug).
+   * Authored applicability claim. Record a bounded platform/version scope and its
+   * supporting evidence; the presence of this field does not verify compatibility.
+   * Omission means applicability has not been documented.
    */
   affects?: string;
   /**
    * Structured counterpart to `affects`, powering the version filter. Version ids
-   * (see data/windows-versions.ts) the technique applies to. OMITTED = applies to all
-   * versions; only version-specific vectors enumerate a restricted set.
+   * (see data/windows-versions.js) of authored applicability. OMITTED = unknown.
+   * A catalog addition does not extend previous applicability claims.
    */
   versions?: string[];
   /**
-   * Foothold gate for the "what you hold" filter: the MINIMUM access a reader must
-   * already possess to attempt this step (see data/footholds.ts). Environmental
-   * conditions and the specific ACL edge / group abused stay in `requires`. OMITTED
-   * = no gate (never dimmed by the foothold filter). Not set on start/category/goal.
+   * Authored access tag for the "what you hold" filter (see data/footholds.js).
+   * Additional conditions belong in `requires`. OMITTED = no filter gate, not a
+   * claim that no access or other conditions are needed. Not set on start/category/goal.
    */
   needs?: FootholdId;
   /**
@@ -87,7 +117,7 @@ export interface TechniqueNodeDef extends GraphNode {
    * hub). Authoring aid only — it documents intent and is a hook for future tooling.
    * It has NO runtime effect today: loop unrolling is decided automatically from the
    * layout (any edge that lands left of its source becomes a forward instance; see
-   * graph/layout.ts `resolveUnroll`), so hubs are not special-cased by the engine.
+   * engine/engine.js `resolveVisible`), so hubs are not special-cased by the engine.
    */
   hub?: boolean;
   /**
@@ -102,17 +132,18 @@ export interface TechniqueNodeDef extends GraphNode {
 /**
  * A directed edge in an attack map.
  *
- * The framework half ({@link GraphEdge}) is source, target and the canonical `rel` id — the
- * relationship vocabulary belongs to the shared framework, not to the security data. The
- * fields below are the same detail body a technique node carries, because an edge is a step
- * too: taking a branch has conditions, costs noise, and has something worth reading behind
- * it. Authoring those as fields rather than as one semicolon-spliced sentence in `description`
- * is what lets the panel render an edge the way it renders a node.
+ * The framework half ({@link GraphEdge}) supplies endpoints and optional captions.
+ * The security domain owns the vocabulary in relationships.js. Connections may
+ * organize topics or describe a security relationship; endpoints and visual order
+ * alone do not establish which meaning applies or that a sequence is feasible.
+ * Each substantive relationship claim needs its own scoped evidence. A technique
+ * reference on either endpoint does not automatically support the connection.
  */
 export interface AttackEdge extends GraphEdge {
+  review?: EditorialReview;
   /**
-   * What has to hold for this branch to be the right one. One condition per entry: they are
-   * rendered as a list under "Applies when", so a reader can check them off.
+   * Author-supplied conditions, rendered under "Authored conditions". Presence
+   * does not establish their completeness or verify the connection's claim.
    */
   requires?: string[];
   /** Detection risk in taking this step, shown in the OPSEC box. */

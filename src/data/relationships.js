@@ -1,83 +1,41 @@
 /**
- * Canonical edge relationships: a controlled vocabulary so edges that mean the
- * SAME thing reuse one definition (consistent label + a rich explanation shown
- * in the edge panel) instead of each inventing its own wording.
- *
- * An edge sets `rel: '<id>'`. If it omits `label`/`description`, the relationship
- * supplies them; an explicit `label` on the edge still wins (keeps a specific
- * on-graph caption while sharing the canonical explanation). See buildModel.
- *
- * This vocabulary is part of the SHARED, domain-independent framework: every map
- * (AD, Windows PE, and future web/cloud/network maps) draws its path-step semantics
- * from the same definitions. Entries are grouped into a cross-domain CORE that all
- * maps use, plus per-domain sections. When adding a map, reuse the core rels and add
- * a new domain section here rather than inventing per-edge wording inline.
+ * Shared definitions for relationship labels used by the security maps.
+ * These explain vocabulary, separately from an individual connection's claims.
+ * Explicit edge captions remain authored captions. Unknown relationship IDs fail
+ * validation; add a definition and its evidence before introducing a new ID.
  */
-
 export const RELATIONSHIPS = {
-  // ── Cross-domain CORE: every map's pathfinding uses these ──────────────────
   'host-exec': {
     label: 'code execution',
-    description:
-      'Yields command execution on the target host (frequently as SYSTEM), establishing or extending a foothold from which you can dump credentials and pivot further.',
+    origin: 'source-based',
+    description: 'Execution means code running on a system. The process or thread has its own security context; the label alone does not identify an account or privilege level.',
+    references: [
+      { label: 'MITRE ATT&CK, Execution', url: 'https://attack.mitre.org/tactics/TA0002/', kind: 'taxonomy', section: 'Execution — introductory definition' },
+      { label: 'Microsoft, Access tokens', url: 'https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens', kind: 'primary', section: 'Introduction and Access token contents' },
+    ],
   },
   'cred-reuse': {
     label: 'credential reuse',
-    description:
-      'A recovered secret (password, NT hash, or Kerberos ticket) is replayed to authenticate to another host or service, spreading access laterally.',
+    origin: 'source-based',
+    description: 'In HackGraph, credential reuse means using existing authentication material in another authentication attempt. Authentication checks a claimed identity; authorization determines permitted access.',
+    references: [
+      { label: 'NIST CSRC, Authentication', url: 'https://csrc.nist.gov/glossary/term/authentication', kind: 'primary', section: 'Definitions — identity authentication (FIPS 200 and NISTIR 4734)' },
+      { label: 'NIST CSRC, Authorization', url: 'https://csrc.nist.gov/glossary/term/authorization', kind: 'primary', section: 'Definitions — access privileges and permission to access resources' },
+    ],
   },
   enables: {
-    label: 'enables',
-    description:
-      'A capability, privilege, or misconfiguration that is needed for the next step. Holding it is the precondition for what follows, where the actual code execution or access happens.',
+    label: 'dependency',
+    origin: 'project-convention',
+    description: "An author-declared dependency between topics. Its scope belongs in the connection's own explanation.",
+    references: [],
   },
-
-  // ── Active Directory domain vocabulary ──────────────────────────────────────
-  coerce: {
-    label: 'coerced auth',
-    description:
-      "A victim machine is forced to authenticate to an attacker-controlled endpoint, exposing its credentials for capture or relay.",
-  },
-  'relay-ldap': {
-    label: 'relay → LDAP(S)',
-    description:
-      'Captured/coerced authentication is relayed to a Domain Controller over LDAP(S) to write ACLs, configure delegation (RBCD), or add shadow credentials.',
-  },
-  'relay-smb': {
-    label: 'relay → SMB',
-    description:
-      'Captured authentication is relayed to SMB on a host where the principal is local admin, to execute code or dump the SAM.',
-  },
-  'cert-auth': {
-    label: 'cert → TGT',
-    description:
-      'A certificate is used via PKINIT to obtain a TGT (and often the account NT hash), bridging certificate access to Kerberos and hash-based attacks.',
-  },
-  'forge-ticket': {
-    label: 'forged ticket',
-    description:
-      'A Kerberos ticket (TGT or TGS) is forged or requested, granting authenticated access as the impersonated principal.',
-  },
-  delegation: {
-    label: 'delegation abuse',
-    description:
-      'A delegation primitive (unconstrained, constrained, or resource-based) is abused to impersonate a privileged user to a target service.',
-  },
-  dcsync: {
-    label: 'DCSync',
-    description:
-      'Directory replication rights are abused to pull secrets (NT hashes, the krbtgt key) directly from a Domain Controller.',
-  },
-  'to-da': {
-    label: '→ Domain Admin',
-    description: 'Yields Domain Admin or equivalent full domain control.',
-  },
-
-  // ── Linux privilege-escalation vocabulary ──────────────────────────────────
   'to-root': {
-    label: '→ root',
-    description:
-      'Yields code execution or a shell as root (EUID 0), completing local privilege escalation on the host.',
+    label: 'root context',
+    origin: 'source-based',
+    description: "Root denotes user ID 0. A Linux process's privileges also depend on its capabilities and user namespace.",
+    references: [
+      { label: 'Linux man-pages, capabilities(7)', url: 'https://man7.org/linux/man-pages/man7/capabilities.7.html', kind: 'primary', section: 'DESCRIPTION — superuser and capabilities' },
+      { label: 'Linux man-pages, user_namespaces(7)', url: 'https://man7.org/linux/man-pages/man7/user_namespaces.7.html', kind: 'primary', section: 'DESCRIPTION and Capabilities' },
+    ],
   },
 };
-

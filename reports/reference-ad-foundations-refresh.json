@@ -1,0 +1,723 @@
+{
+  "scope": "Targeted GET observations for 38 sources supporting the AD foundations comparisons. Nine other comparison sources reuse earlier captures. Other current URLs retain their previous timestamps. This is availability evidence, not operational or claim validation.",
+  "previousReportAt": "2026-09-07T05:41:27.430Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.695Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.713Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.896Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.909Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.960Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:29.962Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.259Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.854Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:30.984Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.092Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.222Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:43.753Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4795.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4795.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4795.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:43.872Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://attack.mitre.org/tactics/TA0003/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/tactics/TA0003/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/tactics/TA0003/"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.646Z"
+    },
+    {
+      "url": "https://attack.mitre.org/tactics/TA0004/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/tactics/TA0004/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/tactics/TA0004/"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.997Z"
+    },
+    {
+      "url": "https://attack.mitre.org/tactics/TA0006/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/tactics/TA0006/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/tactics/TA0006/"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:03.029Z"
+    },
+    {
+      "url": "https://attack.mitre.org/tactics/TA0008/",
+      "code": 200,
+      "finalUrl": "https://attack.mitre.org/tactics/TA0008/",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://attack.mitre.org/tactics/TA0008/"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.998Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/exchange/architecture/architecture?view=exchserver-2019",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/exchange/architecture/architecture?view=exchserver-2019",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/exchange/architecture/architecture?view=exchserver-2019"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.263Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/86b9cf84-df2e-4f0b-ac22-1b957627e1ca",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/86b9cf84-df2e-4f0b-ac22-1b957627e1ca",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-dcom/86b9cf84-df2e-4f0b-ac22-1b957627e1ca"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:42:08.055Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/jea/overview?view=powershell-7.6",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/jea/overview?view=powershell-7.6",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/powershell/scripting/security/remoting/jea/overview?view=powershell-7.6"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.641Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-hardware/drivers/print/print-spooler-architecture",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-hardware/drivers/print/print-spooler-architecture",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-hardware/drivers/print/print-spooler-architecture"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.264Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/active-directory-certificate-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.364Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-template-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-template-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certificate-template-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.388Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certification-authority-role",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certification-authority-role",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-cs/certification-authority-role"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.364Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/ad-ds-installation-and-removal-wizard-page-descriptions",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/ad-ds-installation-and-removal-wizard-page-descriptions",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/deploy/ad-ds-installation-and-removal-wizard-page-descriptions"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.641Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/replication/active-directory-replication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.714Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.499Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-managed-service-accounts/group-managed-service-accounts/group-managed-service-accounts-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.364Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/group-policy/group-policy-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.092Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.697Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-principals"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.499Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/appendix-c--protected-accounts-and-groups-in-active-directory"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.263Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/ad-fs-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.263Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/design/certificate-requirements-for-federation-servers",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/design/certificate-requirements-for-federation-servers",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/design/certificate-requirements-for-federation-servers"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.264Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.364Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/credentials-protection-and-management/configuring-additional-lsa-protection"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.003Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-authentication-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.092Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/kerberos/kerberos-constrained-delegation-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.364Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/storage/file-server/file-server-smb-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.714Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/ad/controlling-access-to-objects-in-active-directory-domain-services",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/ad/controlling-access-to-objects-in-active-directory-domain-services",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/ad/controlling-access-to-objects-in-active-directory-domain-services"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.929Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/adschema/active-directory-schema",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/adschema/active-directory-schema",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/adschema/active-directory-schema"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.092Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/lsa-authentication"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/microsoft-ntlm"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.263Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-control-lists"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/security-descriptors"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.929Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/winrm/portal"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/wmisdk/wmi-start-page"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.641Z"
+    },
+    {
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "code": 200,
+      "finalUrl": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.829Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4120.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.590Z"
+    },
+    {
+      "url": "https://www.rfc-editor.org/rfc/rfc4795.html",
+      "code": 200,
+      "finalUrl": "https://www.rfc-editor.org/rfc/rfc4795.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://www.rfc-editor.org/rfc/rfc4795.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:02.500Z"
+    }
+  ]
+}

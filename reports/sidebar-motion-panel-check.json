@@ -1,0 +1,65 @@
+{
+  "checkedAt": "2026-09-07T08:41:53.601Z",
+  "rendererSha256": "7046b2904d90719095b1744ef5cd97a3e01bc11adaf708f3fec7abf08157e097",
+  "stylesheetSha256": "75b57f61626e046f4ff0005ecda42de1e2343197059dd8d1dd8bfe5d3b4136bf",
+  "scope": "Chromium, 250-topic generic course, open sidebar at desktop and 390px widths in both themes. Automated accessibility, element counts and horizontal overflow; screenshots support separate visual inspection. Video captures use separate pages after accessibility checks end and are supplied for human motion review, not a performance rating.",
+  "rows": [
+    {
+      "width": 1440,
+      "theme": "dark",
+      "screenshot": "reports/visuals/sidebar-motion-1440-dark-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "screenshot": "reports/visuals/sidebar-motion-1440-light-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "screenshot": "reports/visuals/sidebar-motion-390-dark-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "screenshot": "reports/visuals/sidebar-motion-390-light-open.png",
+      "cards": 251,
+      "connectors": 250,
+      "topicRows": 250,
+      "connectionControls": 250,
+      "panelOverflow": false,
+      "violations": []
+    }
+  ],
+  "videos": [
+    {
+      "width": 1440,
+      "height": 1000,
+      "path": "reports/visuals/sidebar-motion-1440.webm"
+    },
+    {
+      "width": 390,
+      "height": 844,
+      "path": "reports/visuals/sidebar-motion-390.webm"
+    }
+  ],
+  "errors": []
+}

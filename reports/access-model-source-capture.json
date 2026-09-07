@@ -1,0 +1,71 @@
+{
+  "scope": "Six primary publications supporting twelve selected conceptual comparisons in six additional category overviews. Retrieval is separate from comparison; exact claims and authored snapshots are in the node records.",
+  "results": [
+    {
+      "label": "Microsoft, Authorization basics",
+      "url": "https://learn.microsoft.com/en-us/entra/identity-platform/authorization-basics",
+      "kind": "primary",
+      "section": "Introduction; Role-based access control",
+      "checkedAt": "2026-09-07T04:45:01.040Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/entra/identity-platform/authorization-basics",
+      "code": 200,
+      "title": "Authorization basics - Microsoft identity platform | Microsoft Learn",
+      "sha256": "ce63dc5ae4a20b46f436a5c125bfbb16cbbaacc8a35a44941522e246b8434743"
+    },
+    {
+      "label": "Microsoft, Configuration Manager role-based administration",
+      "url": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration",
+      "kind": "primary",
+      "section": "Introduction; Security roles; Collections; Security scopes",
+      "checkedAt": "2026-09-07T04:45:01.040Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/intune/configmgr/core/understand/fundamentals-of-role-based-administration",
+      "code": 200,
+      "title": "Role-based administration fundamentals - Configuration Manager | Microsoft Learn",
+      "sha256": "eb37d226e7bd922d7a280b26c0f9f70d31bf5bea30102481cc836a350e28d5e0"
+    },
+    {
+      "label": "Microsoft, Intune role-based access control",
+      "url": "https://learn.microsoft.com/en-us/intune/fundamentals/role-based-access-control/overview",
+      "kind": "primary",
+      "section": "RBAC Roles; About Intune role assignments",
+      "checkedAt": "2026-09-07T04:45:01.040Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/intune/fundamentals/role-based-access-control/overview",
+      "code": 200,
+      "title": "Role-based access control (RBAC) with Microsoft Intune - Microsoft Intune | Microsoft Learn",
+      "sha256": "f584c91ae699dd35d14c480f8c45b320e3118321b6d45d3ecc0a8c0e3dca3484"
+    },
+    {
+      "label": "Microsoft, SQL Server principals",
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/principals-database-engine?view=sql-server-ver17",
+      "kind": "primary",
+      "section": "Introduction; SQL Server-level principals; Database-level principals",
+      "checkedAt": "2026-09-07T04:45:01.040Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/authentication-access/principals-database-engine?view=sql-server-ver17",
+      "code": 200,
+      "title": "Principals (Database Engine) - SQL Server | Microsoft Learn",
+      "sha256": "acb04c623c0c214f09ed432d95e11233557a94c0dd072a3ab7588331aeaf9de2"
+    },
+    {
+      "label": "Microsoft, SQL Server securables",
+      "url": "https://learn.microsoft.com/en-us/sql/relational-databases/security/securables?view=sql-server-ver17",
+      "kind": "primary",
+      "section": "Introduction; Control Access to a Securable",
+      "checkedAt": "2026-09-07T04:45:01.039Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/sql/relational-databases/security/securables?view=sql-server-ver17",
+      "code": 200,
+      "title": "Securables - SQL Server | Microsoft Learn",
+      "sha256": "052046e1a14401a09b086dba6b7bd419fbbd635e188b03fb3dd9b427cdd47feb"
+    },
+    {
+      "label": "Microsoft, Windows Authentication Concepts",
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "kind": "primary",
+      "section": "Authentication and authorization: A travel analogy; Security principals and accounts",
+      "checkedAt": "2026-09-07T04:45:01.040Z",
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "title": "Windows Authentication Concepts | Microsoft Learn",
+      "sha256": "d454c6457dff371af3a1dedf8daac8409595ece9cb68c3240e557346ecdb24b8"
+    }
+  ]
+}

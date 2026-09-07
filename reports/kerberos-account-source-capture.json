@@ -1,0 +1,44 @@
+{
+  "scope": "Three primary publications retrieved for selected conceptual comparisons of KDC account identity, TGT and service-ticket roles, application authorization data, and separate RODC accounts. No operational validation.",
+  "results": [
+    {
+      "id": "kdc",
+      "label": "Microsoft — Key Distribution Center",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center",
+      "checkedAt": "2026-09-07T12:19:53.125Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthn/key-distribution-center",
+      "title": "Key Distribution Center - Win32 apps | Microsoft Learn",
+      "file": ".cache/citation-followup-review/captures/kdc.html",
+      "sha256": "d72318b9d1f3e9e714672d7160fc0b7312f1132611e947984e5b837daf927de8",
+      "textFile": ".cache/citation-followup-review/captures/kdc.txt",
+      "textSha256": "49f532e3e644527e35fe9a60f2c66fa6d85713b9e0892b206d6635f18528f9f0"
+    },
+    {
+      "id": "accounts",
+      "label": "Microsoft — Active Directory accounts",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts",
+      "checkedAt": "2026-09-07T12:19:53.138Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-default-user-accounts",
+      "title": "Active Directory Accounts | Microsoft Learn",
+      "file": ".cache/citation-followup-review/captures/accounts.html",
+      "sha256": "baa4b663f536a2fb80c9434e45b85583ee1aec0df6cfc3faf0c1100db2548a34",
+      "textFile": ".cache/citation-followup-review/captures/accounts.txt",
+      "textSha256": "fe888d16b618cc92dd4bee82271027cab4739f9f31ed63ee2941eb99f0da3264"
+    },
+    {
+      "id": "exchanges",
+      "label": "Microsoft [MS-KILE] — Kerberos Network Authentication Service (V5) Synopsis",
+      "url": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13",
+      "checkedAt": "2026-09-07T12:19:53.139Z",
+      "status": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-kile/b4af186e-b2ff-43f9-b18e-eedb366abf13",
+      "title": "[MS-KILE]: Kerberos Network Authentication Service (V5) Synopsis | Microsoft Learn",
+      "file": ".cache/citation-followup-review/captures/exchanges.html",
+      "sha256": "9680c30cc6fc3bb4baef54a67759537edb644d013df0907f705d0bb8b5fb37de",
+      "textFile": ".cache/citation-followup-review/captures/exchanges.txt",
+      "textSha256": "7f24d8f60b2a701a659c80b6e4aa059c9652f57d61480ec1abc68d687beb340d"
+    }
+  ]
+}

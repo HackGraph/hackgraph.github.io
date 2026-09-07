@@ -1,0 +1,55 @@
+{
+  "checkedAt": "2026-09-07T07:28:45.824Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 131,
+    "failed": 0,
+    "skipped": 0,
+    "newArtifactTests": 20
+  },
+  "browser": {
+    "passed": 96,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 68,
+    "sourceDigest": "22d83879052e0fd16f0e370b7dfe042dbc2a6a96d2f54fff303c76d455f8f481",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousSourceDigest": "22d83879052e0fd16f0e370b7dfe042dbc2a6a96d2f54fff303c76d455f8f481",
+  "publicInputsUnchanged": true,
+  "generatedPages": [
+    "reference.html",
+    "reference/active-directory.html",
+    "reference/windows-privilege-escalation.html",
+    "reference/linux-privilege-escalation.html",
+    "about.html",
+    "glossary.html",
+    "sitemap.xml"
+  ],
+  "generatedPagesRepeatable": true,
+  "dataParityCurrent": true,
+  "toolingSha256": {
+    "tools/site-artifact.mjs": "c2b14d37e1c55f2b18b6b75840f73284a4a8d3e45045c475a94024552c9f985e",
+    "tools/site-artifact.test.mjs": "c5752be59fc07386b1748acd48256164727e075e7ea1b73432e7f9282c01319a",
+    "tools/verify-site.mjs": "91c63ba144da2e12bab1a8c823e45d3fc36f884b1c295187f9e00f34dbaf14da",
+    "tools/prepare-site.mjs": "1f5165e643c960f51a8d573c539cf7d74a014b80744f588e9b41571bfc891748",
+    "package.json": "212a6ae7b7e7c3da063bd747b9b14d21e8bb5013eaf44a38a049c8cca1f046ab",
+    ".github/workflows/deploy.yml": "1e9c8d10df2ab811cae9103fb83db3a859557e8350958cbeaf522d0557d28428"
+  },
+  "logSha256": "aea459a88465ab7b85066259f38567e5909bac7ac96368ee96108049ba1bc01a",
+  "logPath": ".cache/completion-review/artifact-tests.log",
+  "workflowLint": {
+    "tool": "actionlint",
+    "version": "1.7.12",
+    "exitCode": 0
+  },
+  "scope": "Local software verification. No hosted workflow execution, deployment, or operational graph validation."
+}

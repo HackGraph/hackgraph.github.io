@@ -1,0 +1,145 @@
+{
+  "checkedAt": "2026-09-07T12:30:55.000Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 129,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "4e45992e8b85cd00860a0ad0d8796423d945799fb855ff9608c68d9d91dde52e",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "536cb73ba9cb155d88f49bd4ebaab5bd774806e252b574f9da19a4045ff913d0",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "src/data/chains/ad-additions.js",
+    "src/data/chains/domain-dominance.js",
+    "src/data/source-availability.js",
+    "src/data/source-provenance.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "cf8b474ad0fd809f15ecdde442636e8fc100f54d39d5399c86c7c13245fa79e0",
+  "previousGraphDataSha256": "afac544778058e8c461ea0bce52f1424fad5cd96913a5f35f4aee8c0be8b48bb",
+  "conceptualEntry": "krbtgt-hash",
+  "additionalClaims": 4,
+  "reviewedEntries": 99,
+  "selectedClaims": 213,
+  "unchangedEarlierReviewRecords": 98,
+  "citationCorrection": {
+    "map": "ad",
+    "id": "pass-the-certificate",
+    "referenceIndex": 1,
+    "before": {
+      "label": "Certipy wiki, Authentication (Pass the Certificate / PKINIT)",
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication"
+    },
+    "after": {
+      "label": "Certipy wiki, Usage (sub-command overview)",
+      "url": "https://github.com/ly4k/Certipy/wiki/05-%E2%80%90-Usage"
+    },
+    "basis": "The current guide is linked by the publisher and identifies certificate authentication in its overview. This does not recover the nonexistent chapter or verify commands.",
+    "resolvedNotice": {
+      "url": "https://github.com/ly4k/Certipy/wiki/07-%E2%80%90-Authentication",
+      "status": "chapter-missing",
+      "checkedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "observedTitle": "Home · ly4k/Certipy Wiki · GitHub",
+      "finalUrl": "https://github.com/ly4k/Certipy/wiki/",
+      "basis": "The requested chapter redirects to the project wiki Home page. The chapter is not present at the cited destination. Publisher identity is established; chapter identity and claim support are unresolved.",
+      "captureSha256": "623756f83897a32eef4336262bacc6b38af0a9199de9c57557ea833f890a4506"
+    }
+  },
+  "allOtherGraphFieldsUnchanged": true,
+  "provenance": {
+    "groups": 228,
+    "urls": 486,
+    "classifiedOccurrences": 736,
+    "inlineClassifiedOccurrences": 184,
+    "unclassifiedOccurrences": 1
+  },
+  "availability": {
+    "urls": 854,
+    "counts": {
+      "responded": 848,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedCurrentUrls": 5,
+    "otherObservationsUnchanged": true
+  },
+  "destinationNotices": {
+    "urls": 1,
+    "affectedEntries": 3
+  },
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "reference/windows-privilege-escalation.html": "6cc42d818eb0d7cbd4867a001a1e134f56ff8d31427e4516a7f5c49c9792540c",
+    "reference/linux-privilege-escalation.html": "21884a73e6ba2e34c05ca89a2c0e41da728f006614b2fb836e4038fb5efb090b",
+    "about.html": "7e370e20608457be8e6d32658c5b4a9858baea7fe6f3902cdc5c9e722be04da7",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "visual": {
+    "states": 8,
+    "axeStates": 6,
+    "violations": 0,
+    "overflow": 0,
+    "runtimeErrors": 0,
+    "screenshots": 3,
+    "screenshotsVisuallyInspected": true
+  },
+  "hashes": {
+    "about.html": "7e370e20608457be8e6d32658c5b4a9858baea7fe6f3902cdc5c9e722be04da7",
+    "reference/active-directory.html": "a4781db009d0d08b44ac65e80d3900a97cb7b7b9d94c86a2fc114bb0513158ef",
+    "src/data/chains/ad-additions.js": "5c660d05c923dbf2a33045bac6e0bda42fc6aba706eb6d502540a24d7d2882e8",
+    "src/data/chains/domain-dominance.js": "09660c70d760995517dc634957d814d40a7998419277a74e338d21f53340b828",
+    "src/data/source-availability.js": "663122245c2ed033d1d39fdbf90ac27f8e56d76f39fc833d7823527696bc9255",
+    "src/data/source-provenance.js": "51bb30368c64be50414e37d2fc4551dd56533a8bf4f9154b01c62d9bf2447480",
+    "reports/citation-followup-capture.json": "71e97d6be5bf70e3ae6bac196447adb9a67ae611d28784271864df779433a955",
+    "reports/kerberos-account-source-capture.json": "3053482986743a31ea739f2d36964440a3dcf0601727c9c7d2d5ec70f4d445e3",
+    "reports/visuals/kerberos-account-panel-1440.png": "80a7b71b2cf0bdc343a8d5110f6a978cbdef388415a5cd8b77b5b76f850627de",
+    "reports/visuals/kerberos-account-panel-390.png": "d56e3aede7e428b83d42d5084244400512d546f1c3eb90ace22b4ac9ce59b0f4",
+    "reports/visuals/kerberos-account-reading-mobile.png": "b58ba3af20cbd18387ce4eea60c897d708efba005d60edca4a7a9ca4bbfd7ff5",
+    "reports/citation-followup-decisions.json": "41a5924f7e21a9753ffa3d9b6abb5994bd9dca4fef0469401d71996c53de018a",
+    "reports/kerberos-account-review.json": "12faa71d40dcd4001c1215169a47de906857b48d46d987ec4b9a15332f6339a3",
+    "reports/kerberos-account-visual-check.json": "1a4c4c55f47c5a3876ce43a737af8a3d3b2fb822b2419fc9d6e8cf1f64fbee2c",
+    "reports/KERBEROS_ACCOUNT_REVIEW.md": "59ea279af30f0355cea48a2b89e0812df1b14c07cc1dadbc7883ce3a0a66a99a",
+    "reports/COMPLETION_STATUS.md": "7fa70476992e8726f5c5428eedea0d18a38f7f22f2d00a95884e6d9c7d7a719d",
+    "reports/HUMAN_REVIEW.md": "f41a2d15ab0f4a307918728e14c54a8cc74e196d351d65e6e700bed4271315ed",
+    "reports/VERIFICATION.md": "cb0d36bb03e08df94c51686637dc869818450ca2f987c4c2d506fdc4975c791c",
+    "reports/source-provenance.json": "fe535a726ad76260e36f591bec585f619c3d97947632f5bd943cd61dbbb1f46b",
+    "reports/reference-availability.json": "5c4fe10d452d202c68d4ec55728483e5f8b84268a355ad8a2a21e53981666a3d",
+    "reports/review-inventory.json": "7409a98ef7c3dcdd39970a13f44c6caae2f3da2fecec02c3224fd4156993d217",
+    "reports/review-inventory.csv": "c6fa8c0ed940b5d4db154700d363ea6219d57a776df66b5cf9cb8fbb7231c0dd",
+    "reports/content-coverage.json": "d5ea557aa1d8a9a21c7960c4384288ff22eb181328d3fea4afeba7b9d10028a0",
+    "reports/data-parity.json": "1d50a2c451b1e7f057d3448ee8bf6e3418a2d81db44b6d4b57459a4af531a591",
+    "README.md": "d2ace5b446979d42077b9f785df8ac109f7bc7c57d777a67d7602d05a0fbd4cd",
+    "RELEASE_NOTES.md": "c19d708f694b9e59898d83c3a2ce09dda306ba7564a1c0159613e7aa5cbc0f81",
+    "IMPLEMENTATION_PLAN.md": "ba7551cce271f78cabc0a8ab87feb4b3dbd6538481c90ce7bceb2d3263903ac4"
+  },
+  "logPath": ".cache/citation-followup-review/full-tests.log",
+  "logSha256": "4cac767db1f16e024f9ab06236eae158cf66807496ce4eef5ca0a90fae6a7b9f",
+  "scope": "One conceptual KDC-account comparison, one replacement reading-guide citation and publisher-displayed attribution evidence. No command, prerequisite, applicability, connection or operational validation. No human review, new motion benchmark, hosted workflow execution or deployment."
+}

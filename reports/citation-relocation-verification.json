@@ -1,0 +1,120 @@
+{
+  "checkedAt": "2026-09-07T12:13:09.609Z",
+  "command": "npm test",
+  "exitCode": 0,
+  "unit": {
+    "passed": 144,
+    "failed": 0,
+    "skipped": 0
+  },
+  "browser": {
+    "passed": 129,
+    "failed": 0,
+    "projects": [
+      "Chromium",
+      "Firefox",
+      "WebKit"
+    ]
+  },
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "536cb73ba9cb155d88f49bd4ebaab5bd774806e252b574f9da19a4045ff913d0",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "previousArtifact": {
+    "files": 69,
+    "sourceDigest": "f1e79104ae66e1ad1c173083412024c53665d530d51e9c1cd9833c20da3625f8",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicChanges": [
+    "about.html",
+    "reference/active-directory.html",
+    "reference/linux-privilege-escalation.html",
+    "src/data/chains/ad-additions.js",
+    "src/data/chains/ad-categories.js",
+    "src/data/maps/linux-pe.js",
+    "src/data/source-availability.js",
+    "src/data/source-provenance.js"
+  ],
+  "otherPublicInputsUnchanged": true,
+  "graphDataSha256": "afac544778058e8c461ea0bce52f1424fad5cd96913a5f35f4aee8c0be8b48bb",
+  "previousGraphDataSha256": "4fd01638cd407a76744440185a2bb935a0ada4d4bb1d39f804c4b69f50842d2e",
+  "referenceRecordsRepaired": 3,
+  "supplementalReferenceSnapshotsUpdated": 2,
+  "allOtherGraphFieldsUnchanged": true,
+  "selectedClaimTextEvidenceDatesAndScopesUnchanged": true,
+  "reviewedEntries": 98,
+  "selectedClaims": 209,
+  "additionalClaims": 0,
+  "provenance": {
+    "groups": 228,
+    "urls": 486,
+    "classifiedOccurrences": 736,
+    "unclassifiedOccurrences": 1
+  },
+  "availability": {
+    "urls": 852,
+    "counts": {
+      "responded": 846,
+      "blocked": 4,
+      "unreachable": 2
+    },
+    "refreshedDestinations": 2,
+    "otherObservationsUnchanged": true
+  },
+  "destinationNotices": {
+    "urls": 2,
+    "affectedEntries": 4
+  },
+  "generatedPagesRepeatable": true,
+  "generatedHashes": {
+    "reference.html": "249a00b9f956568bd2c3e731ff2ca7f8ed59b9e28168309c661b4310e1fb8bb0",
+    "reference/active-directory.html": "0f8c735df9ca44b1967d0ffac52cf186c9336311fb32c4a296fac2676df39569",
+    "reference/windows-privilege-escalation.html": "6cc42d818eb0d7cbd4867a001a1e134f56ff8d31427e4516a7f5c49c9792540c",
+    "reference/linux-privilege-escalation.html": "21884a73e6ba2e34c05ca89a2c0e41da728f006614b2fb836e4038fb5efb090b",
+    "about.html": "fcaae479fff980a85732db473f33ccef4f92555a526267182436fd9aae3a4b3f",
+    "glossary.html": "5faffb97148b47293b170bb7ab25741fbe407d4e079489719b95c10f23e08281",
+    "sitemap.xml": "16d1f47198770687b326c325d0e93234551ccb9ee6e600f27c4f64c4e80850ca"
+  },
+  "hashes": {
+    "about.html": "fcaae479fff980a85732db473f33ccef4f92555a526267182436fd9aae3a4b3f",
+    "reference/active-directory.html": "0f8c735df9ca44b1967d0ffac52cf186c9336311fb32c4a296fac2676df39569",
+    "reference/linux-privilege-escalation.html": "21884a73e6ba2e34c05ca89a2c0e41da728f006614b2fb836e4038fb5efb090b",
+    "src/data/chains/ad-additions.js": "76090494dc87df65bcb81a5e8d76a2377cd8193823e0e475af622d02c2c53e38",
+    "src/data/chains/ad-categories.js": "f881ed58f9003a198adec59b50b6bbfb5c9eb02380309b0d0791c0eece6459cb",
+    "src/data/maps/linux-pe.js": "c6465465542953e2ab2c6ff97fff3b7805a7ae30735fc6a7d9f6dd4751ef8a4a",
+    "src/data/source-availability.js": "d102295026027ee8f33187a81f5ee9bf0bb0a0f2b53d09a74dd06cd887c80da7",
+    "src/data/source-provenance.js": "3e00b2c9602d38809b71c9d49d5448bca34b7b3a2ea6fc128424aee1d6aab4d5",
+    "reports/citation-relocation-capture.json": "a6a0787f806e4aab934cebd8153eb7ccfff54f64fc94d475d88a8ea02cd36b27",
+    "reports/citation-relocation-repair.json": "f3b71c99ce3395790ab7448464477855173c1476ea31430108dcdaa433f44414",
+    "reports/CITATION_RELOCATION_REVIEW.md": "32dbc36a719458f12f745653a8cfbcd30a6136e42c5be86773466b5359cb7507",
+    "reports/COMPLETION_STATUS.md": "e809433a585062868518dcf6e53d4581e8c6f90043ae8cc625031a5e19092c07",
+    "reports/HUMAN_REVIEW.md": "043083247beebda9105b39bc37e906d1c730288d83ceaab6df46127b157df6fc",
+    "reports/VERIFICATION.md": "b72a53c4765b70dd0c9700a45651ab5ed27917479431b6cc90f4fe383130f815",
+    "reports/source-provenance.json": "38f342ffbbac39b160259c5b8952a9cf9d38f93edb0f741a4b886098ac2430b6",
+    "reports/reference-availability.json": "487d932617e61af0e6afffe77afc3748688b14020903cfd1a98bffaad50fa4ff",
+    "reports/review-inventory.json": "a27e308f24fea0f6cf5c8cedce29fdc9b9b02b67571618697c1ef0cffebef1fe",
+    "reports/review-inventory.csv": "57c17b757b621adccda00523056587d9ef0ea122db618435c8b765943bded555",
+    "reports/content-coverage.json": "01fd28dd1950221238eba29de3c5c715fcc6e7bc688d706f174ec212047c1bc6",
+    "reports/data-parity.json": "e9e3f7cddb74469c4d8d372b17bc2f45e9aa313f0e59a193e52ae9f3fdc4e537",
+    "README.md": "b24de74e87dddba9a58beab6421cde40018f0534b140ffd283bdce34359f33a6",
+    "RELEASE_NOTES.md": "29274b201e2a968199c56121ab464e687fe3bd583b99ed6fa9cf1d790b2d9b66",
+    "IMPLEMENTATION_PLAN.md": "66fc565f690c1cfa8370143bddbfc8856c35ceeec07efc5240a9f982d3f131c3",
+    "browser/learning.spec.mjs": "0cf37c49577e216923a214de260d29668898f8d4b0038f3e678390499235f1a4",
+    ".cache/citation-relocation-review/full-tests-before-responsive-wait.log": "e979230f8e8cd72200c4d363d1f7eef64dd759e487c97ebd811edb920125a3e2",
+    ".cache/citation-relocation-review/breadcrumb-failure/trace.zip": "d936087b2b5b68478aabb0da25e3348aafb212f1e6e5b6a6e3a6239092dc2608"
+  },
+  "logPath": ".cache/citation-relocation-review/full-tests.log",
+  "logSha256": "b0fc09f978d9c0f0609d9928a710d37016fc0294b22e1cbe032aa6eac8136b09",
+  "testSynchronizationRepair": {
+    "test": "wrapped panel breadcrumbs",
+    "initialFailure": "Chromium mobile disclosure visibility checked before responsive layout applied; hidden breadcrumbs measured as zero-sized.",
+    "correction": "Await expected container class, open mobile details explicitly, and await breadcrumb visibility. Original geometry and accessibility assertions retained.",
+    "repeatedScenariosPassed": 9,
+    "repeatLogPath": ".cache/citation-relocation-review/breadcrumb-repeat.log",
+    "repeatLogSha256": "39820189e230274ff180f6fa0cb78e4f3bdc7d25377011685beb817421c4d7cd"
+  },
+  "scope": "Publisher-declared relocation repair and current completion audit. No new graph claim comparisons, operational validation, motion measurements, human review, hosted workflow execution or deployment."
+}

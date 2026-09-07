@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-09-07T14:05:45.649Z",
+  "artifact": {
+    "files": 69,
+    "sourceDigest": "b24a68f523ed22942faf4496bf4be6d4a1c39d5032b2453ba61c0929f587a639",
+    "builtAt": "2026-09-07",
+    "commit": null
+  },
+  "publicFilesUnchanged": 69,
+  "graphDataAndReviewsUnchanged": true,
+  "productionRenderer": "1cf73c7456480d25a54cba64aac3cceaf5b22b8e762a4344b10daa796750df51",
+  "rejectedExperiment": "f845c8d6aab63707d9fe9bdc1175031f4b284594e604bfbd60668d455fdbce9e",
+  "measurementRows": 96,
+  "measuredRows": 72,
+  "errors": 0,
+  "scope": "Private performance experiments and bibliographic archive lookup. No production changes. Unit and browser tests were not rerun; the preceding missing-reference verification remains the completed test evidence for this unchanged public artifact.",
+  "precedingTestReceipt": "reports/missing-reference-verification.json",
+  "archiveLookups": {
+    "attempted": 2,
+    "http429": 2,
+    "publicationRecovered": false
+  },
+  "hashes": {
+    "reports/CARD_CONSTRUCTION_REVIEW.md": "4365ada1f9367ef4967ce2832a38123361faa0516f51f141f9bb1873aaa6591d",
+    "reports/card-construction-timing.json": "8be4eea266ac34e34276d4cb57f036411b431ced2a78dec0696bf85569b25dc1",
+    "reports/citation-archive-attempt.json": "e7474280a2779f97b3a266c0aadf189bfd43bc2269fd25357ec02eaddaf68943",
+    "reports/VERIFICATION.md": "ffcea397d6aa0859650a833a00a58fb61b23147c9650d8621012a6331b79e3be",
+    ".cache/choice-layout-review/profile-before.json": "963294dfabf8e49a5a1d7e5ed0d0af88444f6bd8cafada124ec080160d85522a",
+    ".cache/choice-layout-review/profile-contained.json": "1708324b213d35f03ec4e6868a75dc643a02ad485821047e4f2d4f2d72d83a29",
+    ".cache/choice-layout-review/profile-cloned.json": "4c3b7f129719e480632b71c6765d4de0ee758377b2da5f066d4015314ace5e92",
+    ".cache/choice-layout-review/profile.mjs": "c6f3de71bd8286ab509205f0cd862f093a8450de10a2bbfb50729542f501a37a",
+    ".cache/choice-layout-review/profile-contained.mjs": "8323190381dde66ef7520415ef068c615bd1a11186b9a1baf3d58c67bb1b3568",
+    ".cache/choice-layout-review/profile-cloned.mjs": "456affbaaa2dd4450730bbf08ddbeb49ee2aaf227adcf6f12e82603543f3c0fd",
+    ".cache/choice-layout-review/compare.mjs": "f6973cb25bb13f67a6a7705514605665f5ac5be750f1f3220053df19b70a0b26",
+    ".cache/choice-layout-review/view.before.js": "1cf73c7456480d25a54cba64aac3cceaf5b22b8e762a4344b10daa796750df51",
+    ".cache/choice-layout-review/view.cloned.js": "f845c8d6aab63707d9fe9bdc1175031f4b284594e604bfbd60668d455fdbce9e"
+  }
+}

@@ -37,7 +37,8 @@ h1{font-size:30px;font-weight:600;line-height:1.2;margin:0 0 14px}
 .toc a{border:1px solid var(--border);border-radius:999px;padding:5px 12px;font-size:13px;color:var(--ink)}
 section.phase{margin-top:44px}
 h2.phase-h{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;padding-bottom:6px;border-bottom:1px solid var(--border)}
-article{padding:18px 0;border-bottom:1px solid var(--border)}
+article{padding:18px 0;border-bottom:1px solid var(--border);scroll-margin-top:78px;overflow-wrap:anywhere}
+section.phase>h2{scroll-margin-top:78px}
 article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
 .kind{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);font-weight:600}
 .summary{color:var(--ink);margin:6px 0}
@@ -45,12 +46,19 @@ article h3{font-size:19px;font-weight:600;margin:0 0 4px;scroll-margin-top:70px}
 .meta{color:var(--faint);font-size:13px}
 h4{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin:16px 0 6px}
 ul.req{margin:4px 0;padding-left:18px;color:var(--dim);font-size:14px}
-pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;margin:6px 0}
+pre{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:12px 14px;overflow:auto;overflow-wrap:normal;margin:6px 0}
 code{font-family:'Geist Mono',ui-monospace,Menlo,monospace;font-size:13px;color:#e7dfe1}
 pre .cmt{color:var(--faint)}
 ul.links{margin:4px 0;padding-left:18px;font-size:14px}
+.claim-list{padding-left:18px;font-size:14px;line-height:1.6}
+.claim-list>li+li{margin-top:18px}.claim-list p{margin:0;overflow-wrap:anywhere}
+.claim-list .claim-section{margin-top:6px;font-size:13px;color:var(--dim)}
+.claim-sources{display:grid;gap:4px;margin-top:6px}
+.claim-sources a{display:block;width:fit-content;max-width:100%;padding:2px 0;color:var(--ink);overflow-wrap:anywhere;text-decoration:underline;text-underline-offset:.18em;border-radius:2px}
+.claim-sources a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .opsec{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:10px 14px;margin:12px 0;color:var(--dim);font-size:14px}
 .opsec b{color:var(--ink)}
+.editorial{border-left:2px solid var(--dim);padding:6px 12px;margin:12px 0;color:var(--dim);font-size:13px}.editorial p{margin:4px 0}table{border-collapse:collapse;width:100%;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--border)}.table-wrap{overflow:auto}.table-wrap:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);font-size:14px;border-top:1px solid var(--border)}
 </style>
 </head>
@@ -58,16 +66,18 @@ footer{max-width:860px;margin:0 auto;padding:32px 24px 64px;color:var(--faint);f
 <header class="top"><a href="/" style="display:flex;align-items:center;gap:10px;color:var(--ink)"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" aria-hidden="true"><path d="M9.5 12 H11.5 V5.5 H13.5 M11.5 12 V18.5 H13.5" stroke="#a59699" stroke-width="1.8" stroke-linejoin="round"/><rect x="1" y="8.5" width="8.5" height="7" rx="2.2" fill="#f0eaec"/><rect x="13.5" y="2" width="8.5" height="7" rx="2.2" fill="#a59699"/><rect x="13.5" y="15" width="8.5" height="7" rx="2.2" fill="#f04450"/></svg><span class="name">HackGraph</span></a><a class="cta" href="/">Open the interactive graph &rarr;</a></header>
 <main>
 <h1>HackGraph Reference</h1>
-<p class="lead">HackGraph is an open-source cybersecurity reference and study notes for offensive security. It maps attack paths as interactive, click-to-expand graphs that run from a foothold to Domain Admin or root. Every technique lists the commands to run, the tools it uses, detection and OPSEC notes, and links to primary sources. It works as notes for penetration testing, red teaming, and CTFs, for OSCP, OSEP, CRTP, CRTE, and PNPT prep, and as a detection reference for blue teams.</p>
-<p class="meta">A plain-text mirror of the <a href="/">interactive graph</a>, for search and offline reading. 390 techniques across 3 maps.</p>
-<article><h3><a href="/reference/active-directory.html">Active Directory Attack Paths</a></h3><p class="summary">Enumerate, capture credentials, escalate, move laterally, and reach Domain Admin: Kerberoasting, AS-REP roasting, NTLM relay, AD CS (ESC1-ESC16), DACL/ACL abuse, delegation, DCSync, and golden/silver tickets.</p><p class="meta">250 techniques &middot; <a href="/reference/active-directory.html">Read the reference &rarr;</a></p></article>
-<article><h3><a href="/reference/windows-privilege-escalation.html">Windows Privilege Escalation</a></h3><p class="summary">From a foothold to NT AUTHORITY\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker).</p><p class="meta">93 techniques &middot; <a href="/reference/windows-privilege-escalation.html">Read the reference &rarr;</a></p></article>
-<article><h3><a href="/reference/linux-privilege-escalation.html">Linux Privilege Escalation</a></h3><p class="summary">From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits.</p><p class="meta">47 techniques &middot; <a href="/reference/linux-privilege-escalation.html">Read the reference &rarr;</a></p></article>
+<p class="lead">HackGraph is an open-source collection of security study notes, organized as expandable graphs. Use the graph to explore connections, or read the reference pages at your own pace. Source coverage and editorial review status are shown separately.</p>
+<p><a href="/about.html">How to read the graph and assess its sources</a></p>
+<p><a href="/glossary.html">Security glossary with definition sources</a></p>
+<p class="meta">A plain-text mirror of the <a href="/">interactive graph</a>, for search and offline reading. 390 topics across 3 maps.</p>
+<article><h3><a href="/reference/active-directory.html">Active Directory Attack Paths</a></h3><p class="summary">Enumerate, capture credentials, escalate, move laterally, and reach Domain Admin: Kerberoasting, AS-REP roasting, NTLM relay, AD CS (ESC1-ESC16), DACL/ACL abuse, delegation, DCSync, and golden/silver tickets.</p><p class="meta">250 topics &middot; <a href="/reference/active-directory.html">Read the reference &rarr;</a></p></article>
+<article><h3><a href="/reference/windows-privilege-escalation.html">Windows Privilege Escalation</a></h3><p class="summary">From a foothold to NT AUTHORITY\SYSTEM: token privileges (SeImpersonate, Potato), UAC bypass, service and DLL misconfigurations, unquoted paths, stored credentials, privileged groups, and defense evasion (AMSI, EDR, AppLocker).</p><p class="meta">93 topics &middot; <a href="/reference/windows-privilege-escalation.html">Read the reference &rarr;</a></p></article>
+<article><h3><a href="/reference/linux-privilege-escalation.html">Linux Privilege Escalation</a></h3><p class="summary">From an unprivileged shell to root: sudo abuse and GTFOBins, SUID/SGID and capabilities, cron and systemd jobs, writable files, credential hunting, privileged groups and container escapes, and kernel exploits.</p><p class="meta">47 topics &middot; <a href="/reference/linux-privilege-escalation.html">Read the reference &rarr;</a></p></article>
 </main>
 <footer>
-<p>HackGraph is an open-source cybersecurity reference and study notes for offensive security. It maps attack paths as interactive, click-to-expand graphs that run from a foothold to Domain Admin or root. Every technique lists the commands to run, the tools it uses, detection and OPSEC notes, and links to primary sources. It works as notes for penetration testing, red teaming, and CTFs, for OSCP, OSEP, CRTP, CRTE, and PNPT prep, and as a detection reference for blue teams.</p>
-<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
-<p>This is a text mirror of the interactive graph for search engines and offline reading. Techniques are documented for authorized penetration testing, CTFs, certification study, and blue-team detection.</p>
+<p>HackGraph is an open-source collection of security study notes, organized as expandable graphs. Use the graph to explore connections, or read the reference pages at your own pace. Source coverage and editorial review status are shown separately.</p>
+<p><a href="/">Interactive graph</a> &middot; <a href="/reference.html">All references</a> &middot; <a href="/glossary.html">Glossary</a> &middot; <a href="/about.html">About the sources</a> &middot; <a href="https://github.com/HackGraph/hackgraph.github.io">Source on GitHub</a></p>
+<p>Reading pages accompany the interactive graph. Material is intended for authorized security study and blue-team detection.</p>
 </footer>
 </body>
 </html>

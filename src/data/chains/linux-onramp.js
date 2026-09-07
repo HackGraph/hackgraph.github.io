@@ -69,40 +69,231 @@ find / -writable -type f 2>/dev/null | grep -vE '^/(proc|sys)'`, lang: 'bash' },
     opsec: 'LinPEAS is loud: it touches thousands of files and is trivially fingerprinted by EDR/auditd. On a monitored host prefer the targeted manual checks and a static pspy binary over dropping a full enumeration script.',
   },
   {
-    id: 'lin-identity',
-    label: 'Identity & Entitlements',
-    phase: 'triage',
-    summary: 'What your identity already holds: sudo rights and privileged group membership.',
-    description:
-      'Check what your identity already confers before you go hunting for a misconfiguration. These are the fastest wins on Linux, the same as a Windows token or group you already hold. sudo -l lists any sudo rights, often a one-step path to root. id and groups show privileged group membership: docker and lxd are effectively root, disk reads the raw block device, adm reads logs, shadow reads /etc/shadow. A service or web account (www-data) usually holds none of these and falls through to the misconfiguration techniques. Windows branches on who you are; Linux branches on what is misconfigured.',
-    requires: ['An interactive shell on the host'],
-    commands: [
-      { label: 'Sudo rights (fast path, but may prompt for the account password)', code: r`sudo -l   # yields nothing on a passwordless service-account shell`, lang: 'bash' },
-      { label: 'Your user, groups, and any privileged membership', code: r`id; groups`, lang: 'bash' },
+    "id": "lin-identity",
+    "label": "Identity & Entitlements",
+    "phase": "triage",
+    "summary": "Understand process credentials and the permissions attached to resources.",
+    "description": "Linux process credentials include several user and group IDs and a set of supplementary groups. File permission checks use filesystem user and group IDs together with supplementary groups; the filesystem IDs normally match the effective IDs. Access decisions also depend on the resource's permissions and any applicable mandatory access-control policy. An account name alone does not describe this complete security context.",
+    "requires": [
+      "An interactive shell on the host"
     ],
-    mitre: mitre('T1033'),
-    references: [
-      { label: 'MITRE ATT&CK, System Owner/User Discovery (T1033)', url: 'https://attack.mitre.org/techniques/T1033/' },
-      { label: 'HackTricks, Linux Privilege Escalation', url: 'https://hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html' },
+    "commands": [
+      {
+        "label": "Sudo rights (fast path, but may prompt for the account password)",
+        "code": "sudo -l   # yields nothing on a passwordless service-account shell",
+        "lang": "bash"
+      },
+      {
+        "label": "Your user, groups, and any privileged membership",
+        "code": "id; groups",
+        "lang": "bash"
+      }
     ],
+    "mitre": {
+      "id": "T1033",
+      "url": "https://attack.mitre.org/techniques/T1033/"
+    },
+    "references": [
+      {
+        "label": "Linux man-pages, credentials(7)",
+        "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+        "section": "User and group identifiers",
+        "kind": "primary"
+      },
+      {
+        "label": "Linux kernel, Credentials in Linux",
+        "url": "https://www.kernel.org/doc/html/latest/security/credentials.html",
+        "section": "Overview: Rules, access control lists and security calculations",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, System Owner/User Discovery (T1033)",
+        "url": "https://attack.mitre.org/techniques/T1033/"
+      },
+      {
+        "label": "HackTricks, Linux Privilege Escalation",
+        "url": "https://hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "sudo -l   # yields nothing on a passwordless service-account shell",
+            "label": "Sudo rights (fast path, but may prompt for the account password)",
+            "lang": "bash"
+          },
+          {
+            "code": "id; groups",
+            "label": "Your user, groups, and any privileged membership",
+            "lang": "bash"
+          }
+        ],
+        "description": "Linux process credentials include several user and group IDs and a set of supplementary groups. File permission checks use filesystem user and group IDs together with supplementary groups; the filesystem IDs normally match the effective IDs. Access decisions also depend on the resource's permissions and any applicable mandatory access-control policy. An account name alone does not describe this complete security context.",
+        "id": "lin-identity",
+        "label": "Identity & Entitlements",
+        "mitre": {
+          "id": "T1033",
+          "url": "https://attack.mitre.org/techniques/T1033/"
+        },
+        "phase": "triage",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Linux man-pages, credentials(7)",
+            "section": "User and group identifiers",
+            "url": "https://man7.org/linux/man-pages/man7/credentials.7.html"
+          },
+          {
+            "kind": "primary",
+            "label": "Linux kernel, Credentials in Linux",
+            "section": "Overview: Rules, access control lists and security calculations",
+            "url": "https://www.kernel.org/doc/html/latest/security/credentials.html"
+          },
+          {
+            "label": "MITRE ATT&CK, System Owner/User Discovery (T1033)",
+            "url": "https://attack.mitre.org/techniques/T1033/"
+          },
+          {
+            "label": "HackTricks, Linux Privilege Escalation",
+            "url": "https://hacktricks.wiki/en/linux-hardening/linux-basics/linux-privilege-escalation/index.html"
+          }
+        ],
+        "requires": [
+          "An interactive shell on the host"
+        ],
+        "summary": "Understand process credentials and the permissions attached to resources."
+      },
+      "claims": [
+        {
+          "text": "Linux process credentials include user and group IDs and supplementary group IDs.",
+          "section": "Linux man-pages, credentials(7) — User and group identifiers",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/credentials.7.html"
+          ]
+        },
+        {
+          "text": "File permission checks use filesystem IDs and supplementary groups; filesystem IDs normally match effective IDs.",
+          "section": "Linux man-pages, credentials(7) — User and group identifiers",
+          "sources": [
+            "https://man7.org/linux/man-pages/man7/credentials.7.html"
+          ]
+        },
+        {
+          "text": "Linux access decisions can involve resource-specific discretionary permissions and system-wide mandatory access-control rules.",
+          "section": "Linux kernel, Credentials in Linux — Overview: Rules, access control lists and security calculations",
+          "sources": [
+            "https://www.kernel.org/doc/html/latest/security/credentials.html"
+          ]
+        }
+      ]
+    }
   },
   {
-    id: 'lin-hostcontrols',
-    label: 'Host Controls & Confinement',
-    phase: 'triage',
-    summary: 'Confinement and logging that blocks or catches escalation tricks, the Linux analog of AMSI/EDR.',
-    description:
-      'A hardened Linux host constrains what your escalation attempts can do and logs them, so check before assuming a technique will work. SELinux or AppArmor confinement can deny an action even for a root-equivalent process. Mount options matter most: nosuid neuters SUID and setuid-shell tricks, and noexec blocks running a dropped binary, so /tmp, /dev/shm, and /home are common blockers (this is why the cron-wildcard setuid trick can be inert). auditd or an eBPF-based EDR logs execve and file writes. This constrains which techniques work rather than giving a path to root, like the Windows Defense Evasion checks.',
-    requires: ['An interactive shell on the host'],
-    commands: [
-      { label: 'Confinement + mount restrictions', code: r`id -Z 2>/dev/null; aa-status 2>/dev/null    # SELinux / AppArmor (full aa-status needs root)
-cat /proc/self/attr/current 2>/dev/null      # unprivileged: this shell's AppArmor label
-mount | grep -E 'nosuid|noexec'              # where SUID / exec is blocked`, lang: 'bash' },
+    "id": "lin-hostcontrols",
+    "label": "Host Controls & Confinement",
+    "phase": "triage",
+    "summary": "Distinguish access-control policy from audit-event coverage.",
+    "description": "The Linux Security Module framework supports additional security checks, including mandatory access-control systems such as SELinux and AppArmor. Audit logging is a separate concern. Linux Audit uses configured rules to select file-access and system-call events, and also emits certain built-in events when auditing is enabled. The presence of an auditing component alone does not establish that every execution or file change is recorded.",
+    "requires": [
+      "An interactive shell on the host"
     ],
-    mitre: mitre('T1518.001'),
-    references: [
-      { label: 'MITRE ATT&CK, Security Software Discovery (T1518.001)', url: 'https://attack.mitre.org/techniques/T1518/001/' },
+    "commands": [
+      {
+        "label": "Confinement + mount restrictions",
+        "code": "id -Z 2>/dev/null; aa-status 2>/dev/null    # SELinux / AppArmor (full aa-status needs root)\ncat /proc/self/attr/current 2>/dev/null      # unprivileged: this shell's AppArmor label\nmount | grep -E 'nosuid|noexec'              # where SUID / exec is blocked",
+        "lang": "bash"
+      }
     ],
+    "mitre": {
+      "id": "T1518.001",
+      "url": "https://attack.mitre.org/techniques/T1518/001/"
+    },
+    "references": [
+      {
+        "label": "Linux kernel, Linux Security Module Usage",
+        "url": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html",
+        "section": "Opening explanation of the LSM framework and MAC extensions",
+        "kind": "primary"
+      },
+      {
+        "label": "Linux Audit, audit.rules(7)",
+        "url": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7",
+        "section": "DESCRIPTION: File System and System Call; HARD WIRED EVENTS",
+        "kind": "primary"
+      },
+      {
+        "label": "MITRE ATT&CK, Security Software Discovery (T1518.001)",
+        "url": "https://attack.mitre.org/techniques/T1518/001/"
+      }
+    ],
+    "review": {
+      "status": "source-reviewed",
+      "reviewedAt": "2026-09-07",
+      "reviewedBy": "Codex",
+      "reviewerType": "ai",
+      "scope": "Selected conceptual claims in the identity, permissions, and audit-policy explanation. Excludes commands, tools, prerequisites, applicability, connection outcomes, route viability, and ATT&CK mappings. Navigation labels remain project conventions.",
+      "reviewedContent": {
+        "commands": [
+          {
+            "code": "id -Z 2>/dev/null; aa-status 2>/dev/null    # SELinux / AppArmor (full aa-status needs root)\ncat /proc/self/attr/current 2>/dev/null      # unprivileged: this shell's AppArmor label\nmount | grep -E 'nosuid|noexec'              # where SUID / exec is blocked",
+            "label": "Confinement + mount restrictions",
+            "lang": "bash"
+          }
+        ],
+        "description": "The Linux Security Module framework supports additional security checks, including mandatory access-control systems such as SELinux and AppArmor. Audit logging is a separate concern. Linux Audit uses configured rules to select file-access and system-call events, and also emits certain built-in events when auditing is enabled. The presence of an auditing component alone does not establish that every execution or file change is recorded.",
+        "id": "lin-hostcontrols",
+        "label": "Host Controls & Confinement",
+        "mitre": {
+          "id": "T1518.001",
+          "url": "https://attack.mitre.org/techniques/T1518/001/"
+        },
+        "phase": "triage",
+        "references": [
+          {
+            "kind": "primary",
+            "label": "Linux kernel, Linux Security Module Usage",
+            "section": "Opening explanation of the LSM framework and MAC extensions",
+            "url": "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html"
+          },
+          {
+            "kind": "primary",
+            "label": "Linux Audit, audit.rules(7)",
+            "section": "DESCRIPTION: File System and System Call; HARD WIRED EVENTS",
+            "url": "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7"
+          },
+          {
+            "label": "MITRE ATT&CK, Security Software Discovery (T1518.001)",
+            "url": "https://attack.mitre.org/techniques/T1518/001/"
+          }
+        ],
+        "requires": [
+          "An interactive shell on the host"
+        ],
+        "summary": "Distinguish access-control policy from audit-event coverage."
+      },
+      "claims": [
+        {
+          "text": "The LSM framework supports security checks used by mandatory access-control systems including SELinux and AppArmor.",
+          "section": "Linux kernel, Linux Security Module Usage — Opening explanation of the LSM framework and MAC extensions",
+          "sources": [
+            "https://www.kernel.org/doc/html/latest/admin-guide/LSM/index.html"
+          ]
+        },
+        {
+          "text": "Linux Audit uses file and system-call rules and also has built-in events; auditing being enabled alone does not establish exhaustive file or execution coverage.",
+          "section": "Linux Audit, audit.rules(7) — DESCRIPTION: File System and System Call; HARD WIRED EVENTS",
+          "sources": [
+            "https://raw.githubusercontent.com/linux-audit/audit-userspace/master/docs/audit.rules.7"
+          ]
+        }
+      ]
+    }
   },
 ];
 

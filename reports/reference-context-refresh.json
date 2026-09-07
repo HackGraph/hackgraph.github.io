@@ -1,0 +1,435 @@
+{
+  "scope": "Targeted GET refresh of ten sources supporting start/goal overview comparisons, plus HEAD/GET rechecks of the three remaining source-access exceptions. All three exceptions persisted. Other current URLs retain earlier observations. These are availability observations, not claim or operational validation.",
+  "previousReportAt": "2026-09-07T06:49:28.273Z",
+  "superseded": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.499Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:00.697Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T06:31:01.930Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.819Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:15.817Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T05:35:16.125Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:34.209Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:31.667Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:53:35.243Z"
+    },
+    {
+      "url": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "code": 403,
+      "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "status": "blocked",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory"
+        },
+        {
+          "method": "GET",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory"
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:40.274Z"
+    },
+    {
+      "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "code": 0,
+      "finalUrl": null,
+      "status": "unreachable",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": {
+            "name": "TypeError",
+            "code": "CERT_HAS_EXPIRED",
+            "message": "fetch failed"
+          }
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": {
+            "name": "TypeError",
+            "code": "CERT_HAS_EXPIRED",
+            "message": "fetch failed"
+          }
+        }
+      ],
+      "checkedAt": "2026-09-07T03:33:42.344Z"
+    },
+    {
+      "url": "https://www.sophos.com/en-us/research/skeleton-key-malware-analysis",
+      "code": 0,
+      "finalUrl": null,
+      "status": "unreachable",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": {
+            "name": "TimeoutError",
+            "code": 23,
+            "message": "The operation was aborted due to timeout"
+          }
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": {
+            "name": "TimeoutError",
+            "code": 23,
+            "message": "The operation was aborted due to timeout"
+          }
+        }
+      ],
+      "checkedAt": "2026-09-07T03:34:24.907Z"
+    }
+  ],
+  "removed": [],
+  "refreshed": [
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.258Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/understand-security-groups"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.585Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/remote/remote-desktop-services/overview"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.469Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows-server/security/windows-authentication/windows-authentication-concepts"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.258Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/secauthz/access-tokens"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.258Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/localsystem-account"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.469Z"
+    },
+    {
+      "url": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "code": 200,
+      "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://learn.microsoft.com/en-us/windows/win32/services/service-user-accounts"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.257Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/capabilities.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:45.194Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/credentials.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:44.825Z"
+    },
+    {
+      "url": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "code": 200,
+      "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html",
+      "status": "responded",
+      "attempts": [
+        {
+          "method": "GET",
+          "code": 200,
+          "finalUrl": "https://man7.org/linux/man-pages/man7/user_namespaces.7.html"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:01:45.599Z"
+    },
+    {
+      "url": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "code": 403,
+      "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory",
+      "status": "blocked",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory"
+        },
+        {
+          "method": "GET",
+          "code": 403,
+          "finalUrl": "https://www.akamai.com/blog/security-research/abusing-dmsa-for-privilege-escalation-in-active-directory"
+        }
+      ],
+      "checkedAt": "2026-09-07T07:00:07.545Z"
+    },
+    {
+      "url": "https://www.n00py.io/2021/09/resetting-expired-passwords-remotely/",
+      "code": 0,
+      "finalUrl": null,
+      "status": "unreachable",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": {
+            "name": "TypeError",
+            "code": "CERT_HAS_EXPIRED",
+            "message": "fetch failed"
+          }
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": {
+            "name": "TypeError",
+            "code": "CERT_HAS_EXPIRED",
+            "message": "fetch failed"
+          }
+        }
+      ],
+      "checkedAt": "2026-09-07T07:00:07.262Z"
+    },
+    {
+      "url": "https://www.sophos.com/en-us/research/skeleton-key-malware-analysis",
+      "code": 0,
+      "finalUrl": null,
+      "status": "unreachable",
+      "attempts": [
+        {
+          "method": "HEAD",
+          "code": 0,
+          "error": {
+            "name": "TimeoutError",
+            "code": 23,
+            "message": "The operation was aborted due to timeout"
+          }
+        },
+        {
+          "method": "GET",
+          "code": 0,
+          "error": {
+            "name": "TimeoutError",
+            "code": 23,
+            "message": "The operation was aborted due to timeout"
+          }
+        }
+      ],
+      "checkedAt": "2026-09-07T07:00:46.603Z"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "checkedAt": "2026-09-07T09:01:36.030Z",
+  "browser": "153.0.8010.12",
+  "scope": "Rendering, selected-claim visibility, panel overflow, and WCAG-tagged axe checks for all seven changed identity/permissions panels at desktop and phone widths. Does not validate operational content.",
+  "runtimeErrors": [],
+  "observations": [
+    {
+      "id": "pe-cat-priv",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-priv",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-admin",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-admin",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-enum",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-cat-enum",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": []
+    },
+    {
+      "id": "pe-svc-account",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-pe-svc-account-desktop.png"
+    },
+    {
+      "id": "pe-svc-account",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-pe-svc-account-mobile.png"
+    },
+    {
+      "id": "pe-admins-filtered",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-pe-admins-filtered-desktop.png"
+    },
+    {
+      "id": "pe-admins-filtered",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-pe-admins-filtered-mobile.png"
+    },
+    {
+      "id": "lin-identity",
+      "width": 1440,
+      "height": 1000,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-lin-identity-desktop.png"
+    },
+    {
+      "id": "lin-identity",
+      "width": 390,
+      "height": 844,
+      "claims": 3,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-lin-identity-mobile.png"
+    },
+    {
+      "id": "lin-hostcontrols",
+      "width": 1440,
+      "height": 1000,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-lin-hostcontrols-desktop.png"
+    },
+    {
+      "id": "lin-hostcontrols",
+      "width": 390,
+      "height": 844,
+      "claims": 2,
+      "overflow": false,
+      "violations": [],
+      "screenshot": "reports/visuals/identity-lin-hostcontrols-mobile.png"
+    }
+  ]
+}
