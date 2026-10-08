@@ -46,7 +46,7 @@ jobs:
           path: .site
       - name: Browser diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: browser-diagnostics
           path: test-results/
